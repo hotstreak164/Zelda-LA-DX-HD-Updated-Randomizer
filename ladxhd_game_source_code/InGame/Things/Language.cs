@@ -63,6 +63,17 @@ namespace ProjectZ.InGame.Things
 
         public string ReplacePlaceholderTag(string inputString)
         {
+            string Confirm = ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, 0];
+            string Cancel  = ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, 1];
+
+            if (GameSettings.SwapButtons)
+            {
+                Confirm = ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, 1];
+                Cancel  = ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, 0];
+            }
+            string Select = ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, 8];
+            string Start  = ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, 9];
+
             // Inserts the players name.
             inputString = inputString.Replace("[NAME]", Game1.GameManager.SaveName);
 
@@ -93,10 +104,10 @@ namespace ProjectZ.InGame.Things
             inputString = inputString.Replace("[DOWN]", "²");
             inputString = inputString.Replace("[UP]", "³");
             inputString = inputString.Replace("[DPAD]", "´");
-            inputString = inputString.Replace("[CONFIRM]", ControlHandler.GetButtonName(ControlHandler.ButtonDictionary[ControlHandler.ConfirmButton].Buttons[0]));
-            inputString = inputString.Replace("[CANCEL]", ControlHandler.GetButtonName(ControlHandler.ButtonDictionary[ControlHandler.CancelButton].Buttons[0]));
-            inputString = inputString.Replace("[START]", ControlHandler.GetButtonName(ControlHandler.ButtonDictionary[CButtons.Start].Buttons[0]));
-            inputString = inputString.Replace("[SELECT]", ControlHandler.GetButtonName(ControlHandler.ButtonDictionary[CButtons.Select].Buttons[0]));
+            inputString = inputString.Replace("[CONFIRM]", Confirm);
+            inputString = inputString.Replace("[CANCEL]", Cancel);
+            inputString = inputString.Replace("[START]", Start);
+            inputString = inputString.Replace("[SELECT]", Select);
             return inputString;
         }
 
