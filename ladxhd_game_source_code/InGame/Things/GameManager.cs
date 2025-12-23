@@ -1815,7 +1815,7 @@ namespace ProjectZ.InGame.Things
             int.TryParse(saveVersionStr, out int saveVersion);
 
             // This only affects v0 and v1 save files.
-            if (saveVersion >= 1)
+            if (saveVersion <= 1)
             {
                 // Get the unlocked state of the teleporters that have reversed indexes.
                 string teleporter1 = SaveManager.GetString("unlocked_teleporter_1", "none");
@@ -1848,7 +1848,7 @@ namespace ProjectZ.InGame.Things
             int.TryParse(saveVersionStr, out int saveVersion);
 
             // Check the save file name. Just to be safe, also make sure the dungeon name is correct.
-            if (saveVersion > 3 || LoadedMap == "dungeon3_1.map")
+            if (saveVersion < 3 || LoadedMap == "dungeon3_1.map")
             {
                 // In v1.4.8 Dungeon 3 map file has changed so we need to convert to new name and coordinates.
                 if (LoadedMap == "dungeon3_1.map")
