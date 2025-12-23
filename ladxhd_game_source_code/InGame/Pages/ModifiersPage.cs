@@ -77,7 +77,7 @@ namespace ProjectZ.InGame.Pages
                 newState => { GameSettings.SwordBlock = newState; });
             _contentLayout.AddElement(toggleSwordBlock);
 
-            // Button: Sword Interactions
+            // Button: Extra Sword Interactions
             var toggleSwordInteract = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_mods_swordinteract", GameSettings.SwordInteract, 
                 newState => { GameSettings.SwordInteract = newState; });
