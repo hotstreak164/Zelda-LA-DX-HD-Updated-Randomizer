@@ -48,7 +48,7 @@ namespace ProjectZ.InGame.Map
         private int _viewportWidth;
         private int _viewportHeight;
 
-        public static bool ClassicMode => GameSettings.ClassicCamera && (!GameSettings.ClassicDungeon || (MapManager.ObjLink?.Map?.DungeonMode == true || MapManager.ObjLink?.Map?.DungeonMapless == true));
+        public static bool ClassicMode => GameSettings.ClassicCamera && (!GameSettings.ClassicDungeon || MapManager.ObjLink?.Map?.DungeonMode == true || MapManager.ObjLink?.Map?.DungeonMapless == true || MapManager.ObjLink?.Map?.DungeonCastle == true);
 
         public void SetBounds(int viewportWidth, int viewportHeight)
         {

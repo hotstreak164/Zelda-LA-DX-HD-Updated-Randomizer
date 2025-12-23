@@ -5604,7 +5604,7 @@ namespace ProjectZ.InGame.GameObjects
                 bool mapIsCave = !string.IsNullOrEmpty(Map.MapName) && Map.MapName.StartsWith("cave");
                 bool prevIsCave = !string.IsNullOrEmpty(_previousMap.MapName) && _previousMap.MapName.StartsWith("cave");
                 bool mapsNotCave = !mapIsCave && !prevIsCave;
-                bool notDungeon = !Map.DungeonMode && !Map.DungeonMapless;
+                bool notDungeon = !Map.DungeonMode && !Map.DungeonMapless && !Map.DungeonCastle;
 
                 if (isOverworld || (mapsNotCave && notDungeon))
                 {

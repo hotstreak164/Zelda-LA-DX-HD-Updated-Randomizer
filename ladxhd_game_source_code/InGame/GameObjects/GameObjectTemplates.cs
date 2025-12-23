@@ -375,6 +375,7 @@ namespace ProjectZ.InGame.GameObjects
 
             ObjectTemplates.Add("dungeon", new GameObjectTemplate(typeof(ObjDungeon), new object[] { null, true, 0 }));
             ObjectTemplates.Add("dungeonMapless", new GameObjectTemplate(typeof(ObjDungeonMapless), new object[] { null, true }));
+            ObjectTemplates.Add("dungeonCastle", new GameObjectTemplate(typeof(ObjCastle), new object[] { null, true }));
 
             ObjectTemplates.Add("no follower", new GameObjectTemplate(typeof(ObjNoFollower), new object[] { }));
             ObjectTemplates.Add("cameraField", new GameObjectTemplate(typeof(ObjCameraField), new object[] { }));

@@ -1254,6 +1254,8 @@ namespace ProjectZ.InGame.Things
                 level++;
             }
             MapManager.NextMap.DungeonMode = true;
+            MapManager.NextMap.DungeonMapless = false;
+            MapManager.NextMap.DungeonCastle = false;
             MapManager.NextMap.LocationName = dungeonName;
             MapManager.NextMap.LocationFullName = dungeonName + "_" + dungeonLevel;
         }
@@ -1262,8 +1264,19 @@ namespace ProjectZ.InGame.Things
         {
             MapManager.NextMap.DungeonMode = false;
             MapManager.NextMap.DungeonMapless = true;
+            MapManager.NextMap.DungeonCastle = false;
             MapManager.NextMap.LocationName = dungeonName;
             MapManager.NextMap.LocationFullName = dungeonName;
+        }
+
+        public void SetCastle(string dungeonName)
+        {
+            MapManager.NextMap.DungeonMode = false;
+            MapManager.NextMap.DungeonMapless = false;
+            MapManager.NextMap.DungeonCastle = true;
+            MapManager.NextMap.LocationName = dungeonName;
+            MapManager.NextMap.LocationFullName = dungeonName;
+            System.Diagnostics.Debug.WriteLine(MapManager.NextMap.DungeonCastle);
         }
 
         public void SetNoFollowersMap()
