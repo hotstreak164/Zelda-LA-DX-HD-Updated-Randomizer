@@ -3,9 +3,11 @@ using ProjectZ.Base;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
+using ProjectZ.InGame.GameObjects.Base.Components.AI;
 using ProjectZ.InGame.GameObjects.Dungeon;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Things;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace ProjectZ.InGame.GameObjects.Things
 {
@@ -14,6 +16,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly BodyComponent _body;
         private readonly BoxCollisionComponent _collisionComponent;
         private readonly CarriableComponent _carriableComponent;
+        private readonly HittableComponent _hitComponent;
         private readonly Point _spawnPosition;
         private readonly CBox _upperBox;
         private readonly CBox _lowerBox;
@@ -33,6 +36,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private bool _isAlive = true;
         private bool _damagePlayer;
         private bool _isHeavy;
+        private bool _isPot;
 
         public bool NoRespawn = false;
         public bool FromObjSpawner = false;
@@ -42,9 +46,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             var sprite = Resources.GetSprite(spriteId);
 
             EntityPosition = new CPosition(posX + 8, posY + 16 - _offsetY, 0);
-            EntitySize = new Rectangle(
-                -sprite.SourceRectangle.Width / 2, _offsetY - sprite.SourceRectangle.Height * 2, sprite.SourceRectangle.Width, sprite.SourceRectangle.Height * 2 + 4);
-
+            EntitySize = new Rectangle(-sprite.SourceRectangle.Width / 2, _offsetY - sprite.SourceRectangle.Height * 2, sprite.SourceRectangle.Width, sprite.SourceRectangle.Height * 2 + 4);
             _spawnPosition = new Point(posX, posY + 2);
 
             _baseX = posX;
@@ -54,6 +56,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             _spawnItem = spawnItem;
             _pickupKey = pickupKey;
             _dialogPath = dialogPath;
+
+            _isPot = spriteId.StartsWith("pot");
 
             _isHeavy = isHeavy;
             _potMessage = potMessage;
@@ -66,6 +70,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             var height = map.Is2dMap ? 15 : 13;
             var heightOffset = map.Is2dMap ? 0 : 2;
             var collisionBox = new CBox(EntityPosition, -sprite.SourceRectangle.Width / 2, -height + _offsetY, 0, sprite.SourceRectangle.Width, height - heightOffset, 12, true);
+
             _body = new BodyComponent(EntityPosition, -4, -8 + _offsetY, 8, 8, 12)
             {
                 CollisionTypes = Values.CollisionTypes.Normal,
@@ -88,6 +93,12 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(cSprite, Values.LayerPlayer));
             AddComponent(DrawShadowComponent.Index, new BodyDrawShadowComponent(_body, cSprite));
+
+            if (_isPot)
+            {
+                var hittableBox = new CBox(EntityPosition, -8, -16, 0, 16, 16, 8);
+                AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(collisionBox, OnHit));
+            }
 
             new ObjSpriteShadow("sprshadowm", this, Values.LayerPlayer, map);
         }
@@ -180,7 +191,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             }
         }
 
-        private Vector3 CarryInit()
+
+        private void SpawnItem()
         {
             if (_spawnItem != null)
             {
@@ -199,6 +211,12 @@ namespace ProjectZ.InGame.GameObjects.Things
             // set the pickup key
             else if (!string.IsNullOrEmpty(_pickupKey))
                 Game1.GameManager.SaveManager.SetString(_pickupKey, "1");
+        }
+
+        private Vector3 CarryInit()
+        {
+            // Spawn the item when picking up the pot.
+            SpawnItem();
 
             // the stone was picked up
             _collisionComponent.IsActive = false;
@@ -362,6 +380,18 @@ namespace ProjectZ.InGame.GameObjects.Things
             Map.Objects.SpawnObject(stone1);
             Map.Objects.SpawnObject(stone2);
             Map.Objects.SpawnObject(stone3);
+        }
+
+        private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
+        {
+            if (GameSettings.SwordInteract && ((hitType & HitType.Sword2) != 0 || 
+                Game1.GameManager.GetItem("sword2") != null && ((hitType & HitType.SwordShot) != 0 || (hitType & HitType.PegasusBootsSword) != 0)))
+            {
+                OnCollision();
+                SpawnItem();
+                return Values.HitCollision.Enemy; 
+            }
+            return Values.HitCollision.None; 
         }
     }
 }
