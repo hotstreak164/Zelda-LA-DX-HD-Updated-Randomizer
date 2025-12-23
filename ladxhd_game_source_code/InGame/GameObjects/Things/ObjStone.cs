@@ -3,11 +3,9 @@ using ProjectZ.Base;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
-using ProjectZ.InGame.GameObjects.Base.Components.AI;
 using ProjectZ.InGame.GameObjects.Dungeon;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Things;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace ProjectZ.InGame.GameObjects.Things
 {
