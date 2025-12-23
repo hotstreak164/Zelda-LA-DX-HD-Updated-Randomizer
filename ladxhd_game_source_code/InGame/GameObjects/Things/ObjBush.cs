@@ -77,7 +77,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             _upperBox = new CBox(EntityPosition, -4, -5, 0, 8, 8, 4, true);
             _lowerBox = new CBox(EntityPosition, -4, -5, 0, 8, 8, 4);
-            _hittableBox = new CBox(EntityPosition, -6, -6, 0, 14, 14, 8, true);
+            _hittableBox = new CBox(EntityPosition, -8, -7, 0, 16, 14, 8, true);
 
             if (hasCollider)
             {
@@ -217,7 +217,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 (hitType & HitType.SwordHold) != 0 ||
                 hitType == HitType.Bow ||
                 hitType == HitType.Hookshot ||
-                hitType == HitType.SwordShot ||
+                ((!GameSettings.SwordInteract || Game1.GameManager.GetItem("sword2") == null) && hitType == HitType.SwordShot) ||
                 hitType == HitType.PegasusBootsPush ||
                 hitType == HitType.MagicRod && !_hasCollider ||
                 hitType == HitType.Boomerang && !_hasCollider ||
