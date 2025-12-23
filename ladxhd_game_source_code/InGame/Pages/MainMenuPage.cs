@@ -84,15 +84,15 @@ namespace ProjectZ.InGame.Pages
                     var heartsWidth = saveButtonRec.X / 2 - numberWidth - 20;
                     var hearts = new InterfaceListLayout { Size = new Point(heartsWidth, 30) };
 
-                    var rowOne = new InterfaceListLayout { Size = new Point(heartsWidth - 4, 7), Margin = new Point(2, 1), HorizontalMode = true, ContentAlignment = InterfaceElement.Gravities.Right };
-                    var rowTwo = new InterfaceListLayout { Size = new Point(heartsWidth - 4, 7), Margin = new Point(2, 1), HorizontalMode = true, ContentAlignment = InterfaceElement.Gravities.Right };
+                    var rowOne = new InterfaceListLayout { Size = new Point(heartsWidth - 4, 7), Margin = new Point(2, 1), HorizontalMode = true, ContentAlignment = InterfaceElement.Gravities.Left };
+                    var rowTwo = new InterfaceListLayout { Size = new Point(heartsWidth - 4, 7), Margin = new Point(2, 1), HorizontalMode = true, ContentAlignment = InterfaceElement.Gravities.Left };
 
                     _heartImage[i] = new InterfaceElement[14];
                     for (var j = 0; j < 7; j++)
                     {
                         int k = j + 7;
-                        _heartImage[i][j] = rowOne.AddElement(new InterfaceImage(Resources.SprItem, _heartSprite.ScaledRectangle, Point.Zero, new Point(1, 1)) { Gravity = InterfaceElement.Gravities.Right });
-                        _heartImage[i][k] = rowTwo.AddElement(new InterfaceImage(Resources.SprItem, _heartSprite.ScaledRectangle, Point.Zero, new Point(1, 1)) { Gravity = InterfaceElement.Gravities.Right });
+                        _heartImage[i][j] = rowOne.AddElement(new InterfaceImage(Resources.SprItem, _heartSprite.ScaledRectangle, Point.Zero, new Point(1, 1)) { Gravity = InterfaceElement.Gravities.Left });
+                        _heartImage[i][k] = rowTwo.AddElement(new InterfaceImage(Resources.SprItem, _heartSprite.ScaledRectangle, Point.Zero, new Point(1, 1)) { Gravity = InterfaceElement.Gravities.Left });
                     }
                     hearts.AddElement(rowOne);
                     hearts.AddElement(rowTwo);
