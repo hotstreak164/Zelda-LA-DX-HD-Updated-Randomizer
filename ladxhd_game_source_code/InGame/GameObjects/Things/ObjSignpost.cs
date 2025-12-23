@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (string.IsNullOrEmpty(spriteId))
                 return;
 
-            AddComponent(CollisionComponent.Index, new BoxCollisionComponent(interactBox, Values.CollisionTypes.Normal));
+            AddComponent(CollisionComponent.Index, new BoxCollisionComponent(interactBox, Values.CollisionTypes.Normal | Values.CollisionTypes.Hookshot));
             AddComponent(DrawComponent.Index, new DrawSpriteComponent(spriteId, EntityPosition, Values.LayerPlayer));
             AddComponent(DrawShadowComponent.Index, new DrawShadowSpriteComponent(spriteId, EntityPosition));
             AddComponent(CarriableComponent.Index, new CarriableComponent(new CRectangle(EntityPosition, new Rectangle(-8, -16, 16, 16)), null, null, null) { });
