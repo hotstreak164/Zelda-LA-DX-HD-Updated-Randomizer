@@ -3210,7 +3210,7 @@ namespace ProjectZ.InGame.GameObjects
                 UpdateCharging();
 
             // hit stuff with the sword
-            if (IsAttackingState() || _bootsRunning && CarrySword)
+            if (IsAttackingState() || CurrentState == State.SwordShow0 || _bootsRunning && CarrySword)
                 UpdateAttacking();
 
             if (CurrentState == State.PickingUp)
@@ -3552,7 +3552,7 @@ namespace ProjectZ.InGame.GameObjects
                             Animation.Play("swing_3");
                             AnimatorWeapons.Play("swing_3");
                             CurrentState = State.SwordShow0;
-                            _swordChargeCounter = 1; // don't blink
+                            _swordChargeCounter = 1;
                             ShowItem = null;
                         }
                         else if (ShowItem.Name.StartsWith("instrument"))
