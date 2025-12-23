@@ -236,6 +236,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             Game1.GameManager.PlaySoundEffect("D378-62-3F");
 
             _body.IsActive = false;
+            _damageField.IsActive = false;
             _animator.Play("stand" + _direction);
 
             // stop the music
@@ -535,10 +536,12 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void StandUpEnd()
         {
+            if (_aiDamageState.CurrentLives > 0)
+                _damageField.IsActive = true;
+
             _instantFall = false;
             _aiDamageState.MoveBody = true;
             _damageCooldown.Reset();
-            _damageField.IsActive = true;
             _damageState = false;
             _aiComponent.ChangeState("idle");
         }
