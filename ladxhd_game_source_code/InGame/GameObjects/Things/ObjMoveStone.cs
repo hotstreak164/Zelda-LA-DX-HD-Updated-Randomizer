@@ -195,7 +195,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             var collidingRectangle = Box.Empty;
             var collisionBox = new Box(EntityPosition.X + pushVector.X * 16, EntityPosition.Y + pushVector.Y * 16 - 16, 0, 16, 16, 16);
 
-            if (Map.Objects.Collision(collisionBox, Box.Empty, Values.CollisionTypes.Normal | Values.CollisionTypes.StoneBlock, 0, 0, ref collidingRectangle))
+            if (Map.Objects.Collision(collisionBox, Box.Empty, Values.CollisionTypes.Normal | Values.CollisionTypes.Passageway, 0, 0, ref collidingRectangle))
                 return true;
 
             _startPosition = EntityPosition.Position;

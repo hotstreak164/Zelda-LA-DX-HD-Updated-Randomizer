@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.Things
             NPC               = 1 << 18,
             NonWater          = 1 << 19,
             Field             = 1 << 20,
-            StoneBlock        = 1 << 21,
+            Passageway        = 1 << 21,
             Instrument        = 1 << 22
         }
 

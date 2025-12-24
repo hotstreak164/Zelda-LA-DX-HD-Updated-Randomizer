@@ -3,6 +3,7 @@ using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.Map;
+using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.GameObjects.Things
 {
@@ -22,8 +23,9 @@ namespace ProjectZ.InGame.GameObjects.Things
             EntityPosition = new CPosition(posX, posY, 0);
             EntitySize = new Rectangle(0, 0, 16, 16);
 
-            AddComponent(ObjectCollisionComponent.Index,
-                new ObjectCollisionComponent(new Rectangle(posX, posY, 16, 12), OnCollision));
+            var collisionBox = new CBox(EntityPosition, 0, 0, 0, 16, 16, 4, true);
+            AddComponent(CollisionComponent.Index, new BoxCollisionComponent(collisionBox, Values.CollisionTypes.Passageway) { });
+            AddComponent(ObjectCollisionComponent.Index, new ObjectCollisionComponent(new Rectangle(posX, posY, 16, 12), OnCollision));
         }
 
         private void OnCollision(GameObject gameObject)

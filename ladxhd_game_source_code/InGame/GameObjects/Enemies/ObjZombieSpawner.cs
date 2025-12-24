@@ -50,7 +50,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                     // found a good position?
                     var collidingRectangle = Box.Empty;
                     if (!Map.Objects.Collision(new Box(posX, posY, 0, 16, 16, 8), Box.Empty,
-                        Values.CollisionTypes.Normal | Values.CollisionTypes.Enemy | Values.CollisionTypes.Player, 0, 0,
+                        Values.CollisionTypes.Normal | Values.CollisionTypes.Enemy | Values.CollisionTypes.Passageway | Values.CollisionTypes.Player, 0, 0,
                         ref collidingRectangle))
                     {
                         var newZombie = new EnemyZombie(Map, posX, posY);
