@@ -56,6 +56,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private bool _flee;
         private bool _attackSound;
         private bool _instantFall;
+        private bool _vulnerable;
 
         private int _lives = ObjLives.MStalfos;
         private int _livesMid = ObjLives.MStalfosMid;
@@ -143,7 +144,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             var statePostFall = new AiState();
             statePostFall.Trigger.Add(new AiTriggerCountdown(500, null, () => _aiComponent.ChangeState("idle")));
             var stateIdle = new AiState { Init = InitIdle };
-            stateIdle.Trigger.Add(new AiTriggerCountdown(100, null, EndIdle));
+            stateIdle.Trigger.Add(new AiTriggerCountdown(400, null, EndIdle));
             var stateWalk = new AiState(UpdateWalking) { Init = InitWalk };
             stateWalk.Trigger.Add(new AiTriggerCountdown(1000, null, EndWalking));
             var statePreDamaged = new AiState(UpdatePreDamaged) { Init = InitPreDamageState };
@@ -333,6 +334,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             var playerDirection = MapManager.ObjLink.EntityPosition.Position - EntityPosition.Position;
             _direction = playerDirection.X < 0 ? -1 : 1;
             _animator.Play("stand" + _direction);
+            _vulnerable = true;
         }
 
         private void EndIdle()
@@ -465,6 +467,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private void UpdateDamaged()
         {
             _damageState = true;
+            _vulnerable = false;
 
             if (_instantFall)
             {
@@ -650,9 +653,9 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             }
 
             // Fall into a pile of bones.
-            if (_damageCooldown.State &&
+            if (_vulnerable || (_damageCooldown.State &&
                 _aiComponent.CurrentStateId != "preDamaged" && _aiComponent.CurrentStateId != "damaged" &&
-                _aiComponent.CurrentStateId != "attack" && _aiComponent.CurrentStateId != "wobble" && _aiComponent.CurrentStateId != "standUp")
+                _aiComponent.CurrentStateId != "attack" && _aiComponent.CurrentStateId != "wobble" && _aiComponent.CurrentStateId != "standUp"))
             {
                 _aiComponent.ChangeState("preDamaged");
                 _aiDamageState.OnHit(gameObject, direction, hitType, 0, pieceOfPower);
