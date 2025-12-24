@@ -20,7 +20,11 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly DictAtlasEntry _spriteRope;
         private readonly DictAtlasEntry _spritePullBridge;
 
+        private HittableComponent _hitComponent;
+        private UpdateComponent _updateComponent;
+
         private Vector2 _startPosition;
+        private List<GameObject> _holeList = new List<GameObject>();
 
         private readonly string _strKey;
         private float _state;
@@ -28,14 +32,18 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly int _min = 6;
         private readonly int _max = 72;
 
-        private readonly bool _up;
+        private CBox _hittableBox;
         private bool _startedPulling;
         private bool _finishedPulling;
+        private bool _up;
 
         public ObjPullBridge(Map.Map map, int posX, int posY, string strKey, bool up) : base(map, "pull_bridge")
         {
-            EntityPosition = new CPosition(posX, posY, 0);
             EntitySize = new Rectangle(0, up ? 0 : -64, 16, 80);
+            EntityPosition = new CPosition(posX, posY, 0);
+            ResetPosition  = new CPosition(posX, posY, 0);
+            CanReset = true;
+            OnReset = Reset;
 
             _strKey = strKey;
             _up = up;
@@ -47,18 +55,37 @@ namespace ProjectZ.InGame.GameObjects.Things
             _spriteHook = Resources.GetSprite("pull_bridge_hook");
             _spriteRope = Resources.GetSprite("pull_bridge_rope");
 
-            var box = new CBox(posX + 4, posY + 2, 0, 8, 12, 8);
+            var _hittableBox = new CBox(posX + 4, posY + 2, 0, 8, 12, 8);
+
+            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(_hittableBox, OnHit));
+            AddComponent(UpdateComponent.Index, _updateComponent = new UpdateComponent(Update));
+            AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerBottom, EntityPosition));
 
             // was the bridge already pulled?
             if (!string.IsNullOrEmpty(_strKey) && Game1.GameManager.SaveManager.GetString(_strKey) == "1")
-                FinishedPull();
-            else
             {
-                AddComponent(HittableComponent.Index, new HittableComponent(box, OnHit));
-                AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
+                FinishedPull();
+                _hitComponent.IsActive = false;
+                _updateComponent.IsActive = false;
             }
+        }
 
-            AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerBottom, EntityPosition));
+        private void Reset()
+        {
+            // Reset all the various states of the pull bridge.
+            _state = 0;
+            _startedPulling = false;
+            _finishedPulling = false;
+            _hitComponent.IsActive = true;
+            _updateComponent.IsActive = true;
+
+            // Remove the key that was set so a respawn doesn't create it already pulled.
+            Game1.GameManager.SaveManager.SetString(_strKey, "0");
+
+            // Restore the holes if available.
+            if (_holeList.Count > 0)
+                foreach (var hole in _holeList) 
+                    hole.IsActive = true;
         }
 
         private Values.HitCollision OnHit(GameObject originObject, Vector2 direction, HitType type, int damage, bool pieceOfPower)
@@ -95,8 +122,6 @@ namespace ProjectZ.InGame.GameObjects.Things
         {
             if (_startedPulling && !_finishedPulling && !MapManager.ObjLink.Hookshot.IsMoving)
                 FinishedPull();
-
-            //_state = ((float)Math.Clamp(Math.Sin(Game1.TotalGameTime / 1000f) * 0.6f + 0.5f, 0, 1) * (_max - _min) + _min) / _max;
         }
 
         private void FinishedPull()
@@ -106,6 +131,11 @@ namespace ProjectZ.InGame.GameObjects.Things
             MapManager.ObjLink.Hookshot.HookshotPosition.PositionChangedDict.Remove(typeof(ObjPullBridge));
             RemoveHoles();
 
+            // Disable components after the pull.
+            _hitComponent.IsActive = false;
+            _updateComponent.IsActive = false;
+
+            // Set the key so it remains pulled.
             if (!string.IsNullOrEmpty(_strKey))
                 Game1.GameManager.SaveManager.SetString(_strKey, "1");
         }
@@ -161,11 +191,16 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void RemoveHoles()
         {
-            var holeList = new List<GameObject>();
-            Map.Objects.GetGameObjectsWithTag(holeList, Values.GameObjectTag.Hole,
+            // Clear holes so we don't keep adding them over again.
+            _holeList.Clear();
+
+            // Find holes along the path.
+            Map.Objects.GetGameObjectsWithTag(_holeList, Values.GameObjectTag.Hole,
                 (int)EntityPosition.X + EntitySize.X, (int)EntityPosition.Y + EntitySize.Y, EntitySize.Width - 1, EntitySize.Height - 1);
 
-            Map.Objects.DeleteObjects.AddRange(holeList);
+            // Disable the holes that are found.
+            foreach (var hole in _holeList) 
+                hole.IsActive = false;
         }
     }
 }
