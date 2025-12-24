@@ -62,6 +62,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (!_startBed || _startTransition)
                 return;
 
+            Game1.GameManager.InGameOverlay.DisableInventoryToggle = true;
+
             _transitionCounter -= Game1.DeltaTime;
 
             // Shut off the lights one by one in a sequence.
