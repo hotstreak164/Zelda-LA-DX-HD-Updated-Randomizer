@@ -70,8 +70,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("idle");
 
             var bodyBox = new CBox(EntityPosition, 0, 0, 0, 16, 16, 4);
+            var damageBox =  new CBox(EntityPosition, 6, 6, 0, 4, 4, 4);
+
             AddComponent(PushableComponent.Index, new PushableComponent(bodyBox, OnPush));
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(bodyBox, HitType.Enemy, 4));
+            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 4));
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(HittableComponent.Index, new HittableComponent(bodyBox, OnHit));
