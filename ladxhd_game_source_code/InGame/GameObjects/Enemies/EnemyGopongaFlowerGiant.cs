@@ -52,9 +52,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                                  Values.CollisionTypes.Field,
                 IgnoresZ = true 
             };
-            _collisionBox = new CBox(EntityPosition, -15, -13, 30, 28, 8);
-            var hittableBox = new CBox(EntityPosition, -15, -13, 30, 28, 8);
-            var damageBox = new CBox(EntityPosition, -16, -14, 32, 30, 8);
 
             _aiComponent = new AiComponent();
             _aiComponent.States.Add("idle", new AiState(() => { }));
@@ -66,6 +63,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 OnBurn = OnBurn
             };
             _aiComponent.ChangeState("idle");
+
+            _collisionBox = new CBox(EntityPosition, -9, -9, 18, 18, 8);
+            var hittableBox = new CBox(EntityPosition, -15, -13, 30, 28, 8);
+            var damageBox = new CBox(EntityPosition, -10, -10, 20, 20, 8);
 
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(_collisionBox, Values.CollisionTypes.Enemy));
