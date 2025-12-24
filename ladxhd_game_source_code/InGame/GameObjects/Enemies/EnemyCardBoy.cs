@@ -1,8 +1,8 @@
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.GameObjects.Base;
+using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.GameObjects.Base.Components.AI;
-using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
@@ -23,6 +23,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _changeTime = 250;
         private float _changeCounter;
         private float _walkSpeed = 0.5f;
+        private bool _isRemoving;
         private int _startingCardIndex = 0;
         private int _cardIndex;
         private int _dir;
@@ -49,6 +50,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             }
 
             _key = key;
+
             if (Game1.GameManager.SaveManager.GetString(_key) == "1")
                 IsDead = true;
 
@@ -129,6 +131,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Update()
         {
             _changeCounter += Game1.DeltaTime;
+
             if (_changeCounter > _changeTime * 4)
                 _changeCounter -= _changeTime * 4;
 
@@ -155,9 +158,26 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void RemoveEntity()
         {
-            Map.Objects.SpawnObject(
-                new ObjAnimator(Map, (int)EntityPosition.X - 16, (int)EntityPosition.Y - 24, Values.LayerTop, "Particles/explosion", "run", true));
+            if (_isRemoving)
+                return;
+
+            _isRemoving = true;
+
+            Map.Objects.SpawnObject(new ObjAnimator(Map, (int)EntityPosition.X - 16, (int)EntityPosition.Y - 24, Values.LayerTop, "Particles/explosion", "run", true));
             Map.Objects.DeleteObjects.Add(this);
+
+            string strObject = null;
+
+            if (_cardIndex == 0)
+                strObject = "heart";
+            else if (_cardIndex == 1)
+                strObject = "ruby";
+
+            if (strObject != null)
+            {
+                var objItem = new ObjItem(Map, (int)EntityPosition.X - 8, (int)EntityPosition.Y - 8, "j", null, strObject, null, true);
+                Map.Objects.SpawnObject(objItem);
+            }
         }
 
         private void CheckOther()
@@ -166,6 +186,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var resetBoys = true;
             // all boy states equal
             var allEqual = true;
+
             for (var i = 0; i < 3; i++)
             {
                 if (Game1.GameManager.SaveManager.GetInt(_key + i, -1) == -1)
