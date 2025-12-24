@@ -90,10 +90,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, _lives, true, false);
 
             if (_goldLeaf)
+            {
                 _damageState.OnDeath = OnDeath;
-
-            _damageState.IsActive = false;
-
+                _damageState.IsActive = false;
+            }
             _aiComponent.ChangeState("waiting");
 
             _damageCollider = new CBox(EntityPosition, -6, -14, 0, 12, 14, 4, true);
