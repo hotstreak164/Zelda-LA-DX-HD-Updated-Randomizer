@@ -1596,12 +1596,6 @@ namespace ProjectZ.InGame.Things
 
         public void SetGameTypeSettings()
         {
-            // Apply for any camera settings.
-            if (GameType != 0)
-            {
-                GameSettings.CameraLock = false;
-                GameSettings.SmoothCamera = true;
-            }
             // Game Type is set to "Modern".
             if (GameType == 1)
             {

@@ -158,6 +158,10 @@ namespace ProjectZ.InGame.Overlay
             if ((_currentMenuState == MenuState.None || _currentMenuState == MenuState.Inventory) && ControlHandler.ButtonPressed(CButtons.Start) && 
                 !disableInventory && !DisableInventoryToggle && !_hideHud && !TextboxOverlay.IsOpen)
                 ToggleState(MenuState.Inventory);
+            
+            // Use the inventory disable to identify moments to lock the free camera.
+            if (!Camera.ClassicMode && (disableInventory || DisableInventoryToggle))
+                MapManager.CameraOffset = Vector2.Zero;
 
             // Update the textbox and peform button scale change if a menu is currently not visible.
             if (_currentMenuState == MenuState.None)
