@@ -964,7 +964,7 @@ namespace ProjectZ.InGame.GameObjects
             DisableInput = false;
 
             // Clear the sword damage box if none of the below is true.
-            if (!IsAttackingState() && !IsChargingState() && !AnimatorWeapons.IsPlaying && !_bootsRunning && !_isHoldingSword)
+            if (!IsAttackingState() && !IsChargingState() && !AnimatorWeapons.IsPlaying && !_bootsRunning)
                 SwordDamageBox = Box.Empty;
 
             // Clear the shield box if it's not being utilized.
