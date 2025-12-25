@@ -69,7 +69,8 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
 
                 _breakCounter += Game1.DeltaTime;
 
-                // reset the time while hitting; in dungeon 8 there is a lot of breaking floor with enemies ontop that would be otherwise really hard to clear
+                // reset the time while hitting; in dungeon 8 there is a lot of breaking floor
+                // with enemies ontop that would be otherwise really hard to clear
                 if (MapManager.ObjLink.IsAttackingState())
                     _breakCounter = 0;
 
