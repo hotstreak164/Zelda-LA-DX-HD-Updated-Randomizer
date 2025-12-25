@@ -420,8 +420,9 @@ namespace ProjectZ.InGame.GameObjects
                     CurrentState != State.Jumping && 
                     CurrentState != State.AttackJumping &&
                     CurrentState != State.ChargeJumping)
+                {
                     Direction = newDirection;
-
+                }
                 if (_body.IsGrounded && CurrentState != State.Hookshot && !_hookshotPull)
                 {
                     // If the modifier to add movement speed is used then apply it to 2D walking speed.
@@ -689,12 +690,19 @@ namespace ProjectZ.InGame.GameObjects
                         _body.Velocity = Vector3.Zero;
                     }
                     if (CurrentState == State.Attacking || CurrentState == State.AttackSwimming)
+                    {
                         CurrentState = State.AttackSwimming;
+                    }
                     else if (CurrentState == State.Charging || CurrentState == State.ChargeSwimming)
+                    {
                         CurrentState = State.ChargeSwimming;
+                    }
                     else if (CurrentState == State.Hookshot)
+                    {
                         CurrentState = State.Hookshot;
+                    }
                     else 
+                    {
                         if (CurrentState != State.AttackBlocking && 
                             CurrentState != State.PickingUp && 
                             CurrentState != State.Hookshot && 
@@ -703,8 +711,10 @@ namespace ProjectZ.InGame.GameObjects
                             CurrentState != State.MagicRod && 
                             CurrentState != State.Dying && 
                             CurrentState != State.PreCarrying)
+                        {
                             CurrentState = State.Swimming;
-
+                        }
+                    }
                     _isClimbing = false;
                 }
                 // Drowning without flippers or entering lava.
@@ -783,11 +793,12 @@ namespace ProjectZ.InGame.GameObjects
 
             // If climbing, set the direction.
             if (_isClimbing)
+            {
                 if (Math.Abs(_moveVector2D.X) > Math.Abs(_moveVector2D.Y))
                     Direction = _moveVector2D.X < 0 ? 0 : 2;
                 else
                     Direction = 1;
-
+            }
             if (PlaySound)
                 Game1.GameManager.PlaySoundEffect("D360-13-0D");
 

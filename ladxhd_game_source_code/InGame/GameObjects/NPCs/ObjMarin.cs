@@ -1052,7 +1052,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _animator.Play("idle");
                 Game1.GameManager.SetMusic(-1, 2);
             }
-
             Game1.GameManager.StartDialogPath("maria");
             return true;
         }
@@ -1090,11 +1089,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             DrawHelper.DrawNormalized(spriteBatch, _spriteNote, position, Color.White * transparency);
         }
 
-        public void SetFacingDirection(ObjMarin marinObj, int direction)
+        public void SetFacingDirection(int direction)
         {
-            marinObj._animator.Play("stand_" + direction);
             _lastDirection = direction;
             _walkDirection = direction;
+            _animator.Play("stand_" + direction);
         }
     }
 }

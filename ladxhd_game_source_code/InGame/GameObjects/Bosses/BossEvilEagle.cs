@@ -333,7 +333,6 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
                 return;
             }
-
             var lerpState = MathF.Sin(percentage * MathF.PI / 2);
             var newPosition = Vector2.Lerp(_wingStartPosition, _wingEndPosition, lerpState);
             EntityPosition.Set(newPosition);
