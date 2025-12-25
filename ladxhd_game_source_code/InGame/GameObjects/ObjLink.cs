@@ -1009,9 +1009,7 @@ namespace ProjectZ.InGame.GameObjects
 
             // move the player
             if (CurrentState != State.Hookshot)
-            {
                 _body.VelocityTarget = _moveVelocity * moveMultiplier + _hitVelocity;
-            }
 
             LastMoveVector = _moveVelocity;
             _moveVelocity = Vector2.Zero;
@@ -2201,8 +2199,17 @@ namespace ProjectZ.InGame.GameObjects
 
                         Animation.Play("poke_" + Direction);
                         AnimatorWeapons.Play("poke_" + Direction);
-                        CurrentState = State.Attacking;
                         _swordChargeCounter = sword_charge_time;
+
+                        // If in an accompanying state -> switch to a merged state.
+                        if (IsSwimmingState())
+                            CurrentState = State.AttackSwimming;
+                        else if (IsJumpingState())
+                            CurrentState = State.AttackJumping;
+                        else if (IsBlockingState())
+                            CurrentState = State.AttackBlocking;
+                        else
+                            CurrentState = State.Attacking;
                     }
                     _swordPokeCounter -= Game1.DeltaTime;
                 }
@@ -3662,13 +3669,15 @@ namespace ProjectZ.InGame.GameObjects
             StopRaft();
 
             // If in an accompanying state -> switch to a merged state.
-            CurrentState = CurrentState switch
-            {
-                State.Blocking => State.AttackBlocking,
-                State.Swimming => State.AttackSwimming,
-                State.Jumping => State.AttackJumping,
-                _ => State.Attacking
-            };
+            if (IsSwimmingState())
+                CurrentState = State.AttackSwimming;
+            else if (IsJumpingState())
+                CurrentState = State.AttackJumping;
+            else if (IsBlockingState())
+                CurrentState = State.AttackBlocking;
+            else
+                CurrentState = State.Attacking;
+
             // Reset the jump hack timer.
             _jumpEndTimer = 0;
         }
@@ -3728,6 +3737,11 @@ namespace ProjectZ.InGame.GameObjects
                 if (hitCollision != Values.HitCollision.None &&
                     hitCollision != Values.HitCollision.NoneBlocking)
                 {
+                    var knockback = 6.5f;
+
+                    if (CurrentState == State.Swimming)
+                        knockback = 2.0f;
+
                     // If it's repelling and the player is charging, don't interrupt the charge.
                     if (hitCollision == Values.HitCollision.RepellingParticle && IsChargingState())
                     {
@@ -3736,7 +3750,7 @@ namespace ProjectZ.InGame.GameObjects
                             _hitParticleTime = Game1.TotalGameTime;
                             SpawnRepelParticle(collisionRectangle);
                         }
-                        RepelPlayer(hitCollision, direction, 6.5f);
+                        RepelPlayer(hitCollision, direction, knockback);
                     }
                     // If it's a standard sword attack or <other>?
                     else
@@ -3745,12 +3759,17 @@ namespace ProjectZ.InGame.GameObjects
                         Animation.Play("poke_" + Direction);
                         AnimatorWeapons.Play("poke_" + Direction);
 
-                        if (CurrentState == State.Blocking)
+                        // If in an accompanying state -> switch to a merged state.
+                        if (IsSwimmingState())
+                            CurrentState = State.AttackSwimming;
+                        else if (IsJumpingState())
+                            CurrentState = State.AttackJumping;
+                        else if (IsBlockingState())
                             CurrentState = State.AttackBlocking;
                         else
                             CurrentState = State.Attacking;
 
-                        RepelPlayer(hitCollision, direction, 6.5f);
+                        RepelPlayer(hitCollision, direction, knockback);
                     }
                 }
                 else if (_swordChargeCounter > 0)
@@ -3794,8 +3813,16 @@ namespace ProjectZ.InGame.GameObjects
         }
 
         private void StartSwordSpin()
-        {
-            CurrentState = State.Attacking;
+        { 
+            // If in an accompanying state -> switch to a merged state.
+            if (IsSwimmingState())
+                CurrentState = State.AttackSwimming;
+            else if (IsJumpingState())
+                CurrentState = State.AttackJumping;
+            else if (IsBlockingState())
+                CurrentState = State.AttackBlocking;
+            else
+                CurrentState = State.Attacking;
 
             Animation.Play("swing_" + Direction);
             AnimatorWeapons.Play("swing_" + Direction);
@@ -3973,14 +4000,17 @@ namespace ProjectZ.InGame.GameObjects
                 var multiplier = Map.Is2dMap ? 1.5f : (_bootsRunning ? 1.5f : 1.0f);
 
                 if ((collisionType & Values.HitCollision.Repelling0) != 0)
-                    multiplier = 3.00f;
+                    multiplier = 2.50f;
                 else if ((collisionType & Values.HitCollision.Repelling1) != 0)
-                    multiplier = 2.25f;
+                    multiplier = 2.00f;
                 else if (customMultiplier > 0f)
                     multiplier = customMultiplier;
 
                 if (_bootsRunning)
                     _bootsStop = true;
+
+                if (IsSwimmingState())
+                    multiplier = 1.10f;
 
                 _body.Velocity += new Vector3(-direction.X, -direction.Y, 0) * multiplier;
             }
@@ -5330,11 +5360,11 @@ namespace ProjectZ.InGame.GameObjects
             Vector2 offset = GetMarinSpawnOffset(Direction, 13f);
             Vector2 marinSpawnPos = new Vector2(_body.Position.X, _body.Position.Y) + offset;
             _objMaria = new ObjMarin(Map, (int)EntityPosition.X, (int)EntityPosition.Y);
-            Map.Objects.SpawnObject(_objMaria);
-            _objMaria.SetPosition(marinSpawnPos);
-            _objMaria.SetFacingDirection(_objMaria, Direction);
             _objFollower = _objMaria;
-            Map.Objects.RegisterAlwaysAnimateObject(_objFollower);
+            Map.Objects.SpawnObject(_objMaria);
+            Map.Objects.RegisterAlwaysAnimateObject(_objMaria);
+            _objMaria.SetPosition(marinSpawnPos);
+            _objMaria.SetFacingDirection(Direction);
         }
 
         private void UpdateGhostSpawn()
