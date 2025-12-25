@@ -43,7 +43,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             var animation = AnimatorSaveLoad.LoadAnimator("Objects/boomerang");
             animation.Play("run");
 
-            _body = new BodyComponent(EntityPosition, -1, -1, 2, 2, 8)
+            _body = new BodyComponent(EntityPosition, -3, -3, 6, 6, 8)
             {
                 IgnoresZ = true,
                 MoveCollision = OnCollision,
