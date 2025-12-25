@@ -155,7 +155,10 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private void GenericUpdate()
         {
             if (_disablePlayer)
+            {
                 MapManager.ObjLink.FreezePlayer();
+                MapManager.ObjLink._body.Velocity = Vector3.Zero;
+            }
         }
 
         private void InitStartSequence()
