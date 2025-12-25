@@ -64,9 +64,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             };
             _aiComponent.ChangeState("idle");
 
-            _collisionBox = new CBox(EntityPosition, -9, -9, 18, 18, 8);
-            var hittableBox = new CBox(EntityPosition, -15, -13, 30, 28, 8);
-            var damageBox = new CBox(EntityPosition, -10, -10, 20, 20, 8);
+            _collisionBox = new CBox(EntityPosition, -14, -14, 28, 28, 8);
+            var hittableBox = new CBox(EntityPosition, -15, -15, 30, 30, 8);
+            var damageBox = new CBox(EntityPosition, -15, -15, 30, 30, 8);
 
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(_collisionBox, Values.CollisionTypes.Enemy));
