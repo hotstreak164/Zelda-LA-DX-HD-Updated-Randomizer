@@ -352,7 +352,6 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             {
                 _aiComponent.ChangeState("leave");
             }
-
             // move up and down
             var offset = MathF.Sin(_wingCounter / 1100 * MathF.PI * 2 + MathF.PI / 2) * 4 - 4;
             var newPosition = new Vector2(_wingEndPosition.X, _wingEndPosition.Y + offset);
@@ -531,7 +530,6 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                     _creeperFly0.ToLeave();
                     _creeperFly1.ToLeave();
                 }
-
                 var percentage = MathF.Sin(_slowCounter / 500 * MathF.PI / 2);
                 var newPositionX = MathHelper.Lerp(_slowStart.X, _startPosition.X + 6, percentage);
                 EntityPosition.Set(new Vector2(newPositionX, EntityPosition.Y));
@@ -560,7 +558,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             Game1.GameManager.PlaySoundEffect("D370-07-07");
 
-            // dead?
+            // Dead?
             if (_damageState.CurrentLives <= 0)
             {
                 _body.IsActive = false;
@@ -578,7 +576,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 return Values.HitCollision.Enemy;
             }
 
-            // next move will be the wing attack; not sure how this works in the original
+            // Next move will be the wing attack; not sure how this works in the original.
             if (Game1.RandomNumber.Next(0, 2) == 0)
                 _featherAttack = true;
 

@@ -4,6 +4,7 @@
 ### **The "Awakening From the Dream" Update**
 
 ### **General:**
+  * Fix the Marin dungeon sequence (a.k.a. longstanding Marin beach spawning issue) from firing when it shouldn't.
   * Picking up the sword at the beginning of the game on the beach now deals damage (spin will kill that urchin now).
   * Created a new object for Classic Camera that focuses the camera during a map transition. This fixes classic camera bugs.
   * Fix all Classic Camera respawning issues including: respawning on current field, field edge, and not respawning at all.
@@ -15,8 +16,10 @@
   * When climbing a ladder on a 2D map and reaching the top of it, Link will perform a small flip.
   * One tile high objects in 2D maps will now push the player to the top of it when jumping into and not quite reaching the top.
   * Most ledges in 2D sections are now slightly sloped so they are easier to jump onto, but are flat when on top of them.
-  * Fix the movement speed modifier to also increase movement speed on 2D maps.
+  * Disable the free camera and center it during most sequences. This includes trading items, cutscenes, photo events, etc.
+  * Fix the move speed modifier to increase movement speed on 2D maps. Also fix it from applying X velocity when it should be 0.
   * Fix attacking and jumping in 2D maps so that Link always faces Left or Right even if diagonal directions are being held.
+  * Fix the jump in 2D mode to not apply extra velocity when releasing the button at the height of the jump.
   * Fix swimming in 2D maps so that Link can "jump" (which just ascends quicker) while also charging the sword.
   * Fix ladder transition in 2D maps so that Link exits the map facing north and continues the climbing animation.
   * Fix removing the "poking" state when poking is finished. This bugged out the jump fix hack.
@@ -24,10 +27,11 @@
   * Fix cracked tiles to always detect when Link is pushing against a stone. Sometimes pushing would prevent them from breaking.
   * Fix several caves with pushable stones so that their positions reset when crossing over a certain threshold.
   * Fix Marin singing, Great Fairy, Hinox, and Dodongo Snakes to always reset music when leaving current field with Classic Camera.
-  * Fix the secret ending seagull chants to be evenly spaced apart like in the original game.
   * Fix the burning sound effect to have the proper sound which is a combination of two sound effects.
   * Fix transition walk animation freezing when jumping and landing at the same moment a transition starts.
   * Fix old save files to work with "Nothing is Missable" option which allows getting the followers back and other stuff.
+  * Fix a Raven from taking off during the ending cutscene causing the "wings flapping" sound to play.
+  * Fix the secret ending seagull chants to be evenly spaced apart like in the original game.
 
 ### **User Interface:**
   * File select screen Link sprite: show tunic color, sword if Lvl2 sword collected, and shield if Mirror Shield collected.
@@ -49,11 +53,13 @@
   * Skipping a dialog with the Start button now rapidly scrolls the text and closes the box instead of just closing the box.
   * Block pressing "Start" to open the inventory screen during a number of events and cutscenes.
   * Fix skipping text during "question" dialogs by pressing "Start" to not cut off the text when skipping.
+  * Fix showing sepia photos after photo sequences when Redux option "Colored Photos" is disabled.
   * Fix the "space" character in the variable width font to take up less space. It now matches the ROM hack it was based on.
   * Fix the Trendy Game showing the correct buttons if they were remapped when giving the player instructions.
   
 ### **Items:**
   * Some items will no longer stop Link while casting: Boomerang, Magic Powder, Fire Rod, Bow & Arrow, Bombs, and throwing objects.
+  * Tweak the sword's damage box to be larger during the second/diagonal animation frame so there is no "dead space" between frames.
   * The Boomerang item has been reworked so that it can collect multiple items on a single throw, but can still only grab 1 fairy.
   * Implement "Classic Sword" option that works like the original game where it can only cut a single bush, grass, or crystal at a time.
   * Rework the level 2 sword spawn at Seashell Mansion. The timings could get messed up if the message box wasn't closed immediately.
@@ -64,6 +70,7 @@
   * Bombs have been added to the "always animate" list which allows them to explode when outside of the current viewport.
   * Remove the message when buying bombs at the item shop that said something like "You got a bomb!".
   * Remove the message when getting your shield back from Like Like since the original game did not have one.
+  * The hookshot makes Link invincible while it is in use. This allows him to use it over spikes without taking damage.
   * It's now possible to cancel the ocarina song by pressing the button again. This doesn't trigger ocarina listener events.
   * Opening chests immediately freezes the world instead of after a delay. Also, the items raises slightly higher above the chest.
   * The Trendy Game will now allow Link to move immediately after the crane starts grabbing like in the original game.
@@ -86,35 +93,41 @@
   * Remove activation range check from Pols Voice, Red Zol, and Gel. They will become active when entering the field they are on.
   * Increase the knockback of the Flame Fountain on the way to dungeon 8 so the player can't force their way through with boots.
   * Disable the hit component of some minibosses until the boss is enaged: Rolling Bones, Cue Ball, and Hinox.
+  * Three-of-a-Kind will now respawn when returning to the map/room they were previously defeated on.
   * When fighting the boss Angler Fish in dungeon 4, a barrier is spawned at the top of the arena to prevent leaving.
+  * Angler Fish will no longer have a hit component (it won't take damage) until the fight starts so it can't be sniped.
   * Bow Wow can no longer eat certain types of enemies: Sea Urchins, Ghini, and Zombies.
   * Increase the body box size of sworded enemies to 16x16 pixels: Moblins, Pig-Moblins, Shrouded Stalfos, and Darknuts.
   * Enemies that respawned in the original game when changing fields now respawn here: Bombite, Spiny Beetle, Hardhat Beetle.
   * Fix the burning state to reset when changing fields in classic camera. Enemy should return to normal state and remove burn.
   * Fix the sound effect played when enemies are either drowned or dunked into lava (splash sound instead of fall down hole sound).
   * Fix a hole in Moldorm room to drop the player in the correct location. Also move all drop points left by one tile (16 pixels).
+  * Fix missing explosion sounds when defeating some nightmares. This includes the bosses from Level 5 dungeon and onwards.
   * Fix enemy Antifairy to properly remove its damage field when burning it with Magic Powder and fix it's interaction with shield.
   * Fix enemy Arm Mimic to get stunned when throwing objects (like pots) at them and make them invincible to Magic Powder.
   * Fix enemy Bomber to have unique death with Magic Powder that spawns a fairy 100% of the time. Magic rod spawns fairy 50% of the time.
   * Fix enemy Bombite to bounce off the sword when held outward in a charge state without the sword being put away afterwards.
   * Fix enemy Cheep Cheep from launching the player if jumped on just right while slightly in the water.
+  * Fix enemy Crows from being invincible while perched in a tree. Only the Crow near Kanalet Castle should be invincible on the tree.
   * Fix enemy Gel to properly respawn when changing fields in classic camera instead of burning to death off screen.
   * Fix enemy Goomba to lose it's collision box when set on fire (does not affect Goombas on 3D maps, aka Level 7 dungeon).
-  * Fix enemy Hardhat Beetle to be able to be killed using bombs. This also spawns a bomb after death. Also remove initial idle delay.
+  * Fix enemy Hardhat Beetle to be killable by Bow Wow or bombs. This also spawns a bomb after death. Also remove initial idle delay.
   * Fix enemy Keese to not be affected by conveyor belts. Dungeon 3 is about the only place this is relevant.
   * Fix enemy Leevers from spawning on the ledges above the cave in the desert where Link can't reach by adding collision.
   * Fix enemy Like Like taking damage from items when swallowed. Link now also takes damage from outside sources when trapped.
   * Fix enemy Mini-Moldrom to make the falling sound effect when it is pushed into a hole and falls.
   * Fix enemy Pincer stun state, when it can deal damage, activation range, and replicate narrow window to kill instantly with powder.
-  * Fix enemy Red Zol to spawn Gels in classic camera after burning and respawning with a field change.
+  * Fix enemy Red Zol to spawn Gels in classic camera after burning & respawning after a field change. Also shrink their damage box.
   * Fix enemy Sea Urchins to properly deal damage when touched from the sides. This was a really tricky problem.
   * Fix enemy Spiny Beetle crashing the game when carrying its carried object from the current field in classic camera.
   * Fix enemy Spiny Beetle AI behavior to act much closer to how they do in the original game.
   * Fix enemy Three-of-a-Kind face transitions to be 0.25 seconds instead of 0.50 seconds. This is closer to the original game.
+  * Fix enemy Three-of-a-Kind to drop hearts when matching three hearts and drop rupees when matching three diamonds.
   * Fix enemy Vacuum from causing Link to get stuck in a specific direction if it fell outside the camera viewport.
   * Fix enemy Vacuum to properly Spin Link and his sword when dashing with the Pegasus Boots.
   * Fix enemy Vire death when falling into lava or when burning. The bats it spawns were not destroyed and would not trigger events.
-  * Fix enemy Zombies from spawning inside the walls near the graveyard by adding collision inside the walls.
+  * Fix enemy Zombies from spawning inside walls, from under steps, and from stairs objects by adding a special collision.
+  * Fix miniboss Master Stalfos to have a longer delay before his entry dialog. Also fix him dealing damage to the player during flee.
   * Fix miniboss Dodongo Snakes from resetting current music to dungeon music while they were not encountered.
   * Fix miniboss Smasher when both Link and him pick up the ball simultaneously. Also the ball spawns a fairy when destroyed.
   * Fix miniboss Giant Buzz Blob to remove its damage field after death if it dies while in the "Buzz Blob" form.
@@ -122,7 +135,8 @@
   * Fix boss Angler Fish arena camera to not fall below the boss field which is just a black screen.
   * Fix boss Evil Eagle cutscene to play at the same position on the ladder as the original game instead of on top of the tower.
   * Fix boss Hardhit Beetle shots to despawn when hitting the wall so they don't fly into the ethos.
-  * Fix boss DethI arms falling behind the shadow layer around the Egg boss room by removing the shadow layer.
+  * Fix final boss Shadow Ganon form to take the correct amount of damage. It should always take exactly six hits to defeat.
+  * Fix final boss DethI arms falling behind the shadow layer around the Egg boss room by removing the shadow layer.
 
 ### **Overworld:**
   * The fisherman on the boat on the "Bridge" map is now drawn on a lower layer than Link so his sprite is always behind Link.
@@ -174,6 +188,7 @@
   * Handle the situation where someone completes Level 8 dungeon before Level 7 dungeon (as in setting the correct states).
   * Dungeon doors now make the same hollow "clank" sound when poked as bombable walls like the original games.
   * Jars that contain a fairy and are respawned no longer contain a new fairy after it has been respawned.
+  * Pull bridges found in dungeon 8 now reset on a field change when Classic Camera is enabled.
   * Ice Blocks (found in underground maps in dungeon 8) respawn when changing fields when classic camera is active.
   * Fix the falling animation when being dropped into a 2D underground map: Link flips and faces north.
   * Fix visible tiles in the Color Dungeon that should not have been visible near where the nightmare key was obtained.
