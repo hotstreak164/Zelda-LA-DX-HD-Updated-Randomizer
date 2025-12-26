@@ -71,7 +71,8 @@ namespace ProjectZ.InGame.Overlay.Sequences
 
             // background
             Sprites.Add(new SeqSprite("bowWow_background", position, 0));
-            Sprites.Add(_spritePhoto = new SeqSprite("photo_6", position, 5) { Color = Color.Transparent });
+
+            Sprites.Add(_spritePhoto = new SeqSprite("photo_6", position, 5, true) { Color = Color.Transparent });
 
             _chainStartPosition = new Vector2(position.X + 90, position.Y + 103 - 6);
             for (var i = 0; i < _chain.Length; i++)

@@ -22,7 +22,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
 
             // background
             if (!string.IsNullOrEmpty(photo))
-                Sprites.Add(new SeqSprite(photo, new Vector2(0, 0), 0));
+                Sprites.Add(new SeqSprite(photo, new Vector2(0, 0), 0, true));
 
             base.OnStart();
         }

@@ -58,9 +58,12 @@ namespace ProjectZ.InGame.Overlay.Sequences
         public SpriteEffects SpriteEffect = SpriteEffects.None;
         public bool RoundPosition;
 
-        public SeqSprite(string spriteId, Vector2 position, int layer)
+        public SeqSprite(string spriteId, Vector2 position, int layer, bool isPhoto = false)
         {
-            Sprite = Resources.GetSprite(spriteId);
+            if (isPhoto)
+                Sprite = Resources.GetPhotoSprite(spriteId);
+            else
+                Sprite = Resources.GetSprite(spriteId);
             Position = position;
             Layer = layer;
         }
