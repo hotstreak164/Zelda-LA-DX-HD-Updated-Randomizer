@@ -116,7 +116,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                     IsDead = true;
                     return;
                 }
-
                 _isAlive = true;
                 _sitMode = true;
             }

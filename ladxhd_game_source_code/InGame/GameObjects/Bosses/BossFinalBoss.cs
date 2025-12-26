@@ -1643,26 +1643,27 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         public Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
         {
             // Giant Zol
-            if (_giantZolForm && (hitType & HitType.MagicPowder) != 0)
+            if (_giantZolForm && _aiComponent.CurrentStateId == "slimeJump" || _aiComponent.CurrentStateId == "slimeWait")
             {
-                _body.Velocity.X = direction.X;
-                _body.Velocity.Y = direction.Y;
-                if (_body.Velocity.Z > 0)
-                    _body.Velocity.Z = 0;
+                if ((hitType & HitType.MagicPowder) != 0)
+                {
+                    _body.Velocity.X = direction.X;
+                    _body.Velocity.Y = direction.Y;
+                    if (_body.Velocity.Z > 0)
+                        _body.Velocity.Z = 0;
 
-                _aiComponent.ChangeState("slimeDamaged");
-                _giantZolLives--;
+                    _aiComponent.ChangeState("slimeDamaged");
+                    _giantZolLives--;
 
-                return Values.HitCollision.Enemy;
+                    return Values.HitCollision.Enemy;
+                }
+
+                if ((hitType & (HitType.Sword | HitType.SwordHold)) != 0)
+                {
+                    _aiComponent.ChangeState("slimeHideExplode");
+                    return Values.HitCollision.Enemy;
+                }
             }
-
-            if ((hitType & (HitType.Sword | HitType.SwordHold)) != 0 &&
-                (_aiComponent.CurrentStateId == "slimeJump" || _aiComponent.CurrentStateId == "slimeWait"))
-            {
-                _aiComponent.ChangeState("slimeHideExplode");
-                return Values.HitCollision.Enemy;
-            }
-
             // Moldorm
             if (_aiComponent.CurrentStateId == "moldorm")
             {
