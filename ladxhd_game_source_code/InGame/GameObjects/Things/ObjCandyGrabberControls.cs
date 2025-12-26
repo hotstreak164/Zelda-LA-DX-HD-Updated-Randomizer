@@ -57,10 +57,13 @@ namespace ProjectZ.InGame.GameObjects.Things
         {
             _buttonFrame = ((int)Game1.TotalGameTime % (2 * _animationSpeed)) / _animationSpeed;
 
-            // check if the player is standing on the right spot and has payed for the game
-            var allowedToStartGame = MapManager.ObjLink._body.BodyBox.Box.Intersects(_collisionBox) &&
-                                     Game1.GameManager.SaveManager.GetString("can_play") == "1";
+            // Check if the player has paid and is standing in the correct location.
+            var allowedToStartGame = MapManager.ObjLink._body.BodyBox.Box.Intersects(_collisionBox) && Game1.GameManager.SaveManager.GetString("can_play") == "1";
             Game1.GameManager.SaveManager.SetBool("trendy_ready", allowedToStartGame);
+
+            // When the crane is used, disable the NPC's interaction box.
+            if (allowedToStartGame) 
+                Game1.GameManager.SaveManager.SetString("trendy_npc", "1");   
         }
 
         public void Draw(SpriteBatch spriteBatch)

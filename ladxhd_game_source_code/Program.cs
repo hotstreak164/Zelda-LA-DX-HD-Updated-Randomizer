@@ -42,6 +42,7 @@ namespace ProjectZ
                 using (var game = new Game1(editorMode, loadSave, saveSlot))
                     game.Run();
             }
+
             catch (Exception exception)
             {
                 MessageBox.Show(exception.StackTrace, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);

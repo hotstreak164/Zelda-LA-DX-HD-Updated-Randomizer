@@ -13,6 +13,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private readonly BodyComponent _body;
         private readonly Animator _animator;
         private readonly CSprite _sprite;
+        private readonly InteractComponent _interactComponent;
 
         private bool _grabbed;
         private bool _fallen;
@@ -38,15 +39,15 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 Bounciness = 0.5f,
                 MoveCollision = OnMoveCollision
             };
-
             var box = new CBox(EntityPosition, -7, -14, 14, 14, 8);
             AddComponent(BodyComponent.Index, _body);
             AddComponent(CollisionComponent.Index, new BoxCollisionComponent(box, Values.CollisionTypes.Enemy | Values.CollisionTypes.PushIgnore | Values.CollisionTypes.NPC));
-            AddComponent(InteractComponent.Index, new InteractComponent(box, Interact));
+            AddComponent(InteractComponent.Index, _interactComponent = new InteractComponent(box, Interact));
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             AddComponent(DrawComponent.Index, new BodyDrawComponent(_body, _sprite, Values.LayerPlayer) { WaterOutline = false });
             AddComponent(DrawShadowComponent.Index, new BodyDrawShadowComponent(_body, _sprite));
+            AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(OnKeyChange));
         }
 
         private void Update()
@@ -57,23 +58,31 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _grabbed = true;
                 _animator.Play("grabbed");
             }
-
             // let go by the grabber
             if (_grabbed && !_body.IgnoresZ)
             {
                 _fallen = true;
                 _animator.Play("fall");
             }
-
             // ending dialog?
             if (_fallen && !_endDialog && _body.AdditionalMovementVT == Vector2.Zero && EntityPosition.Z == 0 && _body.Velocity.Z == 0)
             {
                 _endDialog = true;
                 Game1.GameManager.StartDialogPath("trendy_marin_end");
             }
-
             if (_grabbed)
                 MapManager.ObjLink.FreezePlayer();
+        }
+
+        private void OnKeyChange()
+        {
+            // Disable the interact component when the game starts.
+            string npcActive = Game1.GameManager.SaveManager.GetString("trendy_npc", "0");
+            _interactComponent.IsActive = npcActive == "0";
+
+            // Remove the string when no longer needed.
+            if (npcActive == "0")
+                Game1.GameManager.SaveManager.RemoveString("trendy_npc");
         }
 
         private void OnMoveCollision(Values.BodyCollision collision)

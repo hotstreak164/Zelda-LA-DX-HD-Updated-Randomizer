@@ -332,6 +332,9 @@ namespace ProjectZ.InGame.GameObjects.Things
         {
             _grabState = 0;
             _grab2Count = float.MaxValue;
+
+            // When the crane returns and has finished resetting enable the NPC interaction box.
+            Game1.GameManager.SaveManager.SetString("trendy_npc", "0");
         }
 
         private void Draw(SpriteBatch spriteBatch)
