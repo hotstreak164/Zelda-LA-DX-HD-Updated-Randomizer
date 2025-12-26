@@ -1608,10 +1608,11 @@ namespace ProjectZ.InGame.GameObjects
             }
 
             // Used during the ghost house sequence to stop Link from walking.
-            var seenGhostHouse = Game1.GameManager.SaveManager.GetString("ghost_seenhouse");
-            if (!string.IsNullOrEmpty(seenGhostHouse) && seenGhostHouse == "1")
+            var ghostAutoWalk = Game1.GameManager.SaveManager.GetString("ghost_autowalk");
+            if (!string.IsNullOrEmpty(ghostAutoWalk) && ghostAutoWalk == "1")
             {
                 _forceWalking = false;
+                Game1.GameManager.SaveManager.RemoveString("ghost_autowalk");
             }
 
             // Used during the ending sequence when talking to the Wind Fish and showing the 8 instruments.
