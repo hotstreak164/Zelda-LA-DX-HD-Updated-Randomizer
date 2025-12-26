@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Threading;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.InGame.GameObjects.Enemies;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
-using System;
-using System.Threading;
 
 namespace ProjectZ.InGame.GameSystems
 {
@@ -138,6 +139,13 @@ namespace ProjectZ.InGame.GameSystems
 
             // create the objects
             Game1.GameManager.MapManager.NextMap.Objects.LoadObjects();
+
+            // These damn birds are always causing me problems.
+            var ravenList = Game1.GameManager.MapManager.NextMap.Objects.GetObjectsOfType(typeof(EnemyRaven));
+
+            // Completely disable them from being able to do anything.
+            foreach (EnemyRaven raven in ravenList)
+                raven.IsActive = false;
 
             _finishedLoading = true;
         }
