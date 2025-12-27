@@ -74,7 +74,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 IgnoresZ = true
             };
 
-
             var stateIdle = new AiState(UpdateIdle);
             stateIdle.Trigger.Add(new AiTriggerCountdown(1000, null, StartWaiting));
             var stateWaiting = new AiState(UpdateWaiting);
@@ -87,21 +86,25 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("waiting", stateWaiting);
             _aiComponent.States.Add("start", stateStart);
             _aiComponent.States.Add("flying", stateFlying);
-            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, _lives, true, false);
+            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, _lives, true, false) { MoveBody = false };
+
+            _aiComponent.ChangeState("waiting");
+
+            _damageCollider = new CBox(EntityPosition, -6, -14, 0, 12, 14, 4, true);
+            var hittableBox = new CBox(EntityPosition, -8, -32, 0, 16, _goldLeaf ? 48 : 36, 8);
+            _hittableBoxFly = new CBox(EntityPosition, -8, -16, 0, 16, 16, 8, true);
 
             if (_goldLeaf)
             {
                 _damageState.OnDeath = OnDeath;
                 _damageState.IsActive = false;
+                AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
             }
-            _aiComponent.ChangeState("waiting");
-
-            _damageCollider = new CBox(EntityPosition, -6, -14, 0, 12, 14, 4, true);
-            var hittableBox = new CBox(EntityPosition, -8, -32, 0, 16, _goldLeaf ? 48 : 36, 8);
-            _hittableBoxFly = new CBox(EntityPosition, -6, -15, 0, 12, 14, 8, true);
-
+            else
+            {
+                AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(_hittableBoxFly, OnHit));
+            }
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(_damageCollider, HitType.Enemy, 2));
-            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
             AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(_damageCollider, OnPush));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -115,7 +118,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void InitStart()
         {
-            _hitComponent.HittableBox = _hittableBoxFly;
+            if (_goldLeaf)
+                _hitComponent.HittableBox = _hittableBoxFly;
+
+            _damageState.MoveBody = true;
         }
 
         private void UpdateIdle()
@@ -226,6 +232,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (hitType == HitType.Bow || hitType == HitType.MagicRod)
                 damage /= 2;
+
+            if (damage >= _damageState.CurrentLives)
+                _damageState.MoveBody = true;
 
             // start attacking?
             if (_aiComponent.CurrentStateId == "waiting" && (hitType == HitType.Bomb || hitType == HitType.ThrownObject))
