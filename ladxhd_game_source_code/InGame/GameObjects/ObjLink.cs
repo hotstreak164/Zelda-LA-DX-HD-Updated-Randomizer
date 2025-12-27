@@ -1746,6 +1746,7 @@ namespace ProjectZ.InGame.GameObjects
             if (egg_turn_around == "0")
             {
                 _eggPreventStart = false;
+                _forceWalking = false;
                 _eggPreventTimer = 0;
                 Game1.GameManager.SaveManager.RemoveString("link_move");
                 Game1.GameManager.SaveManager.RemoveString("egg_turn_around");
@@ -3783,7 +3784,6 @@ namespace ProjectZ.InGame.GameObjects
                             CurrentState = State.AttackBlocking;
                         else
                             CurrentState = State.Attacking;
-
 
                         RepelPlayer(hitCollision, direction, knockback);
                     }
