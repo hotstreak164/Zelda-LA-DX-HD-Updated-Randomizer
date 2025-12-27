@@ -5573,6 +5573,7 @@ namespace ProjectZ.InGame.GameObjects
             _shadowComponent.IsActive = true;
 
             _isGrabbed = false;
+            _forceWalking = false;
 
             ShowItem = null;
             _collectedShowItem = null;
