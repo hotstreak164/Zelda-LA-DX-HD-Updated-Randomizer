@@ -93,7 +93,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             _aiComponent.ChangeState("idle");
 
-            var damageCollider = new CBox(EntityPosition, -14, -24, 0, 28, 24, 8, true);
+            var damageCollider = new CBox(EntityPosition, -14, -24, 0, 28, 24, 8);
             var hittableBox = new CBox(EntityPosition, -13, -24, 0, 26, 22, 8);
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 6));
             AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(_body.BodyBox, OnPush));
