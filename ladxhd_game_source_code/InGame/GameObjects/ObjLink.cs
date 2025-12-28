@@ -1907,7 +1907,7 @@ namespace ProjectZ.InGame.GameObjects
 
             // Check to see if this is death by the shop keeper.
             bool shopPunish = Game1.GameManager.SaveManager.GetString("stoleItem", "0") == "1";
-            bool shopFinish = Game1.GameManager.SaveManager.GetString("punishActive", "1") == "1";
+            bool shopFinish = Game1.GameManager.SaveManager.GetString("punishActive", "0") == "1";
 
             // Has potion?
             var potion = Game1.GameManager.GetItem("potion");
