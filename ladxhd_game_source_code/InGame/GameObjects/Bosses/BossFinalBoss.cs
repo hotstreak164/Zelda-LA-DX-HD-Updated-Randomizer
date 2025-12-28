@@ -373,7 +373,9 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             _aiComponent.ChangeState("idle");
 
-            //DebugMan();
+            // Set the body parts under the face so they don't appear in the top left corner.
+            for (int i = 0; i < _bodyParts.Length; i++)
+                _bodyParts[i] = new Vector2(80, 64);
         }
 
         #region State: Init
