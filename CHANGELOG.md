@@ -17,6 +17,7 @@
   * One tile high objects in 2D maps will now push the player to the top of it when jumping into and not quite reaching the top.
   * Most ledges in 2D sections are now slightly sloped so they are easier to jump onto, but are flat when on top of them.
   * Disable the free camera and center it during most sequences. This includes trading items, cutscenes, photo events, etc.
+  * Rework the shopkeeper's "revenge" sequence to be more like the original game & it will no longer take the player's potion.
   * Fix the move speed modifier to increase movement speed on 2D maps. Also fix it from applying X velocity when it should be 0.
   * Fix attacking and jumping in 2D maps so that Link always faces Left or Right even if diagonal directions are being held.
   * Fix the jump in 2D mode to not apply extra velocity when releasing the button at the height of the jump.
