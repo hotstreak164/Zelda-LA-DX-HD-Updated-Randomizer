@@ -294,8 +294,6 @@ namespace ProjectZ.InGame.GameObjects
 
         // Arrows
         private Vector2[] _arrowOffset;
-        private const float ArrowSpeed = 3;
-        private const float ArrowSpeedPoP = 4;
 
         // Shield
         public bool CarryShield;
@@ -317,8 +315,6 @@ namespace ProjectZ.InGame.GameObjects
 
         // Magic Rod
         private Vector2[] _magicRodOffset;
-        private const float MagicRodSpeed = 3;
-        private const float MagicRodSpeedPoP = 4;
 
         // Shovel
         private Vector2[] _shovelOffset;
@@ -351,7 +347,6 @@ namespace ProjectZ.InGame.GameObjects
 
         // Roc's Feather: Jumping
         private bool _canJump = true;
-        private const float JumpAcceleration = 2.35f;
         private float _railJumpSpeed;
         private float _jumpEndTimer;
         public float _jumpStartZPos;
@@ -459,13 +454,31 @@ namespace ProjectZ.InGame.GameObjects
         public bool FreezeWorldAroundPlayer;
         public bool FreezeWorldForEvents;
 
-        // Mod File Values (ObjLink.lahdmod)
+        //====================
+        // Mod File Values
+        //====================
+        // Sword Beam
         bool sword1_beam = false;
         bool always_beam = false;
         bool cast2d_beam = false;
         int length_beam = 600;
+
+        // Charge Time
         float sword_charge_time = 500;
         float boots_charge_time = 500;
+
+        // Roc's Feather Jump
+        float feather_velocity = 2.35f;
+
+        // Arrows
+        float arrows_speed = 3;
+        bool cast2d_arrows = false;
+
+        // Magic Rod
+        float magicrod_speed = 3;
+        bool cast2d_magicrod = false;
+
+        // Link as a Light Source
         bool light_source = false;
         int light_red = 255;
         int light_grn = 255;
@@ -4190,6 +4203,7 @@ namespace ProjectZ.InGame.GameObjects
         {
             if ((!force && (
                 CurrentState != State.Idle &&
+                CurrentState != State.Idle &&
                 CurrentState != State.Attacking &&
                 CurrentState != State.AttackBlocking &&
                 CurrentState != State.Charging &&
@@ -4229,7 +4243,7 @@ namespace ProjectZ.InGame.GameObjects
             }
 
             _startedJumping = true;
-            _body.Velocity.Z = JumpAcceleration;
+            _body.Velocity.Z = feather_velocity;
             _jumpStartZPos = _body.Position.Z;
             _jumpEndTimer = 0;
 
@@ -4434,10 +4448,12 @@ namespace ProjectZ.InGame.GameObjects
             if (!Game1.GameManager.RemoveItem("bow", 1))
                 return;
 
-            var spawnPosition = new Vector3(
-                EntityPosition.X + _arrowOffset[Direction].X, EntityPosition.Y + _arrowOffset[Direction].Y + (Map.Is2dMap ? -4 : 0), EntityPosition.Z + (Map.Is2dMap ? 0 : 4));
-            Map.Objects.SpawnObject(new ObjArrow(
-                Map, spawnPosition, Direction, Game1.GameManager.PieceOfPowerIsActive ? ArrowSpeedPoP : ArrowSpeed));
+            var spawnPosition = new Vector3(EntityPosition.X + _arrowOffset[Direction].X, EntityPosition.Y + _arrowOffset[Direction].Y + (Map.Is2dMap ? -4 : 0), EntityPosition.Z + (Map.Is2dMap ? 0 : 4));
+            
+            if (cast2d_arrows)
+                spawnPosition = new Vector3(EntityPosition.X + _arrowOffset[Direction].X, EntityPosition.Y + _arrowOffset[Direction].Y + (Map.Is2dMap ? -4 : 0), EntityPosition.Z + (Map.Is2dMap ? 0 : 4));
+
+            Map.Objects.SpawnObject(new ObjArrow(Map, spawnPosition, Direction, Game1.GameManager.PieceOfPowerIsActive ? (arrows_speed + 1) : arrows_speed));
 
             if (CurrentState != State.Jumping)
             {
@@ -4912,8 +4928,11 @@ namespace ProjectZ.InGame.GameObjects
                 return;
 
             var spawnPosition = new Vector3(EntityPosition.X + _magicRodOffset[Direction].X, EntityPosition.Y + _magicRodOffset[Direction].Y, EntityPosition.Z);
-            Map.Objects.SpawnObject(new ObjMagicRodShot(Map, spawnPosition, AnimationHelper.DirectionOffset[Direction] *
-                (Game1.GameManager.PieceOfPowerIsActive ? MagicRodSpeedPoP : MagicRodSpeed), Direction));
+
+            if (cast2d_magicrod)
+                spawnPosition = new Vector3(EntityPosition.X + _magicRodOffset[Direction].X, EntityPosition.Y + _magicRodOffset[Direction].Y - EntityPosition.Z, 0);
+
+            Map.Objects.SpawnObject(new ObjMagicRodShot(Map, spawnPosition, AnimationHelper.DirectionOffset[Direction] * (Game1.GameManager.PieceOfPowerIsActive ? magicrod_speed + 1 : magicrod_speed), Direction));
 
             CurrentState = State.MagicRod;
             _swordChargeCounter = sword_charge_time;
