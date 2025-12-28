@@ -340,7 +340,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // Perform some camera magic.
             if (Camera.ClassicMode)
-                Camera.SnapCameraTimer = 10f;
+                Camera.SnapCameraTimer = 25f;
             else
             {
                 var goalPosition = Game1.GameManager.MapManager.GetCameraTarget();
