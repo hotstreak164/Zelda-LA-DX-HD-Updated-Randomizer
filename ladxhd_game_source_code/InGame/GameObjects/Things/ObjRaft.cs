@@ -191,12 +191,18 @@ namespace ProjectZ.InGame.GameObjects.Things
             var distance = MapManager.ObjLink.EntityPosition.Position - new Vector2(EntityPosition.X, EntityPosition.Y + 1);
 
             // Use a zone large enough players can't clip off the raft or jump over it.
-            var isColliding = Math.Abs(distance.X) <= 4 && Math.Abs(distance.Y) <= 2;
+            var isColliding = Math.Abs(distance.X) <= 12 && Math.Abs(distance.Y) <= 3;
 
+            // Raft must be active, player colliding, and switch not yet set.
             if (_isActive && isColliding && !_wasColliding)
                 EnterRaft();
 
+            // The key/switch to not constantly lock the player on the raft.
             _wasColliding = isColliding;
+
+            // Prevent side clipping by pushing against ladder/water diagonally.
+            if (Math.Abs(distance.X) > 2)
+                _wasColliding = false;
         }
 
         private void UpdateMoving()

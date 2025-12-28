@@ -2278,6 +2278,9 @@ namespace ProjectZ.InGame.GameObjects
 
         public void StartRailJump(Vector2 goalPosition, float jumpHeightMultiply, float jumpSpeedMultiply, float goalPositionZ = 0)
         {
+            if (_isRafting)
+                return;
+
             if (CurrentState == State.Swimming)
                 CurrentState = State.Idle;
 
@@ -3080,6 +3083,10 @@ namespace ProjectZ.InGame.GameObjects
 
         public void StartRaftRiding(ObjRaft objRaft)
         {
+            // Throw the rooster if using it.
+            if (MapManager.ObjLink.IsFlying())
+                MapManager.ObjLink.ReleaseCarriedObject();
+
             if (!IsJumpingState())
                 CurrentState = State.Rafting;
 
@@ -3115,6 +3122,9 @@ namespace ProjectZ.InGame.GameObjects
 
         public void RaftJump(Vector2 targetPosition)
         {
+            if (!_isRafting)
+                return;
+
             if (IsJumpingState())
                 return;
 
@@ -3126,9 +3136,7 @@ namespace ProjectZ.InGame.GameObjects
             Animation.Play("jump_" + Direction);
 
             if (_objRaft != null)
-            {
                 _objRaft.Jump(targetPosition, 100);
-            }
         }
 
         private void StopRaft()
