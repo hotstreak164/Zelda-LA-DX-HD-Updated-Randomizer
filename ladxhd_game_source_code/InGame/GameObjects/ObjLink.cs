@@ -296,10 +296,10 @@ namespace ProjectZ.InGame.GameObjects
         private Vector2[] _arrowOffset;
 
         // Shield
+        public Box ShieldBlockBox;
         public bool CarryShield;
         private bool _wasBlocking;
         private bool _blockButton;
-        public Box ShieldBlockBox;
 
         // Hookshot
         public ObjHookshot Hookshot = new ObjHookshot();
@@ -329,6 +329,7 @@ namespace ProjectZ.InGame.GameObjects
         private int _ocarinaSong;
 
         // Power Bracelet
+        private RectangleF GrabRectangle;
         private const float PullTime = 100;
         private const float PullMaxTime = 400;
         private const float PullResetTime = -133;
@@ -1295,6 +1296,11 @@ namespace ProjectZ.InGame.GameObjects
                 spriteBatch.Draw(Resources.SprWhite,
                     new Vector2(dashRectangle.X, dashRectangle.Y), new Rectangle(0, 0,
                         (int)dashRectangle.Width, (int)dashRectangle.Height), Color.Red * 0.75f);
+
+                // Draw grab rectangle.
+                spriteBatch.Draw(Resources.SprWhite,
+                    new Vector2(GrabRectangle.X, GrabRectangle.Y), new Rectangle(0, 0,
+                        (int)GrabRectangle.Width, (int)GrabRectangle.Height), Color.Yellow * 0.75f);
 
                 // Draw the field barrier.
                 if (FieldBarrier != null)
@@ -4393,35 +4399,35 @@ namespace ProjectZ.InGame.GameObjects
 
         private void UseBomb()
         {
-            // throw the object the player is currently carrying
+            // If Link is carrying an object throw it.
             if (_carriedGameObject != null)
             {
                 ThrowCarriedObject();
                 return;
             }
-
+            // Return if in any of the current states.
             if (CurrentState != State.Idle &&
                 CurrentState != State.Rafting &&
                 CurrentState != State.Pushing &&
                 (CurrentState != State.Swimming || !Map.Is2dMap))
                 return;
 
-            // pick up the bomb if there is one infront of the player
-            var recInteraction = new RectangleF(
+            // Pick up the bomb if there is one infront of the player.
+            var _bombGrabRectangle = new RectangleF(
                 EntityPosition.X + _walkDirection[Direction].X * (_body.Width / 2) - 4,
                 EntityPosition.Y - _body.Height / 2 + _walkDirection[Direction].Y * (_body.Height / 2) - 4, 8, 8);
 
-            // find a bomb to carry
+            // Find a bomb to carry.
             _bombList.Clear();
             Map.Objects.GetObjectsOfType(_bombList, typeof(ObjBomb),
-                (int)recInteraction.X, (int)recInteraction.Y, (int)recInteraction.Width, (int)recInteraction.Height);
+                (int)_bombGrabRectangle.X, (int)_bombGrabRectangle.Y, (int)_bombGrabRectangle.Width, (int)_bombGrabRectangle.Height);
 
-            // pick up the first bomb
+            // Pick up the first bomb found.
             foreach (var objBomb in _bombList)
             {
                 var carriableComponent = objBomb.Components[CarriableComponent.Index] as CarriableComponent;
                 if (!carriableComponent.IsActive ||
-                    !carriableComponent.Rectangle.Rectangle.Intersects(recInteraction))
+                    !carriableComponent.Rectangle.Rectangle.Intersects(_bombGrabRectangle))
                     continue;
 
                 carriableComponent?.StartGrabbing?.Invoke();
@@ -4432,7 +4438,7 @@ namespace ProjectZ.InGame.GameObjects
                 return;
             }
 
-            // remove one bomb from the inventory
+            // Remove 1 bomb from the inventory.
             if (!Game1.GameManager.RemoveItem("bomb", 1))
                 return;
 
@@ -4532,6 +4538,14 @@ namespace ProjectZ.InGame.GameObjects
             ThrowCarriedObject();
         }
 
+        private RectangleF GetGrabRectangle(int dir, float size)
+        {
+            float bias = 0.08f;
+            float recX = EntityPosition.X + _walkDirection[dir].X * (_body.Width / 2) - 1 - (bias / 2);
+            float recY = EntityPosition.Y - _body.Height / 2 + _walkDirection[dir].Y * (_body.Height / 2) - 1 - (bias / 2);
+            return new RectangleF(recX, recY, size + bias, size + bias);
+        }
+
         private void HoldBracelet()
         {
             // Part One: Grabbing the object. State must be idle, pushing, or swimming (for Flying Rooster) to continue.
@@ -4545,12 +4559,10 @@ namespace ProjectZ.InGame.GameObjects
             if (_carriedComponent == null && _instantPickupObject == null)
             {
                 // Tiny rectangle that finds objects in front of Link that can be grabbed.
-                var recInteraction = new RectangleF(
-                    EntityPosition.X + _walkDirection[Direction].X * (_body.Width / 2) - 1,
-                    EntityPosition.Y - _body.Height / 2 + _walkDirection[Direction].Y * (_body.Height / 2) - 1, 2, 2);
+                GrabRectangle = GetGrabRectangle(Direction, 2.00f);
 
                 // Find's any possible objects within the rectangle.
-                grabbedObject = Map.Objects.GetCarryableObjects(recInteraction);
+                grabbedObject = Map.Objects.GetCarryableObjects(GrabRectangle);
 
                 // A grabble object has been found.
                 if (grabbedObject != null)

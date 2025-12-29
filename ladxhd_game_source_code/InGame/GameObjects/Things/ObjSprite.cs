@@ -27,8 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (!string.IsNullOrEmpty(shadowSpriteId))
             {
                 var shadowSprite = Resources.GetSprite(shadowSpriteId);
-                AddComponent(DrawShadowComponent.Index,
-                    new DrawShadowSpriteComponent(shadowSprite.Texture, EntityPosition, shadowSprite.ScaledRectangle, -shadowSprite.Origin));
+                AddComponent(DrawShadowComponent.Index, new DrawShadowSpriteComponent(shadowSprite.Texture, EntityPosition, shadowSprite.ScaledRectangle, -shadowSprite.Origin));
             }
         }
 
@@ -39,7 +38,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             Rectangle collisionRectangle, Values.CollisionTypes collisionType) : this(map, posX, posY, spriteId, positionOffset, layer, shadowSpriteId)
         {
             AddComponent(CollisionComponent.Index, new BoxCollisionComponent(new CBox(EntityPosition, collisionRectangle.X, collisionRectangle.Y, 0, collisionRectangle.Width, collisionRectangle.Height, 16), collisionType));
-            AddComponent(CarriableComponent.Index, new CarriableComponent(new CRectangle(EntityPosition, new Rectangle(collisionRectangle.X, collisionRectangle.Y, collisionRectangle.Width, collisionRectangle.Height)), null, null, null) { });
+            AddComponent(CarriableComponent.Index, new CarriableComponent(new CRectangle(EntityPosition, new Rectangle(collisionRectangle.X + 1, collisionRectangle.Y + 1, collisionRectangle.Width - 2, collisionRectangle.Height - 2)), null, null, null) { });
         }
 
         // used for the chest

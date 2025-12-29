@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 CollisionBoxes[i] = new Box(posX + rectangles[i].X, posY + rectangles[i].Y, 0, rectangles[i].Width, rectangles[i].Height, 16);
 
                 if (grabComponent)
-                    AddComponent(CarriableComponent.Index, new CarriableComponent(new CRectangle(EntityPosition, new Rectangle(rectangles[i].X, rectangles[i].Y, rectangles[i].Width, rectangles[i].Height)), null, null, null) { });
+                    AddComponent(CarriableComponent.Index, new CarriableComponent(new CRectangle(EntityPosition, new Rectangle(rectangles[i].X + 1, rectangles[i].Y + 1, rectangles[i].Width -2 , rectangles[i].Height - 2)), null, null, null) { });
             }
             AddComponent(CollisionComponent.Index, new CollisionComponent(MultiBoxCollision) { CollisionType = type });
         }
@@ -49,7 +49,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             AddComponent(CollisionComponent.Index, new CollisionComponent(SingleBoxCollision) { CollisionType = type });
             if (grabComponent)
-                AddComponent(CarriableComponent.Index, new CarriableComponent(new CRectangle(EntityPosition, new Rectangle(0, 0, 16, 16)), null, null, null) { });
+                AddComponent(CarriableComponent.Index, new CarriableComponent(new CRectangle(EntityPosition, new Rectangle(1, 1, 14, 14)), null, null, null) { });
         }
 
         private bool MultiBoxCollision(Box box, int dir, int level, ref Box collidingBox)

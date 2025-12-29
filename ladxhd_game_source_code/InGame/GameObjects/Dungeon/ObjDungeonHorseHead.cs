@@ -70,8 +70,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             _cSprite = new CSprite(_spriteHeadDown, EntityPosition, new Vector2(-8, -13));
 
             AddComponent(BodyComponent.Index, _body);
-            AddComponent(CarriableComponent.Index, new CarriableComponent(
-                new CRectangle(EntityPosition, new Rectangle(-7, -14, 14, 14)), CarryInit, CarryUpdate, CarryThrow));
+            AddComponent(CarriableComponent.Index, new CarriableComponent(new CRectangle(EntityPosition, new Rectangle(-7, -14, 14, 14)), CarryInit, CarryUpdate, CarryThrow));
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush));
             AddComponent(HittableComponent.Index, new HittableComponent(_body.BodyBox, OnHit));
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
