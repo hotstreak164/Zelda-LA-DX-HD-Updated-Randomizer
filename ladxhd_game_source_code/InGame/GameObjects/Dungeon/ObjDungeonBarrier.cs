@@ -62,6 +62,8 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             KeyChanged();
             if (_isUp)
                 _stateCounter = StateTimer;
+
+            Map.Objects.RegisterAlwaysAnimateObject(this);
         }
 
         private void KeyChanged()
