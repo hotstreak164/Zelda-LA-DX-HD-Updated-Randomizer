@@ -1668,7 +1668,13 @@ namespace ProjectZ.InGame.GameObjects
                 ReturnToIdle();
                 Game1.GameManager.SaveManager.RemoveString("drop_rooster");
             }
-
+            // Deletes a death from the death counter.
+            var removeDeath = Game1.GameManager.SaveManager.GetString("remove_death", "0") == "1";
+            if (removeDeath)
+            {
+                Game1.GameManager.DeathCount--;
+                Game1.GameManager.SaveManager.RemoveString("remove_death");
+            }
             // Dodongo snakes use an invisible button to reset their music.
             var dSnakeMusic = Game1.GameManager.SaveManager.GetString("dodongo_snake_music");
             if (!string.IsNullOrEmpty(dSnakeMusic))
