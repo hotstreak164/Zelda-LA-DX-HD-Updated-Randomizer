@@ -19,6 +19,8 @@
   * Most ledges in 2D sections are now slightly sloped so they are easier to jump onto, but are flat when on top of them.
   * Disable the free camera and center it during most sequences. This includes trading items, cutscenes, photo events, etc.
   * Rework the shopkeeper's "revenge" sequence to be more like the original game & it will no longer take the player's potion.
+  * When buying back your name from the shopkeeper after stealing, it will also remove a death from the save file.
+  * Remove collision from the various animals found around the game: birds at Mr. Write's house, rats at Crazy Tracy, etc.
   * Fix the move speed modifier to increase movement speed on 2D maps. Also fix it from applying X velocity when it should be 0.
   * Fix attacking and jumping in 2D maps so that Link always faces Left or Right even if diagonal directions are being held.
   * Fix the jump in 2D mode to not apply extra velocity when releasing the button at the height of the jump.
@@ -38,8 +40,8 @@
   * Fix the secret ending seagull chants to be evenly spaced apart like in the original game.
 
 ### **User Interface:**
-  * Update File select screen to show death count, add rupee sprite, clock sprite, and show the collected instruments.
-  * File select screen Link sprite: show tunic color, sword if Lvl2 sword collected, and shield if Mirror Shield collected.
+  * Update File Select screen to show deaths, seashells, and collected instruments. Add sprites to values for identification.
+  * File Select screen Link sprite: show tunic color, sword if Lvl2 sword collected, and shield if Mirror Shield collected.
   * Tooltips on the various options menus now automatically scale with the resolution and UI scale.
   * Players are now required to enter at least a single character for the save file name on the "New Game" screen.
   * Allow pressing "Start" to select a save file from the File Selection screen. Start also progresses "New Game" screen instantly.
@@ -62,6 +64,7 @@
   * Fix showing sepia photos after photo sequences when Redux option "Colored Photos" is disabled.
   * Fix the "space" character in the variable width font to take up less space. It now matches the ROM hack it was based on.
   * Fix the Trendy Game showing the correct buttons if they were remapped when giving the player instructions.
+  * Fix several typos and missing text from the books found at the library. Also fix mistake in Papahl's dialog.
   
 ### **Items:**
   * Some items will no longer stop Link while casting: Boomerang, Magic Powder, Fire Rod, Bow & Arrow, Bombs, and throwing objects.
@@ -80,6 +83,7 @@
   * It's now possible to cancel the ocarina song by pressing the button again. This doesn't trigger ocarina listener events.
   * Opening chests immediately freezes the world instead of after a delay. Also, the items raises slightly higher above the chest.
   * The Trendy Game will now allow Link to move immediately after the crane starts grabbing like in the original game.
+  * Fix the Trendy Game to close up shop when all items are grabbed by the claw rather than when all items are collected.
   * Fix shield appearing on Link when swallowed by a Like Like. It will now properly disappear and reappear depending on equipped status.
   * Fix firing Arrows and Magic Rod shots to make contact and damage enemies when jumping and the enemy & projectile sprites overlap.
   * Fix playing the "holding" animation when jumping onto the Level 2 sword sprite after turning in 20 shells in Seashell Mansion.
@@ -168,6 +172,9 @@
   * Fix clipping off the raft by walking against the stairs just right. Also add a secret entrance to Rapids Ride using the rooster.
   * Add a secret entrance into Rapids Ride using the rooster. Can you find the secret entrance and collect everything there?
   * Cracked rocks will no longer show the message when holding bombs and ice blocks don't show the message if magic rod is obtained.
+  * NPC facing animation has been made more responsive. Also add a new method for NPCs with only two facing directions.
+  * Fix the Trendy Game NPC to have his animation where he appears to be rapidly running in place.
+  * Fix ball kids running backwards during the "Bow Wow kidnapped" event when Link is approaching them from the north.
   * Fix the rooster from being drawn in the background layer when borrowing it from the hen house (after dungeon 8 is complete).
   * Fix crossing a hole reset point while flying with the rooster from storing the Z position which reset Link in the air.
   * Fix the stone in the forest passageway to the bat (Li'l Devil/Mad Batter, whatever you want to call it) to play the secret sound.
@@ -177,6 +184,7 @@
   * Fix the monkey respawning when fighting with Bow Wow, Classic Camera is enabled, and a field change takes place.
   * Fix the owl "freeze" trigger to only not apply during the egg opening sequence and the end credits.
   * Fix trading the stick to Tarin for the honeycomb. Talking to him would just show a message that says "error".
+  * Fix the goat at animal village to be able to turn to face the player. This required implementing her sprites and animations.
   * Fix bushes to show the proper smoke graphics and sound effects when sprinkling Magic Powder on them.
   * Fix bushes & rocks from respawning that cover stairs when changing fields when classic camera is active.
   * Fix bushes & rocks that open up into passageways to play the "secret sound" when revealing the staircase.
@@ -229,6 +237,7 @@
   * Fix Egg camera transition to the final maze room when classic camera is enabled. It would not transition smoothly.
   * Fix Egg boss room from showing a black circle in the top left corner while the dialog is shown.
   * Fix Manbo's Song when played in the Egg to teleport the player to the entrance and not the pond.
+  * Fix running into final stairs with boots which doubled the player's animation speed and bounced off the wall at the end.
 
 ## **v1.4.9**
 ### **The "Beginning of the End" Update**
