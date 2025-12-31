@@ -338,8 +338,6 @@ namespace ProjectZ.InGame.Pages
 
         public override void Update(CButtons pressedButtons, GameTime gameTime)
         {
-            base.Update(pressedButtons, gameTime);
-
             // Cycle through the instrument colors.
             ItemDrawHelper.Update();
 
@@ -363,6 +361,9 @@ namespace ProjectZ.InGame.Pages
                 // Load the save file slot.
                 LoadSave(LoadSlot);
             }
+            // The update must be here or it breaks auto-selecting a save file.
+            base.Update(pressedButtons, gameTime);
+
             // Update the Link animation on the menu.
             UpdatePlayerAnimation();
 
