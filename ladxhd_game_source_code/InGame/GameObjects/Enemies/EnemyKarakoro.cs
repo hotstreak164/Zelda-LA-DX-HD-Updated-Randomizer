@@ -21,11 +21,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly List<GameObject> _holeList = new List<GameObject>();
         private readonly BoxCollisionComponent _boxCollision;
         private readonly BodyComponent _body;
+        private readonly DrawComponent _drawComponent;
         private readonly AiComponent _aiComponent;
         private readonly Animator _animator;
         private readonly CSprite _sprite;
         private readonly DamageFieldComponent _damageField;
         private readonly CarriableComponent _carriableComponent;
+        private readonly DrawShadowComponent _shadowComponent;
         private readonly AiDamageState _damageState;
 
         private ObjHole _hole;
@@ -149,15 +151,23 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(PushableComponent.Index, new PushableComponent(pushableBox, OnPush));
-            AddComponent(DrawComponent.Index, new BodyDrawComponent(_body, DrawSprite, Values.LayerPlayer));
-            AddComponent(DrawShadowComponent.Index, new BodyDrawShadowComponent(_body, _sprite) { Height = 1.0f, Rotation = 0.1f, ShadowWidth = 10, ShadowHeight = 5 });
+            AddComponent(DrawComponent.Index, _drawComponent = new BodyDrawComponent(_body, DrawSprite, Values.LayerPlayer));
+            AddComponent(DrawShadowComponent.Index, _shadowComponent = new BodyDrawShadowComponent(_body, _sprite) { Height = 1.0f, Rotation = 0.1f, ShadowWidth = 10, ShadowHeight = 5 });
 
             new ObjSpriteShadow("sprshadowm", this, Values.LayerPlayer, map);
         }
 
         private void Reset()
         {
+            if (_hole != null)
+                _hole.IsActive = true;
+            _inHole = false;
+            _body.IsActive = true;
+            _boxCollision.IsActive = false;
+            _carriableComponent.IsActive = false;
+            _shadowComponent.IsActive = true;
             _aiComponent.ChangeState("walk");
+            _drawComponent.Layer = Values.LayerPlayer;
         }
 
         private void OnKeyChange()
@@ -344,7 +354,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void InitHoleJump()
         {
             // activate the collision so we can not walk into the ball in the hole
-            _boxCollision.IsActive = true;
+            _boxCollision.IsActive = false;
             _inHole = true;
             _carriableComponent.IsActive = false;
             _body.IsActive = false;
@@ -383,6 +393,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void EndWrongHole()
         {
             // jump out of the hole
+            _drawComponent.Layer = Values.LayerPlayer;
+            _shadowComponent.IsActive = true;
             _boxCollision.IsActive = false;
             _hole.IsActive = true;
             _inHole = false;
@@ -421,6 +433,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                         _holeStartPosition = EntityPosition.Position;
                         _holeTargetPosition = new Vector2(holeObject.Center.X, holeObject.Center.Y + 8);
 
+                        _shadowComponent.IsActive = false;
+                        _drawComponent.Layer = Values.LayerBottom;
                         _aiComponent.ChangeState("holeJump");
 
                         return;
