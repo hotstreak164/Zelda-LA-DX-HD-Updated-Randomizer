@@ -2637,8 +2637,11 @@ namespace ProjectZ.InGame.GameObjects
                 CurrentState != State.Ocarina &&
                 CurrentState != State.MagicRod &&
                 CurrentState != State.BedTransition &&
+                !(!IsChargingState() && (Direction == 1 || Direction == 3)) &&
                 !IsTransitioning && !HoleFalling && !IsPoking)
+            {
                 Animation.Play("stand" + shieldString + animDirection);
+            }
             else if (CurrentState == State.ChargeJumping)
                 Animation.Play("cjump" + shieldString + animDirection);
             else if ((CurrentState == State.Idle ||
