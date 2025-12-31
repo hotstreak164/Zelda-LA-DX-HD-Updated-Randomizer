@@ -239,7 +239,7 @@ namespace ProjectZ.InGame.Map
                     var screenW = viewport.Width;
                     var screenH = viewport.Height;
 
-                    // Compute the rectangle’s position on screen.
+                    // Compute the rectangle's position on screen.
                     var rectScreenX = drawOffset.X + fieldX - Location.X;
                     var rectScreenY = drawOffset.Y + fieldY - Location.Y;
 
@@ -255,7 +255,7 @@ namespace ProjectZ.InGame.Map
                     // If set to the Super Game Boy border.
                     if (GameSettings.ClassicBorders == 2)
                     {
-                        // Border’s original pixel size.
+                        // Border's original pixel size.
                         const int borderW = 256;
                         const int borderH = 224;
 

@@ -572,7 +572,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
                     float effectiveOffset = Math.Clamp(yDiff, 0f, biasStrength);
 
                     // Moves the top of the intersection up slightly,
-                    // effectively reducing how much area is counted as “colliding”.
+                    // effectively reducing how much area is counted as ''colliding''.
                     collidingRec.Y -= effectiveOffset;
                     collidingRec.Height = Math.Max(0, collidingRec.Height - effectiveOffset);
                 }

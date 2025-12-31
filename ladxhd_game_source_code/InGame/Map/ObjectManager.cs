@@ -387,7 +387,7 @@ namespace ProjectZ.InGame.Map
                 _gameObjectPool.GetComponentList(_collidingObjectList, UpdateField.X, UpdateField.Y, UpdateField.Width, UpdateField.Height, ObjectCollisionComponent.Mask);
                 _collidingObjectList.RemoveAll(o => o?.EntityPosition != null && !ActualField.Contains(o.EntityPosition.Position));
             }
-            // Normal Camera: Update objects that are within the player’s body rectangle.
+            // Normal Camera: Update objects that are within the player's body rectangle.
             else
             {
                 _gameObjectPool.GetComponentList(_collidingObjectList, (int)Link.BodyRectangle.X, (int)Link.BodyRectangle.Y,

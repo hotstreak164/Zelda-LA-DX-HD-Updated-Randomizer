@@ -502,7 +502,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             bool powerupActive = Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.GuardianAcornIsActive;
 
             // Piece of Power Conditions:
-            // Set up now to make things easier later. It's a 25% chance to spawn between 40–44 enemies killed with a guaranteed spawn at 45.
+            // Set up now to make things easier later. It's a 25% chance to spawn between 40-44 enemies killed with a guaranteed spawn at 45.
 
             int count = Game1.GameManager.PieceOfPowerCount;
             int pop_threshold = 0;
