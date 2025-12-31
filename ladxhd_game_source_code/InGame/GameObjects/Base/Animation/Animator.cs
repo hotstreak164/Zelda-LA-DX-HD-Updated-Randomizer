@@ -24,6 +24,7 @@ namespace ProjectZ.InGame.GameObjects.Base
 
         public string SpritePath;
         public float SpeedMultiplier = 1;
+        public string AnimationID;
 
         public int CurrentFrameIndex
         {
@@ -194,11 +195,13 @@ namespace ProjectZ.InGame.GameObjects.Base
 
         public void Play(string animationId)
         {
+            AnimationID = animationId;
             Play(GetAnimationIndex(animationId));
         }
 
         public void Play(string animationId, int frame, double time)
         {
+            AnimationID = animationId;
             Play(GetAnimationIndex(animationId));
             SetFrame(frame);
             SetTime(time);

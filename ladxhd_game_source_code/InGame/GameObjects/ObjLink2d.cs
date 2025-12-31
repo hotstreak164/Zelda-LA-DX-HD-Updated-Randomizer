@@ -184,11 +184,16 @@ namespace ProjectZ.InGame.GameObjects
             if (!CarryShield)
                 shieldString = "_";
 
-            // start the jump animation
+            // Check if it's jumping state to play the jump animation.
             if (CurrentState == State.Jumping && !_playedJumpAnimation)
             {
-                Animation.Play("jump_" + Direction);
-                _playedJumpAnimation = true;
+                // If we're already in a jump animation wait until it changes. This fixes a bug when
+                // jumping immediately after hitting the ground and the animation is still playing.
+                if (!Animation.AnimationID.StartsWith("jump_"))
+                {
+                    Animation.Play("jump_" + Direction);
+                    _playedJumpAnimation = true;
+                }
             }
             if (_bootsHolding || _bootsRunning)
             {
