@@ -408,6 +408,9 @@ namespace ProjectZ.InGame.Pages
             // Cylcle the gold color if conditions are met.
             for (var i = 0; i < SaveStateManager.SaveCount; i++)
             {
+                if (SaveStateManager.SaveStates[i] == null)
+                    continue;
+
                 bool goldNames = SaveStateManager.SaveStates[i].GameCleared && !SaveStateManager.SaveStates[i].Thief;
                 bool goldRupee = SaveStateManager.SaveStates[i].CurrentRupees >= 999;
                 bool goldDeath = SaveStateManager.SaveStates[i].Deaths == 0 && SaveStateManager.SaveStates[i].GameCleared;
