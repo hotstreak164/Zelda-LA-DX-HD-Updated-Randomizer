@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             AddComponent(HittableComponent.Index, new HittableComponent(rectangle, OnHit));
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(sprite, Values.LayerBottom));
 
-            _knight = new EnemyDarknut(map, posX, posY + 10)
+            _knight = new EnemyDarknut(map, posX, posY + 16)
             {
                 SpawnGoldLeaf = spawnGoldLeaf,
                 IsActive = false
