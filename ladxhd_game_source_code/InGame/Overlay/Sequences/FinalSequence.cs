@@ -753,9 +753,9 @@ namespace ProjectZ.InGame.Overlay.Sequences
             // Show the credits.
             {
                 _creditCounter += Game1.DeltaTime;
-                if (_creditCounter > 3450)
+                if (_creditCounter > 3350)
                 {
-                    _creditCounter -= 3450;
+                    _creditCounter -= 3350;
                     if (!NextCredits())
                     {
                         _screen6Counter = 0;

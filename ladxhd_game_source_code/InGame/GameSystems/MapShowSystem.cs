@@ -88,7 +88,6 @@ namespace ProjectZ.InGame.GameSystems
                     var oldMap = Game1.GameManager.MapManager.CurrentMap;
                     Game1.GameManager.MapManager.CurrentMap = Game1.GameManager.MapManager.NextMap;
                     Game1.GameManager.MapManager.NextMap = oldMap;
-
                     Game1.GameManager.InGameOverlay.StartSequence("final");
                 }
             }
