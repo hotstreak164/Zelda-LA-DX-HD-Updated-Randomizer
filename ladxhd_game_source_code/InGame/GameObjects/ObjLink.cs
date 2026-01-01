@@ -4414,10 +4414,11 @@ namespace ProjectZ.InGame.GameObjects
                 ThrowCarriedObject();
                 return;
             }
-            // Return if in any of the current states.
+            // Return if not in any of the current states.
             if (CurrentState != State.Idle &&
                 CurrentState != State.Rafting &&
                 CurrentState != State.Pushing &&
+                CurrentState != State.Jumping &&
                 (CurrentState != State.Swimming || !Map.Is2dMap))
                 return;
 
