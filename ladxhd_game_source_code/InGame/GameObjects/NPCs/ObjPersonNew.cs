@@ -31,7 +31,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private string _currentAnimation;
         private string _spawnCondition;
         private float _lookCounter;
-        private int _lookRange = 144;
+        private int _lookRange;
         private bool _directionMode = true;
 
         private bool _isMoving;
@@ -47,7 +47,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         public ObjPersonNew() : base("person") { }
 
-        public ObjPersonNew(Map.Map map, int posX, int posY, string spawnCondition, string animationId, string dialogId, string animationName, Rectangle bodyRectangle, bool binaryFacing = false) : base(map)
+        public ObjPersonNew(Map.Map map, int posX, int posY, string spawnCondition, string animationId, string dialogId, string animationName, Rectangle bodyRectangle, bool binaryFacing = false, int lookrange = 32) : base(map)
         {
             _binaryFacing = binaryFacing;
 
@@ -59,6 +59,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             EntityPosition = new CPosition(posX + 8, posY + 16, 0);
             EntitySize = new Rectangle(bodyRectangle.X - bodyRectangle.Width / 2, bodyRectangle.Y - bodyRectangle.Height, bodyRectangle.Width, bodyRectangle.Height);
 
+            _lookRange = lookrange;
             _spawnCondition = spawnCondition;
             _dialogId = dialogId;
             Animator = AnimatorSaveLoad.LoadAnimator("NPCs/" + animationId);
