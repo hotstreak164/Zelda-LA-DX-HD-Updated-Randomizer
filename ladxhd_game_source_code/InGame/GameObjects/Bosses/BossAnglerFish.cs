@@ -48,8 +48,8 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private Vector2 _preAttackVelocity;
 
-        private List<ObjAnglerFishBarrier> fishBarrier = new List<ObjAnglerFishBarrier>();
-
+        private List<ObjAnglerFishBarrier> _fishBarrier = new List<ObjAnglerFishBarrier>();
+        
         public BossAnglerFish() : base("angler fish") { }
 
         public BossAnglerFish(Map.Map map, int posX, int posY, string saveKey) : base(map)
@@ -174,19 +174,33 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             for (int i = 0; i < 10; i++) 
             {
-                fishBarrier.Add(new ObjAnglerFishBarrier(Map, posX, posY));
+                _fishBarrier.Add(new ObjAnglerFishBarrier(Map, posX, posY));
                 posX += 16;
             }
-            foreach (var barrier in fishBarrier) 
+            foreach (var barrier in _fishBarrier) 
             {
+                // Don't spawn effects with classic camera as they won't even be visible.
+                if (!Camera.ClassicMode)
+                {
+                    var explosionAnimation = new ObjAnimator(Map, barrier.PosX, barrier.PosY, Values.LayerTop, "Particles/spawn", "run", true);
+                    Map.Objects.SpawnObject(explosionAnimation);
+                    Map.Objects.RegisterAlwaysAnimateObject(explosionAnimation);
+                }
                 Map.Objects.SpawnObject(barrier);
             }
         }
 
         private void DestroyBarrier()
         {
-            foreach (var barrier in fishBarrier) 
+            foreach (var barrier in _fishBarrier) 
             {
+                // Don't spawn explosions with classic camera as they won't even be visible.
+                if (!Camera.ClassicMode)
+                {
+                    var explosionAnimation = new ObjAnimator(Map, barrier.PosX, barrier.PosY, Values.LayerTop, "Particles/explosion0", "run", true);
+                    Map.Objects.SpawnObject(explosionAnimation);
+                    Map.Objects.RegisterAlwaysAnimateObject(explosionAnimation);
+                }
                 Map.Objects.DeleteObjects.Add(barrier);
             }
         }
