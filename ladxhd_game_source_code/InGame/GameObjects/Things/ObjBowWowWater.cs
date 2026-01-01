@@ -14,11 +14,14 @@ namespace ProjectZ.InGame.GameObjects.Things
     {
         private readonly Animator _animator;
         private readonly DrawComponent _drawComponent;
+
         public CSprite _sprite;
         public CPosition _position;
-
         public ObjBowWow _host;
+
         private Vector2 _offset = new Vector2(-3, 11);
+
+        private bool _effectPlayed;
 
         public ObjBowWowWater() : this("bowwow_water") { }
 
@@ -56,13 +59,33 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // Get the water state and see if he's jumping or not.
             if (inWater && _host.EntityPosition.Z <= 2.5f)
-                _drawComponent.IsActive = true;
+                EnableAndSplash();
             else
-                _drawComponent.IsActive = false;
+                Disable();
 
             // If the map is null destroy the object.
             if (Map == null || _host.Map == null)
                 Destroy();
+        }
+
+        private void Disable()
+        {
+            _drawComponent.IsActive = false;
+            _effectPlayed = false;
+        }
+
+        private void EnableAndSplash()
+        {
+            _drawComponent.IsActive = true;
+            if (!_effectPlayed)
+            {
+                var splashAnimator = new ObjAnimator(_host._body.Owner.Map, 0, 0, 0, 3, Values.LayerPlayer, "Particles/splash", "idle", true);
+                splashAnimator.EntityPosition.Set(new Vector2(
+                    _host._body.Position.X + _host._body.OffsetX + _host._body.Width / 2f,
+                    _host._body.Position.Y + _host._body.OffsetY + _host._body.Height - _host._body.Position.Z - 3));
+                Game1.GameManager.MapManager.CurrentMap.Objects.SpawnObject(splashAnimator);
+            }
+            _effectPlayed = true;
         }
 
         public void Destroy()
