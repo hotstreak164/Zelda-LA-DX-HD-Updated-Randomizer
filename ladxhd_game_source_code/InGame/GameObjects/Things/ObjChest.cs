@@ -16,6 +16,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly ObjSprite _spriteFront;
         private readonly CSprite _spriteBack;
         private readonly GameObject _spawnObject;
+        private readonly CarriableComponent _carriableComponent;
 
         private ObjSprite _itemSprite;
         private GameItem _item;
@@ -70,18 +71,17 @@ namespace ProjectZ.InGame.GameObjects.Things
             _aiComponent.States.Add("fading", new AiState { Trigger = { fadingTrigger } });
             _aiComponent.ChangeState("closed");
 
+            CRectangle grabBox = new CRectangle(EntityPosition, new Rectangle(1, 2 - 13, 14, 13));
+
             AddComponent(AiComponent.Index, _aiComponent);
+            AddComponent(CarriableComponent.Index, _carriableComponent = new CarriableComponent(grabBox, null, null, null) { });
+            AddComponent(CollisionComponent.Index, new BoxCollisionComponent(new CBox(posX, posY + 3, 0, 16, 11, 12), Values.CollisionTypes.Normal | Values.CollisionTypes.Hookshot));
 
             if (!hitMode)
                 AddComponent(InteractComponent.Index, new InteractComponent(new CBox(posX + 4, posY + 3, 0, 8, 13, 16), Interact));
             else
-            {
                 AddComponent(HittableComponent.Index, new HittableComponent(new CBox(posX + 4, posY + 3, 0, 8, 13, 16), OnHit));
-            }
-
-            AddComponent(CollisionComponent.Index, new BoxCollisionComponent(
-                new CBox(posX, posY + 3, 0, 16, 11, 12), Values.CollisionTypes.Normal | Values.CollisionTypes.Hookshot));
-
+            
             _spriteBack = new CSprite("chest_back", new CPosition(posX, posY + 12.9f, 0), new Vector2(0, -12.9f));
             _spriteBack.SourceRectangle.X += spriteType * 32;
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_spriteBack, Values.LayerPlayer));

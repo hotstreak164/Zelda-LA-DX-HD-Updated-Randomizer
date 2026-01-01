@@ -14,6 +14,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         public DoorStates _currentState;
 
         private readonly BoxCollisionComponent _collisionComponent;
+        private readonly CarriableComponent _carriableComponent;
         private readonly Rectangle _sourceRectangle;
         private readonly CSprite _sprite;
 
@@ -49,8 +50,11 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             _sprite.Center = new Vector2(8, 8);
             _sprite.Rotation = (float)(Math.PI / 2 * (direction + 1));
 
+            CRectangle grabBox = new CRectangle(EntityPosition, new Rectangle(1, 1, 14, 14));
+
             if (!string.IsNullOrEmpty(_strKey))
                 AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(KeyChanged));
+            AddComponent(CarriableComponent.Index, _carriableComponent = new CarriableComponent(grabBox, null, null, null) { });
             AddComponent(CollisionComponent.Index, _collisionComponent);
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerBottom));
