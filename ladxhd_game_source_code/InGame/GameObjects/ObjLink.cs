@@ -2243,8 +2243,9 @@ namespace ProjectZ.InGame.GameObjects
                     var outBox = Box.Empty;
 
                     // check if the object we are walking into is actually an object where the push animation should be played
-                    if (Map.Objects.Collision(box, cBox, _body.CollisionTypes, Values.CollisionTypes.PushIgnore, Direction, _body.Level, ref outBox))
-                        CurrentState = State.Pushing;
+                    if (ControlHandler.GetMoveVector2() != Vector2.Zero)
+                        if (Map.Objects.Collision(box, cBox, _body.CollisionTypes, Values.CollisionTypes.PushIgnore, Direction, _body.Level, ref outBox))
+                            CurrentState = State.Pushing;
                 }
 
                 if (CurrentState == State.Swimming)
