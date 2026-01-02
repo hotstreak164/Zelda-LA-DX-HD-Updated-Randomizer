@@ -295,8 +295,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (!NoRespawn)
                 Map.Objects.SpawnObject(new ObjStoneRespawner(Map, _baseX, _baseY, _spriteId, _spawnItem, _pickupKey, _dialogPath, _isHeavy, _potMessage, FromObjSpawner));
 
-            // Skulls have a 33% chance to spawn a fairy.
-            if (_isSkull && Game1.RandomNumber.Next(0,5) == 0)
+            // Skulls have a 20% chance to spawn a fairy and must have come from a spiny beetle.
+            if (_isSkull && NoRespawn && Game1.RandomNumber.Next(0,5) == 0)
             {
                 var objFairy = new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 0);
                 Map.Objects.SpawnObject(objFairy);
