@@ -386,6 +386,7 @@ namespace ProjectZ.InGame.Pages
                 _selectStoredSave = false;
 
                 // Close the menu page and change to the intro screen.
+                HideInstruments();
                 Game1.ScreenManager.ChangeScreen(Values.ScreenNameIntro);
                 Game1.UiPageManager.PopPage(null, PageManager.TransitionAnimation.TopToBottom, PageManager.TransitionAnimation.TopToBottom, true);
             }
@@ -454,14 +455,14 @@ namespace ProjectZ.InGame.Pages
 
             var intent = new Dictionary<string, object>();
             intent.Add("selectedSlot", number);
-
+            HideInstruments();
             Game1.UiPageManager.ChangePage(typeof(CopyPage), intent, PageManager.TransitionAnimation.Fade, PageManager.TransitionAnimation.Fade);
         }
 
         private void OnClickDelete(int number)
         {
             _selectedSaveIndex = number;
-
+            HideInstruments();
             Game1.UiPageManager.ChangePage(typeof(DeleteSaveSlotPage), null, PageManager.TransitionAnimation.Fade, PageManager.TransitionAnimation.Fade);
         }
 
@@ -482,20 +483,23 @@ namespace ProjectZ.InGame.Pages
                 Game1.ScreenManager.ChangeScreen(Values.ScreenNameGame);
                 // load the save
                 Game1.GameManager.LoadSaveFile(saveIndex);
+                // Hide the instruments.
+                HideInstruments();
                 // close the menu page
                 Game1.UiPageManager.PopPage(null, PageManager.TransitionAnimation.TopToBottom, PageManager.TransitionAnimation.TopToBottom, true);
                 // Store the last game save that was selected.
                 GameSettings.LastSavePos = saveIndex;
+                _selectStoredSave = false;
             }
             else
             {
                 // change to the NewGamePage
                 _newGameIntent["SelectedSaveSlot"] = saveIndex;
+                HideInstruments();
                 Game1.UiPageManager.ChangePage(typeof(NewGamePage), _newGameIntent);
                 // Store the last game save that was selected.
                 GameSettings.LastSavePos = saveIndex;
             }
-            _selectStoredSave = false;
         }
 
         private void ReloadSaves()
