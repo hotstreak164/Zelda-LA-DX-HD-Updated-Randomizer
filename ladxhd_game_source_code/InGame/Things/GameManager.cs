@@ -1688,6 +1688,8 @@ namespace ProjectZ.InGame.Things
             GameCleared = false;
             HasMagnifyingLens = false;
 
+            MaxHearts = 3;
+            CurrentHealth = 12;
             KillCount = 0;
             DeathCount = 0;
             SwordLevel = 0;
@@ -1698,9 +1700,6 @@ namespace ProjectZ.InGame.Things
             OcarinaSongs[0] = 0;
             OcarinaSongs[1] = 0;
             OcarinaSongs[2] = 0;
-
-            MaxHearts = 3;
-            CurrentHealth = MaxHearts * 4;
 
             PlayerMapPosition = null;
             MapVisibility = new bool[16, 16];
