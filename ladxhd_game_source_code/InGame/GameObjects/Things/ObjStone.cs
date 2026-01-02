@@ -35,6 +35,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private bool _damagePlayer;
         private bool _isHeavy;
         private bool _isPot;
+        private bool _isSkull;
 
         public bool NoRespawn = false;
         public bool FromObjSpawner = false;
@@ -56,6 +57,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _dialogPath = dialogPath;
 
             _isPot = spriteId.StartsWith("pot");
+            _isSkull = spriteId.StartsWith("skull");
 
             _isHeavy = isHeavy;
             _potMessage = potMessage;
@@ -92,7 +94,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(cSprite, Values.LayerPlayer));
             AddComponent(DrawShadowComponent.Index, new BodyDrawShadowComponent(_body, cSprite));
 
-            if (_isPot)
+            if (_isPot || _isSkull)
             {
                 var hittableBox = new CBox(EntityPosition, -8, -16, 0, 16, 16, 8);
                 AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(collisionBox, OnHit));
@@ -262,7 +264,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 OnCollision();
         }
 
-        private void OnCollision()
+        public void OnCollision()
         {
             if (!_isAlive)
                 return;
@@ -293,6 +295,12 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (!NoRespawn)
                 Map.Objects.SpawnObject(new ObjStoneRespawner(Map, _baseX, _baseY, _spriteId, _spawnItem, _pickupKey, _dialogPath, _isHeavy, _potMessage, FromObjSpawner));
 
+            // Skulls have a 33% chance to spawn a fairy.
+            if (_isSkull && Game1.RandomNumber.Next(0,5) == 0)
+            {
+                var objFairy = new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 0);
+                Map.Objects.SpawnObject(objFairy);
+            }
             // Delete the stone.
             Map.Objects.DeleteObjects.Add(this);
             _isAlive = false;

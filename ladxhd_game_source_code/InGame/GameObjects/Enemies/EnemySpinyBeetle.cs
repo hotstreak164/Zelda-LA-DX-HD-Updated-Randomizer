@@ -38,7 +38,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         // 0: Grass ; 1: Stone ; 2: skull
         private readonly int _type;
         private bool _objectPickedUp;
-        private bool _bushDestroyed;
+        private bool _objectDestroyed;
         private int _lives = ObjLives.SpinyBeetle;
 
         private float moveTimer;
@@ -141,7 +141,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reset()
         {
             // Delete carried object only if still on beetle's back.
-            if (!_objectPickedUp)
+            if (!_objectPickedUp && !_objectDestroyed)
                Map.Objects.DeleteObjects.Add(_carriedObject);
 
             // Always delete the beetle and spawn a new one.
@@ -210,7 +210,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void CheckCarrier()
         {
             // Object was destroyed or picked up?
-            if (_carriedObject.IsDead || (_carriableComponent != null && _objectPickedUp))
+            if (_carriedObject.IsDead || _objectDestroyed || (_carriableComponent != null && _objectPickedUp))
             {
                 ToRunning();
                 _body.VelocityTarget = Vector2.Zero;
@@ -291,18 +291,21 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if ((hitType & HitType.CrystalSmash) != 0 || (hitType & HitType.ClassicSword) != 0)
                 return Values.HitCollision.None;
 
-            if (!_bushDestroyed && _type == 0)
+            if (!_objectDestroyed && (_type == 0 || (_type == 2 && GameSettings.SwordInteract)))
             {
-                _bushDestroyed = true;
+                _objectDestroyed = true;
 
-                if (!_carriedObject.IsDead)
+                if (!_carriedObject.IsDead && _carriedObject.GetType() == typeof(ObjBush))
                     ((ObjBush)_carriedObject).DestroyBush(direction);
+
+                if (!_carriedObject.IsDead && _carriedObject.GetType() == typeof(ObjStone))
+                    ((ObjStone)_carriedObject).OnCollision();
 
                 if (hitType == HitType.Bomb || hitType == HitType.Bow || hitType == HitType.Hookshot)
                     return Values.HitCollision.Blocking;
             }
             // Attacks get repelled by stone/skull.
-            if (_type > 0 && !_objectPickedUp)
+            if (_type > 0 && !_objectPickedUp && !_objectDestroyed)
             {
                 _body.Velocity = new Vector3(direction.X * 0.25f, direction.Y * 0.25f, _body.Velocity.Z);
                 return Values.HitCollision.RepellingParticle;
