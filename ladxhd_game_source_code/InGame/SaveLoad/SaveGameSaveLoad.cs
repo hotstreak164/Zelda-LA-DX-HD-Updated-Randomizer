@@ -102,7 +102,6 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetInt("pieceOfPowerCount", gameManager.PieceOfPowerCount);
             saveManager.SetFloat("totalPlaytime", gameManager.TotalPlaytime + gameManager.CurrentSessionPlaytime);
             saveManager.SetBool("cleared", gameManager.GameCleared);
-
             saveManager.SetBool("debugMode", gameManager.DebugMode);
 
             // this is only used in the main menu

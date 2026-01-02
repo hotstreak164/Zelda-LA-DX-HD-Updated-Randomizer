@@ -787,7 +787,6 @@ namespace ProjectZ.InGame.Overlay.Sequences
             // Set the save file's cleared state and save.
             Game1.GameManager.GameCleared = true;
             SaveGameSaveLoad.SaveGame(Game1.GameManager, true);
-
         }
 
         private bool NextCredits()

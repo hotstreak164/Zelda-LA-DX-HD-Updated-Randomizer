@@ -285,6 +285,9 @@ namespace ProjectZ.InGame.Pages
 
             UpdateUi();
 
+            // This likes to stick around so clear it whenever we show this page.
+            Game1.GameManager.GameCleared = false;
+
             if (_selectedSaveIndex != -1)
             {
                 _saveFileList.Elements[_selectedSaveIndex].Deselect(false);

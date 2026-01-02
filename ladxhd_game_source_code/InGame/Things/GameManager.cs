@@ -134,7 +134,7 @@ namespace ProjectZ.InGame.Things
         public int SavePositionY;
         public int SaveDirection;
         public int SaveSlot;
-        public string SaveFileVersion = "3";
+        public string SaveFileVersion = "4";
 
         private float _shakeCountX;
         private float _shakeCountY;
@@ -152,7 +152,7 @@ namespace ProjectZ.InGame.Things
         public int StoneGrabberLevel;
         public bool HasMagnifyingLens;
         public bool DebugMode;
-        public bool GameCleared;
+        public bool GameCleared = false;
 
         // 0: Marin, 1: Manbo, 2: Mamu
         public int[] OcarinaSongs = new int[3];
@@ -1652,6 +1652,7 @@ namespace ProjectZ.InGame.Things
             // 1: Seashell Mansion & "Nothing is Missable" enabled.
             // 2: World teleporter indexes fixed.
             // 3: Dungeon 3 has a new map.
+            // 4: New games may have "cleared" state when they shouldn't.
             SaveManager.SetString("save_version", SaveFileVersion);
 
             // set up values
@@ -1738,6 +1739,7 @@ namespace ProjectZ.InGame.Things
             SaveFileFix_v0();
             SaveFileFix_v1();
             SaveFileFix_v2();
+            SaveFileFix_v3();
 
             // Item and equipment preparations.
             ItemDrawHelper.Init();
@@ -1856,6 +1858,26 @@ namespace ProjectZ.InGame.Things
                 // Increment the save version.
                 SaveManager.SetString("save_version", SaveFileVersion);
             }
+        }
+
+        private void SaveFileFix_v3()
+        {
+            // Fixes "game cleared" on save files where it wasn't actually cleared.
+            string saveVersionStr = SaveManager.GetString("save_version", "0");
+            int.TryParse(saveVersionStr, out int saveVersion);
+
+            // Check if the save file is below version 4.
+            if (saveVersion < 4)
+            {
+                // Check to see if the game is really cleared.
+                bool notInEgg = SaveManager.GetString("egg_enter_end") == null;
+
+                // It's not perfect, but it's the closest value we have to the end.
+                if (notInEgg)
+                    GameCleared = false;
+            }
+            // Increment the save version.
+            SaveManager.SetString("save_version", SaveFileVersion);
         }
 
         public void RespawnPlayer()
