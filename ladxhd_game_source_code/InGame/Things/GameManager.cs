@@ -152,7 +152,7 @@ namespace ProjectZ.InGame.Things
         public int StoneGrabberLevel;
         public bool HasMagnifyingLens;
         public bool DebugMode;
-        public bool GameCleared = false;
+        public bool GameCleared;
 
         // 0: Marin, 1: Manbo, 2: Mamu
         public int[] OcarinaSongs = new int[3];
@@ -1683,8 +1683,16 @@ namespace ProjectZ.InGame.Things
 
             ItemDrawHelper.Init();
 
-            SwordLevel = 0;
             CloakType = CloakGreen;
+            ThiefState = false;
+            GameCleared = false;
+            HasMagnifyingLens = false;
+
+            KillCount = 0;
+            DeathCount = 0;
+            SwordLevel = 0;
+            ShieldLevel = 0;
+            StoneGrabberLevel = 0;
 
             SelectedOcarinaSong = 0;
             OcarinaSongs[0] = 0;
@@ -1701,9 +1709,6 @@ namespace ProjectZ.InGame.Things
 
             // randomize the directions of the egg
             Game1.GameManager.SaveManager.SetString("eggDirections", Game1.RandomNumber.Next(0, 4).ToString());
-
-            // Reset the "thief state".
-            Game1.GameManager.ThiefState = false;
 
             // create empty map
             MapManager.CurrentMap = Map.Map.CreateEmptyMap();
