@@ -128,10 +128,10 @@ namespace ProjectZ.InGame.Pages
 
         public override void OnLoad(Dictionary<string, object> intent)
         {
-            // get the selected save slot number from the intent
+            // Get the selected save slot number from the intent.
             _selectedSaveSlot = (int)intent["SelectedSaveSlot"];
 
-            // reset the name of the save slot
+            // Reset the name of the save slot.
             _strNameInput = "Link";
             _labelNameInput.SetText(_strNameInput + " ");
             _gameTypeSlider.CurrentStep = 0;
@@ -173,12 +173,16 @@ namespace ProjectZ.InGame.Pages
 
             // Keep the current column when moving around on the keyboard.
             for (var y = 0; y < _charactersUpper.GetLength(0); y++)
+            {
                 for (int x = 0; x < _charactersUpper.GetLength(1); x++)
+                {
                     if (_keyboardButtons[y, x] != null && _keyboardButtons[y, x].Selected)
                     {
                         for (var y1 = 0; y1 < _charactersUpper.GetLength(0); y1++)
                             _keyboardRows[y1].SetSelectionIndex(x);
                     }
+                }
+            }
 
             // When the name entry button is selected, allow keyboard input and
             // deleting characters with the controller "Cancel" button.
@@ -235,7 +239,8 @@ namespace ProjectZ.InGame.Pages
                 }
             }
             // The "Tooltip" button was pressed.
-            if (ControlHandler.ButtonPressed(CButtons.Y, true))
+            bool keyboardSelected = _newGameLayout.SelectionIndex == 1;
+            if (ControlHandler.ButtonPressed(CButtons.Y, keyboardSelected))
             {
                 _showTooltip = !_showTooltip;
                 if (_showTooltip)
@@ -274,7 +279,6 @@ namespace ProjectZ.InGame.Pages
 
         private void RemoveCharacter()
         {
-            // remove the last letter
             if (_strNameInput.Length > 0)
                 _strNameInput = _strNameInput.Remove(_strNameInput.Length - 1);
         }
@@ -283,7 +287,6 @@ namespace ProjectZ.InGame.Pages
         {
             _strNameInput += letter;
 
-            // cut the string off
             if (_strNameInput.Length > MaxNameLength)
                 _strNameInput = _strNameInput.Remove(MaxNameLength);
         }
@@ -292,7 +295,6 @@ namespace ProjectZ.InGame.Pages
         {
             var characters = _upperMode ? _charactersUpper : _charactersLower;
 
-            // toggle caps lock
             if (characters[y, x] == CapsLockCharacter)
             {
                 _upperMode = !_upperMode;

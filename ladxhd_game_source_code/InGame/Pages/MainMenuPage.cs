@@ -259,7 +259,6 @@ namespace ProjectZ.InGame.Pages
             PageLayout.Select(InterfaceElement.Directions.Top, false);
         }
 
-
         public void HideInstruments()
         {
             for (var i = 0; i < SaveStateManager.SaveCount; i++)
