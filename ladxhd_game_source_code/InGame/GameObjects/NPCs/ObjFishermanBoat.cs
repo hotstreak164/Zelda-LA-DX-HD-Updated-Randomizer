@@ -55,11 +55,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _sprite = new CSprite(EntityPosition);
             var animationComponent = new AnimationComponent(_animator, _sprite, Vector2.Zero);
 
-            _body = new BodyComponent(EntityPosition,
-                bodyRectangle.X - bodyRectangle.Width / 2, bodyRectangle.Y - bodyRectangle.Height, bodyRectangle.Width, bodyRectangle.Height, bodyRectangle.Height)
-            {
-                Gravity = -0.15f,
-            };
+            _body = new BodyComponent(EntityPosition, bodyRectangle.X - bodyRectangle.Width / 2, bodyRectangle.Y - bodyRectangle.Height, bodyRectangle.Width, bodyRectangle.Height, bodyRectangle.Height) { Gravity = -0.15f };
 
             AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(OnKeyChange));
             AddComponent(BodyComponent.Index, _body);
@@ -109,7 +105,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                         _animator.Play("stand_" + (playerDistance.Y < 0 ? "1" : "3"));
                 }
             }
-
             // finished playing
             if (_currentAnimation != null && !_animator.IsPlaying)
             {
@@ -121,7 +116,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             {
                 var targetPosition = new Vector2(EntityPosition.X - 25, EntityPosition.Y - 1);
                 var pullDirection = targetPosition - _photoMouse.EntityPosition.Position;
-                // pull slower in water
                 var pullSpeed = (_photoMouse.Body.CurrentFieldState & MapStates.FieldStates.DeepWater) != 0 ? 0.25f : 0.5f;
 
                 if (pullDirection.Length() > pullSpeed * Game1.TimeMultiplier)
@@ -136,7 +130,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                         _pulledMouse = true;
                         Game1.GameManager.SaveManager.SetString("mousePulledUp", "1");
                     }
-
                     _photoMouse.Body.VelocityTarget = Vector2.Zero;
                     _photoMouse.EntityPosition.Set(targetPosition);
                 }

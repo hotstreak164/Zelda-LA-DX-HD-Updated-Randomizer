@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.InGame.GameObjects;
 using ProjectZ.InGame.GameSystems;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Overlay;
@@ -19,9 +20,8 @@ namespace ProjectZ.InGame.Things
         public struct MiniMapTile
         {
             public int TileIndex;
-            public bool DiscoveryState;
-
             public int HintTileIndex;
+            public bool DiscoveryState;
             public string HintKey;
         }
 
@@ -37,19 +37,15 @@ namespace ProjectZ.InGame.Things
         {
             public int OffsetX;
             public int OffsetY;
-
             public MiniMapTile[,] Tiles;
-
             public MiniMapOverrides[] Overrides;
         }
 
         private class PlayingSoundEffect
         {
             public bool LowerMusicVolume;
-            
             public float Volume;
             public double EndTime;
-
             public SoundEffectInstance Instance;
         }
 
@@ -102,21 +98,17 @@ namespace ProjectZ.InGame.Things
 
         // dungeon maps
         public Dictionary<string, MiniMap> DungeonMaps = new Dictionary<string, MiniMap>();
-
         public Dictionary<Type, GameSystem> GameSystems = new Dictionary<Type, GameSystem>();
 
         public Point PlayerDungeonPosition;
-
-        // can be null if the player never left the house in the beginning
         public Point? PlayerMapPosition;
 
         public bool[,] MapVisibility;
-
         public bool ThiefState = false;
-
         public string RealSaveName = "Link";
 
-        public string SaveName {
+        public string SaveName 
+        {
             get { return ThiefState ? Game1.LanguageManager.GetString("savename_thief", "error") : RealSaveName; }
             set { RealSaveName = value; } 
         } 
@@ -125,7 +117,6 @@ namespace ProjectZ.InGame.Things
         // playtime tracking
         public float TotalPlaytime = 0.0f; // total playtime across all sessions in minutes
         public float CurrentSessionPlaytime = 0.0f; // current session playtime in minutes
-
         public float DrawPlayerOnTopPercentage;
 
         // save game data
@@ -143,6 +134,11 @@ namespace ProjectZ.InGame.Things
         private int _maxOffsetX;
         private int _maxOffsetY;
 
+        public static int CloakGreen = 0;
+        public static int CloakBlue = 1;
+        public static int CloakRed = 2;
+
+        public int CloakType;
         public int DeathCount;
         public int KillCount;
         public int MaxHearts = 3;
@@ -158,11 +154,6 @@ namespace ProjectZ.InGame.Things
         public int[] OcarinaSongs = new int[3];
         public int SelectedOcarinaSong = 0;
 
-        public static int CloakGreen = 0;
-        public static int CloakBlue = 1;
-        public static int CloakRed = 2;
-
-        public int CloakType;
         public Color CloakColor => ItemDrawHelper.CloakColors[CloakType];
 
         public bool GuardianAcornIsActive;
@@ -192,10 +183,11 @@ namespace ProjectZ.InGame.Things
         public float _scaleMultiplier;
         private int _currentDialogPathState;
 
-        // 0: map music, 1: guardian acorn/piece of power, 2: maria singing
+        // 0: Map Music, 1: PowerUp Music, 2: Marin Singing
         private const int MusicChannels = 3;
         private int[] _musicArray = new int[MusicChannels];
-        // counters used to stop music
+
+        // Counters used to stop music.
         private float[] _musicCounter = new float[MusicChannels];
 
         // Muting the sound requires overwriting effect volume so store user setting.
@@ -203,10 +195,12 @@ namespace ProjectZ.InGame.Things
         private bool _lastStateSet;
         private bool _muteInactive;
 
+        // Quick reference to "ObjLink" in MapManager.
+        private ObjLink Link => MapManager.ObjLink;
+
         public GameManager()
         {
             ResetMusic();
-
             GameSystems.Add(typeof(MapTransitionSystem), new MapTransitionSystem(MapManager));
             GameSystems.Add(typeof(GameOverSystem), new GameOverSystem());
             GameSystems.Add(typeof(EndingSystem), new EndingSystem());
@@ -221,7 +215,6 @@ namespace ProjectZ.InGame.Things
             MapManager.Load();
             ItemManager.Load();
 
-            // load the dialog paths
             DialogPathLoader.LoadScripts(Path.Combine(Values.PathContentFolder, "scripts.zScript"), _dialogPaths);
         }
 
@@ -242,35 +235,39 @@ namespace ProjectZ.InGame.Things
 
         public void UpdateGame()
         {
+            // Update the overlay. Includes the HUD and inventory.
             InGameOverlay.Update();
 
+            // Update the sound effects and music.
             UpdateSoundEffects();
-
             UpdateMusic();
+
 
             ItemDrawHelper.Update();
 
-            // update the dialogs; forced dialog update is used in sequences where the dialog should be updated but not the normal game
-            // needs to come after the ingame overlay update because Game1.UpdateGame can be set to false by it
+            // Update the dialogs. "ForceDialogUpdate" is used in sequences where the dialog should be updated but the rest of the
+            // game remains frozen. Needs to come after the InGameOverlay update because "Game1.UpdateGame" can be set to false by it.
             if (Game1.UpdateGame || Game1.ForceDialogUpdate)
             {
                 UpdateDialog();
                 Game1.ForceDialogUpdate = false;
             }
-
+            // Update the game if enabled and the player is not taking damage (freeze time is used when damage is taken).
             if (Game1.UpdateGame && Game1.TotalGameTime > Game1.FreezeTime)
             {
-                // track playtime during active gameplay (exclude pause/menu time)
-                CurrentSessionPlaytime += Game1.DeltaTime / 1000.0f / 60.0f; // convert ms to minutes
+                // Track playtime during active gameplay (exclude pause/menu time).
+                CurrentSessionPlaytime += Game1.DeltaTime / 1000.0f / 60.0f;
 
-                // update the game-systems
+                // Update the game-systems.
                 foreach (var gameSystem in GameSystems)
                     gameSystem.Value.Update();
 
+                // Update the current map and animate all objects.
                 if (Game1.UpdateGame)
                     MapManager.Update(false);
             }
-            else if (Game1.GameManager.InGameOverlay.UpdateCameraAndAnimation())
+            // Update the current map but freeze all objects. 
+            else if (InGameOverlay.UpdateCameraAndAnimation())
             {
                 MapManager.Update(true);
                 MapManager.UpdateAnimation();
@@ -373,13 +370,13 @@ namespace ProjectZ.InGame.Things
                 Resources.LightShader.Parameters["height"].SetValue(_lightRenderTarget.Height);
 
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, Resources.LightShader, MapManager.Camera.TransformMatrix);
-                MapManager.ObjLink.DrawTransition(spriteBatch);
+                Link.DrawTransition(spriteBatch);
                 spriteBatch.End();
             }
             else if (DrawPlayerOnTopPercentage > 0)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, MapManager.Camera.TransformMatrix);
-                MapManager.ObjLink.DrawTransition(spriteBatch);
+                Link.DrawTransition(spriteBatch);
                 spriteBatch.End();
             }
 
@@ -444,7 +441,7 @@ namespace ProjectZ.InGame.Things
             }
 
             // try to start a new dialog box
-            if (dialogPath == null && !Game1.GameManager.InGameOverlay.TextboxOverlay.IsOpen)
+            if (dialogPath == null && !InGameOverlay.TextboxOverlay.IsOpen)
             {
                 // directly start a dialog
                 string stateString = null;
@@ -550,7 +547,7 @@ namespace ProjectZ.InGame.Things
 
         private DialogPath DequeueDialogPath()
         {
-            Game1.GameManager.InGameOverlay.TextboxOverlay.UpdateObjects = false;
+            InGameOverlay.TextboxOverlay.UpdateObjects = false;
 
             var dialogKey = _dialogPathQueue.Peek();
 
@@ -570,7 +567,7 @@ namespace ProjectZ.InGame.Things
             }
 
             // try to start a new dialog box
-            if (!Game1.GameManager.InGameOverlay.TextboxOverlay.IsOpen)
+            if (!InGameOverlay.TextboxOverlay.IsOpen)
             {
                 _dialogPathQueue.Dequeue();
 
@@ -828,7 +825,7 @@ namespace ProjectZ.InGame.Things
                 if (GuardianAcornDamageCount >= 3)
                 {
                     StopGuardianAcorn();
-                    Game1.GameManager.GuardianAcornCount = 0;
+                    GuardianAcornCount = 0;
                 }
             }
 
@@ -839,7 +836,7 @@ namespace ProjectZ.InGame.Things
                 if (PieceOfPowerDamageCount >= 3)
                 {
                     StopPieceOfPower();
-                    Game1.GameManager.PieceOfPowerCount = 0;
+                    PieceOfPowerCount = 0;
                 }
             }
         }
@@ -855,7 +852,7 @@ namespace ProjectZ.InGame.Things
             if (!GameSettings.MutePowerups)
                 StartPieceOfPowerMusic(0);
             else
-                Game1.GameManager.PlaySoundEffect("D360-23-17");
+                PlaySoundEffect("D360-23-17");
         }
 
         public void StopGuardianAcorn()
@@ -863,7 +860,7 @@ namespace ProjectZ.InGame.Things
             GuardianAcornIsActive = false;
 
             if (!GameSettings.MutePowerups)
-                Game1.GameManager.SetMusic(-1, 1, false);
+                SetMusic(-1, 1, false);
         }
 
         public void InitPieceOfPower()
@@ -877,14 +874,14 @@ namespace ProjectZ.InGame.Things
             if (!GameSettings.MutePowerups)
                 StartPieceOfPowerMusic(0);
             else
-                Game1.GameManager.PlaySoundEffect("D360-23-17");
+                PlaySoundEffect("D360-23-17");
         }
         public void StartPieceOfPowerMusic(int Variation)
         {
             // 0: Delayed with sound effect
             // 1: Music starts instantly.
             int trackId = Variation == 0 ? 38 : 72;
-            Game1.GameManager.SetMusic(trackId, 1);
+            SetMusic(trackId, 1);
 
             // @HACK: When music is restarted for any reason: map/area transition, healing
             // from a great fairy, etc. we want the version without the starting sound effect.
@@ -899,7 +896,7 @@ namespace ProjectZ.InGame.Things
             PieceOfPowerIsActive = false;
 
             if (!GameSettings.MutePowerups)
-                Game1.GameManager.SetMusic(-1, 1, false);
+                SetMusic(-1, 1, false);
         }
 
         public void ResetMusic()
@@ -967,7 +964,7 @@ namespace ProjectZ.InGame.Things
         {
             // Don't restart the overworld track if the version with the intro was already started. But if it's the part
             // of the game where Marin joins the player and the beach photo is taken, we need to allow song 4 to replace 48.
-            if (trackID == 4 && _musicArray[priority] == 48 && Game1.GameManager.SaveManager.GetString("maria_state") != "3")
+            if (trackID == 4 && _musicArray[priority] == 48 && SaveManager.GetString("maria_state") != "3")
                 return false;
 
             // Make sure to not restart the music while showing the overworld in the final sequence. 
@@ -1078,7 +1075,7 @@ namespace ProjectZ.InGame.Things
 
         public void PlaySoundEffect(string name, bool restart, Vector2 position, float range = 256)
         {
-            var playerDistance = MapManager.ObjLink.EntityPosition.Position - position;
+            var playerDistance = Link.EntityPosition.Position - position;
             var volume = 1 - playerDistance.Length() / range;
 
             if (volume > 0)
@@ -1335,9 +1332,9 @@ namespace ProjectZ.InGame.Things
             if (itemCollected.LocationBounding == "")
                 itemCollected.LocationBounding = null;
 
-            var item = Game1.GameManager.ItemManager[itemCollected.Name];
+            var item = ItemManager[itemCollected.Name];
             // the base item has the max count information
-            var baseItem = Game1.GameManager.ItemManager[item.Name];
+            var baseItem = ItemManager[item.Name];
 
             // make sure to replace then name
             // this is used for items that have different variations like the normal powder or powderPD with dialog
@@ -1346,22 +1343,22 @@ namespace ProjectZ.InGame.Things
             // add the arrow count to the bow and remove the arrows
             if (itemCollected.Name == "bow")
             {
-                var arrow = Game1.GameManager.GetItem("arrow");
+                var arrow = GetItem("arrow");
                 if (arrow != null)
                 {
                     itemCollected.Count += arrow.Count;
-                    Game1.GameManager.RemoveItem("arrow", arrow.Count);
+                    RemoveItem("arrow", arrow.Count);
                 }
             }
             // if we have the bow collected change the type to bow
             if (itemCollected.Name == "arrow")
             {
-                var bow = Game1.GameManager.GetItem("bow");
+                var bow = GetItem("bow");
                 if (bow != null)
                 {
                     itemCollected.Name = "bow";
-                    item = Game1.GameManager.ItemManager[itemCollected.Name];
-                    baseItem = Game1.GameManager.ItemManager[item.Name];
+                    item = ItemManager[itemCollected.Name];
+                    baseItem = ItemManager[item.Name];
                 }
             }
             if (itemCollected.Name == "cloakBlue")
@@ -1369,7 +1366,7 @@ namespace ProjectZ.InGame.Things
             else if (itemCollected.Name == "cloakRed")
                 CloakType = CloakRed;
 
-            // unlock the ocarina songs
+            // Unlock the ocarina songs.
             if (itemCollected.Name == "ocarina_maria")
             {
                 OcarinaSongs[0] = 1;
@@ -1392,7 +1389,7 @@ namespace ProjectZ.InGame.Things
                     SelectedOcarinaSong = 2;
             }
 
-            // magnifying lens collected
+            // Magnifying lens collected.
             if (itemCollected.Name == "trade13")
                 HasMagnifyingLens = true;
 
@@ -1482,19 +1479,19 @@ namespace ProjectZ.InGame.Things
 
                 if (item.Name == "heartMeter")
                 {
-                    var heart = Game1.GameManager.GetItem("heartMeter");
+                    var heart = GetItem("heartMeter");
 
                     // expand hearts?
                     while (heart?.Count >= 4)
                     {
                         heart.Count -= 4;
-                        Game1.GameManager.MaxHearts++;
-                        Game1.GameManager.HealPlayer(99);
+                        MaxHearts++;
+                        HealPlayer(99);
                         ItemDrawHelper.EnableHeartAnimationSound();
                     }
                 }
                 else if (item.Name == "flippers")
-                    MapManager.ObjLink.HasFlippers = true;
+                    Link.HasFlippers = true;
             }
         }
 
@@ -1515,14 +1512,14 @@ namespace ProjectZ.InGame.Things
             for (var i = 0; i < Equipment.Length; i++)
             {
                 if (Equipment[i] == null || Equipment[i].Name != itemName ||
-                    Game1.GameManager.ItemManager[Equipment[i].Name].Level == 0 && Equipment[i].Count < count)
+                    ItemManager[Equipment[i].Name].Level == 0 && Equipment[i].Count < count)
                     continue;
 
                 Equipment[i].Count -= count;
 
                 // remove the item from the inventory if the player can only have 1 of it
                 // bombs, powder, etc will stay in the inventory
-                if (Equipment[i].Count <= 0 && Game1.GameManager.ItemManager[Equipment[i].Name].MaxCount == 1)
+                if (Equipment[i].Count <= 0 && ItemManager[Equipment[i].Name].MaxCount == 1)
                     Equipment[i] = null;
 
                 // remove the item?
@@ -1538,19 +1535,19 @@ namespace ProjectZ.InGame.Things
             for (var i = 0; i < CollectedItems.Count; i++)
             {
                 if (CollectedItems[i] == null || CollectedItems[i].Name != itemName ||
-                    Game1.GameManager.ItemManager[CollectedItems[i].Name].Level == 0 && CollectedItems[i].Count < count ||
+                    ItemManager[CollectedItems[i].Name].Level == 0 && CollectedItems[i].Count < count ||
                     !string.IsNullOrEmpty(CollectedItems[i].LocationBounding) && CollectedItems[i].LocationBounding != MapManager.CurrentMap.LocationName)
                     continue;
 
                 CollectedItems[i].Count -= count;
 
                 // remove the item?
-                if (Game1.GameManager.ItemManager[CollectedItems[i].Name].Level != 0 || CollectedItems[i].Count == 0)
+                if (ItemManager[CollectedItems[i].Name].Level != 0 || CollectedItems[i].Count == 0)
                 {
                     CollectedItems.RemoveAt(i);
 
                     if (itemName == "flippers")
-                        MapManager.ObjLink.HasFlippers = false;
+                        Link.HasFlippers = false;
                 }
 
                 return true;
@@ -1575,16 +1572,15 @@ namespace ProjectZ.InGame.Things
 
         private void UpdateEquipment()
         {
-            // check if link is carrying a shield
-            MapManager.ObjLink.CarrySword = false;
-            MapManager.ObjLink.CarryShield = false;
+            Link.CarrySword = false;
+            Link.CarryShield = false;
 
             for (var i = 0; i < Values.HandItemSlots; i++)
             {
                 if (Equipment[i]?.Name == "sword1" || Equipment[i]?.Name == "sword2")
-                    MapManager.ObjLink.CarrySword = true;
+                    Link.CarrySword = true;
                 else if (Equipment[i]?.Name == "shield" || Equipment[i]?.Name == "mirrorShield")
-                    MapManager.ObjLink.CarryShield = true;
+                    Link.CarryShield = true;
             }
         }
 
@@ -1637,6 +1633,7 @@ namespace ProjectZ.InGame.Things
         {
             ResetStuff();
 
+            SaveSlot = slot;
             SaveName = slotName;
             TotalPlaytime = 0.0f;
             CurrentSessionPlaytime = 0.0f;
@@ -1676,17 +1673,16 @@ namespace ProjectZ.InGame.Things
                 CollectItem(new GameItemCollected("bow") { Count = 999 }, 0);
                 CollectItem(new GameItemCollected("ocarina") { Count = 1 }, 0);
             }
-
             CollectedItems.Clear();
-
             DungeonMaps.Clear();
-
             ItemDrawHelper.Init();
 
             CloakType = CloakGreen;
             ThiefState = false;
             GameCleared = false;
             HasMagnifyingLens = false;
+            GuardianAcornIsActive = false;
+            PieceOfPowerIsActive = false;
 
             MaxHearts = 3;
             CurrentHealth = 12;
@@ -1695,7 +1691,10 @@ namespace ProjectZ.InGame.Things
             SwordLevel = 0;
             ShieldLevel = 0;
             StoneGrabberLevel = 0;
-
+            GuardianAcornCount = 0;
+            GuardianAcornDamageCount = 0;
+            PieceOfPowerCount = 0;
+            PieceOfPowerDamageCount = 0;
             SelectedOcarinaSong = 0;
             OcarinaSongs[0] = 0;
             OcarinaSongs[1] = 0;
@@ -1704,28 +1703,24 @@ namespace ProjectZ.InGame.Things
             PlayerMapPosition = null;
             MapVisibility = new bool[16, 16];
 
-            SaveSlot = slot;
-
             // randomize the directions of the egg
-            Game1.GameManager.SaveManager.SetString("eggDirections", Game1.RandomNumber.Next(0, 4).ToString());
+            SaveManager.SetString("eggDirections", Game1.RandomNumber.Next(0, 4).ToString());
 
             // create empty map
             MapManager.CurrentMap = Map.Map.CreateEmptyMap();
 
-            MapManager.ObjLink.Map = MapManager.CurrentMap;
-            MapManager.ObjLink.MapTransitionStart = MapManager.ObjLink.EntityPosition.Position;
-            MapManager.ObjLink.MapTransitionEnd = MapManager.ObjLink.EntityPosition.Position;
-            MapManager.ObjLink.EntityPosition.Z = 0;
-            MapManager.ObjLink.TransitionOutWalking = false;
-            MapManager.ObjLink.TransitionInWalking = false;
-            MapManager.ObjLink.BlackScreenOverride = true;
-
-            MapManager.ObjLink.InitGame();
-
+            Link.Map = MapManager.CurrentMap;
+            Link.MapTransitionStart = Link.EntityPosition.Position;
+            Link.MapTransitionEnd = Link.EntityPosition.Position;
+            Link.EntityPosition.Z = 0;
+            Link.TransitionOutWalking = false;
+            Link.TransitionInWalking = false;
+            Link.BlackScreenOverride = true;
+            Link.InitGame();
             MapManager.Camera.ForceUpdate(MapManager.GetCameraTargetLink());
 
             // load the map
-            MapManager.ObjLink.SetNextMapPosition(new Vector2(MapManager.ObjLink.PosX, MapManager.ObjLink.PosY));
+            Link.SetNextMapPosition(new Vector2(Link.PosX, Link.PosY));
             ((MapTransitionSystem)GameSystems[typeof(MapTransitionSystem)]).LoadMapFromFile("house1.map", true, true, Values.MapFirstTransitionColor, false);
             ((MapTransitionSystem)GameSystems[typeof(MapTransitionSystem)]).AdditionalBlackScreenDelay = Values.GameSaveBlackScreen;
         }
@@ -1734,7 +1729,7 @@ namespace ProjectZ.InGame.Things
         {
             ResetStuff();
 
-            MapManager.ObjLink.InitGame();
+            Link.InitGame();
 
             // Load the values from "save#" and "saveGame#". 
             SaveGameSaveLoad.LoadSaveFile(this, slot);
@@ -1751,53 +1746,53 @@ namespace ProjectZ.InGame.Things
 
             // Create a new empty map file to load objects into and put Link on it.
             MapManager.CurrentMap = Map.Map.CreateEmptyMap();
-            MapManager.CurrentMap.Objects.SpawnObject(MapManager.ObjLink);
+            MapManager.CurrentMap.Objects.SpawnObject(Link);
 
             // These are set from the "SaveGameSaveLoad.LoadSaveFile()" call from above.
-            MapManager.ObjLink.Map = MapManager.CurrentMap;
-            MapManager.ObjLink.SaveMap = LoadedMap;
-            MapManager.ObjLink.SavePosition.X = SavePositionX;
-            MapManager.ObjLink.SavePosition.Y = SavePositionY;
-            MapManager.ObjLink.SaveDirection = SaveDirection;
-            MapManager.ObjLink.Direction = SaveDirection;
-            MapManager.ObjLink.DirectionEntry = SaveDirection;
-            MapManager.ObjLink.SetWalkingDirection(SaveDirection);
+            Link.Map = MapManager.CurrentMap;
+            Link.SaveMap = LoadedMap;
+            Link.SavePosition.X = SavePositionX;
+            Link.SavePosition.Y = SavePositionY;
+            Link.SaveDirection = SaveDirection;
+            Link.Direction = SaveDirection;
+            Link.DirectionEntry = SaveDirection;
+            Link.SetWalkingDirection(SaveDirection);
 
             // Set up the camera.
             MapManager.CameraOffset = Vector2.Zero;
             MapManager.Camera.ForceUpdate(MapManager.GetCameraTargetLink());
 
             // Set up the map transition stuff.
-            MapManager.ObjLink.MapTransitionStart = MapManager.ObjLink.EntityPosition.Position;
-            MapManager.ObjLink.MapTransitionEnd = MapManager.ObjLink.EntityPosition.Position;
-            MapManager.ObjLink.TransitionOutWalking = false;
-            MapManager.ObjLink.TransitionInWalking = false;
-            MapManager.ObjLink.BlackScreenOverride = true;
+            Link.MapTransitionStart = Link.EntityPosition.Position;
+            Link.MapTransitionEnd = Link.EntityPosition.Position;
+            Link.TransitionOutWalking = false;
+            Link.TransitionInWalking = false;
+            Link.BlackScreenOverride = true;
 
             // Default Z-Position to zero.
-            MapManager.ObjLink.EntityPosition.Z = 0;
+            Link.EntityPosition.Z = 0;
 
             // This value is an override for the low health beep. When true it does not force the beep to play
             // but if it's false, it does force it to not play. This is used for the ending sequence.
-            MapManager.ObjLink.ToggleLowHealthBeep(true);
+            Link.ToggleLowHealthBeep(true);
 
             // load the map
             var transitionSystem = ((MapTransitionSystem)GameSystems[typeof(MapTransitionSystem)]);
-            MapManager.ObjLink.SetNextMapPosition(new Vector2(SavePositionX, SavePositionY));
+            Link.SetNextMapPosition(new Vector2(SavePositionX, SavePositionY));
             transitionSystem.LoadMapFromFile(LoadedMap, true, true, Values.MapFirstTransitionColor, false);
             transitionSystem.AdditionalBlackScreenDelay = Values.GameSaveBlackScreen;
 
             // If the game was saved frozen or the inventory disabled, unfreeze and enable the inventory.
-            MapManager.ObjLink.FreezeAnimations(false);
-            MapManager.ObjLink.DisableInventory(false);
+            Link.FreezeAnimations(false);
+            Link.DisableInventory(false);
         }
 
         private void SaveFileFix_v0()
         {
             // If second_chance doesn't exist and the Level 7/8 dungeons have been completed.
-            var secondchance = Game1.GameManager.GetItem("second_chance") == null;
-            var instrument07 = Game1.GameManager.GetItem("instrument6") != null;
-            var instrument08 = Game1.GameManager.GetItem("instrument7") != null;
+            var secondchance = GetItem("second_chance") == null;
+            var instrument07 = GetItem("instrument6") != null;
+            var instrument08 = GetItem("instrument7") != null;
 
             // Add the second chance key and set it to 1.
             if (secondchance && instrument07 && instrument08)
@@ -1886,47 +1881,45 @@ namespace ProjectZ.InGame.Things
 
         public void RespawnPlayer()
         {
-            if (Game1.GameManager.SaveManager.HistoryEnabled)
+            if (SaveManager.HistoryEnabled)
             {
-                Game1.GameManager.SaveManager.RevertHistory();
-                Game1.GameManager.SaveManager.DisableHistory();
+                SaveManager.RevertHistory();
+                SaveManager.DisableHistory();
             }
-
             ResetStuff();
 
             // create empty map
             MapManager.CurrentMap = Map.Map.CreateEmptyMap();
-            MapManager.CurrentMap.Objects.SpawnObject(MapManager.ObjLink);
-            MapManager.ObjLink.Map = MapManager.CurrentMap;
+            MapManager.CurrentMap.Objects.SpawnObject(Link);
 
+            Link.Map = MapManager.CurrentMap;
             MapManager.Camera.ForceUpdate(MapManager.GetCameraTargetLink());
 
             // respawn the player
-            MapManager.ObjLink.Respawn();
-
+            Link.Respawn();
             ItemDrawHelper.Init();
 
-            MapManager.ObjLink.MapTransitionStart = MapManager.ObjLink.EntityPosition.Position;
-            MapManager.ObjLink.MapTransitionEnd = MapManager.ObjLink.EntityPosition.Position;
-            MapManager.ObjLink.TransitionOutWalking = false;
-            MapManager.ObjLink.TransitionInWalking = false;
-            MapManager.ObjLink.BlackScreenOverride = true;
+            Link.MapTransitionStart = Link.EntityPosition.Position;
+            Link.MapTransitionEnd = Link.EntityPosition.Position;
+            Link.TransitionOutWalking = false;
+            Link.TransitionInWalking = false;
+            Link.BlackScreenOverride = true;
 
             // respawn looking down
-            MapManager.ObjLink.DirectionEntry = 3;
-            MapManager.ObjLink.SetWalkingDirection(3);
-            MapManager.ObjLink.SetNextMapPosition(MapManager.ObjLink.SavePosition);
+            Link.DirectionEntry = 3;
+            Link.SetWalkingDirection(3);
+            Link.SetNextMapPosition(Link.SavePosition);
 
             // load the map
             var transitionSystem = ((MapTransitionSystem)GameSystems[typeof(MapTransitionSystem)]);
-            transitionSystem.LoadMapFromFile(MapManager.ObjLink.SaveMap, true, true, Values.MapFirstTransitionColor, false);
+            transitionSystem.LoadMapFromFile(Link.SaveMap, true, true, Values.MapFirstTransitionColor, false);
             transitionSystem.AdditionalBlackScreenDelay = Values.GameRespawnBlackScreen;
         }
 
         private void ResetStuff()
         {
             SaveGameSaveLoad.ClearSaveState();
-            Game1.GameManager.SaveManager.DisableHistory();
+            SaveManager.DisableHistory();
 
             // this was done to support DialogActionCooldown working after loading a new save
             Game1.TotalGameTime = 0;

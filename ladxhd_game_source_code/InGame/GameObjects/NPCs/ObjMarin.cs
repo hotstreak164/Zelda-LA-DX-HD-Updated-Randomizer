@@ -356,7 +356,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             }
             else if (_currentState == States.AnimalSinging)
             {
-                // start/stop depending on the distance to the player
+                // Start/stop depending on the distance to the player.
                 var nearPlayer = _fieldRectangle.Contains(MapManager.ObjLink.EntityPosition.Position);
 
                 if (!_isSingingWithSound && nearPlayer)
@@ -379,22 +379,17 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 }
             }
             else if (_currentState == States.SingingDuo)
-            {
                 UpdateSingingDuo();
-            }
+            
             else if (_currentState == States.FollowPlayer)
-            {
                 UpdateFollowPlayer();
-            }
+            
             else if (_currentState == States.Jumping)
-            {
                 UpdateMountainSequence();
-            }
+            
             else if (_currentState == States.DungeonReturn)
-            {
                 UpdateReturn();
-            }
-
+            
             UpdateMoving();
 
             UpdateFade();
@@ -673,9 +668,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _body.VelocityTarget = Vector2.Zero;
                 return;
             }
+            // ---------------------------------------------------------------------
+            // PHOTO SEQUENCE: Everything below here is part of the photo sequence.
 
-            // make sure that the player does not walk before marin hits the ground
-            // he could potentially collect the heart
+            // Make sure that the player does not walk before Marin
+            // hits the ground he could potentially collect the heart.
             if (_fountainMouse)
                 Link.FreezePlayer();
 
@@ -694,7 +691,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 var fallenOnLink = playerDist.Length() < 8;
 
                 Game1.GameManager.SaveManager.SetString("fallen_on_link", (fallenOnLink ? "1" : "0"));
-
                 Game1.GameManager.StartDialogPath("seq_fountain");
 
                 if (fallenOnLink)
@@ -704,7 +700,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 }
             }
 
-            // jump
+            // Jump when Link jumps or when rail jumping.
             if (Link.IsJumpingState() && _body.IsGrounded && !inDeepWater &&
                 (Link.RailJumpAmount() > 0.45f || (!Link.IsRailJumping() && Link._body.Velocity.Z < 0)))
             {
@@ -732,21 +728,18 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                     _animator.Play("stand_" + _walkDirection);
                 }
                 else 
-                {
                     Game1.GameManager.PlaySoundEffect("D360-36-24");
-                }
             }
-
+            // Marin is currently in a rail jump.
             if (_isRailJumping)
             {
                 _railJumpPercentage += Game1.TimeMultiplier * _railJumpSpeed;
                 var amount = MathF.Sin(_railJumpPercentage * (MathF.PI * 0.3f)) / MathF.Sin(MathF.PI * 0.3f);
                 var newPosition = Vector2.Lerp(_railJumpStartPosition, _railJumpTargetPosition, amount);
                 EntityPosition.Set(newPosition);
-
                 EntityPosition.Z = MathF.Sin(_railJumpPercentage * MathF.PI) * _railJumpHeight;
 
-                // finished rail jump?
+                // Finished rail jump?
                 if (_railJumpPercentage >= 1)
                 {
                     _isRailJumping = false;
@@ -754,19 +747,17 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                     _body.IgnoresZ = false;
                     _body.Velocity.Z = -1f;
                     EntityPosition.Set(_railJumpTargetPosition);
-
                 }
-
+                // If Link jumps into a hole Marin should follow.
                 if (Link.IsHoleAbsorb())
                 {
                     _holeAbsorb = true;
                     _holeAbsorbCounter = 175;
                 }
-
                 return;
             }
 
-            // fall into a hole with link?
+            // Fall into a hole with Link?
             if (_holeAbsorb)
             {
                 _holeAbsorbCounter -= Game1.DeltaTime;
@@ -792,10 +783,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             bool landedGround = _body.IsGrounded && !_body.WasGrounded;
             bool enteredWater = inDeepWater && !_wasInDeepWater && _body.IsGrounded;
 
-            // Decide if we should play a splash.
+            // Play a splash effect and sound.
             if ((landedGround && inDeepWater) || enteredWater)
             {
-                // Play a splash effect and sound.
                 var splashAnimator = new ObjAnimator(
                     Map, 0, 0, 0, 3, Values.LayerPlayer,
                     "Particles/splash", "idle", true);
@@ -810,9 +800,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             }
             // Landed on solid ground.
             else if (landedGround)
-            {
                 Game1.GameManager.PlaySoundEffect("D378-07-07");
-            }
+
             var playerDirection = Link.EntityPosition.Position - EntityPosition.Position;
             var playerDistance = Math.Abs(playerDirection.X) + Math.Abs(playerDirection.Y);
             if (playerDirection != Vector2.Zero)
@@ -822,7 +811,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             var collisionCheckDist = 8;
             var collidingBox = Box.Empty;
-            // check for future collisions
+
+            // Check for future collisions.
             var collisionH = SystemBody.Collision(_body,
                 EntityPosition.X + playerDirection.X * collisionCheckDist,
                 EntityPosition.Y, 0, _body.CollisionTypes, false, ref collidingBox);
@@ -830,14 +820,15 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 EntityPosition.X,
                 EntityPosition.Y + playerDirection.Y * collisionCheckDist, 0, _body.CollisionTypes, false, ref collidingBox);
 
-            // disable the collision if we are too far away from the player; this will prevent situations where we are stuck
+            // Disable the collision if we are too far away from the player; this will prevent situations where we are stuck.
             var ignoreCollisions = Link.IsRailJumping() || playerDistance > 24;
             _body.CollisionTypes = ignoreCollisions ? Values.CollisionTypes.None : Values.CollisionTypes.Normal;
 
             if (playerDistance > 16)
             {
                 targetVelocity = playerDirection * walkSpeedMult;
-                // try to avoid future collisions by walking around the colliding object
+
+                // Try to avoid future collisions by walking around the colliding object.
                 if (!ignoreCollisions && collisionH)
                 {
                     targetVelocity.Y += (Math.Abs(targetVelocity.X) * MathF.Sign(targetVelocity.Y)) * 0.5f;
@@ -849,7 +840,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                     targetVelocity.Y *= 0.5f;
                 }
             }
-
             _followVelocity = Vector2.Lerp(_followVelocity, targetVelocity, 0.45f * Game1.TimeMultiplier);
             _body.VelocityTarget = _followVelocity;
 
@@ -929,7 +919,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (!IsActive)
                 return;
 
-            // start fading away?
+            // Start fading away?
             var fadeValue = Game1.GameManager.SaveManager.GetString("maria_fade");
             if (!string.IsNullOrEmpty(fadeValue))
             {
@@ -938,7 +928,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 Game1.GameManager.SaveManager.RemoveString("maria_fade");
             }
 
-            // start moving?
+            // Start moving?
             var moveValue = Game1.GameManager.SaveManager.GetString("maria_walk");
             if (!string.IsNullOrEmpty(moveValue))
             {
@@ -972,7 +962,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 Game1.GameManager.SaveManager.RemoveString("maria_walk");
             }
 
-            // start singing?
+            // Start singing?
             var value = Game1.GameManager.SaveManager.GetString("maria_sing");
             if (value != null && value == "1")
             {
@@ -982,7 +972,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 Game1.GameManager.SaveManager.RemoveString("maria_sing");
             }
 
-            // start singing for the final scene?
+            // Start singing for the final scene?
             var singFinal = Game1.GameManager.SaveManager.GetString("maria_sing_final", "0");
             if (singFinal == "1")
             {
@@ -1045,7 +1035,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _currentState != States.PostDuo)
                 return false;
 
-            // stop singing
             if (_currentState == States.AnimalSinging)
             {
                 _isSinging = false;
@@ -1058,10 +1047,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void Draw(SpriteBatch spriteBatch)
         {
-            // draw maria
             _bodyDrawComponent.Draw(spriteBatch);
 
-            // draw the notes if maria is singing
             var leftNotePosition = new Vector2(EntityPosition.X - 8 - _spriteNote.SourceRectangle.Width / 2f, EntityPosition.Y - 16 - _spriteNote.SourceRectangle.Height / 2f);
             var leftNoteDirection = new Vector2(-0.4f, -1.0f);
             DrawNote(spriteBatch, leftNotePosition, leftNoteDirection, 0);
