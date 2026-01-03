@@ -9,17 +9,19 @@ namespace ProjectZ.InGame.Overlay.Sequences
         {
             _sequenceWidth = 160;
             _sequenceHeight = 144;
-
-            // background
             Sprites.Add(new SeqSprite("shrine", new Vector2(0, 0), 0));
         }
 
         public override void Update()
         {
             base.Update();
-
-            if (!Game1.GameManager.DialogIsRunning() && (ControlHandler.ButtonPressed(ControlHandler.CancelButton) || ControlHandler.ButtonPressed(ControlHandler.ConfirmButton)))
+            if (!Game1.GameManager.DialogIsRunning() && 
+                (ControlHandler.ButtonReleased(CButtons.Start) || 
+                ControlHandler.ButtonPressed(ControlHandler.CancelButton) || 
+                ControlHandler.ButtonPressed(ControlHandler.ConfirmButton)))
+            {
                 Game1.GameManager.InGameOverlay.CloseOverlay();
+            }
         }
     }
 }

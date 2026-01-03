@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Things;
-using System;
 
 namespace ProjectZ.InGame.Overlay.Sequences
 {
@@ -108,12 +109,12 @@ namespace ProjectZ.InGame.Overlay.Sequences
             if (Game1.GameManager.InGameOverlay.TextboxOverlay.IsOpen)
                 return;
 
+            // This is where the Bow Wow picture is shown to the player.
             if (_showPicture)
             {
                 _counter += Game1.DeltaTime;
-                if (_counter > 2500)
+                if (_counter > 2500 || ControlHandler.ButtonPressed(CButtons.Start))
                     Game1.GameManager.InGameOverlay.CloseOverlay();
-
                 return;
             }
 
@@ -146,12 +147,14 @@ namespace ProjectZ.InGame.Overlay.Sequences
                     _spriteSmoke0.Position = new Vector2(_aniBowWow.Position.X - 17, _aniBowWow.Position.Y - 30);
                     _spriteSmoke1.Position = new Vector2(_aniBowWow.Position.X + 17, _aniBowWow.Position.Y - 30);
                 }
+
                 if (_counter > 500)
                 {
                     _flashPercentage = 1;
                     _spritePhotoFlash.Color = Color.White * _flashPercentage;
                     Game1.GameManager.PlaySoundEffect("D378-63-40");
 
+                    // Show the Bow Wow picture.
                     _showPicture = true;
                     _spritePhoto.Color = Color.White;
                     _counter = 0;

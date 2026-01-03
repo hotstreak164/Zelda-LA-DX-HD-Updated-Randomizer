@@ -83,6 +83,10 @@ namespace ProjectZ.InGame.SaveLoad
             {
                 path.Action.Add(new DialogActionFreezePlayer(stringSplit[1], stringSplit[2]));
             }
+            else if (stringSplit[0] == "freeze_skippable")
+            {
+                path.Action.Add(new DialogActionFreezePlayerSkippable(int.Parse(stringSplit[1])));
+            }
             else if (stringSplit[0] == "lock_player" && stringSplit.Length == 2)
             {
                 path.Action.Add(new DialogActionLockPlayerTime(int.Parse(stringSplit[1])));

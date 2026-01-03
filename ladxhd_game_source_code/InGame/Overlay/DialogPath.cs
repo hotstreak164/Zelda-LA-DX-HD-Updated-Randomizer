@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.GameSystems;
 using ProjectZ.InGame.Map;
@@ -201,7 +202,6 @@ namespace ProjectZ.InGame.Overlay
             _key = key;
             _value = value;
         }
-
         public override bool Execute()
         {
             return Game1.GameManager.SaveManager.GetString(_key) == _value;
@@ -220,12 +220,10 @@ namespace ProjectZ.InGame.Overlay
         {
             Time = time;
         }
-
         public override void Init()
         {
             _counter = Time;
         }
-
         public override bool Execute()
         {
             _counter -= Game1.DeltaTime;
@@ -243,7 +241,6 @@ namespace ProjectZ.InGame.Overlay
             _key = key;
             _value = value;
         }
-
         public override bool Execute()
         {
             MapManager.ObjLink.FreezePlayer();
@@ -260,12 +257,10 @@ namespace ProjectZ.InGame.Overlay
         {
             _time = time;
         }
-
         public override void Init()
         {
             _counter = _time;
         }
-
         public override bool Execute()
         {
             // freeze the player while the time is running
@@ -287,20 +282,41 @@ namespace ProjectZ.InGame.Overlay
         {
             _time = time;
         }
-
         public override void Init()
         {
             _counter = _time;
         }
-
         public override bool Execute()
         {
-            // freeze the player while the time is running
+            var finished = _counter <= 0;
+            _counter -= Game1.DeltaTime;
+            MapManager.ObjLink.SeqLockPlayer();
+            return finished;
+        }
+    }
+
+    class DialogActionFreezePlayerSkippable : DialogAction
+    {
+        private float _counter;
+        private readonly float _time;
+
+        public DialogActionFreezePlayerSkippable(int time)
+        {
+            _time = time;
+        }
+        public override void Init()
+        {
+            _counter = _time;
+        }
+        public override bool Execute()
+        {
             var finished = _counter <= 0;
             _counter -= Game1.DeltaTime;
 
-            MapManager.ObjLink.SeqLockPlayer();
+            if (ControlHandler.ButtonPressed(CButtons.Start))
+                return true;
 
+            MapManager.ObjLink.FreezePlayer();
             return finished;
         }
     }
@@ -318,7 +334,6 @@ namespace ProjectZ.InGame.Overlay
             _key = key;
             _value = value;
         }
-
         public override bool Execute()
         {
             MapManager.ObjLink.SeqLockPlayer();
@@ -342,7 +357,6 @@ namespace ProjectZ.InGame.Overlay
             _shakeSpeedX = shakeSpeedX;
             _shakeSpeedY = shakeSpeedY;
         }
-
         public override bool Execute()
         {
             Game1.GameManager.ShakeScreen(_time, _maxX, _maxY, _shakeSpeedX, _shakeSpeedY);
@@ -369,7 +383,6 @@ namespace ProjectZ.InGame.Overlay
             _time = time;
             _priority = priority;
         }
-
         public override bool Execute()
         {
             Game1.GameManager.StopMusic(_time, _priority);
@@ -387,7 +400,6 @@ namespace ProjectZ.InGame.Overlay
             _songNr = songNr;
             _priority = priority;
         }
-
         public override bool Execute()
         {
             if (_priority < 0)
@@ -395,8 +407,6 @@ namespace ProjectZ.InGame.Overlay
                 Game1.GameManager.StopMusic();
                 return true;
             }
-
-            // play the music after the transition if the game is transitioning
             if (MapManager.ObjLink.IsTransitioning)
                 Game1.GameManager.MapManager.NextMap.MapMusic[_priority] = _songNr;
             else
@@ -405,7 +415,6 @@ namespace ProjectZ.InGame.Overlay
                 if (_songNr >= 0)
                     Game1.GbsPlayer.Play();
             }
-
             return true;
         }
     }
@@ -418,7 +427,6 @@ namespace ProjectZ.InGame.Overlay
         {
             _playbackSpeed = playbackSpeed;
         }
-
         public override bool Execute()
         {
 #if WINDOWS
@@ -436,7 +444,6 @@ namespace ProjectZ.InGame.Overlay
         {
             _soundEffect = soundEffect;
         }
-
         public override bool Execute()
         {
             Game1.GameManager.PlaySoundEffect(_soundEffect);
@@ -456,7 +463,6 @@ namespace ProjectZ.InGame.Overlay
             _count = count;
             _resultKey = resultKey;
         }
-
         public override bool Execute()
         {
             // get the item and check if enough are available
@@ -481,7 +487,6 @@ namespace ProjectZ.InGame.Overlay
             _resultKey = resultKey;
             _lastExecutionTime = -_cooldownTime;
         }
-
         public override bool Execute()
         {
             // check when the last time the check was successful
@@ -509,7 +514,6 @@ namespace ProjectZ.InGame.Overlay
             _itemName = itemName;
             _amount = amount;
         }
-
         public override bool Execute()
         {
             if (Game1.GameManager.InGameOverlay.TextboxOverlay.IsOpen)
@@ -538,7 +542,6 @@ namespace ProjectZ.InGame.Overlay
             _animatorId = animatorId;
             _newPosition = newPosition;
         }
-
         public override bool Execute()
         {
             var gameSequence = Game1.GameManager.InGameOverlay.GetCurrentGameSequence();
