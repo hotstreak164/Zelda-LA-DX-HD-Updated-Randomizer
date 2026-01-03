@@ -43,7 +43,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _sprite = new CSprite(EntityPosition);
             var animationComponent = new AnimationComponent(_animator, _sprite, new Vector2(-8, -8));
 
-            var hittableBox = new CBox(EntityPosition, -5, -5, 0, 10, 10, 8, true);
+            var hittableBox = new CBox(EntityPosition, -7, -7, 0, 14, 14, 8, true);
             var collisionBox = new CBox(EntityPosition, -8, -8, 0, 16, 16, 16, true);
 
             AddComponent(CollisionComponent.Index, _collisionComponent =
