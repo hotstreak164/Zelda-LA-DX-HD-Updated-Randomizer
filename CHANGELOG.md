@@ -1,5 +1,24 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.5.1**
+### The "Following the Dream" Update
+  * Hide the instruments on the File Selection screen during additional menu transitions.
+  * Don't try to select the last save on the File Selection screen when backing out of the "New Game" screen.
+  * Skulls that are carried on Spiny Beetles have a 25% chance to spawn a fairy when broken.
+  * Unblock the keyboard tooltip button on New Game page for anything other than the name entry field.
+  * Implement Link being able to dodge Marin when falling into the well for the photo event.
+  * Fix the sword poke from destroying two consecutive bushes with a single poke when poking in certain directions.
+  * Fix a new file from being "cleared" if other files also have cleared state. Also add a fix to saves affected by this.
+  * Fix one-way colliders used for bridges to be closer to the bridges so Link can't turn around after hitting water.
+  * Fix remaining photo/picture sequences to be skippable: Bow Wow, Ghost, Face Shrine, Christine, and Painting.
+  * Fix some "GameManager" states (stores life, rupees, deaths, etc) persisting through save file selections.
+  * Fix the fisherman on the boat to continue to face the player when talking to him after the trade sequence is finished.
+  * Fix a weird animation glitch when jumping or down towards collision where Link would push without the stick being held.
+  * Fix dungeon 3 dark room behind bombable wall to light up when bombed. Also hide enemies inside that room.
+  * Fix dungeon 5 room where falling down a hole respawns the player inside a door that closed behind them.
+  * Fix dungeon 8 ice blocks hitbox size of 10x10 to 14x14. It was possible to shoot a fire rod shot between them.
+  * Fix more movable blocks to be reset when attempting to leave the rooms they are in.
+
 ## **v1.5.0**
 ### **The "Awakening From the Dream" Update**
 
@@ -443,7 +462,7 @@
   * Fix Dungeon 7 room with horse heads so that they can not leave the room. Previously they could then they would bug out.
 
 ## **v1.4.2**
-### **"On the Road to Glory" Update**
+### **The "On the Road to Glory" Update**
   * Note: Classic Camera has not made it into this release as it still needs more work.
   * Implement Indonesia language + textures. Thanks to [PangranggaCLAMP](https://github.com/PangranggaCLAMP) (creator).
   * Exclusive Fullscreen mode has finally been fixed! There is a slight delay entering it when booting the game with it enabled.
