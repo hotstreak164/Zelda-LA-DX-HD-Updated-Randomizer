@@ -396,11 +396,16 @@ namespace ProjectZ.InGame.Overlay
                     return;
                 }
             }
+            // Get the current key that was used to get the dialog string and check if it's the monkey.
+            bool isMonkey = Game1.GameManager.CurrentDialogKey.StartsWith("castle_monkey");
 
-            if (!fastForward && !OwlMode && _running && _currentDialogCount % 6 == 0)
+            if (!fastForward && isMonkey && _running && _currentDialogCount % 7 == 0)
+                Game1.GameManager.PlaySoundEffect("D370-20-14", true);
+
+            else if (!fastForward && !OwlMode && _running && _currentDialogCount % 6 == 0)
                 Game1.GameManager.PlaySoundEffect("D370-15-0F", true);
 
-            if (!fastForward && OwlMode && _running && _currentDialogCount % 28 == 0)
+            else if (!fastForward && OwlMode && _running && _currentDialogCount % 28 == 0)
                 Game1.GameManager.PlaySoundEffect("D370-25-19", true);
 
             _currentDialogCount++;

@@ -198,6 +198,8 @@ namespace ProjectZ.InGame.Things
         // Quick reference to "ObjLink" in MapManager.
         private ObjLink Link => MapManager.ObjLink;
 
+        public string CurrentDialogKey { get; private set; }
+
         public GameManager()
         {
             ResetMusic();
@@ -397,6 +399,9 @@ namespace ProjectZ.InGame.Things
 
         public void StartDialogPath(string dialogKey)
         {
+            CurrentDialogKey = dialogKey;
+
+            _dialogPathQueue.Clear();
             _dialogPathQueue.Enqueue(dialogKey);
         }
 

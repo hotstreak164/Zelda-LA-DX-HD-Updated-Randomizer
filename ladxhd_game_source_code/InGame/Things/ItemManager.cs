@@ -115,7 +115,7 @@ namespace ProjectZ.InGame.Things
                 showAnimation: 3,
                 soundEffectName: "D370-01-01"
             ));
-
+            
             // not sure why there are two differently colored versions
             // I am using the same version ingame and in the menu
             _items.Add("goldLeaf", new GameItem(
