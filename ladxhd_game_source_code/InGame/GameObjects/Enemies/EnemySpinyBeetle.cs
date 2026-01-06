@@ -193,7 +193,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void ToHide()
         {
-            if (_carriedObject.IsDead || (_carriableComponent != null && _objectPickedUp))
+            if (_carriedObject.IsDead || _objectDestroyed || (_carriableComponent != null && (_objectPickedUp)))
                 return;
 
             if (_aiComponent.CurrentStateId != "moving" || (PlayerDirection() >= 0 && _body.LastVelocityCollision == 0))
@@ -210,7 +210,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void CheckCarrier()
         {
             // Object was destroyed or picked up?
-            if (_carriedObject.IsDead || _objectDestroyed || (_carriableComponent != null && _objectPickedUp))
+            if (_carriedObject.IsDead || _objectDestroyed || (_carriableComponent != null && (_objectPickedUp)))
             {
                 ToRunning();
                 _body.VelocityTarget = Vector2.Zero;

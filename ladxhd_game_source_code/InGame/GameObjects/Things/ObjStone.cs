@@ -395,7 +395,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 OnCollision();
                 SpawnItem();
-                return Values.HitCollision.Enemy; 
+                IsDead = true;
+                return Values.HitCollision.Enemy;
             }
             return Values.HitCollision.None; 
         }
