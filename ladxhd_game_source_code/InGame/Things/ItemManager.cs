@@ -94,6 +94,7 @@ namespace ProjectZ.InGame.Things
                 name: "shell",
                 pickUpDialog: GameSettings.NoHelperText ? null : "seashell",
                 count: 1,
+                swordCollect: true,
                 soundEffectName: "D370-01-01"
             ));
             _items.Add("shellChest", new GameItem(
@@ -134,7 +135,7 @@ namespace ProjectZ.InGame.Things
                 pickUpDialog: "instrument0",
                 count: 1,
                 maxCount: 1,
-                isRelict: true,
+                instrument: true,
                 showAnimation: 1,
                 showEffect: true,
                 showTime: 1500
@@ -145,7 +146,7 @@ namespace ProjectZ.InGame.Things
                 pickUpDialog: "instrument1",
                 count: 1,
                 maxCount: 1,
-                isRelict: true,
+                instrument: true,
                 showAnimation: 1,
                 showEffect: true,
                 showTime: 1500
@@ -156,7 +157,7 @@ namespace ProjectZ.InGame.Things
                 pickUpDialog: "instrument2",
                 count: 1,
                 maxCount: 1,
-                isRelict: true,
+                instrument: true,
                 showAnimation: 1,
                 showEffect: true,
                 showTime: 1500
@@ -167,7 +168,7 @@ namespace ProjectZ.InGame.Things
                 pickUpDialog: "instrument3",
                 count: 1,
                 maxCount: 1,
-                isRelict: true,
+                instrument: true,
                 showAnimation: 1,
                 showEffect: true,
                 showTime: 1500
@@ -178,7 +179,7 @@ namespace ProjectZ.InGame.Things
                 pickUpDialog: "instrument4",
                 count: 1,
                 maxCount: 1,
-                isRelict: true,
+                instrument: true,
                 showAnimation: 1,
                 showEffect: true,
                 showTime: 1500
@@ -189,7 +190,7 @@ namespace ProjectZ.InGame.Things
                 pickUpDialog: "instrument5",
                 count: 1,
                 maxCount: 1,
-                isRelict: true,
+                instrument: true,
                 showAnimation: 1,
                 showEffect: true,
                 showTime: 1500
@@ -200,7 +201,7 @@ namespace ProjectZ.InGame.Things
                 pickUpDialog: "instrument6",
                 count: 1,
                 maxCount: 1,
-                isRelict: true,
+                instrument: true,
                 showAnimation: 1,
                 showEffect: true,
                 showTime: 1500
@@ -211,7 +212,7 @@ namespace ProjectZ.InGame.Things
                 pickUpDialog: "instrument7",
                 count: 1,
                 maxCount: 1,
-                isRelict: true,
+                instrument: true,
                 showAnimation: 1,
                 showEffect: true,
                 showTime: 1500
@@ -402,6 +403,7 @@ namespace ProjectZ.InGame.Things
                 name: "ruby",
                 count: 1,
                 maxCount: 999,
+                swordCollect: true,
                 soundEffectName: "D370-05-05"
             ));
             _items.Add("rubyGreen", new GameItem(
@@ -467,6 +469,7 @@ namespace ProjectZ.InGame.Things
                 name: "heart",
                 count: 1,
                 maxCount: 999,
+                swordCollect: true,
                 soundEffectName: "D360-20-14"
             ));
             _items.Add("heart_1", new GameItem(
@@ -482,6 +485,7 @@ namespace ProjectZ.InGame.Things
                 name: "heart",
                 count: 3,
                 maxCount: 999,
+                swordCollect: true,
                 soundEffectName: "D370-01-01"
             ));
 
@@ -565,6 +569,7 @@ namespace ProjectZ.InGame.Things
                 name: "guardianAcorn",
                 pickUpDialog: GameSettings.NoHelperText ? null : "guardianAcorn",
                 showAnimation: 2,
+                swordCollect: true,
                 soundEffectName: "D360-23-17"
             ));
             _items.Add("pieceOfPower", new GameItem(
@@ -572,6 +577,7 @@ namespace ProjectZ.InGame.Things
                 name: "pieceOfPower",
                 pickUpDialog: GameSettings.NoHelperText ? null : "pieceOfPower",
                 showAnimation: 2,
+                swordCollect: true,
                 soundEffectName: "D360-23-17"
             ));
             _items.Add("sword1PoP", new GameItem(
@@ -838,6 +844,7 @@ namespace ProjectZ.InGame.Things
             _items.Add("powder_1", new GameItem(
                 name: "powder",
                 count: 1,
+                swordCollect: true,
                 soundEffectName: "D370-01-01"
             ));
             _items.Add("powder_10", new GameItem(
@@ -872,6 +879,7 @@ namespace ProjectZ.InGame.Things
             _items.Add("bomb_1", new GameItem(
                 name: "bomb",
                 count: 1,
+                swordCollect: true,
                 soundEffectName: "D370-01-01"
             ));
             _items.Add("bomb_10", new GameItem(
@@ -897,6 +905,7 @@ namespace ProjectZ.InGame.Things
                 Resources.GetSprite("arrow"),
                 name: "arrow",
                 count: 1,
+                swordCollect: true,
                 soundEffectName: "D370-01-01"
             ));
 

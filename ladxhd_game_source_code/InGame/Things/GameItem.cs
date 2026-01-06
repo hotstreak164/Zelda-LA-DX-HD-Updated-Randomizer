@@ -25,10 +25,11 @@ namespace ProjectZ.InGame.Things
         public readonly int MaxCount;
         public readonly int DrawLength;
 
-        public readonly bool IsRelict;
+        public readonly bool Instrument;
         public readonly bool Equipable;
 
         public readonly bool ShowEffect;
+        public readonly bool SwordCollect;
         public readonly int ShowAnimation;
         public readonly int ShowTime;
 
@@ -36,12 +37,21 @@ namespace ProjectZ.InGame.Things
             DictAtlasEntry sprite = null,
             DictAtlasEntry mapSprite = null,
             bool animateSprite = false,
-            string name = null, string pickUpDialog = null,
-            string soundEffectName = null, int musicName = -1, bool turnDownMusic = false,
+            string name = null,
+            string pickUpDialog = null,
+            string soundEffectName = null,
+            int musicName = -1,
+            bool turnDownMusic = false,
             int level = 0,
-            int count = 0, int maxCount = 0, int drawLength = 2,
-            bool isRelict = false, bool equipable = false,
-            bool showEffect = false, int showAnimation = 0, int showTime = 250)
+            int count = 0,
+            int maxCount = 0,
+            int drawLength = 2,
+            bool instrument = false,
+            bool equipable = false,
+            bool showEffect = false,
+            bool swordCollect = false,
+            int showAnimation = 0,
+            int showTime = 250)
         {
             Sprite = sprite;
             MapSprite = mapSprite;
@@ -64,10 +74,11 @@ namespace ProjectZ.InGame.Things
             MaxCount = maxCount;
             DrawLength = drawLength;
 
-            IsRelict = isRelict;
+            Instrument = instrument;
             Equipable = equipable;
 
             ShowEffect = showEffect;
+            SwordCollect = swordCollect;
             ShowAnimation = showAnimation;
             ShowTime = showTime;
         }

@@ -329,7 +329,7 @@ namespace ProjectZ.InGame.Things
                 DrawHelper.DrawNormalized(spriteBatch, sprite.Texture, new Vector2(position.X, position.Y),
                     new Rectangle(sourceRectangle.X, sourceRectangle.Y + sourceRectangle.Height, sourceRectangle.Width, sourceRectangle.Height), CloakColors[2] * transparency, scale * sprite.Scale);
             }
-            else if (!item.IsRelict)
+            else if (!item.Instrument)
             {
                 DrawHelper.DrawNormalized(spriteBatch, sprite.Texture, new Vector2(position.X, position.Y), sourceRectangle, color, scale * sprite.Scale);
             }

@@ -49,7 +49,6 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public bool _isFlying;
         public bool _isSwimming;
-        public bool _isInstrument;
 
         public bool IsVisible { get; internal set; }
         private bool _despawn;
@@ -79,7 +78,6 @@ namespace ProjectZ.InGame.GameObjects.Things
             _itemName = itemName;
             _locationBound = locationBound;
             _despawn = despawn;
-            _isInstrument = _itemName.StartsWith("instrument");
 
             if (_item == null)
             {
@@ -200,12 +198,11 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(ObjectCollisionComponent.Index, new ObjectCollisionComponent(_collectionRectangle, OnCollision));
             AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(box, Values.CollisionTypes.Item));
 
-            if (_isInstrument)
+            if (_item.Instrument)
                 _collisionComponent.CollisionType = Values.CollisionTypes.Item | Values.CollisionTypes.Instrument;
 
-            // Collect item with the sword by adding a hit component to the item. Guardian
-            // Acorn and Piece of Power "ShowAnimation" is 1 so we need to add as special cases.
-            if (_item.ShowAnimation == 0 || _item.Name == "guardianAcorn" || _item.Name == "pieceOfPower" || _isInstrument)
+            // Collect item with the sword by adding a hit component to the item.
+            if (_item.SwordCollect || _item.Instrument)
                 AddComponent(HittableComponent.Index, new HittableComponent(box, OnHit));
 
             _shadowComponent = new DrawShadowSpriteComponent(
@@ -378,7 +375,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
         {
             // If it's an instrument collide with items.
-            if (_isInstrument)
+            if (_item.Instrument)
             {
                 if ((hitType & HitType.Sword) != 0)
                     return Values.HitCollision.None;
@@ -447,9 +444,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_isFlying && MapManager.ObjLink.EntityPosition.Z < 7)
                 return;
 
-            // Do not collect the item while the player is jumping. Once again we need a special case for 
-            // Guardian Acorn and Piece of Power as they could be collected while jumping in the original game.
-            if (_item.ShowAnimation != 0 && _item.Name != "guardianAcorn" && _item.Name != "pieceOfPower" &&
+            // Do not collect the item while the player is jumping.
+            if (_item.ShowAnimation != 0 && !_item.SwordCollect &&
                 ((!Map.Is2dMap && !MapManager.ObjLink.IsGrounded()) || (Map.Is2dMap && !MapManager.ObjLink.IsGrounded() && !MapManager.ObjLink.IsInWater2D())))
             {
                 return;
