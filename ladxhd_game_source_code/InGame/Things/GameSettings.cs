@@ -59,8 +59,16 @@
         public static float   MoveSpeedAdded  =  0;
         public static bool    NoHeartDrops    =  false;
         public static bool    NoDamageLaunch  =  false;
-        public static bool    SwordBlock      =  false;
-        public static bool    SwordInteract   =  false;
+
+        // Sword Collection
+        public static bool    SwGrabNormal    =  true;
+        public static bool    SwGrabWorldItem =  false;
+        public static bool    SwGrabFairy     =  false;
+        public static bool    SwGrabSmallKey  =  false;
+        public static bool    SwItemSmack     =  false;
+        public static bool    SwMissileBlock  =  false;
+        public static bool    SwBreakPots     =  false;
+        public static bool    SwBeamShrubs    =  false;
 
         public static int MusicVolume
         {

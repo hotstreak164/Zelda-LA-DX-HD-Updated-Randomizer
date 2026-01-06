@@ -390,7 +390,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
         {
-            if (GameSettings.SwordInteract && ((hitType & HitType.Sword2) != 0 || 
+            if (GameSettings.SwBreakPots && ((hitType & HitType.Sword2) != 0 || 
                 Game1.GameManager.GetItem("sword2") != null && ((hitType & HitType.SwordShot) != 0 || (hitType & HitType.PegasusBootsSword) != 0)))
             {
                 OnCollision();

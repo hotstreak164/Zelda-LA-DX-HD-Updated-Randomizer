@@ -71,8 +71,16 @@ namespace ProjectZ.InGame.SaveLoad
             GameSettings.MoveSpeedAdded = saveManager.GetFloat("MoveSpeedAdded", GameSettings.MoveSpeedAdded);
             GameSettings.NoHeartDrops = saveManager.GetBool("NoHeartDrops", GameSettings.NoHeartDrops);
             GameSettings.NoDamageLaunch = saveManager.GetBool("NoDamageLaunch", GameSettings.NoDamageLaunch);
-            GameSettings.SwordBlock = saveManager.GetBool("SwordBlock", GameSettings.SwordBlock);
-            GameSettings.SwordInteract = saveManager.GetBool("SwordInteract", GameSettings.SwordInteract);
+
+            // Sword Interact Settings
+            GameSettings.SwGrabNormal = saveManager.GetBool("SwGrabNormal", GameSettings.SwGrabNormal);
+            GameSettings.SwGrabWorldItem = saveManager.GetBool("SwGrabWorldItem", GameSettings.SwGrabWorldItem);
+            GameSettings.SwGrabFairy = saveManager.GetBool("SwGrabFairy", GameSettings.SwGrabFairy);
+            GameSettings.SwGrabSmallKey = saveManager.GetBool("SwGrabSmallKey", GameSettings.SwGrabSmallKey);
+            GameSettings.SwItemSmack = saveManager.GetBool("SwItemSmack", GameSettings.SwItemSmack);
+            GameSettings.SwMissileBlock = saveManager.GetBool("SwMissileBlock", GameSettings.SwMissileBlock);
+            GameSettings.SwBreakPots = saveManager.GetBool("SwBreakPots", GameSettings.SwBreakPots);
+            GameSettings.SwBeamShrubs = saveManager.GetBool("SwBeamShrubs", GameSettings.SwBeamShrubs);
 
             ControlHandler.LoadButtonMap(saveManager);
             ControlHandler.SetControllerIndex();
@@ -142,8 +150,16 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetFloat("MoveSpeedAdded", GameSettings.MoveSpeedAdded);
             saveManager.SetBool("NoHeartDrops", GameSettings.NoHeartDrops);
             saveManager.SetBool("NoDamageLaunch", GameSettings.NoDamageLaunch);
-            saveManager.SetBool("SwordBlock", GameSettings.SwordBlock);
-            saveManager.SetBool("SwordInteract", GameSettings.SwordInteract);
+
+            // Sword Interact Settings
+            saveManager.SetBool("SwGrabNormal", GameSettings.SwGrabNormal);
+            saveManager.SetBool("SwGrabWorldItem", GameSettings.SwGrabWorldItem);
+            saveManager.SetBool("SwGrabFairy", GameSettings.SwGrabFairy);
+            saveManager.SetBool("SwGrabSmallKey", GameSettings.SwGrabSmallKey);
+            saveManager.SetBool("SwItemSmack", GameSettings.SwItemSmack);
+            saveManager.SetBool("SwMissileBlock", GameSettings.SwMissileBlock);
+            saveManager.SetBool("SwBreakPots", GameSettings.SwBreakPots);
+            saveManager.SetBool("SwBeamShrubs", GameSettings.SwBeamShrubs);
 
             // Write the save file.
             saveManager.Save(SettingsFilePath, Values.SaveRetries);

@@ -85,7 +85,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
         {
             // If "Sword Item Interactions" is enabled, bounce the boomerang off the sword.
-            if ((hitType & HitType.Sword) != 0 && GameSettings.SwordInteract && !_swordBounce && _comingBack)
+            if ((hitType & HitType.Sword) != 0 && GameSettings.SwItemSmack && !_swordBounce && _comingBack)
             {
                 _comingBack = false;
                 _swordBounce = true;

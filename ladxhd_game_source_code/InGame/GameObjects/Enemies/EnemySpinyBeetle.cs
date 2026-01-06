@@ -291,7 +291,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if ((hitType & HitType.CrystalSmash) != 0 || (hitType & HitType.ClassicSword) != 0)
                 return Values.HitCollision.None;
 
-            if (!_objectDestroyed && (_type == 0 || (_type == 2 && GameSettings.SwordInteract)))
+            if (!_objectDestroyed && (_type == 0 || (_type == 2 && GameSettings.SwBreakPots)))
             {
                 _objectDestroyed = true;
 

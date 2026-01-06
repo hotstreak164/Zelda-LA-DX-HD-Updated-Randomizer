@@ -30,6 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private AiTriggerCountdown _delayCountdown;
         private BodyDrawComponent _bodyDrawComponent;
         private BoxCollisionComponent _collisionComponent;
+        private HittableComponent _hitComponent;
         private CRectangle _collectionRectangle;
 
         private Rectangle _sourceRectangle;
@@ -197,13 +198,10 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(ObjectCollisionComponent.Index, new ObjectCollisionComponent(_collectionRectangle, OnCollision));
             AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(box, Values.CollisionTypes.Item));
+            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(box, OnHit));
 
             if (_item.Instrument)
                 _collisionComponent.CollisionType = Values.CollisionTypes.Item | Values.CollisionTypes.Instrument;
-
-            // Collect item with the sword by adding a hit component to the item.
-            if (_item.SwordCollect || _item.Instrument)
-                AddComponent(HittableComponent.Index, new HittableComponent(box, OnHit));
 
             _shadowComponent = new DrawShadowSpriteComponent(
                 Resources.SprShadow, EntityPosition, _shadowSourceRectangle,
@@ -378,15 +376,20 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_item.Instrument)
             {
                 if ((hitType & HitType.Sword) != 0)
-                    return Values.HitCollision.None;
+                {
+                    if (_item.SwordCollect)
+                        Collect();
 
+                    return Values.HitCollision.None;
+                }
                 if ((hitType & HitType.Hookshot) != 0 || (hitType & HitType.Boomerang) != 0)
                     return Values.HitCollision.RepellingParticle;
 
                 return Values.HitCollision.None;
             }
-            // item can be collected with the sword
-            if ((hitType & HitType.Sword) != 0)
+
+            // Item can be collected with the sword.
+            if ((hitType & HitType.Sword) != 0 && _item.SwordCollect)
                 Collect();
 
             return Values.HitCollision.NoneBlocking;

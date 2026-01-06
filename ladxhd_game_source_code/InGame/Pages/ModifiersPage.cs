@@ -71,17 +71,9 @@ namespace ProjectZ.InGame.Pages
                 newState => { GameSettings.NoDamageLaunch = newState; });
             _contentLayout.AddElement(toggleNoDmgLaunch);
 
-            // Button: Sword Block Projectiles
-            var toggleSwordBlock = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
-                "settings_mods_swordblock", GameSettings.SwordBlock, 
-                newState => { GameSettings.SwordBlock = newState; });
-            _contentLayout.AddElement(toggleSwordBlock);
-
             // Button: Extra Sword Interactions
-            var toggleSwordInteract = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
-                "settings_mods_swordinteract", GameSettings.SwordInteract, 
-                newState => { GameSettings.SwordInteract = newState; });
-            _contentLayout.AddElement(toggleSwordInteract);
+            _contentLayout.AddElement(new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(1, 2), 
+                "settings_mods_swordinteract", element => { Game1.UiPageManager.ChangePage(typeof(SwordInteractPage)); }));
 
             // Bottom Bar / Back Button:
             _bottomBar = new InterfaceListLayout() { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true, HorizontalMode = true };
@@ -184,8 +176,7 @@ namespace ProjectZ.InGame.Pages
                 case 3:  { tooltip = Game1.LanguageManager.GetString("tooltip_mods_movespeed", "error"); break; }
                 case 4:  { tooltip = Game1.LanguageManager.GetString("tooltip_mods_nohearts", "error"); break; }
                 case 5:  { tooltip = Game1.LanguageManager.GetString("tooltip_mods_dmglaunch", "error"); break; }
-                case 6:  { tooltip = Game1.LanguageManager.GetString("tooltip_mods_swordblock", "error"); break; }
-                case 7:  { tooltip = Game1.LanguageManager.GetString("tooltip_mods_swordinteract", "error"); break; }
+                case 6:  { tooltip = Game1.LanguageManager.GetString("tooltip_mods_swordinteract", "error"); break; }
             }
             // Display the tooltip in the tooltip window.
             return tooltip;

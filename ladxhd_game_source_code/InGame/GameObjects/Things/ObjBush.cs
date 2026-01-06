@@ -217,7 +217,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 (hitType & HitType.SwordHold) != 0 ||
                 hitType == HitType.Bow ||
                 hitType == HitType.Hookshot ||
-                ((!GameSettings.SwordInteract || Game1.GameManager.GetItem("sword2") == null) && hitType == HitType.SwordShot) ||
+                ((!GameSettings.SwBeamShrubs || Game1.GameManager.GetItem("sword2") == null) && hitType == HitType.SwordShot) ||
                 hitType == HitType.PegasusBootsPush ||
                 hitType == HitType.MagicRod && !_hasCollider ||
                 hitType == HitType.Boomerang && !_hasCollider ||

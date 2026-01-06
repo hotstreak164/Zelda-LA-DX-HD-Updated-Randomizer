@@ -24,7 +24,8 @@ namespace ProjectZ.InGame.Things
                 count: 1,
                 maxCount: 9,
                 drawLength: 1,
-                soundEffectName: "D370-01-01"
+                soundEffectName: "D370-01-01",
+                swordCollect: GameSettings.SwGrabSmallKey
             ));
             _items.Add("smallkeyChest", new GameItem(
                 Resources.GetSprite("smallkey"),
@@ -94,8 +95,8 @@ namespace ProjectZ.InGame.Things
                 name: "shell",
                 pickUpDialog: GameSettings.NoHelperText ? null : "seashell",
                 count: 1,
-                swordCollect: true,
-                soundEffectName: "D370-01-01"
+                soundEffectName: "D370-01-01",
+                swordCollect: GameSettings.SwGrabNormal
             ));
             _items.Add("shellChest", new GameItem(
                 Resources.GetSprite("shell"),
@@ -125,7 +126,8 @@ namespace ProjectZ.InGame.Things
                 turnDownMusic: true,
                 count: 1,
                 showAnimation: 1,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
 
             // instruments
@@ -138,7 +140,8 @@ namespace ProjectZ.InGame.Things
                 instrument: true,
                 showAnimation: 1,
                 showEffect: true,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("instrument1", new GameItem(
                 Resources.GetSprite("instrument1"),
@@ -149,7 +152,8 @@ namespace ProjectZ.InGame.Things
                 instrument: true,
                 showAnimation: 1,
                 showEffect: true,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("instrument2", new GameItem(
                 Resources.GetSprite("instrument2"),
@@ -160,7 +164,8 @@ namespace ProjectZ.InGame.Things
                 instrument: true,
                 showAnimation: 1,
                 showEffect: true,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("instrument3", new GameItem(
                 Resources.GetSprite("instrument3"),
@@ -171,7 +176,8 @@ namespace ProjectZ.InGame.Things
                 instrument: true,
                 showAnimation: 1,
                 showEffect: true,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("instrument4", new GameItem(
                 Resources.GetSprite("instrument4"),
@@ -182,7 +188,8 @@ namespace ProjectZ.InGame.Things
                 instrument: true,
                 showAnimation: 1,
                 showEffect: true,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("instrument5", new GameItem(
                 Resources.GetSprite("instrument5"),
@@ -193,7 +200,8 @@ namespace ProjectZ.InGame.Things
                 instrument: true,
                 showAnimation: 1,
                 showEffect: true,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("instrument6", new GameItem(
                 Resources.GetSprite("instrument6"),
@@ -204,7 +212,8 @@ namespace ProjectZ.InGame.Things
                 instrument: true,
                 showAnimation: 1,
                 showEffect: true,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("instrument7", new GameItem(
                 Resources.GetSprite("instrument7"),
@@ -215,7 +224,8 @@ namespace ProjectZ.InGame.Things
                 instrument: true,
                 showAnimation: 1,
                 showEffect: true,
-                showTime: 1500
+                showTime: 1500,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
 
             // TRADE 0: Yoshi Doll
@@ -369,7 +379,8 @@ namespace ProjectZ.InGame.Things
                 turnDownMusic: true,
                 count: 1,
                 maxCount: 1,
-                showAnimation: 1
+                showAnimation: 1,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
 
             _items.Add("marin", new GameItem(
@@ -403,8 +414,8 @@ namespace ProjectZ.InGame.Things
                 name: "ruby",
                 count: 1,
                 maxCount: 999,
-                swordCollect: true,
-                soundEffectName: "D370-05-05"
+                soundEffectName: "D370-05-05",
+                swordCollect: GameSettings.SwGrabNormal
             ));
             _items.Add("rubyGreen", new GameItem(
                 Resources.GetSprite("rubyGreen"),
@@ -469,8 +480,8 @@ namespace ProjectZ.InGame.Things
                 name: "heart",
                 count: 1,
                 maxCount: 999,
-                swordCollect: true,
-                soundEffectName: "D360-20-14"
+                soundEffectName: "D360-20-14",
+                swordCollect: GameSettings.SwGrabNormal
             ));
             _items.Add("heart_1", new GameItem(
                 Resources.GetSprite("heart"),
@@ -485,8 +496,8 @@ namespace ProjectZ.InGame.Things
                 name: "heart",
                 count: 3,
                 maxCount: 999,
-                swordCollect: true,
-                soundEffectName: "D370-01-01"
+                soundEffectName: "D370-01-01",
+                swordCollect: GameSettings.SwGrabNormal
             ));
 
             _items.Add("heartMeter", new GameItem(
@@ -497,7 +508,8 @@ namespace ProjectZ.InGame.Things
                 maxCount: 99,
                 showAnimation: 1,
                 soundEffectName: "D368-16-10",
-                turnDownMusic: true
+                turnDownMusic: true,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("heartMeterSilent", new GameItem(
                 name: "heartMeter",
@@ -509,7 +521,8 @@ namespace ProjectZ.InGame.Things
                 count: 4,
                 showAnimation: 1,
                 showTime: 1750,
-                pickUpDialog: "heartMeterFull"
+                pickUpDialog: "heartMeterFull",
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
 
             // dungeon keys
@@ -521,7 +534,8 @@ namespace ProjectZ.InGame.Things
                 maxCount: 1,
                 showAnimation: 1,
                 soundEffectName: "D368-16-10",
-                turnDownMusic: true
+                turnDownMusic: true,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("dkey2", new GameItem(
                 Resources.GetSprite("dkey2"),
@@ -531,7 +545,8 @@ namespace ProjectZ.InGame.Things
                 maxCount: 1,
                 showAnimation: 1,
                 soundEffectName: "D368-16-10",
-                turnDownMusic: true
+                turnDownMusic: true,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("dkey3", new GameItem(
                 Resources.GetSprite("dkey3"),
@@ -541,7 +556,8 @@ namespace ProjectZ.InGame.Things
                 maxCount: 1,
                 showAnimation: 1,
                 soundEffectName: "D368-16-10",
-                turnDownMusic: true
+                turnDownMusic: true,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("dkey4", new GameItem(
                 Resources.GetSprite("dkey4"),
@@ -551,7 +567,8 @@ namespace ProjectZ.InGame.Things
                 maxCount: 1,
                 showAnimation: 1,
                 soundEffectName: "D368-16-10",
-                turnDownMusic: true
+                turnDownMusic: true,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("dkey5", new GameItem(
                 Resources.GetSprite("dkey5"),
@@ -561,7 +578,8 @@ namespace ProjectZ.InGame.Things
                 maxCount: 1,
                 showAnimation: 1,
                 soundEffectName: "D368-16-10",
-                turnDownMusic: true
+                turnDownMusic: true,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
 
             _items.Add("guardianAcorn", new GameItem(
@@ -569,16 +587,16 @@ namespace ProjectZ.InGame.Things
                 name: "guardianAcorn",
                 pickUpDialog: GameSettings.NoHelperText ? null : "guardianAcorn",
                 showAnimation: 2,
-                swordCollect: true,
-                soundEffectName: "D360-23-17"
+                soundEffectName: "D360-23-17",
+                swordCollect: GameSettings.SwGrabNormal
             ));
             _items.Add("pieceOfPower", new GameItem(
                 Resources.GetSprite("pieceOfPower"),
                 name: "pieceOfPower",
                 pickUpDialog: GameSettings.NoHelperText ? null : "pieceOfPower",
                 showAnimation: 2,
-                swordCollect: true,
-                soundEffectName: "D360-23-17"
+                soundEffectName: "D360-23-17",
+                swordCollect: GameSettings.SwGrabNormal
             ));
             _items.Add("sword1PoP", new GameItem(
                 Resources.GetSprite("sword1"),
@@ -650,7 +668,8 @@ namespace ProjectZ.InGame.Things
                 count: 1,
                 maxCount: 1,
                 level: 1,
-                equipable: true
+                equipable: true,
+                swordCollect: GameSettings.SwGrabNormal
             ));
             _items.Add("mirrorShield", new GameItem(
                 Resources.GetSprite("mirror shield"),
@@ -675,7 +694,8 @@ namespace ProjectZ.InGame.Things
                 showAnimation: 1,
                 equipable: true,
                 soundEffectName: "D368-16-10",
-                turnDownMusic: true
+                turnDownMusic: true,
+                swordCollect: GameSettings.SwGrabWorldItem
             ));
             _items.Add("feather", new GameItem(
                 Resources.GetSprite("feather"),
@@ -844,8 +864,8 @@ namespace ProjectZ.InGame.Things
             _items.Add("powder_1", new GameItem(
                 name: "powder",
                 count: 1,
-                swordCollect: true,
-                soundEffectName: "D370-01-01"
+                soundEffectName: "D370-01-01",
+                swordCollect: GameSettings.SwGrabNormal
             ));
             _items.Add("powder_10", new GameItem(
                 name: "powder",
@@ -879,8 +899,8 @@ namespace ProjectZ.InGame.Things
             _items.Add("bomb_1", new GameItem(
                 name: "bomb",
                 count: 1,
-                swordCollect: true,
-                soundEffectName: "D370-01-01"
+                soundEffectName: "D370-01-01",
+                swordCollect: GameSettings.SwGrabNormal
             ));
             _items.Add("bomb_10", new GameItem(
                 name: "bomb",
@@ -905,8 +925,8 @@ namespace ProjectZ.InGame.Things
                 Resources.GetSprite("arrow"),
                 name: "arrow",
                 count: 1,
-                swordCollect: true,
-                soundEffectName: "D370-01-01"
+                soundEffectName: "D370-01-01",
+                swordCollect: GameSettings.SwGrabNormal
             ));
 
             _items.Add("cloakRed", new GameItem(

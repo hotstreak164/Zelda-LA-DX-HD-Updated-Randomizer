@@ -173,7 +173,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             _sprite.SpriteEffect = _direction.X < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             // Collision boxes of Link and fairy collide or if the lahdmod file allows sword collection.
-            if (_collectionCooldown <= 0 && (MapManager.ObjLink.PlayerRectangle.Intersects(_collectionBox.Box.Rectangle()) || (MapManager.ObjLink.SwordDamageBox.Intersects(_collectionBox.Box) && (sword_collect || GameSettings.SwordInteract))))
+            if (_collectionCooldown <= 0 && (MapManager.ObjLink.PlayerRectangle.Intersects(_collectionBox.Box.Rectangle()) || (MapManager.ObjLink.SwordDamageBox.Intersects(_collectionBox.Box) && (sword_collect || GameSettings.SwGrabFairy))))
                 CollectFairy();
             
             // Despawn the fairy.

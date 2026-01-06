@@ -159,7 +159,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if ((hitType & HitType.CrystalSmash) != 0 || (hitType & HitType.ClassicSword) != 0)
                 return Values.HitCollision.None;
 
-            bool swordBlock = GameSettings.SwordBlock 
+            bool swordBlock = GameSettings.SwMissileBlock 
                 ? (hitType & HitType.Sword) != 0 && (hitType & HitType.SwordHold) == 0 
                 : false;
 

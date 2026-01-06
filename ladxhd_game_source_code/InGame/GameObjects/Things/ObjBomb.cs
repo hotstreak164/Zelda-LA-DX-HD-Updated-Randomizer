@@ -308,7 +308,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
         {
             // If "Classic Sword" is enabled, do not let the sword interact.
-            if (!GameSettings.SwordInteract && ((hitType & HitType.Sword) != 0 || (hitType & HitType.SwordSpin) != 0 || (hitType & HitType.SwordShot) != 0 || (hitType & HitType.ClassicSword) != 0))
+            if (!GameSettings.SwItemSmack && ((hitType & HitType.Sword) != 0 || (hitType & HitType.SwordSpin) != 0 || (hitType & HitType.SwordShot) != 0 || (hitType & HitType.ClassicSword) != 0))
                 return Values.HitCollision.None;
 
             // Because of the way the hit system works, this needs to be in any hit that doesn't default to "None" hit collision.
