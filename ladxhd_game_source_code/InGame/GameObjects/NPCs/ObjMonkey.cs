@@ -89,7 +89,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             stateJump.Trigger.Add(_hitCooldown);
             var stateFlee = new AiState(UpdateFlee) { Init = ToFlee };
             var stateFleeSit = new AiState(UpdateFleeSit);
-            stateFleeSit.Trigger.Add(new AiTriggerRandomTime(() => _aiComponent.ChangeState("flee"), 500, 1000));
+            stateFleeSit.Trigger.Add(new AiTriggerRandomTime(() => _aiComponent.ChangeState("flee"), 250, 300));
             var stateReset = new AiState(UpdateReset);
             var stateBanana = new AiState(UpdateBusiness);
             stateBanana.Trigger.Add(new AiTriggerCountdown(1500, null, ToBusiness));
