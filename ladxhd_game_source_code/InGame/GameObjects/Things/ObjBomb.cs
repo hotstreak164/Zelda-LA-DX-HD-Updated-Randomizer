@@ -296,7 +296,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 return false;
 
             // push the bomb away
-            if (type == PushableComponent.PushType.Impact)
+            if (GameSettings.SwItemSmack && type == PushableComponent.PushType.Impact)
             {
                 Body.Drag = 0.85f;
                 Body.Velocity = new Vector3(direction.X * 1.5f, direction.Y * 1.5f, Body.Velocity.Z);
@@ -308,13 +308,17 @@ namespace ProjectZ.InGame.GameObjects.Things
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
         {
             // If "Classic Sword" is enabled, do not let the sword interact.
-            if (!GameSettings.SwItemSmack && ((hitType & HitType.Sword) != 0 || (hitType & HitType.SwordSpin) != 0 || (hitType & HitType.SwordShot) != 0 || (hitType & HitType.ClassicSword) != 0))
+            if (!GameSettings.SwItemSmack && ((hitType & HitType.Sword) != 0 || (hitType & HitType.SwordSpin) != 0  || (hitType & HitType.SwordHold) != 0 || 
+                (hitType & HitType.SwordShot) != 0 || (hitType & HitType.ClassicSword) != 0 || (hitType & HitType.PegasusBootsSword) != 0))
+            {
                 return Values.HitCollision.None;
-
+            }
             // Because of the way the hit system works, this needs to be in any hit that doesn't default to "None" hit collision.
-            if (hitType == HitType.CrystalSmash)
+            if (!_playerBomb || hitType == HitType.CrystalSmash || hitType == HitType.Boomerang || hitType == HitType.Bomb || 
+                hitType == HitType.MagicRod || hitType == HitType.Hookshot || hitType == HitType.MagicPowder || hitType == HitType.ThrownObject)
+            {
                 return Values.HitCollision.None;
-
+            }
             // Combine with arrows to create a bomb-arrow.
             if (_playerBomb && _bombCounter + 175 > _explosionTime && gameObject is ObjArrow objArrow)
             {
@@ -327,11 +331,13 @@ namespace ProjectZ.InGame.GameObjects.Things
             }
             // Don't hit the arrow part if it's a bomb-arrow.
             if (_arrowMode)
+            {
                 return Values.HitCollision.None;
-
+            }
             if (_exploded || (_lastHitTime != 0 && Game1.TotalGameTime - _lastHitTime < 250) || hitType == HitType.Bow)
+            {
                 return Values.HitCollision.None;
-
+            }
             _lastHitTime = Game1.TotalGameTime;
 
             Body.Drag = 0.85f;
