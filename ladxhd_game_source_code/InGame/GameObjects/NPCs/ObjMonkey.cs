@@ -24,7 +24,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private ObjBowWow _bowWow;
 
-        private readonly Vector2 _resetPosition;
         private readonly Vector2 _endPosition;
 
         // lives are used to fight with the bowwow
@@ -46,7 +45,10 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         public ObjMonkey(Map.Map map, int posX, int posY) : base(map)
         {
             EntityPosition = new CPosition(posX + 8, posY + 16, 0);
+            ResetPosition  = new CPosition(posX + 8, posY + 16, 0);
             EntitySize = new Rectangle(-8, -16, 16, 16);
+            CanReset = true;
+            OnReset = Reset;
 
             var value = Game1.GameManager.SaveManager.GetString("monkeyBusiness");
             if (value == "3")
@@ -54,8 +56,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 IsDead = true;
                 return;
             }
-            _resetPosition = EntityPosition.Position;
-
             _body = new BodyComponent(EntityPosition, -6, -10, 12, 10, 8)
             {
                 MoveCollision = OnCollision,
@@ -137,6 +137,20 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             }
             new ObjSpriteShadow("sprshadowm", this, Values.LayerPlayer, map);
             Map.Objects.RegisterAlwaysAnimateObject(this);
+        }
+
+        private void Reset()
+        {
+            _fightMode = false;
+            _animator.Play("idle_" + _direction);
+            _aiComponent.ChangeState("waiting");
+            _currentLives = MaxLives;
+            _damageCounter = 0;
+            _directionChangeCounter = 0;
+            _body.Velocity = Vector3.Zero;
+            _body.CollisionTypes = Values.CollisionTypes.Normal |
+                                    Values.CollisionTypes.NPCWall;
+            EntityPosition.Set(ResetPosition);
         }
 
         private void KeyChanged()
@@ -231,14 +245,14 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void ToFlee()
         {
-            if (EntityPosition.Y < _resetPosition.Y - 90)
+            if (EntityPosition.Y < ResetPosition.Y - 90)
             {
                 _aiComponent.ChangeState("reset");
                 _animator.Play("idle_" + _direction);
                 Tags = Values.GameObjectTag.None;
                 return;
             }
-            _direction = EntityPosition.X < _resetPosition.X ? 1 : 0;
+            _direction = EntityPosition.X < ResetPosition.X ? 1 : 0;
             _body.Velocity = new Vector3(_direction == 0 ? -0.5f : 0.5f, -1, 2.0f);
             _animator.Play("jump_" + _direction);
             _body.CollisionTypes = Values.CollisionTypes.None;
@@ -256,13 +270,13 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void UpdateReset()
         {
-            var distance = MapManager.ObjLink.EntityPosition.Position - _resetPosition;
+            var distance = MapManager.ObjLink.EntityPosition.Position - ResetPosition.Position;
 
             // come back to the start position?
             if (distance.Length() > 128 || MapManager.ObjLink.FieldChange)
             {
                 _currentLives = MaxLives;
-                EntityPosition.Set(_resetPosition);
+                EntityPosition.Set(ResetPosition);
                 _aiComponent.ChangeState("waiting");
                 _damageCounter = 0;
                 _body.CollisionTypes = Values.CollisionTypes.Normal |
