@@ -260,7 +260,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 return;
             }
             _direction = EntityPosition.X < ResetPosition.X ? 1 : 0;
-            _body.Velocity = new Vector3(_direction == 0 ? -0.5f : 0.5f, -1, 2.0f);
+            _body.Velocity = new Vector3(_direction == 0 ? -1.20f : 1.20f, -1.20f, 2.0f);
             _animator.Play("jump_" + _direction);
             _body.CollisionTypes = Values.CollisionTypes.None;
         }
