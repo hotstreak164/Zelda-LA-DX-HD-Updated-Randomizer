@@ -1,5 +1,17 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.5.2**
+### The "Monkeying Around With Swords" Update
+  * Add a sub-menu to "Modifiers" that expands "Extra Sword Interactions" and offers a ton of new sword options.
+  * Rework sword-item collection. Items now have a dedicated field that determines if the sword can collect them.
+  * Fix player bombs so that items do not interact with them. Sword can interact with them with an option above.
+  * Fix enemy bombs so that nothing interacts with them. It's possible to restore this behavior via a "lahdmod".
+  * Fix several issues with the monkey near the castle: sound effects, Bow Wow duel, fleeing state, etc.
+  * Fix animated lilypads found in the swamp from being culled along the camera's edges.
+  * Fix another dungeon 3 stairs exit direction. This is the stairs in the first section leading to the "cross" rooms.
+  * Fix skulls being destroyed when carried on the backs of Spiny Beetles.
+  * Fix the moblin cave to remove the ObjPushButton from the doorway on a return visit which traps the player.
+
 ## **v1.5.1**
 ### The "Following the Dream" Update
   * Hide the instruments on the File Selection screen during additional menu transitions.
