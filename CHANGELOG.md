@@ -1,5 +1,19 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.5.3**
+### The "Lighting the Way to a Brighter Future" Update
+  * Add Graphics setting to toggle "Global Lighting" which is the full screen darkening effect for object lights.
+  * Add Graphics setting to toggle "Object Lighting" which is lights casted by items, enemies, etc.
+  * Disabling thes settings gives a more "vanilla" experience and eliminates the need for "Fullbright" modpack.
+  * Move "Epilepsy Safe" to Game Settings. I was out of space and this was the only generalized option left.
+  * Dark rooms in dungeons are now fully neutralized by light emitters such as items, enemies, torches, etc.
+  * Add more lighting effects to objects such as magic rod, sword beam, bomb explosions, fairies, and more.
+  * Most lighting effects now fade out rather than instantly disappear when the emitter is removed from the map.
+  * Implement more "lahdmod" files and rework some previous ones. Several options were moved out of "ObjLink".
+  * Fix missing death effect when under influence of Piece of Power or red tunic. It never worked in this port.
+  * Fix enemies that carry sword to be able to fall down holes and tweak other enemies that may struggle.
+  * Fix dungeon 2 power bracelet room playing compass sound. This should only play for rooms with keys in them.
+
 ## **v1.5.2b**
   * Fix a serious issue with the dialog path system that could break game logic when multiple actions happened at once.
   
