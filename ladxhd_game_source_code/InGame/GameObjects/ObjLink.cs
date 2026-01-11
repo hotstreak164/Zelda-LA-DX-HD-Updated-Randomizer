@@ -1470,7 +1470,7 @@ namespace ProjectZ.InGame.GameObjects
             if (light_source && GameSettings.ObjectLighting)
             {
                 var _lightColor = new Color(light_red, light_grn, light_blu);
-                var _lightRectangle = new Rectangle((int)_body.Position.X - light_size / 2, (int)_body.Position.Y - light_size / 2 - 8, light_size, light_size);
+                var _lightRectangle = new Rectangle((int)_body.Position.X - light_size / 2, (int)_body.Position.Y - (int)_body.Position.Z - light_size / 2 - 6, light_size, light_size);
                 spriteBatch.Draw(Resources.SprLight, _lightRectangle, _lightColor * light_bright);
             }
         }

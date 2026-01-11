@@ -7,9 +7,9 @@ namespace ProjectZ.InGame.GameObjects.Effects
     {
         bool  light_source = true;
         int   light_red = 255;
-        int   light_grn = 220;
-        int   light_blu = 160;
-        float light_bright = 0.80f;
+        int   light_grn = 230;
+        int   light_blu = 230;
+        float light_bright = 0.70f;
         int   light_size = 120;
         float light_fade = 0.35f;
 

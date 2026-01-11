@@ -1,3 +1,4 @@
+using System.Threading;
 using Microsoft.Xna.Framework;
 using ProjectZ.Base;
 using ProjectZ.InGame.GameObjects.Base;
@@ -59,7 +60,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         public void Destroy()
         {
             // spawn explosion
-            var animation = new ObjAnimator(Map, 0, 0, Values.LayerTop, "Particles/explosion0", "runc", true);
+            var animation = new ObjDeathExplodeEffect(Map, 0, 0, 0, 0);
             animation.EntityPosition.Set(new Vector2(EntityPosition.X, EntityPosition.Y - EntityPosition.Z - 8));
             Map.Objects.SpawnObject(animation);
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y - 8, 0));
@@ -193,7 +194,6 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 _damageField.IsActive = false;
                 _hitEnemies = false;
             }
-
             if ((direction & Values.BodyCollision.Horizontal) != 0)
                 _body.Velocity.X = -_body.Velocity.X * 0.65f;
             if ((direction & Values.BodyCollision.Vertical) != 0)

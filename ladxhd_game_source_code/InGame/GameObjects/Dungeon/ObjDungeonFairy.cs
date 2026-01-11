@@ -52,10 +52,10 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         private int hearts_healed = 6;
 
         bool  light_source = true;
-        int   light_red = 180;
-        int   light_grn = 180;
+        int   light_red = 220;
+        int   light_grn = 220;
         int   light_blu = 255;
-        float light_bright = 1.0f;
+        float light_bright = 0.60f;
         int   light_size = 32;
 
         public ObjDungeonFairy() : base("fairy") { }

@@ -20,6 +20,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private int _collisionCount;
         private bool _wasHit;
+        private bool _swordHit;
 
         public EnemyNut(Map.Map map, Vector3 position, Vector3 direction) : base(map)
         {
@@ -78,9 +79,19 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 if (_wasHit)
                 {
                     Game1.GameManager.PlaySoundEffect("D360-03-03");
-                    Map.Objects.SpawnObject(new ObjAnimator(Map, (int)EntityPosition.X - 12,
-                        (int)EntityPosition.Y - 12, Values.LayerTop, "Particles/explosion0", "run", true));
 
+                    if (_swordHit && (Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.CloakType == GameManager.CloakRed))
+                    {
+                        var posX = (int)EntityPosition.X;
+                        var posY = (int)EntityPosition.Y;
+                        Map.Objects.SpawnObject(new ObjDeathExplodeEffect(Map, posX, posY, 0, 0, true));
+                    }
+                    else
+                    {
+                        var posX = (int)EntityPosition.X - 12;
+                        var posY = (int)EntityPosition.Y - 16;
+                        Map.Objects.SpawnObject(new ObjDeathExplodeEffect(Map, posX, posY, 0, 0));
+                    }
                     if (Game1.RandomNumber.Next(0, 2) == 0)
                     {
                         var objItem = new ObjItem(Map, (int)EntityPosition.X - 8, (int)EntityPosition.Y - 8, "j", "", "ruby", "", true);
@@ -109,6 +120,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             // Because of the way the hit system works, this needs to be in any hit that doesn't default to "None" hit collision.
             if ((hitType & HitType.CrystalSmash) != 0 || (hitType & HitType.ClassicSword) != 0)
                 return Values.HitCollision.None;
+
+            if ((hitType & HitType.Sword) != 0)
+                _swordHit = true;
 
             if (_wasHit)
                 return Values.HitCollision.None;

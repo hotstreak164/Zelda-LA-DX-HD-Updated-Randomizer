@@ -478,18 +478,23 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             // Spawn the explosion effect.
             var bodyCenter = _body.BodyBox.Box.Center;
             bodyCenter.Y += ExplosionOffsetY;
+
+            // Piece of power has an alternate effect. The paramater being fed to "BaseOnDeath" does not work so use the global field.
             if (DeathAnimation)
             {
-                if (!pieceOfPower)
+                if (!_pieceOfPower)
                 {
-                    var explosionAnimation = new ObjAnimator(_gameObject.Map, (int)bodyCenter.X - 12, (int)(bodyCenter.Y - _body.Position.Z - 12 - 5), Values.LayerTop, "Particles/explosion0", "run", true);
+                    var posX = (int)bodyCenter.X;
+                    var posY = (int)(bodyCenter.Y);
+                    var explosionAnimation = new ObjDeathExplodeEffect(_gameObject.Map, posX, posY, -12, -12, false);
                     Game1.GameManager.MapManager.CurrentMap.Objects.SpawnObject(explosionAnimation);
                     Game1.GameManager.MapManager.CurrentMap.Objects.RegisterAlwaysAnimateObject(explosionAnimation);
                 }
                 else
                 {
-                    var explosionAnimation = new ObjAnimator(_gameObject.Map, 0, 0, Values.LayerTop, "Particles/pieceOfPowerExplosion", "run", true);
-                    explosionAnimation.EntityPosition.Set(new Vector2(bodyCenter.X, bodyCenter.Y - _body.Position.Z));
+                    var posX = (int)bodyCenter.X;
+                    var posY = (int)bodyCenter.Y;
+                    var explosionAnimation = new ObjDeathExplodeEffect(_gameObject.Map, posX, posY, 0, 0, true);
                     Game1.GameManager.MapManager.CurrentMap.Objects.SpawnObject(explosionAnimation);
                     Game1.GameManager.MapManager.CurrentMap.Objects.RegisterAlwaysAnimateObject(explosionAnimation);
                 }

@@ -24,11 +24,11 @@ namespace ProjectZ.InGame.GameObjects.Things
         int   powder_damage = 2;
         float powder_gravity = 5.00f;
         bool  light_source = true;
-        int   light_red = 160;
-        int   light_grn = 160;
+        int   light_red = 230;
+        int   light_grn = 230;
         int   light_blu = 255;
-        float light_bright = 0.625f;
-        int   light_size = 24;
+        float light_bright = 0.35f;
+        int   light_size = 20;
 
         public ObjPowder(Map.Map map, float posX, float posY, float posZ, bool playerPowder) : base(map)
         {

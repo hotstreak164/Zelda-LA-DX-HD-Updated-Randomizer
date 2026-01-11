@@ -198,7 +198,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 // Don't spawn explosions with classic camera as they won't even be visible.
                 if (!Camera.ClassicMode)
                 {
-                    var explosionAnimation = new ObjAnimator(Map, barrier.PosX, barrier.PosY, Values.LayerTop, "Particles/explosion0", "run", true);
+                    var explosionAnimation = new ObjDeathExplodeEffect(Map, barrier.PosX, barrier.PosY, 0, 0);
                     Map.Objects.SpawnObject(explosionAnimation);
                     Map.Objects.RegisterAlwaysAnimateObject(explosionAnimation);
                 }
