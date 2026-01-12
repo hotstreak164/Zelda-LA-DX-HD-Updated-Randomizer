@@ -155,7 +155,7 @@ namespace ProjectZ.InGame.Map
                     var cameraPosition = new Vector2(Camera.RoundX / Camera.Scale, Camera.RoundY / Camera.Scale);
                     matrixPosition = new Vector2((int)cameraPosition.X - 1, (int)cameraPosition.Y - 1);
 
-                    // Build blurMatrix — clamp values and avoid NaN
+                    // Build blurMatrix - clamp values and avoid NaN
                     var translateX = -matrixPosition.X;
                     var translateY = -matrixPosition.Y;
                     if (float.IsNaN(translateX) || float.IsNaN(translateY))
@@ -173,7 +173,7 @@ namespace ProjectZ.InGame.Map
                                     (float)blurRT0.Height / Game1.GameManager.SideBlurRenderTargetHeight, 1f));
                 }
 
-                // Begin drawing to blurRT0 (or main RT) — ensure DrawBegin uses blurMatrix; supply null safely if needed
+                // Begin drawing to blurRT0 (or main RT) - ensure DrawBegin uses blurMatrix; supply null safely if needed
                 DrawBegin(spriteBatch, null);
 
                 // draw object blur stuff
@@ -192,7 +192,7 @@ namespace ProjectZ.InGame.Map
                 if (blurRT1 == null || blurRT2 == null || blurRT1.Width <= 0 || blurRT1.Height <= 0 || blurRT2.Width <= 0 || blurRT2.Height <= 0)
                     return;
 
-                // prepare blur shaders — safe access of widths
+                // prepare blur shaders - safe access of widths
                 Resources.BBlurEffectH.Parameters["pixelX"].SetValue(1.0f / blurRT1.Width);
                 Resources.BBlurEffectV.Parameters["pixelY"].SetValue(1.0f / blurRT1.Height);
 
@@ -220,7 +220,7 @@ namespace ProjectZ.InGame.Map
                 // Restore the active render target to your main RT
                 Game1.GameManager.SetActiveRenderTarget();
 
-                // Draw the blurred texture into world using camera transform — ensure Camera.TransformMatrix is valid
+                // Draw the blurred texture into world using camera transform - ensure Camera.TransformMatrix is valid
                 var safeTransform = Camera.TransformMatrix;
 
                 // optional check for NaN components here, replace with Matrix.Identity if found

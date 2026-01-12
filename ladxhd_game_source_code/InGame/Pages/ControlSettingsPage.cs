@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
 using ProjectZ.InGame.Things;
@@ -45,6 +46,12 @@ namespace ProjectZ.InGame.Pages
             // Button: Remap Settings
             _contentLayout.AddElement(new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(1, 2), 
                 "settings_controls_remap", element => { Game1.UiPageManager.ChangePage(typeof(ControlMappingPage)); }));
+
+            // Button: Toggle Six Buttons
+            var toggleSixButtons = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+                "settings_controls_sixbuttons", GameSettings.SixButtons, 
+                newState => { UpdateSixButtonToggle(newState); });
+            _contentLayout.AddElement(toggleSixButtons);
 
             // Button: Swap Confirm & Cancel
             var toggleSwapButtons = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
@@ -121,6 +128,15 @@ namespace ProjectZ.InGame.Pages
             ControlMappingPage.UpdateLabels();
         }
 
+        public void UpdateSixButtonToggle(bool newState)
+        {
+            // Enable or disable the six inventory button state.
+            GameSettings.SixButtons = newState;
+
+            // The number of inventory slots needs to be upated now so the game knows to enable/disable the top front buttons immediately.
+            Values.HandItemSlots = newState ? 6 : 4; 
+        }
+
         public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
         {
             // Always draw the menu even when not showing tooltips.
@@ -150,9 +166,10 @@ namespace ProjectZ.InGame.Pages
                 case 0:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_deadzone", "error"); break; }
                 case 1:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_gamepad", "error"); break; }
                 case 2:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_remap", "error"); break; }
-                case 3:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_swapconfirm", "error"); break; }
-                case 4:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_classicmove", "error"); break; }
-                case 5:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_digitalanalog", "error"); break; }
+                case 3:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_sixbuttons", "error"); break; }
+                case 4:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_swapconfirm", "error"); break; }
+                case 5:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_classicmove", "error"); break; }
+                case 6:  { tooltip = Game1.LanguageManager.GetString("tooltip_controls_digitalanalog", "error"); break; }
             }
             // Display the tooltip in the tooltip window.
             return tooltip;

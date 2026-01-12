@@ -49,7 +49,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
         {
             spriteBatch.End();
 
-            // Use unscaled logical dimensions — the overlay itself handles UiScale.
+            // Use unscaled logical dimensions - the overlay itself handles UiScale.
             var width = _sequenceWidth;
             var height = _sequenceHeight;
 

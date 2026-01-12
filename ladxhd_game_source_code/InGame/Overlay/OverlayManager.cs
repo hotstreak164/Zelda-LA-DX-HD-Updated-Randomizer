@@ -255,12 +255,14 @@ namespace ProjectZ.InGame.Overlay
                 return;
 
             // If both LT and RT are pressed together, set the scaling to auto-scaling.
-            if (ControlHandler.ButtonDown(CButtons.RT) && ControlHandler.ButtonDown(CButtons.LT))
+            if ((GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.RT) && ControlHandler.ButtonDown(CButtons.LT)) || 
+                (!GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.RB) && ControlHandler.ButtonDown(CButtons.LB)))
             {
                 GameSettings.GameScale = maxScale;
             }
             // If either LT or RT were pressed scale up or down.
-            else if (ControlHandler.ButtonDown(CButtons.RT) || ControlHandler.ButtonDown(CButtons.LT))
+            else if ((GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.RT)) || (!GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.RB)) ||
+                (GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.LT)) || (!GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.LB)))
             {
                 // When autoscaling is set, match the scaling value so it can move up and down smoothly.
                 if (GameSettings.GameScale == maxScale)
@@ -287,14 +289,16 @@ namespace ProjectZ.InGame.Overlay
                 _scaleButtonTimer += Game1.DeltaTime;
 
             // Increase/Decrease game scale. Start the timer so that there is a 500ms repeat delay.
-            if (ControlHandler.ButtonPressed(CButtons.LT))
+            if ((GameSettings.SixButtons && ControlHandler.ButtonPressed(CButtons.LT)) || 
+                (!GameSettings.SixButtons && ControlHandler.ButtonPressed(CButtons.LB)))
             {
                 ChangeGameScale(GameScaleDirection.Decrease);
                 _scaleButtonDown = true;
                 _scaleButtonTimer = -425f;
                 _scaleButtonPeriod = 75;
             }
-            else if (ControlHandler.ButtonPressed(CButtons.RT))
+            else if ((GameSettings.SixButtons && ControlHandler.ButtonPressed(CButtons.RT)) || 
+                (!GameSettings.SixButtons && ControlHandler.ButtonPressed(CButtons.RB)))
             {
                 ChangeGameScale(GameScaleDirection.Increase);
                 _scaleButtonDown = true;
@@ -302,13 +306,17 @@ namespace ProjectZ.InGame.Overlay
                 _scaleButtonPeriod = 75;
             }
             // Increase/Decrease game scale repeatedly while button is held every 75ms.
-            if (ControlHandler.ButtonDown(CButtons.LT) && _scaleButtonDown && _scaleButtonTimer > _scaleButtonPeriod)
+            if (_scaleButtonDown && _scaleButtonTimer > _scaleButtonPeriod && 
+                ((GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.LT)) || 
+                (!GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.LB))))
             {
                 ChangeGameScale(GameScaleDirection.Decrease);
                 _scaleButtonTimer = 0;
                 _scaleButtonCount++;
             }
-            if (ControlHandler.ButtonDown(CButtons.RT) && _scaleButtonDown && _scaleButtonTimer > _scaleButtonPeriod)
+            if (_scaleButtonDown && _scaleButtonTimer > _scaleButtonPeriod && 
+                ((GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.RT)) || 
+                (!GameSettings.SixButtons && ControlHandler.ButtonDown(CButtons.RB))))
             {
                 ChangeGameScale(GameScaleDirection.Increase);
                 _scaleButtonTimer = 0;
@@ -328,7 +336,8 @@ namespace ProjectZ.InGame.Overlay
                 _ => _scaleButtonPeriod
             };
             // When either button is released, reset the repeat variables.
-            if (ControlHandler.ButtonReleased(CButtons.LT) || ControlHandler.ButtonReleased(CButtons.RT))
+            if ((GameSettings.SixButtons && ControlHandler.ButtonReleased(CButtons.LT)) || (!GameSettings.SixButtons && ControlHandler.ButtonReleased(CButtons.LB)) ||
+                (GameSettings.SixButtons && ControlHandler.ButtonReleased(CButtons.RT)) || (!GameSettings.SixButtons && ControlHandler.ButtonReleased(CButtons.RB)))
             {
                 _scaleButtonDown = false;
                 _scaleButtonTimer = 0;
