@@ -22,7 +22,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private readonly HittableComponent _hitComponent;
         private readonly PushableComponent _pushComponent;
         private readonly InteractComponent _interactComponent;
-        private readonly KeyChangeListenerComponent _listenerComponent;
         private readonly DamageFieldComponent _damageField;
 
         private Vector2 _marinPosition;
@@ -34,6 +33,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         public ObjDog(Map.Map map, int posX, int posY) : base(map)
         {
             EntityPosition = new CPosition(posX + 8, posY + 16, 0);
+            ResetPosition  = new CPosition(posX + 8, posY + 16, 0);
             EntitySize = new Rectangle(-8, -16, 16, 16);
 
             CanReset = true;
@@ -80,7 +80,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             var box = new CBox(EntityPosition, -7, -14, 14, 14, 8);
 
-            AddComponent(KeyChangeListenerComponent.Index, _listenerComponent = new KeyChangeListenerComponent(OnKeyChange));
+            AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(OnKeyChange));
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(box, HitType.Enemy, 2) { IsActive = false });
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(box, OnHit));
             AddComponent(BodyComponent.Index, _body);
@@ -96,11 +96,17 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void Reset()
         {
+            _damageField.IsActive = false;
+            _hitComponent.IsActive = true;
+            _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
         }
 
         private void OnKeyChange()
         {
+            if (_aiComponent.CurrentStateId == "burning")
+                return;
+
             var marinPosition = Game1.GameManager.SaveManager.GetString("marin_sing_position");
             if (!string.IsNullOrEmpty(marinPosition))
             {
@@ -114,9 +120,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 }
             }
             else
-            {
                 _marinPosition = Vector2.Zero;
-            }
+            
         }
 
         private void InitIdle()
@@ -179,10 +184,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _hitComponent.IsActive = false;
             _pushComponent.IsActive = false;
             _interactComponent.IsActive = false;
-
-            if (_listenerComponent != null)
-                RemoveComponent(KeyChangeListenerComponent.Index);
-
             _animator.Pause();
         }
 
@@ -245,7 +246,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                                        direction.X * (float)Math.Cos(offsetAngle) - direction.Y * (float)Math.Sin(offsetAngle),
                                        direction.X * (float)Math.Sin(offsetAngle) + direction.Y * (float)Math.Cos(offsetAngle)) * 0.5f;
                 _body.VelocityTarget = newDirection;
-
                 UpdateAnimation();
             }
             else if (type == PushableComponent.PushType.Impact)
@@ -254,7 +254,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _body.VelocityTarget = Vector2.Zero;
                 _body.Velocity = new Vector3(direction.X, direction.Y, 0.25f);
             }
-
             return true;
         }
 
@@ -277,9 +276,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             }
             // vertical collision
             else if ((moveCollision & Values.BodyCollision.Vertical) != 0)
-            {
                 _body.VelocityTarget.Y = -_body.VelocityTarget.Y;
-            }
+            
         }
 
         private Values.HitCollision OnHit(GameObject originObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)

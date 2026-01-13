@@ -38,6 +38,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         {
             var rectangle = new Rectangle(0, 0, 14, 8);
             EntityPosition = new CPosition(posX + 8, posY + 16, 0);
+            ResetPosition  = new CPosition(posX + 8, posY + 16, 0);
             EntitySize = new Rectangle(-8, -32, 16, 32);
 
             CanReset = true;
@@ -108,6 +109,10 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void Reset()
         {
+            _damageField.IsActive = false;
+            _hitComponent.IsActive = true;
+            _pushComponent.IsActive = true;
+            _carriableComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
             _hitCounter = 0;
         }
