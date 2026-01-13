@@ -42,6 +42,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private bool _exploded;
         private bool _arrowMode;
+        private bool _carried;
 
         // Default values modifiable with "lahdmod".
         private int fuse_timer = 1500;
@@ -137,7 +138,8 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public void Reset()
         {
-            Map.Objects.DeleteObjects.Add(this);
+            if (!_carried)
+                Map.Objects.DeleteObjects.Add(this);
         }
 
         private void Update()
@@ -234,6 +236,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private Vector3 CarryInit()
         {
             _animator.Play("idle");
+            _carried = true;
 
             // the bomb was picked up
             Body.IsActive = false;
@@ -281,6 +284,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             Body.CollisionTypesIgnore = Values.CollisionTypes.ThrowWeaponIgnore;
 
+            _carried = false;
             _carriableComponent.IsActive = false;
         }
 
