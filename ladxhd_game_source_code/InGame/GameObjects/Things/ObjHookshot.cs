@@ -54,6 +54,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _body = new BodyComponent(_hookshotPosition, -1, -1, 2, 2, 8)
             {
                 CollisionTypes = Values.CollisionTypes.Normal |
+                                 Values.CollisionTypes.Field |
                                  Values.CollisionTypes.Instrument,
                 IgnoresZ = true,
                 IgnoreHoles = true,

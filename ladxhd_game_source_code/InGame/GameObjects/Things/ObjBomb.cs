@@ -65,6 +65,9 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);
 
+            CanReset = true;
+            OnReset = Reset;
+
             // For some reason, getting the map from the parameter avoids a crash that *sometimes* happens when shooting a bomb arrow into the 
             // mouth of a Dodongo Snake. This was originally coded to use "Map" directly, but for reasons unknown it could end up being null!
             _map = map;
@@ -87,6 +90,8 @@ namespace ProjectZ.InGame.GameObjects.Things
                 HoleAbsorb = FallDeath,
                 MoveCollision = OnCollision,
                 IgnoreInsideCollision = false,
+                CollisionTypes = Values.CollisionTypes.Normal |
+                                 Values.CollisionTypes.Field,
             };
 
             if (_map.Is2dMap)
@@ -128,6 +133,11 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             if (_playerBomb)
                 Map.Objects.RegisterAlwaysAnimateObject(this);
+        }
+
+        public void Reset()
+        {
+            Map.Objects.DeleteObjects.Add(this);
         }
 
         private void Update()

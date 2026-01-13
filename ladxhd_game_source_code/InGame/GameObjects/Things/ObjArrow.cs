@@ -47,6 +47,9 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public ObjArrow(Map.Map map, CPosition linkPos, Vector2 offsetpos, int direction) : base(map)
         {
+            CanReset = true;
+            OnReset = Reset;
+
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathModFolder, "ObjArrow.lahdmod");
 
@@ -113,6 +116,11 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerPlayer, EntityPosition));
             AddComponent(DrawShadowComponent.Index, _shadowBody = new ShadowBodyDrawComponent(EntityPosition));
+        }
+
+        public void Reset()
+        {
+            Map.Objects.DeleteObjects.Add(this);
         }
 
         private void UpdateIdle()

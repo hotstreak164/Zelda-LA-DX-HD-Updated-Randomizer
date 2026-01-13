@@ -43,6 +43,9 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);
 
+            CanReset = true;
+            OnReset = Reset;
+
             var spawnPosition = new Vector3(linkPos.X + offsetpos.X, linkPos.Y + offsetpos.Y, linkPos.Z);
 
             if (magicrod_cast2d)
@@ -62,6 +65,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 VelocityTarget = AnimationHelper.DirectionOffset[direction] * (Game1.GameManager.PieceOfPowerIsActive ? magicrod_speed + 1 : magicrod_speed),
                 CollisionTypes = Values.CollisionTypes.Normal |
+                                 Values.CollisionTypes.Field |
                                  Values.CollisionTypes.Instrument,
                 CollisionTypesIgnore = Values.CollisionTypes.ThrowWeaponIgnore,
                 MoveCollision = OnCollision,
@@ -74,6 +78,11 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(BodyComponent.Index, body);
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerPlayer));
             AddComponent(LightDrawComponent.Index, new LightDrawComponent(DrawLight));
+        }
+
+        public void Reset()
+        {
+            Map.Objects.DeleteObjects.Add(this);
         }
 
         private void Update()

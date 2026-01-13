@@ -42,6 +42,9 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public ObjSwordShot(Map.Map map, CPosition linkPos, Vector2 offsetpos, int damage, int direction) : base(map)
         {
+            CanReset = true;
+            OnReset = Reset;
+
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathModFolder, "ObjSwordShot.lahdmod");
 
@@ -75,6 +78,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 VelocityTarget = AnimationHelper.DirectionOffset[direction] * swordbeam_speed,
                 CollisionTypes = Values.CollisionTypes.Normal |
+                                 Values.CollisionTypes.Field |
                                  Values.CollisionTypes.Instrument,
                 MoveCollision = OnCollision,
                 IgnoreHoles = true,
@@ -86,6 +90,11 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(BodyComponent.Index, _body);
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerPlayer, EntityPosition));
             AddComponent(LightDrawComponent.Index, new LightDrawComponent(DrawLight));
+        }
+
+        public void Reset()
+        {
+            Map.Objects.DeleteObjects.Add(this);
         }
 
         public override void Init()
