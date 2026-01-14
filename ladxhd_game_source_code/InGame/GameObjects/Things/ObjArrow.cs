@@ -51,7 +51,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             OnReset = Reset;
 
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjArrow.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjArrow.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

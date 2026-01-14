@@ -310,6 +310,11 @@ namespace ProjectZ.InGame.Things
             TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_por.png"));
             TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_rus.png"));
 
+            // Try to load graphics from here before other places.
+            if (Directory.Exists(Values.PathGraphicsMods))
+                LoadTexturesFromFolder(Values.PathGraphicsMods, true);
+
+            // Load sequences and light graphics.
             LoadTexturesFromFolder(Path.Combine(Values.PathContentFolder, "Sequences"));
             LoadTexturesFromFolder(Path.Combine(Values.PathContentFolder, "Light"));
 
@@ -486,9 +491,14 @@ namespace ProjectZ.InGame.Things
             SoundEffects.TryAdd(fileName, soundEffect);
         }
 
-        public static void LoadTexturesFromFolder(string path)
+        public static void LoadTexturesFromFolder(string path, bool recurse = false)
         {
-            var texturePaths = Directory.GetFiles(path).ToList();
+            List<string> texturePaths;
+
+            if (recurse)
+                texturePaths = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories).ToList();
+            else
+                texturePaths = Directory.GetFiles(path).ToList();
 
             foreach (var filePath in texturePaths)
             {

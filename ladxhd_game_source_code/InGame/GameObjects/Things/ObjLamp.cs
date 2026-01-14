@@ -35,7 +35,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         public ObjLamp(Map.Map map, int posX, int posY, string animationName, int rotation, bool hasCollision, bool powderLamp, string lampKey, bool emitslight) : base(map)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjLamp.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjLamp.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

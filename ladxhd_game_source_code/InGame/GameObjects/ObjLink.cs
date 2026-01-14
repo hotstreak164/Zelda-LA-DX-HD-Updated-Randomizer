@@ -480,7 +480,7 @@ namespace ProjectZ.InGame.GameObjects
         public ObjLink() : base((Map.Map)null)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjLink.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjLink.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

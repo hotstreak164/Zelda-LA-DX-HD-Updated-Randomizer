@@ -65,7 +65,7 @@ namespace ProjectZ.InGame.Overlay
         public HudOverlay()
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "HUDOverlay.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "HUDOverlay.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

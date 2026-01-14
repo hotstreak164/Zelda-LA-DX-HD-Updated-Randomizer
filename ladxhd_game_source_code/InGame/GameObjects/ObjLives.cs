@@ -137,7 +137,7 @@ namespace ProjectZ.InGame.GameObjects
         public static void ParseModFile()
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjLives.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjLives.lahdmod");
 
             if (!File.Exists(modFile))
                 return;

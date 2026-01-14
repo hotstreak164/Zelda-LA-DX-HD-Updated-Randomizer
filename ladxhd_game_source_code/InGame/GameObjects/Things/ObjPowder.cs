@@ -33,7 +33,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         public ObjPowder(Map.Map map, float posX, float posY, float posZ, bool playerPowder) : base(map)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjPowder.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjPowder.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

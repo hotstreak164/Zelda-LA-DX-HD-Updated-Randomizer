@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public ObjLightSprite(Map.Map map, int posX, int posY, string spriteId, int colorR, int colorG, int colorB, int colorA, int layer, int rotation) : base(map)
         {
-            string modFile = Path.Combine(Values.PathModFolder, "ObjLightSprite.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjLightSprite.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

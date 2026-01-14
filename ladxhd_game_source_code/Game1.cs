@@ -126,7 +126,7 @@ namespace ProjectZ
         public Game1(bool editorMode, bool loadSave, int loadSlot)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "Game1.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "Game1.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

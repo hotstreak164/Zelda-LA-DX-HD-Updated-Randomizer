@@ -16,7 +16,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         public ObjDungeonBlacker(Map.Map map, int posX, int posY, int colorR, int colorG, int colorB, int colorA) : base(map)
         {
             // Check for the existence of "ObjDungeonBlacker.lahdmod" in folder "Data\Mods".
-            string modFile = Path.Combine(Values.PathModFolder, "ObjDungeonBlacker.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjDungeonBlacker.lahdmod");
 
             // If the file exists attempt to load in custom values.
             if (File.Exists(modFile))

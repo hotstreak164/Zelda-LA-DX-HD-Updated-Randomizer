@@ -17,7 +17,7 @@ namespace ProjectZ.InGame.GameObjects.Effects
             : base(map, posX, posY, offsetX, offsetY, Values.LayerTop, "Particles/swordPoke", "run", deleteOnFinish: true)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjSparkingEffect.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjSparkingEffect.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

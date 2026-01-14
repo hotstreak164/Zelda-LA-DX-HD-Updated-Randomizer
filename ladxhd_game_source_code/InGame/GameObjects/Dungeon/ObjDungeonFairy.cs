@@ -63,7 +63,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         public ObjDungeonFairy(Map.Map map, int posX, int posY, int posZ, string carriedItem = null) : base(map)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjDungeonFairy.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjDungeonFairy.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

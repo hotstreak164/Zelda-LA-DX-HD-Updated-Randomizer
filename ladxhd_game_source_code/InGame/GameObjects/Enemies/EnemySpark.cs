@@ -48,7 +48,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         public EnemySpark(Map.Map map, int posX, int posY, int direction, bool clockwise, string destructionKey) : base(map)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "EnemySpark.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "EnemySpark.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

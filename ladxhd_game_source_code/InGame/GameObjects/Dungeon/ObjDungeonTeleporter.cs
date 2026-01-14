@@ -43,7 +43,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         public ObjDungeonTeleporter(Map.Map map, int posX, int posY, string teleportMap, string teleporterId) : base(map)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjDungeonTeleporter.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjDungeonTeleporter.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

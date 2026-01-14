@@ -93,7 +93,7 @@ namespace ProjectZ.InGame.Overlay
         public TextboxOverlay()
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "TextboxOverlay.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "TextboxOverlay.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

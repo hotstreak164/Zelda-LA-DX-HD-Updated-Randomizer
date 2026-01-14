@@ -19,7 +19,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public ObjLight(Map.Map map, int posX, int posY, int size, int colorR, int colorG, int colorB, int colorA, int layer) : base(map)
         {
-            string modFile = Path.Combine(Values.PathModFolder, "ObjLight.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjLight.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

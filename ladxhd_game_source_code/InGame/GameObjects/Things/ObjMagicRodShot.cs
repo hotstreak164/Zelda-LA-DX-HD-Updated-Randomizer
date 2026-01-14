@@ -38,7 +38,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         public ObjMagicRodShot(Map.Map map, CPosition linkPos, Vector2 offsetpos, int direction) : base(map)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjMagicRodShot.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjMagicRodShot.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);

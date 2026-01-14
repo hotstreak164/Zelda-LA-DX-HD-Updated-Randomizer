@@ -17,7 +17,7 @@ namespace ProjectZ.InGame.GameObjects.Effects
             : base(map, posX, posY, offsetX, offsetY, Values.LayerTop, pieceofpower ? "Particles/pieceOfPowerExplosion" : "Particles/explosion0", "run", deleteOnFinish: true)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathModFolder, "ObjDeathExplodeEffect.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjDeathExplodeEffect.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);
