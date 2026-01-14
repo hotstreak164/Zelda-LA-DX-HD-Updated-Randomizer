@@ -52,8 +52,9 @@ namespace ProjectZ.InGame.Things
         public static string PathAnimationFolder => Path.Combine(PathContentFolder, "Animations");
         public static string PathMinimapFolder => Path.Combine(PathContentFolder, "Dungeon");
 
-        public static string PathLAHDMods => "Mods_LAHDMod";
-        public static string PathGraphicsMods => "Mods_Graphics";
+        public static string PathMods => "Mods";
+        public static string PathLAHDMods => Path.Combine(PathMods, "LAHDMods");
+        public static string PathGraphicsMods => Path.Combine(PathMods, "Graphics");
 
         public const string EditorUiObjectEditor = "objectEditor";
         public const string EditorUiObjectSelection = "objectSelection";
