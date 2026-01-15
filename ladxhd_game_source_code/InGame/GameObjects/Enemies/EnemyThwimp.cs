@@ -16,7 +16,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Animator _animator;
         private readonly BodyComponent _body;
 
-        private const float ResturnSpeed = 0.5f;
+        private const float ReturnSpeed = 0.5f;
 
         public EnemyThwimp() : base("thwimp") { }
 
@@ -69,11 +69,17 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(sprite, Values.LayerBottom));
+
+            Map.Objects.RegisterAlwaysAnimateObject(this);
         }
 
         private void Reset()
         {
             _aiComponent.ChangeState("idle");
+            _body.Velocity = Vector3.Zero;
+            _body.VelocityTarget = Vector2.Zero;
+            _body.IgnoresZ = true;
+            _animator.Play("idle");
         }
 
         private void UpdateIdle()
@@ -112,7 +118,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void InitReturn()
         {
             _body.IgnoresZ = true;
-            _body.VelocityTarget.Y = -ResturnSpeed;
+            _body.VelocityTarget.Y = -ReturnSpeed;
         }
 
         private void InitReturned()

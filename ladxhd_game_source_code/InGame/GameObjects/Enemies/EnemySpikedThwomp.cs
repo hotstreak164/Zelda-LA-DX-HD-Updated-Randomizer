@@ -83,10 +83,16 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(BodyComponent.Index, _body);
             AddComponent(CollisionComponent.Index, new BoxCollisionComponent(_collisionBox, Values.CollisionTypes.Enemy));
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(sprite, Values.LayerBottom));
+
+            Map.Objects.RegisterAlwaysAnimateObject(this);
         }
         private void Reset()
         {
             _aiComponent.ChangeState("idle");
+            _body.Velocity = Vector3.Zero;
+            _body.VelocityTarget = Vector2.Zero;
+            _body.IgnoresZ = true;
+            _animator.Play("idle");
         }
 
         private Values.HitCollision OnHit(GameObject originObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
