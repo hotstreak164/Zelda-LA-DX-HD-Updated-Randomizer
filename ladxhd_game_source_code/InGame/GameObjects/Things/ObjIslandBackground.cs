@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.GameObjects.Base;
@@ -46,10 +47,22 @@ namespace ProjectZ.InGame.GameObjects.Things
         private int _topWaveFrame;
         private int _topWaveSpeed = 250;
 
+        int ocean_color_red = 66;
+        int ocean_color_grn = 89;
+        int ocean_color_blu = 255;
+
         public ObjIslandBackground() : base("water_3") { }
 
         public ObjIslandBackground(Map.Map map, int posX, int posY) : base(map)
         {
+            // If a mod file exists load the values from it.
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjIslandBackground.lahdmod");
+
+            if (File.Exists(modFile))
+            {
+                ModFile.Parse(modFile, this);
+                _colorOceanBright = new Color(ocean_color_red, ocean_color_grn, ocean_color_blu);
+            }
             _waveSource = Resources.SourceRectangle("water_3");
             _waveSource.Width = 16;
             _topWaveSource = Resources.SourceRectangle("water_12");

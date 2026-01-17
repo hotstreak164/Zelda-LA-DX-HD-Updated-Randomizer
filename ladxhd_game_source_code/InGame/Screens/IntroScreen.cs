@@ -132,7 +132,11 @@ namespace ProjectZ.InGame.Screens
         private Vector2 _oceanPosition3;
 
         private readonly int[] _thunderFrame = { 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0 };
-        private Color[] _oceanColor = { new Color(0, 32, 168), new Color(32, 32, 168), new Color(96, 96, 232) };
+        private Color _raftSkyColor;
+        private Color[] _raftOceanColor;
+        private Color _raftLowerColor;
+        private Color _islandOcean;
+        private Color _titleScreenSky;
 
         private DictAtlasEntry _spriteBackground;
         private DictAtlasEntry _spriteMountain;
@@ -200,7 +204,60 @@ namespace ProjectZ.InGame.Screens
 
         private bool _loaded;
 
-        public IntroScreen(string screenId) : base(screenId) { }
+        int intro_sky_red = 24;
+        int intro_sky_grn = 56;
+        int intro_sky_blu = 40;
+
+        int intro_ocean_red = 0;
+        int intro_ocean_grn = 32;
+        int intro_ocean_blu = 168;
+
+        int intro_ocean_lightning1_red = 32;
+        int intro_ocean_lightning1_grn = 32;
+        int intro_ocean_lightning1_blu = 168;
+
+        int intro_ocean_lightning2_red = 96;
+        int intro_ocean_lightning2_grn = 96;
+        int intro_ocean_lightning2_blu = 232;
+
+        int intro_ocean_bottom_red = 16;
+        int intro_ocean_bottom_grn = 0;
+        int intro_ocean_bottom_blu = 104;
+
+        int intro_ocean_island_red = 104;
+        int intro_ocean_island_grn = 96;
+        int intro_ocean_island_blu = 248;
+
+        int title_screen_sky_red = 248;
+        int title_screen_sky_grn = 248;
+        int title_screen_sky_blu = 248;
+
+        public IntroScreen(string screenId) : base(screenId) 
+        { 
+            // If a mod file exists load the values from it.
+            string modFile = Path.Combine(Values.PathLAHDMods, "IntroScreen.lahdmod");
+
+            if (File.Exists(modFile))
+                ModFile.Parse(modFile, this);
+
+            // Set up the color of the sky during the raft scene.
+            _raftSkyColor = new Color(intro_sky_red, intro_sky_grn, intro_sky_blu);
+
+            // Set up the color of the ocean during the raft scene. Includes 2 lightning strike variations.
+            Color ocean_01 = new Color(intro_ocean_red, intro_ocean_grn, intro_ocean_blu);
+            Color ocean_02 = new Color(intro_ocean_lightning1_red, intro_ocean_lightning1_grn, intro_ocean_lightning1_blu);
+            Color ocean_03 = new Color(intro_ocean_lightning2_red, intro_ocean_lightning2_grn, intro_ocean_lightning2_blu);
+            _raftOceanColor = new Color[] { ocean_01, ocean_02, ocean_03 };
+
+            // Set up the color of the lower part of the ocean during the raft scene.
+            _raftLowerColor = new Color(intro_ocean_bottom_red, intro_ocean_bottom_grn, intro_ocean_bottom_blu);
+
+            // Set up the color of the ocean during the scene Marin is walking towards Link.
+            _islandOcean = new Color(intro_ocean_island_red, intro_ocean_island_grn, intro_ocean_island_blu);
+
+            // Set up the color of the sky on the title screen.
+            _titleScreenSky = new Color(title_screen_sky_red, title_screen_sky_grn, title_screen_sky_blu);
+        }
 
         public override void Load(ContentManager content)
         {
@@ -710,7 +767,7 @@ namespace ProjectZ.InGame.Screens
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Game1.Graphics.GraphicsDevice.Clear(_currentState == States.OceanPicture ? Color.Black : new Color(104, 96, 248));
+            Game1.Graphics.GraphicsDevice.Clear(_currentState == States.OceanPicture ? Color.Black : _islandOcean);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, TransformMatrix);
 
             DrawOcean(spriteBatch);
@@ -744,7 +801,7 @@ namespace ProjectZ.InGame.Screens
             if (_currentState == States.OceanCamera || _currentState == States.OceanThunder)
             {
                 // draw the dark cloud
-                spriteBatch.Draw(Resources.SprWhite, new Rectangle(screenLeft, screenTop, width, -screenTop), new Color(24, 56, 40));
+                spriteBatch.Draw(Resources.SprWhite, new Rectangle(screenLeft, screenTop, width, -screenTop), _raftSkyColor);
 
                 // draw the clouds
                 spriteBatch.Draw(_sprOcean,
@@ -755,7 +812,7 @@ namespace ProjectZ.InGame.Screens
                     Color.White, 0, new Vector2(1 - cloudOffset % 1, 0), SpriteEffects.None, 0);
 
                 // draw the dark sky
-                spriteBatch.Draw(Resources.SprWhite, new Rectangle(screenLeft, _oceanCloudRectangle.Height, width, 64), _oceanColor[_thunderIndex]);
+                spriteBatch.Draw(Resources.SprWhite, new Rectangle(screenLeft, _oceanCloudRectangle.Height, width, 64), _raftOceanColor[_thunderIndex]);
 
                 // draw the ocean top
                 var oceanAnimationOffset = _thunderIndex * 64;
@@ -792,7 +849,7 @@ namespace ProjectZ.InGame.Screens
                 // draw the dark ocean
                 spriteBatch.Draw(Resources.SprWhite,
                     new Rectangle(screenLeft, (int)_oceanPosition3.Y + 48, width,
-                        screenBottom - ((int)_oceanPosition3.Y + 48)), new Color(16, 0, 104));
+                        screenBottom - ((int)_oceanPosition3.Y + 48)), _raftLowerColor);
             }
 
             if (_currentState == States.OceanPicture)
@@ -846,7 +903,7 @@ namespace ProjectZ.InGame.Screens
 
             // draw the sky white
             spriteBatch.Draw(Resources.SprWhite, new Rectangle(
-                screenLeft, screenTop, width, -screenTop + 47), new Color(248, 248, 248));
+                screenLeft, screenTop, width, -screenTop + 47), _titleScreenSky);
 
             var mountainOffset = new Vector2((float)(Math.Round(_cameraCenter.X * 0.5f * _scale) / _scale), 0);
 

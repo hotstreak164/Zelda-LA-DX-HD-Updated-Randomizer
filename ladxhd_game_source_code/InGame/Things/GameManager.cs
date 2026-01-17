@@ -138,6 +138,8 @@ namespace ProjectZ.InGame.Things
         public static int CloakBlue = 1;
         public static int CloakRed = 2;
 
+        public Color CloakColor => ItemDrawHelper.CloakColors[CloakType];
+
         public int CloakType;
         public int DeathCount;
         public int KillCount;
@@ -153,8 +155,6 @@ namespace ProjectZ.InGame.Things
         // 0: Marin, 1: Manbo, 2: Mamu
         public int[] OcarinaSongs = new int[3];
         public int SelectedOcarinaSong = 0;
-
-        public Color CloakColor => ItemDrawHelper.CloakColors[CloakType];
 
         public bool GuardianAcornIsActive;
         public int GuardianAcornCount;

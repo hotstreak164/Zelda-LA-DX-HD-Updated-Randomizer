@@ -92,9 +92,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _animator.Play(angry ? "angry" : "idle");
 
             if (distanceH < 22)
-            {
                 _aiComponent.ChangeState("fall");
-            }
         }
 
         private void InitFall()

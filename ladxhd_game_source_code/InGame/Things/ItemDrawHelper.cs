@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.Map;
@@ -54,8 +55,33 @@ namespace ProjectZ.InGame.Things
         private static bool _heartAnimation;
         private static bool _heartSounds;
 
+        static int tunic_grn_r = 16;
+        static int tunic_grn_g = 173;
+        static int tunic_grn_b = 66;
+
+        static int tunic_blu_r = 24;
+        static int tunic_blu_g = 132;
+        static int tunic_blu_b = 255;
+
+        static int tunic_red_r = 255;
+        static int tunic_red_g = 8;
+        static int tunic_red_b = 41;
+
         public static void Load()
         {
+            // If a mod file exists load the values from it.
+            string modFile = Path.Combine(Values.PathLAHDMods, "ItemDrawHelper.lahdmod");
+
+            if (File.Exists(modFile))
+            {
+                ModFile.ParseStatic(modFile, typeof(ItemDrawHelper));
+
+                Color grnCloak = new Color(tunic_grn_r, tunic_grn_g, tunic_grn_b);
+                Color bluCloak = new Color(tunic_blu_r, tunic_blu_g, tunic_blu_b);
+                Color redCloak = new Color(tunic_red_r, tunic_red_g, tunic_red_b);
+
+                CloakColors = new Color[] { grnCloak, bluCloak, redCloak };
+            }
             SpriteLetter = Resources.GetSprite("ui letter");
             SpriteHeart = Resources.GetSprite("ui heart");
             SpriteRubee = Resources.GetSprite("ui ruby");

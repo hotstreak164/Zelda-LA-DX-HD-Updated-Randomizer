@@ -256,6 +256,14 @@ namespace ProjectZ.InGame.Things
             SprWhite = new Texture2D(graphics, 1, 1);
             SprWhite.SetData(new[] { Color.White });
 
+            if (Directory.Exists(Values.PathGraphicsMods))
+            {
+                var introDirs = Directory.EnumerateDirectories(Values.PathGraphicsMods, "Intro", SearchOption.AllDirectories);
+
+                foreach (var introDir in introDirs)
+                    LoadTexturesFromFolder(introDir, false);
+            }
+            // Then load base intro graphics (acts as fallback)
             LoadTexturesFromFolder(Path.Combine(Values.PathContentFolder, "Intro"));
 
             BlurEffect = content.Load<Effect>("Shader/EffectBlur");

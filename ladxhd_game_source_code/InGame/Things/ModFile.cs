@@ -29,5 +29,28 @@ namespace ProjectZ.InGame.Things
                 field.SetValue(inputClass, convertedValue);
             }
         }
+
+        public static void ParseStatic(string modFile, Type inputClass)
+        {
+            foreach (string line in File.ReadAllLines(modFile))
+            {
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
+                    continue;
+
+                string[] splitLine = line.Split(new char[]{ '=', '/' });
+                if (splitLine.Length < 2)
+                    continue;
+
+                string varName = splitLine[0].Trim();
+                string varValue = splitLine[1].Trim();
+
+                FieldInfo field = inputClass.GetField(varName, BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+
+                if (field == null) { continue; }
+
+                object convertedValue = Convert.ChangeType(varValue, field.FieldType, CultureInfo.InvariantCulture);
+                field.SetValue(inputClass, convertedValue);
+            }
+        }
     }
 }
