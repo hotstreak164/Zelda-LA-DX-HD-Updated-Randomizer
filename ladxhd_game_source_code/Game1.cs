@@ -195,9 +195,6 @@ namespace ProjectZ
             GraphicsDevice.DeviceReset += OnDeviceReset;
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Start loading the resources that are needed after the intro.
-            ThreadPool.QueueUserWorkItem(LoadContentThreaded);
-
             // Initialize controller and input handler.
             ControlHandler.Initialize();
             Components.Add(new InputHandler(this));
@@ -209,6 +206,9 @@ namespace ProjectZ
             GameManager.UpdateSoundEffects();
             Resources.LoadIntro(Graphics.GraphicsDevice, Content);
             ScreenManager.LoadIntro(Content);
+
+            // Start loading the resources that are needed after the intro.
+            ThreadPool.QueueUserWorkItem(LoadContentThreaded);
 
             // Initialize the GBS Player and load in the Link's Awakening GBS file.
             GbsPlayer.LoadFile(Path.Combine(Values.PathContentFolder, "Music", "awakening.gbs"));
@@ -231,6 +231,7 @@ namespace ProjectZ
         private void LoadContentThreaded(Object obj)
         {
             // Load all of the game's resources.
+            Resources.LoadBlurEffect(Content);
             Resources.LoadTextures(Graphics.GraphicsDevice, Content);
             Resources.LoadSounds(Content);
             GameManager.Load(Content);
@@ -375,18 +376,8 @@ namespace ProjectZ
             base.Update(gameTime);
         }
 
-        private void EnsureRenderTargets()
-        {
-            if (MainRenderTarget == null || _renderTarget1 == null || _renderTarget2 == null)
-            {
-                UpdateRenderTargetSizes(Math.Max(1, WindowWidth), Math.Max(1, WindowHeight));
-            }
-        }
-
         protected override void Draw(GameTime gameTime)
         {
-            EnsureRenderTargets();
-
             if (!_finishedLoading)
             {
                 ScreenManager.Draw(SpriteBatch);
@@ -704,11 +695,13 @@ namespace ProjectZ
             width = Math.Max(1, width);
             height = Math.Max(1, height);
 
-            Resources.BlurEffect.Parameters["width"].SetValue(width);
-            Resources.BlurEffect.Parameters["height"].SetValue(height);
-            Resources.RoundedCornerBlurEffect.Parameters["textureWidth"].SetValue(width);
-            Resources.RoundedCornerBlurEffect.Parameters["textureHeight"].SetValue(height);
-
+            if (_finishedLoading)
+            {
+                Resources.BlurEffect.Parameters["width"].SetValue(width);
+                Resources.BlurEffect.Parameters["height"].SetValue(height);
+                Resources.RoundedCornerBlurEffect.Parameters["textureWidth"].SetValue(width);
+                Resources.RoundedCornerBlurEffect.Parameters["textureHeight"].SetValue(height);
+            }
             var blurScale = MathHelper.Clamp(MapManager.Camera.Scale / 2, 1, 10);
             var blurRtWidth = Math.Max(1, (int)(width / blurScale));
             var blurRtHeight = Math.Max(1, (int)(height / blurScale));

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -248,14 +249,12 @@ namespace ProjectZ.InGame.Things
             {(AtlasLanguage.Russian,    AtlasVariant.Redux),   SpriteAtlasRusRedux},
         };
 
-        // resources needed to start showing the intro
         public static void LoadIntro(GraphicsDevice graphics, ContentManager content)
         {
-            // TODO: make sure to only load the stuff needed; BlurEffect is not needed but needs changes to not load it here
-
             SprWhite = new Texture2D(graphics, 1, 1);
             SprWhite.SetData(new[] { Color.White });
 
+            // Try to load custom Intro graphics first.
             if (Directory.Exists(Values.PathGraphicsMods))
             {
                 var introDirs = Directory.EnumerateDirectories(Values.PathGraphicsMods, "Intro", SearchOption.AllDirectories);
@@ -266,14 +265,17 @@ namespace ProjectZ.InGame.Things
             // Then load base intro graphics (acts as fallback)
             LoadTexturesFromFolder(Path.Combine(Values.PathContentFolder, "Intro"));
 
-            BlurEffect = content.Load<Effect>("Shader/EffectBlur");
-            RoundedCornerBlurEffect = content.Load<Effect>("Shader/RoundedCornerEffectBlur");
-
             AddSoundEffect(content, "D378-15-0F");
             AddSoundEffect(content, "D378-12-0C");
             AddSoundEffect(content, "D378-25-19");
         }
         
+        public static void LoadBlurEffect(ContentManager content)
+        {
+            BlurEffect = content.Load<Effect>("Shader/EffectBlur");
+            RoundedCornerBlurEffect = content.Load<Effect>("Shader/RoundedCornerEffectBlur");
+        }
+
         private static void TryLoadTextures(Texture2D source, string inputPath)
         {
             if (File.Exists(inputPath)) 
@@ -501,24 +503,29 @@ namespace ProjectZ.InGame.Things
 
         public static void LoadTexturesFromFolder(string path, bool recurse = false)
         {
-            List<string> texturePaths;
+            if (!Directory.Exists(path))
+                return;
 
-            if (recurse)
-                texturePaths = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories).ToList();
-            else
-                texturePaths = Directory.GetFiles(path).ToList();
-
-            foreach (var filePath in texturePaths)
+            // Load PNGs in this directory.
+            foreach (var filePath in Directory.GetFiles(path, "*.png"))
             {
-                var _filePath = filePath.Replace("//","/");
+                var normalizedPath = filePath.Replace("\\", "/");
 
-                if (!_filePath.Contains(".png"))
+                var newTexture = new Texture(Path.GetFileName(normalizedPath));
+                LoadTexture(out newTexture.SprTexture, normalizedPath);
+                TextureList.Add(newTexture);
+            }
+
+            if (!recurse)
+                return;
+
+            // Recurse into subdirectories except "Intro".
+            foreach (var dir in Directory.GetDirectories(path))
+            {
+                if (string.Equals(Path.GetFileName(dir), "Intro", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                var newTexture = new Texture(Path.GetFileName(_filePath));
-
-                LoadTexture(out newTexture.SprTexture, _filePath);
-                TextureList.Add(newTexture);
+                LoadTexturesFromFolder(dir, true);
             }
         }
 
