@@ -183,7 +183,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (light_source && GameSettings.ObjectLighting)
+            if (light_source && GameSettings.ObjectLights)
             {
                 Rectangle _lightRectangle = new Rectangle((int)EntityPosition.X + 8 - light_size / 2, (int)EntityPosition.Y + 8 - light_size / 2, light_size, light_size);
                 spriteBatch.Draw(Resources.SprLight, _lightRectangle, new Color(light_red, light_grn, light_blu) * _lampState);

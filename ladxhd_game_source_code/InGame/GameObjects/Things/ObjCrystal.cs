@@ -82,7 +82,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (light_source && GameSettings.ObjectLighting)
+            if (light_source && GameSettings.ObjectLights)
             {
                 var _lightRectangle = new Rectangle((int)EntityPosition.X - light_size / 2, (int)EntityPosition.Y - 8 - light_size / 2, light_size, light_size);
                 DrawHelper.DrawLight(spriteBatch, _lightRectangle, _lightColor);

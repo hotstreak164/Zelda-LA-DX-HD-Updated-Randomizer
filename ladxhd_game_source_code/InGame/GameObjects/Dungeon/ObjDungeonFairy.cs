@@ -247,7 +247,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (light_source && GameSettings.ObjectLighting)
+            if (light_source && GameSettings.ObjectLights)
             {
                 Rectangle _lightRectangle = new Rectangle((int)EntityPosition.X - light_size / 2, (int)EntityPosition.Y - light_size / 2 - (int)EntityPosition.Z - 5, light_size, light_size);
                 DrawHelper.DrawLight(spriteBatch, _lightRectangle, new Color(light_red, light_grn, light_blu) * light_bright);

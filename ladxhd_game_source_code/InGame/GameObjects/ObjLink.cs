@@ -1467,7 +1467,7 @@ namespace ProjectZ.InGame.GameObjects
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (light_source && GameSettings.ObjectLighting)
+            if (light_source && GameSettings.ObjectLights)
             {
                 var _lightColor = new Color(light_red, light_grn, light_blu);
                 var _lightRectangle = new Rectangle((int)_body.Position.X - light_size / 2, (int)_body.Position.Y - (int)_body.Position.Z - light_size / 2 - 6, light_size, light_size);

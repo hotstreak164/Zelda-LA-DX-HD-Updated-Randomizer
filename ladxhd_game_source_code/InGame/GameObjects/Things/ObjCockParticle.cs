@@ -173,7 +173,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (!GameSettings.ObjectLighting)
+            if (!GameSettings.ObjectLights)
                 return;
 
             for (int i = 0; i < _sprites.Length; i++)

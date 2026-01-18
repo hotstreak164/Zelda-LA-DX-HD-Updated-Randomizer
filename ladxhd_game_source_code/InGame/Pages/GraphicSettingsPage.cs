@@ -61,14 +61,14 @@ namespace ProjectZ.InGame.Pages
 
             // Button: Disable Global Lighting
             var disableGlobalLightingToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
-               "settings_graphics_globallights", GameSettings.GlobalLighting,
-               newState => GameSettings.GlobalLighting = newState);
+               "settings_graphics_globallights", GameSettings.GlobalLights,
+               newState => GameSettings.GlobalLights = newState);
              _contentLayout.AddElement(disableGlobalLightingToggle);
 
             // Button: Disable Object Lighting
             var disableObjectLightingToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
-               "settings_graphics_objectlights", GameSettings.ObjectLighting,
-               newState => GameSettings.ObjectLighting = newState);
+               "settings_graphics_objectlights", GameSettings.ObjectLights,
+               newState => GameSettings.ObjectLights = newState);
              _contentLayout.AddElement(disableObjectLightingToggle);
 
             // Button: Dynamic Shadows

@@ -124,7 +124,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (GameSettings.ObjectLighting)
+            if (GameSettings.ObjectLights)
                 DrawHelper.DrawLight(spriteBatch, new Rectangle((int)EntityPosition.X - 32, (int)EntityPosition.Y - 32, 64, 64), new Color(255, 200, 200) * 0.75f);
         }
     }

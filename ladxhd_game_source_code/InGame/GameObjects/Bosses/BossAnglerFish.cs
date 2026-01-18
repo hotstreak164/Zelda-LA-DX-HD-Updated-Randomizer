@@ -388,7 +388,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (GameSettings.ObjectLighting)
+            if (GameSettings.ObjectLights)
                 spriteBatch.Draw(Resources.SprLight, new Rectangle((int)EntityPosition.X - 22 - 32, (int)EntityPosition.Y - 18 - 16, 64, 64), _lightColor);
         }
 

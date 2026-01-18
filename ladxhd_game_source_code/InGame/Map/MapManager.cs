@@ -259,7 +259,7 @@ namespace ProjectZ.InGame.Map
 
         public void DrawLight(SpriteBatch spriteBatch)
         {
-            Color lighting = GameSettings.GlobalLighting ? CurrentMap.LightColor : new Color(255, 255, 255);
+            Color lighting = GameSettings.GlobalLights ? CurrentMap.LightColor : new Color(255, 255, 255);
             Game1.Graphics.GraphicsDevice.Clear(lighting);
             spriteBatch.Begin(SpriteSortMode.Deferred, LightBlendState, SamplerState.AnisotropicClamp, null, null, null, Camera.TransformMatrix);
             CurrentMap.Objects.DrawLight(spriteBatch);

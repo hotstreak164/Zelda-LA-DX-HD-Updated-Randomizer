@@ -120,7 +120,7 @@ namespace ProjectZ.InGame.GameObjects.Effects
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (!GameSettings.ObjectLighting || !light_source || light_bright <= 0f)
+            if (!GameSettings.ObjectLights || !light_source || light_bright <= 0f)
                 return;
             Rectangle rect = new Rectangle((int)EntityPosition.X - light_size / 2, (int)EntityPosition.Y - light_size / 2, light_size, light_size);
             DrawHelper.DrawLight(spriteBatch, rect, new Color(light_red, light_grn, light_blu) * light_bright);

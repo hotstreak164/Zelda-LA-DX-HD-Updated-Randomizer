@@ -212,7 +212,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _lastEpSafe = GameSettings.EpilepsySafe;
             }
 
-            if (light_source && GameSettings.ObjectLighting)
+            if (light_source && GameSettings.ObjectLights)
             {
                 Rectangle _lightRectangle = new Rectangle((int)EntityPosition.X - light_size / 2, (int)EntityPosition.Y - light_size / 2, light_size, light_size);
                 DrawHelper.DrawLight(spriteBatch, _lightRectangle, new Color(light_red, light_grn, light_blu) * (0.125f + _lightState * light_bright));

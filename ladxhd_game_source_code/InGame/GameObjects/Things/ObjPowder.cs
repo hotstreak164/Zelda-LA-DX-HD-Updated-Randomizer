@@ -130,7 +130,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // spriteBatch.Draw(Resources.SprWhite, new Vector2(drawRect.X, drawRect.Y), new Rectangle(0, 0, (int)drawRect.Width, (int)drawRect.Height), Color.Red * 1.00f);
 
             // Draw the lighting effect.
-            if (light_source && GameSettings.ObjectLighting)
+            if (light_source && GameSettings.ObjectLights)
             {
                 for (var i = 0; i < _points.Length; i++)
                     DrawHelper.DrawLight(spriteBatch, new Rectangle((int)_points[i].X - light_size / 2, (int)(_points[i].Y - _points[i].Z) - 2 - light_size / 2, light_size, light_size), new Color(light_red, light_grn, light_blu) * light_bright * _live[i]);

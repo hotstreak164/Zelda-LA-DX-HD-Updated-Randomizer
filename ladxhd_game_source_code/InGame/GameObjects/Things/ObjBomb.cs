@@ -436,7 +436,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void DrawLight(SpriteBatch spriteBatch)
         {
-            if (!GameSettings.ObjectLighting || !light_source || !_exploded || _deathState == DeathState.Dead || light_bright <= 0f)
+            if (!GameSettings.ObjectLights || !light_source || !_exploded || _deathState == DeathState.Dead || light_bright <= 0f)
                 return;
 
             Rectangle rect = new Rectangle((int)EntityPosition.X - light_size / 2, (int)EntityPosition.Y - light_size / 2 - (int)EntityPosition.Z, light_size, light_size);

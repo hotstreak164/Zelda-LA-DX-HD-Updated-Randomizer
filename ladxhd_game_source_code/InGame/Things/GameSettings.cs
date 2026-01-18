@@ -35,8 +35,8 @@
         public static int     UiScale         =  11;
         public static bool    IsFullscreen    =  false;
         public static bool    ExFullscreen    =  false;
-        public static bool    GlobalLighting  =  false;
-        public static bool    ObjectLighting  =  false;
+        public static bool    GlobalLights    =  true;
+        public static bool    ObjectLights    =  true;
         public static bool    EnableShadows   =  true;
         public static bool    VerticalSync    =  true;
 

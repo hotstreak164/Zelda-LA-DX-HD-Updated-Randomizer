@@ -54,7 +54,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public void DrawLight(SpriteBatch spriteBatch)
         {
-            if (light_source && GameSettings.ObjectLighting)
+            if (light_source && GameSettings.ObjectLights)
             {
                 spriteBatch.Draw(_sprite.Texture, _position, _sprite.ScaledRectangle, 
                     _lightColor, _rotation, _sprite.ScaledOrigin, _sprite.Scale, SpriteEffects.None, 0);
