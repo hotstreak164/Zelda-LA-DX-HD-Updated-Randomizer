@@ -481,10 +481,14 @@ namespace ProjectZ.InGame.Map
 
         public static void SetSpriteShader(SpriteShader spriteShader)
         {
-            // update the parameters of the shader
-            if (spriteShader != null)
-                foreach (var parameter in spriteShader.FloatParameter)
-                    spriteShader.Effect.Parameters[parameter.Key].SetValue(parameter.Value);
+            if (spriteShader == null)
+                return;
+
+            foreach (var parameter in spriteShader.FloatParameter)
+                spriteShader.Effect.Parameters[parameter.Key]?.SetValue(parameter.Value);
+
+            foreach (var parameter in spriteShader.Vector4Parameter)
+                spriteShader.Effect.Parameters[parameter.Key]?.SetValue(parameter.Value);
         }
 
         public static void SpriteBatchBeginAnisotropic(SpriteBatch spriteBatch, Effect effect)

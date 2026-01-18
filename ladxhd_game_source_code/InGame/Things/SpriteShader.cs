@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectZ.InGame.Things
@@ -9,10 +10,17 @@ namespace ProjectZ.InGame.Things
     {
         public Effect Effect;
         public Dictionary<string, float> FloatParameter = new Dictionary<string, float>();
+        public Dictionary<string, Vector4> Vector4Parameter = new();
 
         public SpriteShader(Effect effect)
         {
             Effect = effect;
+        }
+
+        public Vector4 this[string key]
+        {
+            get => Vector4Parameter[key];
+            set => Vector4Parameter[key] = value;
         }
     }
 }

@@ -440,6 +440,7 @@ namespace ProjectZ.InGame.Things
             NoiseTexture = GetTexture("thanos noise.png");
             ThanosShader = content.Load<Effect>("Shader/ThanosShader");
             ThanosShader.Parameters["NoiceTexture"].SetValue(NoiseTexture);
+
             // only works for sprites using the sequence sprite
             ThanosShader.Parameters["Scale"].SetValue(new Vector2(
                     (float)SprGameSequencesFinal.Width / NoiseTexture.Width,
@@ -462,11 +463,17 @@ namespace ProjectZ.InGame.Things
             DamageSpriteShader0 = new SpriteShader(damageShader);
             DamageSpriteShader0.FloatParameter.Add("mark0", 0.1f);
             DamageSpriteShader0.FloatParameter.Add("mark1", 0.725f);
+            DamageSpriteShader0.Vector4Parameter.Add("Color0", new Vector4(1.000f, 0.710f, 0.192f, 1.000f));
+            DamageSpriteShader0.Vector4Parameter.Add("Color1", new Vector4(0.871f, 0.000f, 0.000f, 1.000f));
+            DamageSpriteShader0.Vector4Parameter.Add("Color2", new Vector4(0.000f, 0.000f, 0.000f, 1.000f));
 
             // stone hinox needs mark1 to be below 0.553
             DamageSpriteShader1 = new SpriteShader(damageShader);
             DamageSpriteShader1.FloatParameter.Add("mark0", 0.1f);
             DamageSpriteShader1.FloatParameter.Add("mark1", 0.55f);
+            DamageSpriteShader1.Vector4Parameter.Add("Color0", new Vector4(1.000f, 0.710f, 0.192f, 1.000f));
+            DamageSpriteShader1.Vector4Parameter.Add("Color1", new Vector4(0.871f, 0.000f, 0.000f, 1.000f));
+            DamageSpriteShader1.Vector4Parameter.Add("Color2", new Vector4(0.000f, 0.000f, 0.000f, 1.000f));
 
             var shockShader = content.Load<Effect>("Shader/ShockEffect");
 
