@@ -17,10 +17,12 @@ namespace ProjectZ.InGame.GameObjects.Effects
             : base(map, posX, posY, offsetX, offsetY, Values.LayerTop, "Particles/flame", "idle", deleteOnFinish: true)
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathLAHDMods, "ObjSwordPokeEffect.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjBurningEffect.lahdmod");
 
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);
+
+            System.Diagnostics.Debug.WriteLine(light_source);
 
             ConfigureLight(light_source, light_red, light_grn, light_blu, light_bright, light_size, light_fade);
         }
