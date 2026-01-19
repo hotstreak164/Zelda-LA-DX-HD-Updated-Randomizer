@@ -5127,6 +5127,12 @@ namespace ProjectZ.InGame.GameObjects
             // Manbo's Mambo was played.
             if (_ocarinaSong == 1)
             {
+                // if (GameSettings.DungeonTeleport)
+                // {
+                //    Game1.GameManager.InGameOverlay.StartSequence("map");
+                //    Game1.GbsPlayer.Play();
+                // }
+
                 // Freeze the game during the transition.
                 FreezeAnimations(true);
 

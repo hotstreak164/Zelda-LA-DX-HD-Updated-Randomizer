@@ -22,9 +22,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         public void Update()
         {
             // update the players position on the map
-            Game1.GameManager.SetMapPosition(new Point(
-                    (int)(MapManager.ObjLink.PosX - _offset.X) / Values.FieldWidth,
-                    (int)(MapManager.ObjLink.PosY - _offset.Y) / Values.FieldHeight));
+            Game1.GameManager.SetMapPosition(new Point((int)(MapManager.ObjLink.PosX - _offset.X) / Values.FieldWidth, (int)(MapManager.ObjLink.PosY - _offset.Y) / Values.FieldHeight));
         }
     }
 }

@@ -61,6 +61,9 @@ namespace ProjectZ.InGame.Overlay
         private bool _iconAnimationRunning;
         private bool _fullMap;
 
+        Animator[] animDungeons = new Animator[8];
+        Point[] animPosition = new Point[8];
+
         public Point SelectionPosition { get => _selectionPosition; }
 
         public MapOverlay(int width, int height, int margin, bool fullMap)
@@ -68,13 +71,10 @@ namespace ProjectZ.InGame.Overlay
             _width = width;
             _height = height;
             _margin = margin;
-
             _fullMap = fullMap;
 
-            // 1 shop
-            // 2 ?
-            // 3 cave
-            // 4 owl
+            // Icons:
+            // 1: shop, 2: ?, 3: cave, 4: owl
             _mapIcons[6, 0] = 2;
             _mapIcons[8, 0] = 4;
             _mapIcons[10, 0] = 2;
@@ -137,15 +137,32 @@ namespace ProjectZ.InGame.Overlay
 
             _mapIcons[2, 15] = 4;
             _mapIcons[6, 15] = 2;
+
+            // Positions of Dungeons on the minimap 1-8.
+            animPosition[0] = new Point(3, 13);
+            animPosition[1] = new Point(4, 2);
+            animPosition[2] = new Point(5, 11);
+            animPosition[3] = new Point(11, 2);
+            animPosition[4] = new Point(9, 13);
+            animPosition[5] = new Point(12, 8);
+            animPosition[6] = new Point(14, 0);
+            animPosition[7] = new Point(0, 1);
         }
 
         public void Load()
         {
+            // Load the player and selection icons and play their animation.
             _animationPlayer = AnimatorSaveLoad.LoadAnimator("mapPlayer");
             _animationSelection = AnimatorSaveLoad.LoadAnimator("mapSelector");
-
             _animationPlayer.Play("idle");
             _animationSelection.Play("idle");
+
+            // Load the dungeon icons and play their animation.
+            for (int i = 0; i < 8; i++)
+            {
+                animDungeons[i] = AnimatorSaveLoad.LoadAnimator("mapDungeon");
+                animDungeons[i].Play("idle");
+            }
         }
 
         public void UpdateRenderTarget()
@@ -156,7 +173,14 @@ namespace ProjectZ.InGame.Overlay
 
         public void Update()
         {
+            // Update player and selection animations.
             _animationPlayer.Update();
+            _animationSelection.Update();
+
+            // Update dungeon icons if enabled.
+            if (GameSettings.DungeonTeleport)
+                for (int i = 0; i < 8; i++)
+                    animDungeons[i].Update();
 
             var mapIcon = _mapIcons[_selectionPosition.X, _selectionPosition.Y];
 
@@ -191,8 +215,6 @@ namespace ProjectZ.InGame.Overlay
             }
             if (!IsSelected)
                 return;
-
-            _animationSelection.Update();
 
             if (!Game1.GameManager.InGameOverlay.TextboxOverlay.IsOpen)
                 UpdateInput();
@@ -244,7 +266,7 @@ namespace ProjectZ.InGame.Overlay
 
                 // If it's not a teleport position or the player doesn't have the instrument.
                 if (!GameSettings.DungeonTeleport || !validPosition || hasInstrument == null || hasInstrument.Count < 1 || 
-                    !Game1.GameManager.InGameOverlay.InventoryState || !MapManager.ObjLink.Map.IsOverworld)
+                    (!Game1.GameManager.InGameOverlay.InventoryState && !_fullMap) || !MapManager.ObjLink.Map.IsOverworld)
                     return;
 
                 // We'll need this to teleport Link later.
@@ -261,7 +283,7 @@ namespace ProjectZ.InGame.Overlay
                 body.Position.Set(teleportPos);
                 body.Velocity = Vector3.Zero;
                 body.VelocityTarget = Vector2.Zero;
-                MapManager.ObjLink.Direction = 1;
+                MapManager.ObjLink.Direction = 3;
 
                 // Play an animation and a sound effect.
                 var explosionAnimation = new ObjAnimator(MapManager.ObjLink.Map, (int)teleportPos.X, (int)teleportPos.Y - 8, Values.LayerTop, "Particles/pieceOfPowerExplosion", "run", true);
@@ -317,9 +339,7 @@ namespace ProjectZ.InGame.Overlay
                 (_fullMap || Game1.GameManager.MapVisibility[newPosition.X, newPosition.Y]))
             {
                 Game1.GameManager.PlaySoundEffect("D360-10-0A");
-
                 _selectionPosition = newPosition;
-
                 _animationSelection.Stop();
                 _animationSelection.Play("idle");
             }
@@ -352,6 +372,21 @@ namespace ProjectZ.InGame.Overlay
             {
                 var mapRectangle = new Point(drawPosition.X + _margin, drawPosition.Y + _margin);
 
+                // Draw the dungeon icons if enabled.
+                if (GameSettings.DungeonTeleport && IsSelected)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        var hasInstrument = Game1.GameManager.GetItem("instrument" + i);
+                        if (hasInstrument == null || hasInstrument.Count < 1)
+                            continue;
+
+                        Vector2 animLocation = new Vector2(
+                            mapRectangle.X + (8 + animPosition[i].X * 8 + 1) * Game1.UiScale, 
+                            mapRectangle.Y + (8 + animPosition[i].Y * 8 + 1) * Game1.UiScale);
+                        animDungeons[i].DrawBasic(spriteBatch, animLocation, color, Game1.UiScale);
+                    }
+                }
                 // Draw the player icon.
                 var position = new Vector2(
                     mapRectangle.X + (8 + Game1.GameManager.PlayerMapPosition.Value.X * 8 + 2) * Game1.UiScale,
@@ -405,11 +440,7 @@ namespace ProjectZ.InGame.Overlay
 
             // draw icon of the selection
             if (_shownSelection > 0)
-            {
-                DrawIcon(spriteBatch, new Point(
-                    mapRectangle.X + _iconPosition.X,
-                    mapRectangle.Y + _iconPosition.Y), _shownSelection, 1, _animationState);
-            }
+                DrawIcon(spriteBatch, new Point(mapRectangle.X + _iconPosition.X, mapRectangle.Y + _iconPosition.Y), _shownSelection, 1, _animationState);
         }
 
         public void DrawIcon(SpriteBatch spriteBatch, Point position, int icon, int scale, float animationPercentage)
