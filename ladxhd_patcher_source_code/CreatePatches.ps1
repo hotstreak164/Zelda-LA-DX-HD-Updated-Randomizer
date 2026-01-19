@@ -56,7 +56,7 @@
 $OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
 $NewGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated"
 $ZipFilePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD-Updated\ladxhd_patcher_source_code"
-$GameVersion = "1.5.4"
+$GameVersion = "1.5.5"
 
 #========================================================================================================================================
 # SETUP XDELTA & OUTPUTS
@@ -124,7 +124,8 @@ $uiImages   = @("ui_deu.png", "ui_esp.png", "ui_fre.png", "ui_ind.png", "ui_ita.
 $musicTile  = @("musicOverworldClassic.data")
 $dungeon3M  = @("dungeon3.map")
 $dungeon3D  = @("dungeon3.map.data")
-$animations = @("bowwow_water.ani")
+$bowwowanim = @("bowwow_water.ani")
+$dungeonani = @("mapDungeon.ani")
 
 $FileTargets = @{
     "eng.lng"             = $langFiles
@@ -142,7 +143,8 @@ $FileTargets = @{
     "musicOverworld.data" = $musicTile
     "dungeon3_1.map"      = $dungeon3M
     "dungeon3_1.map.data" = $dungeon3D
-    "BowWow.ani"		  = $animations
+    "BowWow.ani"		  = $bowwowanim
+    "mapPlayer.ani"		  = $dungeonani
 }
 
 function Build-ReverseMap($Targets)

@@ -1,5 +1,24 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.5.5**
+### The "Out of Clever Update Names" Update
+  * Add new Redux option "Teleport to Cleared Dungeons" which can be done from the map on the inventory screen.
+  * Add translated textures for the remaining languages that didn't have them: Italian, Portuguese, and Russian.
+  * Add an option "Extra Screen Shake Effects" that separates new screen shakes from original screen shakes.
+  * Add support for changing Classic Camera field transition speed via "lahdmod" file. (Credit: @Mandras2).
+  * Add lahdmod support for changing colors of things not controlled via textures like the intro, ocean, sky, etc.
+  * Add support for changing the damage shader colors in "ObjLink.lahdmod". This affects almost all flashing colors.
+  * Fix Link's missing right-facing blocking sprites. When facing right, his arm should be seen holding the shield.
+  * Fix inventory/map screens to render at screen resolution rather than render at low resolution then scale up.
+  * Fix 2D Link "landing" sound effect to play when falling from ladders while pressing a downward diagonal direction.
+  * Fix Classic Camera border rounding errors when using certain window resolutions and game scaling values.
+  * Fix Buzz Blob shock effect getting stuck in Classic Camera on a field transition or hitting from a different field.
+  * Fix crash when letting a fish get away in the fishing minigame when playing with Spanish language.
+  * Fix "Enable Global Lighting" and "Enable Object Lighting" to be enabled by default and rename internal variables.
+  * Fix properly resetting the various Thwomp enemies when leaving the field and returning in Classic Camera.
+  * Fix loading custom "Intro" graphics. These require being in a folder named "Intro" in the "Mods\Graphics" folder.
+  * Fix loading custom "UI" graphics (ui.png, ui_deu.png, ui_esp.png, etc). No special folder required for these.
+
 ## **v1.5.4**
 ### The "Opening the Path to Customs" Update
   * Add preliminary custom texture replacement which can replace in-game sprites in a non-destructive manner.

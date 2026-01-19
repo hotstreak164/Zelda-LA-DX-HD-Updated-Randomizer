@@ -39,7 +39,8 @@ namespace LADXHD_Patcher
         private static string[] musicTile  = new[] { "musicOverworldClassic.data" };
         private static string[] dungeon3M  = new[] { "dungeon3.map" };
         private static string[] dungeon3D  = new[] { "dungeon3.map.data" };
-        private static string[] animations = new[] { "bowwow_water.ani" };
+        private static string[] bowwowanim = new[] { "bowwow_water.ani" };
+        private static string[] dungeonani = new[] { "mapDungeon.ani" };
 
         // THE "KEY" IS THE MASTER FILE THAT CREATES OTHER FILES FROM IT. THE "VALUE" IS THE STRING ARRAY THAT HOLDS THOSE FILES
 
@@ -60,7 +61,8 @@ namespace LADXHD_Patcher
             { "musicOverworld.data", musicTile },
             { "dungeon3_1.map",      dungeon3M },
             { "dungeon3_1.map.data", dungeon3D },
-            { "BowWow.ani",         animations }
+            { "BowWow.ani",         bowwowanim },
+            { "mapPlayer.ani",      dungeonani }
         };
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -79,7 +81,7 @@ namespace LADXHD_Patcher
         {
             // Because old versions of the patchers saved "new" files, we need to remove them or they will cause problems.
             string[][] list = { langFiles, langDialog, smallFonts, backGround, linkImages, npcImages, itemImages, introImage, 
-                                miniMapImg, objectsImg, photograph, uiImages, musicTile, dungeon3M, dungeon3D, animations };
+                                miniMapImg, objectsImg, photograph, uiImages, musicTile, dungeon3M, dungeon3D, bowwowanim, dungeonani };
 
             string[] remove = list.SelectMany(x => x).ToArray();
 
