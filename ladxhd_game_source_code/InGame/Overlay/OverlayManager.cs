@@ -47,7 +47,6 @@ namespace ProjectZ.InGame.Overlay
         private string _currentSequenceName;
 
         private RenderTarget2D _menuRenderTarget2D;
-
         private UiRectangle _blurRectangle;
 
         private Rectangle _recInventory;
@@ -410,7 +409,7 @@ namespace ProjectZ.InGame.Overlay
                         mapStart = ControlHandler.GetButtonName(ControlHandler.ButtonDictionary[CButtons.Select].Buttons[0]);
 
                     var mapString = mapStart + ": " + Game1.LanguageManager.GetString(_updateInventory ? "overlay_map" : "overlay_inventory", "error");
-                    var mapDrawPos =  new Vector2(8 * Game1.UiScale, Game1.WindowHeight - 16 * Game1.UiScale);
+                    var mapDrawPos = new Vector2(8 * Game1.UiScale, Game1.WindowHeight - 16 * Game1.UiScale);
 
                     spriteBatch.DrawString(Resources.GameFont, mapString, mapDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
 
@@ -556,19 +555,22 @@ namespace ProjectZ.InGame.Overlay
         {
             TextboxOverlay.ResolutionChange();
             InGameHud.ResolutionChange();
+            _inventoryOverlay.ResolutionChanged();
+            _dungeonOverlay.ResolutionChanged();
 
             _blurRectangle.Rectangle.Width = Game1.WindowWidth;
             _blurRectangle.Rectangle.Height = Game1.WindowHeight;
 
             _scale = Game1.UiScale;
 
+            // Render at actual screen resolution (not native resolution)
             _overlayWidth = _overlaySize.X * _scale;
             _overlayHeight = _overlaySize.Y * _scale;
 
             _menuPosition = new Vector2(
-                Game1.WindowWidth / 2 - _overlayWidth / 2, Game1.WindowHeight / 2 - _overlayHeight / 2);
+                Game1.WindowWidth / 2 - _overlayWidth / 2, 
+                Game1.WindowHeight / 2 - _overlayHeight / 2);
 
-            // ensure RTs resized properly
             EnsureMenuRenderTarget();
         }
 

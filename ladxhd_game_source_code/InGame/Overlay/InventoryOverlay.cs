@@ -62,8 +62,8 @@ namespace ProjectZ.InGame.Overlay
         private Point _equipmentPosition;
         private readonly Rectangle _itemsRectangle = new Rectangle(6, 124, 108, 52);
 
-        private readonly int _width;
-        private readonly int _height;
+        private int _width;
+        private int _height;
 
         private float _selectionCounter;
         private const int SelectionTime = 125;
@@ -73,8 +73,8 @@ namespace ProjectZ.InGame.Overlay
 
         public InventoryOverlay(int width, int height)
         {
-            _width = width;
-            _height = height;
+            _width = width * Game1.UiScale;
+            _height = height * Game1.UiScale;
 
             _rubeePosition = new Point(width - ItemDrawHelper.RubeeSize.X - Margin, 10);
 
@@ -152,6 +152,13 @@ namespace ProjectZ.InGame.Overlay
             }
             _itemSlotString = new string[_itemSlots.Length];
             Values.HandItemSlots = _itemSlots.Length;
+        }
+
+        public void ResolutionChanged()
+        {
+            _width = Game1.WindowWidth;
+            _height = Game1.WindowHeight;
+            UpdateRenderTarget();
         }
 
         public void UpdateRenderTarget()
@@ -236,12 +243,10 @@ namespace ProjectZ.InGame.Overlay
                     Game1.GameManager.SelectedOcarinaSong = previousSong;
                     return false;
                 }
-
                 if (Game1.GameManager.SelectedOcarinaSong != -1 &&
                     Game1.GameManager.OcarinaSongs[Game1.GameManager.SelectedOcarinaSong] == 1)
                     return Game1.GameManager.SelectedOcarinaSong != previousSong;
             }
-
             Game1.GameManager.SelectedOcarinaSong = -1;
             return false;
         }
@@ -249,14 +254,7 @@ namespace ProjectZ.InGame.Overlay
         public void Draw(SpriteBatch spriteBatch, Rectangle drawPosition, Color color)
         {
             if (_renderTarget == null) return;
-
-            // Draw the RT to the screen scaled by Game1.UiScale (like HUD)
-            var destRect = new Rectangle(
-                drawPosition.X,
-                drawPosition.Y,
-                (int)(_renderTarget.Width * Game1.UiScale),
-                (int)(_renderTarget.Height * Game1.UiScale));
-
+            var destRect = new Rectangle(drawPosition.X, drawPosition.Y, _renderTarget.Width, _renderTarget.Height);
             spriteBatch.Draw(_renderTarget, destRect, color);
         }
 
@@ -268,11 +266,11 @@ namespace ProjectZ.InGame.Overlay
             device.SetRenderTarget(_renderTarget);
             device.Clear(Color.Transparent);
 
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(1f);
+            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(1f * Game1.UiScale);
             Resources.RoundedCornerEffect.Parameters["radius"].SetValue(3f);
 
             // Draw main background.
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, Resources.RoundedCornerEffect);
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(Game1.UiScale));
 
             Resources.RoundedCornerEffect.Parameters["width"].SetValue(_background0.Width);
             Resources.RoundedCornerEffect.Parameters["height"].SetValue(_background0.Height);
@@ -285,7 +283,7 @@ namespace ProjectZ.InGame.Overlay
             spriteBatch.End();
 
             // Draw item backgrounds.
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, Resources.RoundedCornerEffect);
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(Game1.UiScale));
 
             var offset = new Point(_background1.X, _background1.Y);
 
@@ -342,7 +340,7 @@ namespace ProjectZ.InGame.Overlay
             spriteBatch.End();
 
             // Draw icons, hearts, etc.
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(Game1.UiScale));
 
             var heartOffset = new Point(0, Game1.GameManager.MaxHearts > 7 ? 0 : 4);
             ItemDrawHelper.DrawHearts(spriteBatch, _heartsPosition + heartOffset, 1, Color.White);

@@ -38,11 +38,18 @@ namespace ProjectZ.InGame.Overlay
 
         public DungeonOverlay(int width, int height)
         {
-            _width = width;
-            _height = height;
+            _width = width * Game1.UiScale;
+            _height = height * Game1.UiScale;
 
             _backgroundTop = new Rectangle(0, 0, width, 20);
             _backgroundBottom = new Rectangle(0, 20 + 2, width, height - 20 - 2);
+        }
+
+        public void ResolutionChanged()
+        {
+            _width = Game1.WindowWidth;
+            _height = Game1.WindowHeight;
+            UpdateRenderTarget();
         }
 
         public void UpdateRenderTarget()
@@ -92,36 +99,30 @@ namespace ProjectZ.InGame.Overlay
 
         public void Draw(SpriteBatch spriteBatch, Rectangle drawPosition, Color color)
         {
-            if (_renderTarget == null)
-                return;
-
-            if (!Game1.GameManager.MapManager.CurrentMap.DungeonMode)
-                return;
-
-            spriteBatch.Draw(_renderTarget, drawPosition.Location.ToVector2(), null, color, 0f, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0f);
+            if (_renderTarget == null || !Game1.GameManager.MapManager.CurrentMap.DungeonMode) return;
+            var destRect = new Rectangle(drawPosition.X, drawPosition.Y, _renderTarget.Width, _renderTarget.Height);
+            spriteBatch.Draw(_renderTarget, destRect, color);
         }
 
         public void DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
-            if (_renderTarget == null)
-                return;
-
-            if (!Game1.GameManager.MapManager.CurrentMap.DungeonMode)
+            if (_renderTarget == null || !Game1.GameManager.MapManager.CurrentMap.DungeonMode)
                 return;
 
             Game1.Graphics.GraphicsDevice.SetRenderTarget(_renderTarget);
             Game1.Graphics.GraphicsDevice.Clear(Color.Transparent);
 
             // draw the background
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect);
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(Game1.UiScale));
 
             Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
             Resources.RoundedCornerEffect.Parameters["radius"].SetValue(3f);
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_width);
 
+            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_backgroundTop.Width);
             Resources.RoundedCornerEffect.Parameters["height"].SetValue(_backgroundTop.Height);
             spriteBatch.Draw(Resources.SprWhite, _backgroundTop, Values.InventoryBackgroundColor);
 
+            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_backgroundBottom.Width);
             Resources.RoundedCornerEffect.Parameters["height"].SetValue(_backgroundBottom.Height);
             spriteBatch.Draw(Resources.SprWhite, _backgroundBottom, Values.InventoryBackgroundColor);
 
@@ -137,18 +138,14 @@ namespace ProjectZ.InGame.Overlay
                 DrawBackground(spriteBatch, Point.Zero, new Rectangle(_smallKeyPosition.X + _smallKeyPosition.Width / 2, _smallKeyPosition.Bottom - 5, 4, 2), 1);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(Game1.UiScale));
 
             var offset = new Point(0, 0);
 
             ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.GetItem("dmap"), offset, _mapRectangle, 1, Color.White);
-
             ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.GetItem("compass"), offset, _compasRectangle, 1, Color.White);
-
             ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.GetItem("stonebeak"), offset, _stonebreakRectangle, 1, Color.White);
-
             ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.GetItem("nightmarekey"), offset, _nightmareKeyPosition, 1, Color.White);
-
             ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.GetItem("smallkey"), offset, _smallKeyPosition, 1, Color.White);
 
             // draw the dungeon maps
