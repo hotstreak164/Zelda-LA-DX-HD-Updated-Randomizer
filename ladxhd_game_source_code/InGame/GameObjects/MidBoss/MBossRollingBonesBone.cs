@@ -44,12 +44,11 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 Drag = 1.0f,
                 DragAir = 1.0f,
             };
-
             var hittableCollider = new CBox(EntityPosition, 0, 0, 0, 16, 96, 8);
             var damageCollider = new CBox(EntityPosition, 2, 0, 0, 12, 96, 4);
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableCollider, OnHit));
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
-            AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(_body.BodyBox, OnPush) { RepelMultiplier = 4.5f });
+            AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(_body.BodyBox, OnPush) { RepelMultiplier = 5.0f });
             AddComponent(BodyComponent.Index, _body);
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerBottom, EntityPosition));

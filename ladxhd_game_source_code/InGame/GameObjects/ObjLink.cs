@@ -517,8 +517,8 @@ namespace ProjectZ.InGame.GameObjects
                 IsPusher = true,
                 IsSlider = true,
                 MaxJumpHeight = 3,
-                Drag = 0.80f,
-                DragAir = 0.80f,
+                Drag = 0.72f,
+                DragAir = 0.72f,
                 Gravity = -0.15f,
                 Gravity2D = 0.1f,
                 AbsorbStop = 0.35f,
@@ -1044,6 +1044,10 @@ namespace ProjectZ.InGame.GameObjects
                 var slowDownAmount = 0.05f + MathHelper.Clamp(_hitVelocity.Length() / 25f, 0, 0.05f);
 
                 _hitVelocity -= hitNormal * slowDownAmount * Game1.TimeMultiplier;
+
+                foreach (var barrier in FieldBarrier)
+                    if (MapManager.ObjLink._body.BodyBox.Box.Intersects(barrier.CollisionBox))
+                        _hitVelocity = Vector2.Zero;
             }
             else
                 _hitVelocity = Vector2.Zero;

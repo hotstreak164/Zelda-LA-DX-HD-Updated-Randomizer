@@ -18,7 +18,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Components
         public double LastPushTime;
         public double LastWaitTime;
         
-        public float RepelMultiplier = 3.0f;
+        public float RepelMultiplier = 4.0f;
         public float InertiaCounter;
         
         public int InertiaTime = 0;
