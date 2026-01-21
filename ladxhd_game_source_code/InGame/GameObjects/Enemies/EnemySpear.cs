@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _despawnPercentage = 1;
         private int _despawnTime = 500;
         private int dir;
-        private bool _playSound;
+        private bool _playSound = true;
 
         private Point[] _collisionBoxSize = { new Point(12, 4), new Point(4, 12), new Point(12, 4), new Point(4, 12) };
 
@@ -142,8 +142,16 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private bool OnDamage()
         {
-            Map.Objects.DeleteObjects.Add(this);
-            return _damageField.DamagePlayer();
+            _playSound = false;
+
+            bool damaged = _damageField.DamagePlayer();
+
+            if (damaged)
+                Map.Objects.DeleteObjects.Add(this);
+            else
+                OnCollision(Values.BodyCollision.None);
+            
+            return damaged;
         }
 
         private bool OnPush(Vector2 direction, PushableComponent.PushType type)
@@ -188,8 +196,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void OnCollision(Values.BodyCollision direction)
         {
-            _playSound = true;
-
             if (_aiComponent.CurrentStateId == "despawn")
                 return;
 
