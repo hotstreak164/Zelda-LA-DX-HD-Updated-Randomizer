@@ -49,7 +49,16 @@ namespace ProjectZ.InGame.Map
         private int _viewportWidth;
         private int _viewportHeight;
 
-        public static bool ClassicMode => GameSettings.ClassicCamera && (!GameSettings.ClassicDungeon || MapManager.ObjLink?.Map?.DungeonMode == true || MapManager.ObjLink?.Map?.DungeonMapless == true || MapManager.ObjLink?.Map?.DungeonCastle == true);
+        public static bool ClassicMode => 
+            (!GameSettings.ClassicCamera && 
+            GameSettings.ModernOverworld && 
+            (MapManager.ObjLink?.Map?.IsOverworld == false)) 
+            || 
+            (GameSettings.ClassicCamera && 
+            (!GameSettings.ClassicDungeon || 
+            MapManager.ObjLink?.Map?.DungeonMode == true || 
+            MapManager.ObjLink?.Map?.DungeonMapless == true || 
+            MapManager.ObjLink?.Map?.DungeonCastle == true));
 
         // Classic Camera transition speed loaded via "lahdmod".
         public float classic_transition_speed = 1.00f;

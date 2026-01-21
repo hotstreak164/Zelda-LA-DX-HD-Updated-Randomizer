@@ -68,7 +68,7 @@ namespace ProjectZ.InGame.Map
             return GetCameraTargetLink();
         }
 
-        public Vector2 GetCameraTargetLink()
+        static public Vector2 GetCameraTargetLink()
         {
             return (new Vector2 (ObjLink.PosX, ObjLink.PosY - 4) + CameraOffset) * Camera.Scale;
         }

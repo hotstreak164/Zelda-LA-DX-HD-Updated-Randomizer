@@ -13,7 +13,8 @@ namespace ProjectZ.InGame.Pages
         private readonly InterfaceListLayout _contentLayout;
         private readonly InterfaceListLayout _bottomBar;
 
-        private readonly InterfaceListLayout _toggleClassicCamera;
+        private readonly InterfaceButton     _buttonCameraType;
+        private readonly InterfaceListLayout _toggleModernOverworld;
         private readonly InterfaceListLayout _toggleClassicDungeon;
         private readonly InterfaceSlider     _sliderCameraBorder;
         private readonly InterfaceSlider     _sliderBorderOpacity;
@@ -22,9 +23,11 @@ namespace ProjectZ.InGame.Pages
         private readonly InterfaceListLayout _toggleScreenShake;
         private readonly InterfaceListLayout _toggleExScreenShake;
 
+        private string _cameraName => GameSettings.ClassicCamera ? "Classic Camera" : "Modern Camera";
         private bool _showTooltip;
 
-        public void SetClassicCamera(bool state) => ((InterfaceToggle)_toggleClassicCamera.Elements[1]).ToggleState = state;
+        public void SetCameraMode(bool state) => ToggleCameraModes(state);
+        public void SetModernOverworld(bool state) => ((InterfaceToggle)_toggleModernOverworld.Elements[1]).ToggleState = state;
         public void SetClassicDungeon(bool state) => ((InterfaceToggle)_toggleClassicDungeon.Elements[1]).ToggleState = state;
         public void SetClassicCamBorder(int value) { ((InterfaceSlider)_sliderCameraBorder).CurrentStep = value; }
         public void SetClassicBorderAlpha(int value) { ((InterfaceSlider)_sliderBorderOpacity).CurrentStep = value; }
@@ -47,17 +50,25 @@ namespace ProjectZ.InGame.Pages
                 new Point(buttonWidth, (int)(height * Values.MenuHeaderSize)), new Point(0, 0)));
             _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize) - 12), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
 
-            // Toggle: Classic Camera
-            _toggleClassicCamera = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
-                "settings_camera_classiccam", GameSettings.ClassicCamera, 
-                newState => { GameSettings.ClassicCamera = newState; Game1.ScaleChanged = true; UpdateInterfaceColors(); });
-            _contentLayout.AddElement(_toggleClassicCamera);
+            // Button: Modern/Classic Camera
+            _contentLayout.AddElement(_buttonCameraType = new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(0, 2), "", PressButtonCameraChange));
+            _buttonCameraType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_camera_cameratype", "error") + ": " + _cameraName;
+
+            // Toggle: Overworld Only
+            _toggleModernOverworld = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+                "settings_camera_modernoverworld", GameSettings.ModernOverworld, 
+                newState => { GameSettings.ModernOverworld = newState; Game1.ScaleChanged = true; });
 
             // Toggle: Dungeons Only
             _toggleClassicDungeon = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_classicdungeon", GameSettings.ClassicDungeon, 
                 newState => { GameSettings.ClassicDungeon = newState; Game1.ScaleChanged = true; });
-            _contentLayout.AddElement(_toggleClassicDungeon);
+            
+            // Depending on which of the above two options is added depends on camera state.
+            if (GameSettings.ClassicCamera)
+                _contentLayout.AddElement(_toggleClassicDungeon);
+            else
+                _contentLayout.AddElement(_toggleModernOverworld);
 
             // Slider: Camera Border
             _sliderCameraBorder = new InterfaceSlider(Resources.GameFont, "settings_camera_camborder",
@@ -139,9 +150,34 @@ namespace ProjectZ.InGame.Pages
             PageLayout.Select(InterfaceElement.Directions.Top, false);
         }
 
+        private void PressButtonCameraChange(InterfaceElement element)
+        {
+            ToggleCameraModes();
+        }
+
+        private void ToggleCameraModes(bool? classicState = null)
+        {
+            // Force the parameter if defined and if not, invert the current Classic Camera selection.
+            GameSettings.ClassicCamera = classicState ?? !GameSettings.ClassicCamera;
+
+            // Override the button text with this fancy hack.
+            _buttonCameraType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_camera_cameratype", "error") + ": " + _cameraName;
+
+            // The camera has changed so the game scale must also be upated.
+            Game1.ScaleChanged = true;
+
+            // Toggling classic camera "grays out" some options depending on its state.
+            UpdateInterfaceColors();
+
+            // Replace the opposing "support" option with the one that matches the current type.
+            if (GameSettings.ClassicCamera)
+                _contentLayout.ReplaceElement(_toggleModernOverworld, _toggleClassicDungeon);
+            else
+                _contentLayout.ReplaceElement(_toggleClassicDungeon, _toggleModernOverworld);
+        }
+
         public void UpdateInterfaceColors()
         {
-            // Toggling classic camera "grays out" some options depending on its state.
             _toggleClassicDungeon.ToggleElementColors(GameSettings.ClassicCamera);
             _sliderCameraBorder.ToggleSliderColors(GameSettings.ClassicCamera);
             _sliderBorderOpacity.ToggleSliderColors(GameSettings.ClassicCamera);
@@ -189,8 +225,8 @@ namespace ProjectZ.InGame.Pages
             // Use the selected index to determine which tooltip to show.
             switch (index) 
             {
-                case 0:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_classiccam", "error"); break; }
-                case 1:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_classicdungeon", "error"); break; }
+                case 0:  { tooltip = Game1.LanguageManager.GetString(GameSettings.ClassicCamera ? "tooltip_camera_classiccam" : "tooltip_camera_moderncam", "error"); break; }
+                case 1:  { tooltip = Game1.LanguageManager.GetString(GameSettings.ClassicCamera ? "tooltip_camera_classicdungeon" : "tooltip_camera_modernoverworld", "error"); break; }
                 case 2:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_camborder", "error"); break; }
                 case 3:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_blackpercent", "error"); break; }
                 case 4:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_cameralock", "error"); break; }

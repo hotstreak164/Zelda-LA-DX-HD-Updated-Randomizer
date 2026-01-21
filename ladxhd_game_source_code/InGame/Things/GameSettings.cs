@@ -23,6 +23,7 @@
 
         // Camera Settings
         public static bool    ClassicCamera   =  false;
+        public static bool    ModernOverworld =  false;
         public static bool    ClassicDungeon  =  false;
         public static int     ClassicBorders  =  0;
         public static float   ClassicAlpha    =  1.00f;
@@ -112,6 +113,7 @@
 
             // Camera Settings
             ClassicCamera   =  false;
+            ModernOverworld =  false;
             ClassicDungeon  =  false;
             ClassicBorders  =  0;
             ClassicAlpha    =  1.00f;

@@ -48,7 +48,6 @@ namespace ProjectZ.InGame.Pages
             // Button: Set Purist Values
             _contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_preset_purist", element => { SetPuristValues(); }));
 
-
             // Bottom Bar / Back Button:
             _bottomBar = new InterfaceListLayout() { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true, HorizontalMode = true };
             _bottomBar.AddElement(new InterfaceButton(new Point(100, 18), new Point(2, 4), "settings_menu_back", element => { Game1.UiPageManager.PopPage(); }));
@@ -115,6 +114,7 @@ namespace ProjectZ.InGame.Pages
             GameSettings.PhotosColor = true;
             GameSettings.DungeonTeleport = true;
             GameSettings.ClassicCamera = false;
+            GameSettings.ModernOverworld = false;
             GameSettings.ClassicDungeon = false;
             GameSettings.ClassicBorders = 0;
             GameSettings.CameraLock = false;
@@ -187,6 +187,7 @@ namespace ProjectZ.InGame.Pages
             GameSettings.PhotosColor = true;
             GameSettings.DungeonTeleport = true;
             GameSettings.ClassicCamera = true;
+            GameSettings.ModernOverworld = true;
             GameSettings.ClassicDungeon = true;
             GameSettings.ClassicBorders = 1;
             GameSettings.CameraLock = false;
@@ -285,6 +286,7 @@ namespace ProjectZ.InGame.Pages
             {
                 var CameraSettingsPage = (CameraSettingsPage)camPage;
                 CameraSettingsPage.SetClassicCamera(GameSettings.ClassicCamera);
+                CameraSettingsPage.SetModernOverworld(GameSettings.ModernOverworld);
                 CameraSettingsPage.SetClassicDungeon(GameSettings.ClassicDungeon);
                 CameraSettingsPage.SetClassicCamBorder(GameSettings.ClassicBorders);
                 CameraSettingsPage.SetClassicBorderAlpha((int)(GameSettings.ClassicAlpha * 100));

@@ -22,8 +22,6 @@ namespace ProjectZ.InGame.GameObjects.Effects
             if (File.Exists(modFile))
                 ModFile.Parse(modFile, this);
 
-            System.Diagnostics.Debug.WriteLine(light_source);
-
             ConfigureLight(light_source, light_red, light_grn, light_blu, light_bright, light_size, light_fade);
         }
     }

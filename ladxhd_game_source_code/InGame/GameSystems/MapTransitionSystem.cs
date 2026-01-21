@@ -221,7 +221,7 @@ namespace ProjectZ.InGame.GameSystems
                 return;
 
             // Hide Link behind the circle shader effect on the first load into the world.
-            if (Camera.ClassicMode && MapManager.ObjLink.BlackScreenOverride)
+            if (Camera.ClassicMode || MapManager.ObjLink.BlackScreenOverride)
                 Game1.GameManager.DrawPlayerOnTopPercentage = 0;
 
             _transitionObject.Draw(spriteBatch);
@@ -261,7 +261,7 @@ namespace ProjectZ.InGame.GameSystems
             if (!_introTransition)
                 Game1.GameManager.DrawPlayerOnTopPercentage = 1.0f;
 
-            if (Camera.ClassicMode || (GameSettings.ClassicCamera && GameSettings.ClassicDungeon))
+            if (Camera.ClassicMode || (GameSettings.ClassicCamera && GameSettings.ClassicDungeon) || (!GameSettings.ClassicCamera && GameSettings.ModernOverworld))
                 Camera.SnapCamera = true;
         }
 

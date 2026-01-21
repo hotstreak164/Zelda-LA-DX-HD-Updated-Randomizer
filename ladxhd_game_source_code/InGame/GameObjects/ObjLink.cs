@@ -1045,8 +1045,13 @@ namespace ProjectZ.InGame.GameObjects
 
                 _hitVelocity -= hitNormal * slowDownAmount * Game1.TimeMultiplier;
 
-                if (FieldBarrier?.Any(b => MapManager.ObjLink._body.BodyBox.Box.Intersects(b.CollisionBox)) == true)
-                    _hitVelocity = Vector2.Zero;
+                if (FieldBarrier != null)
+                    foreach (var barrier in FieldBarrier)
+                        if (MapManager.ObjLink._body.BodyBox.Box.Intersects(barrier.CollisionBox))
+                        {
+                            _hitVelocity = Vector2.Zero;
+                            break;
+                        }
             }
             else
                 _hitVelocity = Vector2.Zero;
@@ -6050,7 +6055,8 @@ namespace ProjectZ.InGame.GameObjects
                 SetPosition(newPosition);
 
                 // Recalculate scale when classic dungeons is enabled.
-                if (GameSettings.ClassicCamera && GameSettings.ClassicDungeon)
+                if ((GameSettings.ClassicCamera && GameSettings.ClassicDungeon) ||
+                    (!GameSettings.ClassicCamera && GameSettings.ModernOverworld))
                     Game1.ScaleChanged = true;
             }
 

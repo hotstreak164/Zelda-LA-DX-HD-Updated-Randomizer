@@ -35,6 +35,7 @@ namespace ProjectZ.InGame.SaveLoad
 
             // Camera Settings
             GameSettings.ClassicCamera = saveManager.GetBool("ClassicCamera", GameSettings.ClassicCamera);
+            GameSettings.ModernOverworld = saveManager.GetBool("ModernOverworld", GameSettings.ModernOverworld);
             GameSettings.ClassicDungeon = saveManager.GetBool("ClassicDungeon", GameSettings.ClassicDungeon);
             GameSettings.ClassicBorders = saveManager.GetInt("ClassicBorders", GameSettings.ClassicBorders);
             GameSettings.ClassicAlpha = saveManager.GetFloat("ClassicAlpha", GameSettings.ClassicAlpha);
@@ -120,6 +121,7 @@ namespace ProjectZ.InGame.SaveLoad
 
             // Camera Settings
             saveManager.SetBool("ClassicCamera", GameSettings.ClassicCamera);
+            saveManager.SetBool("ModernOverworld", GameSettings.ModernOverworld);
             saveManager.SetBool("ClassicDungeon", GameSettings.ClassicDungeon);
             saveManager.SetInt("ClassicBorders", GameSettings.ClassicBorders);
             saveManager.SetFloat("ClassicAlpha", GameSettings.ClassicAlpha);

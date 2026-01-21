@@ -1618,7 +1618,7 @@ namespace ProjectZ.InGame.Things
             if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(CameraSettingsPage), out var camPage))
             {
                 var cameraPage = (CameraSettingsPage)camPage;
-                cameraPage.SetClassicCamera(GameSettings.ClassicCamera);
+                cameraPage.SetCameraMode(GameSettings.ClassicCamera);
                 cameraPage.SetClassicDungeon(GameSettings.ClassicDungeon);
                 cameraPage.SetClassicCamBorder(GameSettings.ClassicBorders);
                 cameraPage.SetCameraLock(GameSettings.CameraLock);
