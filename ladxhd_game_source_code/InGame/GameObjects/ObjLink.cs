@@ -463,7 +463,6 @@ namespace ProjectZ.InGame.GameObjects
         //====================
         bool swordbeam_level1 = false;
         bool swordbeam_always = false;
-        bool swordbeam_cast2d = false;
 
         float sword_charge_time = 500;
         float boots_charge_time = 500;
@@ -3761,6 +3760,7 @@ namespace ProjectZ.InGame.GameObjects
             _stopCharging = false;
             _swordPoked = false;
             _shotSword = false;
+            _isSwordSpinning = false;
 
             _swordChargeCounter = sword_charge_time;
             _beamDirection = Direction;
@@ -3769,15 +3769,13 @@ namespace ProjectZ.InGame.GameObjects
             StopRaft();
 
             // If in an accompanying state -> switch to a merged state.
-            if (IsSwimmingState())
-                CurrentState = State.AttackSwimming;
-            else if (IsJumpingState())
-                CurrentState = State.AttackJumping;
-            else if (IsBlockingState())
-                CurrentState = State.AttackBlocking;
-            else
-                CurrentState = State.Attacking;
-
+            CurrentState = CurrentState switch
+            {
+                State.Blocking => State.AttackBlocking,
+                State.Swimming => State.AttackSwimming,
+                State.Jumping => State.AttackJumping,
+                _ => State.Attacking
+            };
             // Reset the jump hack timer.
             _jumpEndTimer = 0;
         }
