@@ -11,30 +11,35 @@ namespace ProjectZ.InGame.GameObjects.Things
     {
         public Box CollisionBox;
         public Rectangle Rect;
-
-        private int _width;
-        private int _height;
+        public Point Position;
+        public int Width;
+        public int Height;
 
         public ObjFieldBarrier(Map.Map map, int posX, int posY, Values.CollisionTypes type, Rectangle rectangle) : base(map)
         {
-            _width  = rectangle.Width;
-            _height = rectangle.Height;
+            Position.X = posX;
+            Position.Y = posY;
 
-            EditorIconSource = new Rectangle(0, 0, _width, _height);
+            Width  = rectangle.Width;
+            Height = rectangle.Height;
 
-            EntityPosition = new CPosition(posX, posY, 0);
-            EntitySize = new Rectangle(0, 0, _width, _height);
+            EditorIconSource = new Rectangle(0, 0, Width, Height);
+
+            EntityPosition = new CPosition(Position.X, Position.Y, 0);
+            EntitySize = new Rectangle(0, 0, Width, Height);
 
             Rect = rectangle;
-            CollisionBox = new Box(posX + rectangle.X, posY + rectangle.Y, 0, _width, _height, 16);
+            CollisionBox = new Box(Position.X + rectangle.X, Position.Y + rectangle.Y, 0, Width, Height, 16);
 
             AddComponent(CollisionComponent.Index, new CollisionComponent(DetectCollision) { CollisionType = type });
         }
 
         public void SetPosition(int posX, int posY)
         {
-            EntityPosition.Set(new Vector2(posX, posY));
-            CollisionBox = new Box(posX, posY, 0, _width, _height, 16);
+            Position.X = posX;
+            Position.Y = posY;
+            EntityPosition.Set(new Vector2(Position.X, Position.Y));
+            CollisionBox = new Box(Position.X, Position.Y, 0, Width, Height, 16);
         }
 
         private bool DetectCollision(Box box, int dir, int level, ref Box collidingBox)
