@@ -98,6 +98,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("cooldown");
+            _aiComponent.ChangeState("cooldown");
             _animator.Play("idle");
         }
 

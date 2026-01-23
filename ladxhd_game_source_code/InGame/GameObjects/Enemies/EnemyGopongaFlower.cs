@@ -86,6 +86,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
 
             if (_collisionComponent == null)
                 AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(_collisionBox, Values.CollisionTypes.Enemy));

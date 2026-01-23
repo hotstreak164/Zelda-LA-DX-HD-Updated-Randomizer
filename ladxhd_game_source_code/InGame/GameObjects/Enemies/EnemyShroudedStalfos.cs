@@ -102,6 +102,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _direction = Game1.RandomNumber.Next(0, 4);
             _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "walking" : "idle");
+            _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "walking" : "idle");
             _damageState.CurrentLives = ObjLives.ShroudedStalfos;
         }
 

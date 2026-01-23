@@ -96,6 +96,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _isFollowing = false;
             _wasFollowing = false;
             _aiComponent.ChangeState("waiting");
+            _aiComponent.ChangeState("waiting");
         }
 
         private void InitWaiting()

@@ -47,9 +47,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _aiComponent.States.Add("falling", stateFalling);
             _aiComponent.States.Add("lie", stateLieing);
             _aiComponent.States.Add("fading", stateDespawning);
-
             _aiComponent.ChangeState("falling");
-
 
             _shadowSprite = new DrawShadowSpriteComponent(Resources.SprShadow,
                 EntityPosition, new Rectangle(0, 0, 65, 66), new Vector2(-1, -3), 1.0f, 0.0f);
@@ -63,6 +61,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerPlayer));
             AddComponent(DrawShadowComponent.Index, _shadowSprite);
+
+            Map.Objects.RegisterAlwaysAnimateObject(this);
         }
 
         public void StateFalling()

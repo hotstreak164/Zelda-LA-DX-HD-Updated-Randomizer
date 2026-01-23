@@ -107,6 +107,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("waiting");
+            _aiComponent.ChangeState("waiting");
             _damageState.CurrentLives = ObjLives.Pincer;
         }
 

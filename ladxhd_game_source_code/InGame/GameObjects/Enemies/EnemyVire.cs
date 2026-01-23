@@ -137,6 +137,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             EntityPosition.Z = 0;
             _animator.Play("idle");
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
             _body.Velocity = Vector3.Zero;
             _body.VelocityTarget = Vector2.Zero;
             _damageState.CurrentLives = ObjLives.Vire;

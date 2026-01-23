@@ -104,6 +104,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (_mainGhini)
             {
                 _aiComponent.ChangeState("flying");
+                _aiComponent.ChangeState("flying");
                 _damageState.CurrentLives = ObjLives.Ghini;
             }
             // ToDo: Spawned Ghinis might need "ObjOnPushKeySetter" to be reset somehow...

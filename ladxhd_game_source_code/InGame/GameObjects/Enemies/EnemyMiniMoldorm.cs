@@ -99,6 +99,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reset()
         {
             _aiComp.ChangeState("walking");
+            _aiComp.ChangeState("walking");
             _damageState.CurrentLives = ObjLives.MiniMoldorm;
         }
 

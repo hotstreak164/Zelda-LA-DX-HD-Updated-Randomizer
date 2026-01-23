@@ -96,6 +96,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("moving");
+            _aiComponent.ChangeState("moving");
             _damageState.CurrentLives = ObjLives.LikeLike;
         }
 

@@ -113,6 +113,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;
             _aiComponent.ChangeState("moving");
+            _aiComponent.ChangeState("moving");
             ToMoving();
         }
 

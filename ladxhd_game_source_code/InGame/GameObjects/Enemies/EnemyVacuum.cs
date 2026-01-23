@@ -107,6 +107,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reset()
         {
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
         }
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)

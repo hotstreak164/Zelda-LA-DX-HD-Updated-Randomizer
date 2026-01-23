@@ -168,6 +168,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _carriableComponent.IsActive = false;
             _shadowComponent.IsActive = true;
             _aiComponent.ChangeState("walk");
+            _aiComponent.ChangeState("walk");
             _drawComponent.Layer = Values.LayerPlayer;
         }
 

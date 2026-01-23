@@ -100,6 +100,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reset()
         {
             _aiComponent.ChangeState(_hasWings ? "flying" : "jumping");
+            _aiComponent.ChangeState(_hasWings ? "flying" : "jumping");
         }
 
         public bool StartJump()

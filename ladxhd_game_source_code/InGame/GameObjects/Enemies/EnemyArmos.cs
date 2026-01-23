@@ -95,6 +95,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageField.IsActive = false;
             _bodyCollision.IsActive = true;
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
         }
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)

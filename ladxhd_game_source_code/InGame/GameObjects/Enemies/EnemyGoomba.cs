@@ -110,6 +110,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _animator.Play("walk");
             _aiComponent.ChangeState("walking");
+            _aiComponent.ChangeState("walking");
 
             if (_bodyCollision != null)
                 _bodyCollision.IsActive = true;

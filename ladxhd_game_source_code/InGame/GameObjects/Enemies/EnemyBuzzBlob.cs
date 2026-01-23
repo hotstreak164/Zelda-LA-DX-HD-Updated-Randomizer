@@ -96,6 +96,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _isCukeman = false;
             _animator.Play("walk");
             _aiComponent.ChangeState("walking");
+            _aiComponent.ChangeState("walking");
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;

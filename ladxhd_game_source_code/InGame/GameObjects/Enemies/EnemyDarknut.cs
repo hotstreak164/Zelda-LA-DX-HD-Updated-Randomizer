@@ -96,6 +96,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("idle", stateIdle);
             _aiComponent.States.Add("walking", stateWalk);
             _aiComponent.States.Add("attack", stateAttack);
+
             new AiFallState(_aiComponent, Body, OnHoleAbsorb, OnAbsorbDeath);
             _damageState = new AiDamageState(this, Body, _aiComponent, _sprite, _lives)
             {
@@ -128,8 +129,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
-            _aiComponent.ChangeState("idle");
             _damageState.CurrentLives = ObjLives.Darknut;
+            _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
         }
 
         private void OnBurn()

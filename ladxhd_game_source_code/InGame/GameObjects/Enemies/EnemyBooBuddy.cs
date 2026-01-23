@@ -107,6 +107,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reset()
         {
             _aiComponent.ChangeState("attacking");
+            _aiComponent.ChangeState("attacking");
         }
 
         private void KeyChanged()

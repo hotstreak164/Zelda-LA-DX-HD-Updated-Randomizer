@@ -89,6 +89,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _dealsDamage = true;
             _lastPosition = ResetPosition.Position;
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
         }
 
         private void OnBurn()

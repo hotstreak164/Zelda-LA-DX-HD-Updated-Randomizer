@@ -97,6 +97,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _animator.Play("idle");
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
             _body.VelocityTarget = Vector2.Zero;
         }
 

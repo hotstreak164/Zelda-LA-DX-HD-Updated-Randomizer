@@ -116,6 +116,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _animator.Play("idle_0");
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
             _hitComponent.IsActive = true;
             _damageState.CurrentLives = ObjLives.AntiKirby;
         }

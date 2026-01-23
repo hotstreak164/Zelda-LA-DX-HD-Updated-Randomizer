@@ -91,6 +91,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
             _aiDamageState.CurrentLives = ObjLives.MaskMimic;
             _body.VelocityTarget = Vector2.Zero;
         }

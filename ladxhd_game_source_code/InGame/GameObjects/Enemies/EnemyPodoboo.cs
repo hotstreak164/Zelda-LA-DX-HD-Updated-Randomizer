@@ -87,6 +87,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reset()
         {
             _aiComponent.ChangeState("hidden");
+            _aiComponent.ChangeState("hidden");
         }
 
         private void InitFlying()

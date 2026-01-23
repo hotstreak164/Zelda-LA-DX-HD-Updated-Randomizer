@@ -96,6 +96,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("swim");
+            _aiComponent.ChangeState("swim");
         }
 
         private void OnBurn()

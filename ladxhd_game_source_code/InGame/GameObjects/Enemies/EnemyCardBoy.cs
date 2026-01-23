@@ -118,6 +118,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reset()
         {
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
             _changeCounter = _startingCardIndex * _changeTime;
             _cardIndex = _startingCardIndex;
             ResetPuzzle();

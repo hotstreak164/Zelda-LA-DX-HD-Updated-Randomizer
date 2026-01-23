@@ -116,6 +116,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.VelocityTarget = Vector2.Zero;
             _animator.SpeedMultiplier = 0;
             _aiComponent.ChangeState("start");
+            _aiComponent.ChangeState("start");
             _damageState.CurrentLives = ObjLives.Peahat;
         }
 

@@ -101,6 +101,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _animator.Continue();
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;
             _body.VelocityTarget = new Vector2(-1, 1) * (3 / 4.0f);

@@ -1610,7 +1610,6 @@ namespace ProjectZ.InGame.GameObjects
             if (!string.IsNullOrEmpty(boomerangValue))
             {
                 Game1.GameManager.SaveManager.RemoveString("boomerang_trade");
-
                 int index = GameSettings.SwapButtons ? 0 : 1;
 
                 if (Game1.GameManager.Equipment[index] != null &&
@@ -2003,8 +2002,7 @@ namespace ProjectZ.InGame.GameObjects
                     }
                 }
                 // Update the direction the player is walking towards.
-                if (!IsAttackingState() &&
-                    !IsChargingState())
+                if (!IsAttackingState() && !IsChargingState())
                 {
                     Direction = ToDirection(walkVelocity);
                 }
@@ -2102,7 +2100,6 @@ namespace ProjectZ.InGame.GameObjects
                         Game1.GameManager.ShakeScreen(750, 1, 2, 2.5f, 5.5f, 1, dirY);
                     knockBack = true;
                 }
-
                 if (knockBack)
                 {
                     _bootsRunning = false;
@@ -3402,7 +3399,6 @@ namespace ProjectZ.InGame.GameObjects
             if (IsChargingState())
                 UpdateCharging();
 
-            // hit stuff with the sword
             if (IsAttackingState() || CurrentState == State.SwordShow0 || _bootsRunning && CarrySword)
                 UpdateAttacking();
 
@@ -4425,7 +4421,7 @@ namespace ProjectZ.InGame.GameObjects
                     _lastMoveVelocity = Vector2.Zero;
                 }
             }
-            // touched the ground
+            // Touched the ground.
             if (_body.IsGrounded && _body.Velocity.Z <= 0)
             {
                 // Only push the player if he jumps into the water and does not walk. Walking is handled in another location.
@@ -4564,7 +4560,7 @@ namespace ProjectZ.InGame.GameObjects
                 (CurrentState != State.Swimming || !Map.Is2dMap))
                 return;
 
-            // remove one powder from the inventory
+            // Remove one powder from the inventory,
             if (!Game1.GameManager.RemoveItem("bow", 1))
                 return;
 
@@ -4695,9 +4691,8 @@ namespace ProjectZ.InGame.GameObjects
 
             // If an instant pickup object was grabbed, restore it from the previous loop.
             if (_instantPickupObject != null)
-            {
                 grabbedObject = _instantPickupObject;
-            }
+            
             // Part Two: An object was found above and the state was set to grabbing.
             if (CurrentState == State.Grabbing || _instantPickup)
             {

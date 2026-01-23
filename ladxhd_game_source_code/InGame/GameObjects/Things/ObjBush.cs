@@ -310,6 +310,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 var posZ = EntityPosition.Z + 5 - Game1.RandomNumber.Next(0, 40) / 10f;
                 var newLeaf = new ObjLeaf(Map, (int)EntityPosition.X + offsets[i].X, (int)EntityPosition.Y + offsets[i].Y, posZ, direction);
                 Map.Objects.SpawnObject(newLeaf);
+                Map.Objects.RegisterAlwaysAnimateObject(newLeaf);
             }
         }
     }

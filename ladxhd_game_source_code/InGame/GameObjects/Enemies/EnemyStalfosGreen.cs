@@ -101,6 +101,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _animator.Continue();
             _aiComponent.ChangeState("walking");
+            _aiComponent.ChangeState("walking");
             _damageState.CurrentLives = ObjLives.StalfosGreen;
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;

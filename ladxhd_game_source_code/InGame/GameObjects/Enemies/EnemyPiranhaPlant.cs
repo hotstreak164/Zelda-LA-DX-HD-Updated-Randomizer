@@ -77,6 +77,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;
             _aiComponent.ChangeState("hidden");
+            _aiComponent.ChangeState("hidden");
         }
 
         private void OnBurn()

@@ -69,6 +69,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void ToMoving()
         {
             _aiComponent.ChangeState("moving");
+            _aiComponent.ChangeState("moving");
             _aiDamageState.IsActive = true;
         }
 

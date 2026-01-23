@@ -103,6 +103,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageField.IsActive = false;
             _pushComponent.IsActive = false;
             _aiComponent.ChangeState("hidden");
+            _aiComponent.ChangeState("hidden");
             _damageState.CurrentLives = ObjLives.Wizzrobe;
         }
 

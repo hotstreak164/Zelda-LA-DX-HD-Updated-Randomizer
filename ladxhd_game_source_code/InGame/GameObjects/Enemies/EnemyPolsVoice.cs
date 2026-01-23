@@ -86,6 +86,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reset()
         {
             _aiComponent.ChangeState("waiting");
+            _aiComponent.ChangeState("waiting");
             _damageState.CurrentLives = ObjLives.PolsVoice;
         }
 

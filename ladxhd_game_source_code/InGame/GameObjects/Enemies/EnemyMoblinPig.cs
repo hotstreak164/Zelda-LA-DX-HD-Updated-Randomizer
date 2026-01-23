@@ -102,6 +102,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
+            _aiComponent.ChangeState("idle");
             _damageState.CurrentLives = ObjLives.MoblinPig;
         }
 

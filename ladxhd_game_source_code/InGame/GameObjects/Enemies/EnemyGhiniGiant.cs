@@ -101,6 +101,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             {
                 EntityPosition.Z = _flyHeight;
                 _aiComponent.ChangeState("flying");
+                _aiComponent.ChangeState("flying");
                 _damageState.IsActive = true;
                 _damageField.IsActive = true;
             }
