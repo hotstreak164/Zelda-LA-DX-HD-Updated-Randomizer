@@ -4189,6 +4189,7 @@ namespace ProjectZ.InGame.GameObjects
             var posX = (int)(EntityPosition.X - 8 + collisionRectangle.X + collisionRectangle.Width / 2);
             var posY = (int)(EntityPosition.Y - 15 + collisionRectangle.Y + collisionRectangle.Height / 2);
             var pokeParticle = new ObjSparkingEffect(Map, posX, posY, 0, 0);
+            Map.Objects.SpawnObject(pokeParticle);
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
