@@ -4176,6 +4176,7 @@ namespace ProjectZ.InGame.GameObjects
 
                 _repelVelocity = new Vector2(-direction.X, -direction.Y) * multiplier;
             }
+            PreventFieldKnockback();
         }
 
         private void SpawnRepelParticle(RectangleF collisionRectangle)
@@ -4287,6 +4288,7 @@ namespace ProjectZ.InGame.GameObjects
                 else
                     Game1.GameManager.PlaySoundEffect("D360-09-09");
             }
+            PreventFieldKnockback();
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
