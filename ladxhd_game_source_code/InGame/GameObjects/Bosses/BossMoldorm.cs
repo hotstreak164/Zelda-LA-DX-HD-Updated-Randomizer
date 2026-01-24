@@ -126,7 +126,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(OnKeyChang));
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BodyComponent.Index, _body);
-            AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush) { RepelMultiplier = 2.15f });
+            AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush) { RepelMultiplier = 2.35f });
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(damageCollider, OnHit));
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerPlayer, EntityPosition));
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 4) { PushMultiplier = 2.5f } );
@@ -136,6 +136,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _tail = new BossMoldormTail(map, this);
             map.Objects.SpawnObject(_tail);
         }
+
         private void Update()
         {
             if (_aiComponent.CurrentStateId == "dying")
