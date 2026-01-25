@@ -12,7 +12,7 @@ using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.GameObjects.Things
 {
-    internal class ObjBomb : GameObject
+    public class ObjBomb : GameObject
     {
         public BodyComponent Body;
         public bool DamageEnemies;
@@ -133,13 +133,16 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(LightDrawComponent.Index, new LightDrawComponent(DrawLight));
 
             if (_playerBomb)
+            {
                 Map.Objects.RegisterAlwaysAnimateObject(this);
+                MapManager.ObjLink.BombList.Add(this);
+            }
         }
 
         public void Reset()
         {
             if (!_carried)
-                Map.Objects.DeleteObjects.Add(this);
+                RemoveBomb();
         }
 
         private void Update()
@@ -191,7 +194,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                     // spawn splash effect
                     var fallAnimation = new ObjAnimator(_map, (int)(Body.Position.X + Body.OffsetX + Body.Width / 2.0f), (int)(Body.Position.Y + Body.OffsetY + Body.Height / 2.0f), Values.LayerPlayer, "Particles/fishingSplash", "idle", true);
                     _map.Objects.SpawnObject(fallAnimation);
-                    _map.Objects.DeleteObjects.Add(this);
+                    RemoveBomb();
                 }
             }
             else if (Body.IsGrounded)
@@ -212,7 +215,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // Remove the bomb completely.
             if (_deathState == DeathState.Dead)
-                _map.Objects.DeleteObjects.Add(this);
+                RemoveBomb();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -230,7 +233,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 Body.Position.X + Body.OffsetX + Body.Width / 2.0f - 5,
                 Body.Position.Y + Body.OffsetY + Body.Height / 2.0f - 5));
             _map.Objects.SpawnObject(fallAnimation);
-            _map.Objects.DeleteObjects.Add(this);
+            RemoveBomb();
         }
 
         private Vector3 CarryInit()
@@ -316,6 +319,16 @@ namespace ProjectZ.InGame.GameObjects.Things
             // explode after the idle animation is finished
             if (_animator.CurrentAnimation.Id == "idle")
                 Explode();
+        }
+
+        private void RemoveBomb()
+        {
+            // If it's a bomb from Link remove it from the bomb list.
+            if (_playerBomb)
+                MapManager.ObjLink.BombList.Remove(this);
+
+            // Remove the bomb completely.
+            _map.Objects.DeleteObjects.Add(this);
         }
 
         private void OnCollision(Values.BodyCollision collision)

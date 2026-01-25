@@ -272,7 +272,7 @@ namespace ProjectZ.InGame.GameObjects
         private Vector2[] _powderOffset;
 
         // Bombs
-        private List<GameObject> _bombList = new List<GameObject>();
+        public List<ObjBomb> BombList = new List<ObjBomb>();
         private List<GameObject> _destroyableWallList = new List<GameObject>();
         private Vector2[] _bombOffset;
 
@@ -4561,13 +4561,8 @@ namespace ProjectZ.InGame.GameObjects
                 EntityPosition.X + _walkDirection[Direction].X * (_body.Width / 2) - 4,
                 EntityPosition.Y - _body.Height / 2 + _walkDirection[Direction].Y * (_body.Height / 2) - 4, 8, 8);
 
-            // Find a bomb to carry.
-            _bombList.Clear();
-            Map.Objects.GetObjectsOfType(_bombList, typeof(ObjBomb),
-                (int)_bombGrabRectangle.X, (int)_bombGrabRectangle.Y, (int)_bombGrabRectangle.Width, (int)_bombGrabRectangle.Height);
-
             // Pick up the first bomb found.
-            foreach (var objBomb in _bombList)
+            foreach (var objBomb in BombList)
             {
                 var carriableComponent = objBomb.Components[CarriableComponent.Index] as CarriableComponent;
                 if (!carriableComponent.IsActive ||
@@ -4588,7 +4583,7 @@ namespace ProjectZ.InGame.GameObjects
 
             var spawnPosition = new Vector2(EntityPosition.X, EntityPosition.Y) + _bombOffset[Direction];
             Map.Objects.SpawnObject(new ObjBomb(Map, spawnPosition.X, spawnPosition.Y, true, false, 2000));
-
+            
             CurrentState = State.Bombing;
 
             // play animation
