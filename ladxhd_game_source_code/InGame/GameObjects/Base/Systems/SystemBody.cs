@@ -20,7 +20,6 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
         private readonly List<GameObject> _dropList = new List<GameObject>();
         private readonly ObjectManager _objectManager;
         private bool _inAir;
-        private bool _onHole;
 
         public SystemBody(ObjectManager objectManager)
         {
@@ -403,31 +402,49 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
             // Get the position of Link and the current map objects.
             var linkPos = MapManager.ObjLink.EntityPosition;
             var objects = Game1.GameManager.MapManager.CurrentMap.Objects;
+            var onHole = false;
 
             // Find objects within the same tile as where Link hit the ground.
             _dropList.Clear();
-            objects.GetObjectsOfType(_dropList, typeof(ObjHole), (int)linkPos.X - 4, (int)linkPos.Y - 4, 8, 8);
-            objects.GetObjectsOfType(_dropList, typeof(ObjOverworldTeleporter), (int)linkPos.X - 4, (int)linkPos.Y - 4, 8, 8);
+            objects.GetComponentList(_dropList, (int)linkPos.X - 4, (int)linkPos.Y - 4, 8, 8, CollisionComponent.Mask);
 
-            // For now at least, we are only looking when landing on a hole.
-            foreach (var hole in _dropList) 
+            // We are only looking for when landing on a hole or world teleporter.
+            foreach (var obj in _dropList)
             {
-                if (hole is ObjHole objHole)
-                    _onHole = objHole.IsActive && body.BodyBox.Box.Intersects(objHole.collisionBox.Box);
-                else if (hole is ObjOverworldTeleporter objTeleporter)
-                    _onHole = body.BodyBox.Box.Intersects(objTeleporter.collisionBox.Box);
+                if (obj is ObjHole hole)
+                {
+                    var holeRect = hole.collisionBox.Box.Rectangle();
+                    var overRect = new Rectangle((int)holeRect.X + 2, (int)holeRect.Y + 3, (int)holeRect.Width - 4, (int)holeRect.Height - 5);
+                    var position = new Point((int)linkPos.X, (int)linkPos.Y - 3);
+
+                    if (hole.IsActive && overRect.Contains(position))
+                    {
+                        onHole = true;
+                        break;
+                    }
+                }
+                else if (obj is ObjOverworldTeleporter teleporter)
+                {
+                    var holeRect = teleporter.collisionBox.Box.Rectangle();
+                    var overRect = new Rectangle((int)holeRect.X + 2, (int)holeRect.Y + 2, (int)holeRect.Width - 4, (int)holeRect.Height - 4);
+
+                    if (overRect.Contains(linkPos.Position))
+                    {
+                        onHole = true;
+                        break;
+                    }
+                }
             }
             // The sound played depends on hitting land or water.
-            if (!_onHole)
+            if (!onHole)
             {
                 if ((body.CurrentFieldState & (MapStates.FieldStates.Water | MapStates.FieldStates.DeepWater)) == 0)
                     Game1.GameManager.PlaySoundEffect("D378-07-07");
                 else if ((body.CurrentFieldState & MapStates.FieldStates.DeepWater) == 0)
                     Game1.GameManager.PlaySoundEffect("D360-14-0E");
             }
-            // Reset the variables for the next jump.
+            // Reset for the next jump.
             _inAir = false;
-            _onHole = false;
         }
 
         private Values.BodyCollision UpdateVelocityZ(BodyComponent body)
