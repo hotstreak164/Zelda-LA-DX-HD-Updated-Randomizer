@@ -1,5 +1,36 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.5.6**
+### The "Even More Accuracy?!" Update
+  * Implement new options for "Restore Defaults" and "Presets" which can automatically set option groups.
+  * Update the normal font (non-VWF) playstation button glyphs to use the ones from the VWF font.
+  * Change the "Classic Camera" option into a toggle that offers between: Modern Camera and Classic Camera.
+  * Add a new option for Modern Camera named "Overworld Only" where Classic Camera is applied everywhere else.
+  * Track Link's center position and use it to reference Link's position for determining fields.
+  * When Classic Camera is active it's no longer possible to get knocked back into a different field.
+  * When Classic Camera is active bushes and grass can only be chopped down in the current field.
+  * Optimize and increase accuracy of playing (or not playing) landing sound when landing on or near holes.
+  * Prevent using the sword while performing a spin attack since this is original game behavior.
+  * Reworked knockback physics to use frame based velocity. This allows more control over knockback effects.
+  * Reduced enemy swords to match collision of the original game. Damage boxes still match visible sword length.
+  * Enemy spears now bounce off of the shield when deflected instead of disappearing instantly.
+  * Enemy Blade Traps have a delay with Classic Camera and dungeon 2 traps can fire a "warning shot".
+  * Optimize the function that counts how many Dodongo Snakes remain which is used to restore dungeon music.
+  * Reduce final boss Aghanim form's exploding shot chance to 25% from 33%. This is a revert to what it was.
+  * Fix "snap camera" function for which caused visual stutters during Modern Camera map transitions.
+  * Fix restoring "Classic Camera" after the ending has played out if the game was completed with it on.
+  * Fix particles to actually spawn when repelling effects happen during any sword-based attacks.
+  * Fix poke particles to properly apply an offset based on the direction of the poke.
+  * Fix a serious exploit where a "sword charge" could be released on normal sword attacks indefinitely.
+  * Fix the sword's charge-up time to be more accurate to the original game (670ms vs. 500ms).
+  * Fix the Pegasus Boot's charge-up time to be more accurate to the original game (533ms vs. 500ms).
+  * Fix dungeon 4 locked door that can prevent passing through after it's already opened on a return visit.
+  * Fix enemies getting stuck on Classic Camera field transitions if they were in a damage state during transition.
+  * Fix poke vs. sword enemies to repel properly: knockback reduced, charge interrupted, sword is not put away.
+  * Fix enemy Blade Trap detection range to match the original game where it's 5 pixels from their line of sight.
+  * Fix enemy Pincer to be able to fall down its hole when stunned or when defeated while it's over the hole.
+  * Fix slightly moving when exiting underground cave near Kanalet Castle (the one with the seashell).
+
 ## **v1.5.5**
 ### The "Out of Clever Update Names" Update
   * Add new Redux option "Teleport to Cleared Dungeons" which can be done from the map on the inventory screen.

@@ -20,7 +20,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             EntitySize = new Rectangle(0, 0, 16, 16);
             CanReset = false;
 
-            // remove the underlying objects
+            // Remove the underlying objects.
             _underlyingObjects.Clear();
             Map.Objects.GetGameObjectsWithTag(_underlyingObjects, Values.GameObjectTag.Hole | Values.GameObjectTag.Trap, posX, posY, 16, 16);
             SetHoleState(false);
