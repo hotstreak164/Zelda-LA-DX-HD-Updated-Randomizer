@@ -6,6 +6,7 @@ using ProjectZ.Base;
 using ProjectZ.Editor;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.Components;
+using ProjectZ.InGame.GameObjects.Dungeon;
 using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.Things;
 
@@ -56,6 +57,7 @@ namespace ProjectZ.InGame.Map
         public bool NoFollowers;
         public bool IsFinalMap;
 
+        public List<ObjDungeonTeleporter> DungeonTeleporters = new List<ObjDungeonTeleporter>();
         private List<GameObject> _digList = new List<GameObject>();
 
         public Map()
@@ -96,6 +98,8 @@ namespace ProjectZ.InGame.Map
 
             ShadowHeight = Values.ShadowHeightDefault;
             ShadowRotation = Values.ShadowRotationDefault;
+
+            DungeonTeleporters.Clear();
         }
 
         public void SetFieldState(int posX, int posY, MapStates.FieldStates newState)

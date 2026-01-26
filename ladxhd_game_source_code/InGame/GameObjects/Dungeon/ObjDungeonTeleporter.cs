@@ -70,6 +70,9 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             _animationComponent = new AnimationComponent(_centerAnimator, _sprite, Vector2.Zero);
             _lockTeleporter = true;
 
+            // Tracks the dungeon teleporters in a static list.
+            Map.DungeonTeleporters.Add(this);
+
             // Has the player just teleported to this teleporter?
             if (teleporterId != null && MapManager.ObjLink.NextMapPositionId == teleporterId)
             {
@@ -81,6 +84,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerBottom, EntityPosition));
             AddComponent(LightDrawComponent.Index, new LightDrawComponent(DrawLight) { Layer = Values.LightLayer1 });
 
+            // Update the positions of the rotating orbs.
             UpdatePositions();
         }
 
@@ -92,17 +96,20 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
 
         private void Update()
         {
-            // is the player close enough?
+            // Check if the player is close enough to the teleporter.
             var distance = TeleportPosition - MapManager.ObjLink.EntityPosition.Position;
             if (distance.Length() < teleport_range)
                 OnCollision();
 
+            // Update the positions of the rotating orbs.
             _rotateCount -= Game1.DeltaTime;
             UpdatePositions();
 
+            // Unlock the teleporter when not colliding.
             if (!_isColliding)
                 _lockTeleporter = false;
 
+            // Set collision to false.
             _isColliding = false;
         }
 
@@ -110,30 +117,31 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         {
             _isColliding = true;
 
+            // If the teleporter is locked or Link is jumping then return.
             if (_lockTeleporter || MapManager.ObjLink.EntityPosition.Z > 1)
                 return;
 
+            // Play the teleport sound effect.
             Game1.GameManager.PlaySoundEffect("D360-28-1C");
 
-            // teleport into a new map?
+            // The teleporter is not on the current map. This only applies for Level 7 dungeon.
             if (!string.IsNullOrEmpty(_teleportMap) && Map.MapName != _teleportMap)
             {
+                // Warp Link to the other teleporter.
                 MapManager.ObjLink.SetPosition(TeleportPosition);
                 MapManager.ObjLink.StartTeleportation(_teleportMap, _teleporterId);
-
                 _lockTeleporter = true;
                 return;
             }
-            var teleporterList = Map.Objects.GetObjectsOfType(typeof(ObjDungeonTeleporter));
-
-            foreach (var entity in teleporterList)
+            // Loop through the dungeon teleporters.
+            foreach (var teleporter in Map.DungeonTeleporters)
             {
-                var teleporter = (ObjDungeonTeleporter)entity;
+                // Find the teleporter that is not this one.
                 if (teleporter != this && teleporter._teleporterId == _teleporterId)
                 {
+                    // Warp Link to the other teleporter.
                     MapManager.ObjLink.SetPosition(TeleportPosition);
                     MapManager.ObjLink.StartTeleportation(teleporter);
-
                     _lockTeleporter = true;
                     break;
                 }
@@ -144,7 +152,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         {
             var radiants = _rotateCount / 150f;
 
-            // rotate around the field
+            // Rotate around the field.
             for (var i = 0; i < 4; i++)
             {
                 _pointPositions[i] = new Vector2(
