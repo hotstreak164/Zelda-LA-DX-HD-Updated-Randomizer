@@ -599,7 +599,7 @@ namespace ProjectZ.InGame.GameObjects
             ObjectTemplates.Add("e_darknut", new GameObjectTemplate(typeof(EnemyDarknut), new object[] { }));
             ObjectTemplates.Add("e_wallKnight", new GameObjectTemplate(typeof(ObjWallKnight), new object[] { false }));
             ObjectTemplates.Add("e_madBomber", new GameObjectTemplate(typeof(EnemyMadBomber), new object[] { }));
-            ObjectTemplates.Add("e6", new GameObjectTemplate(typeof(EnemyBladeTrap), new object[] { 0, 0, 0, 0 }));
+            ObjectTemplates.Add("e6", new GameObjectTemplate(typeof(EnemyBladeTrap), new object[] { 0, 0, 0, 0, false }));
             ObjectTemplates.Add("e8", new GameObjectTemplate(typeof(EnemyHardhatBeetle), new object[] { }));
             ObjectTemplates.Add("e9", new GameObjectTemplate(typeof(EnemyGreenZol), new object[] { 0, false }));
             ObjectTemplates.Add("e15", new GameObjectTemplate(typeof(EnemyRedZol), new object[] { }));

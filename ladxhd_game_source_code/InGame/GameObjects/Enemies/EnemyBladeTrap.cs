@@ -24,6 +24,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _cTimer;
         private float _cReset = 225;
 
+        // In Level 2 dungeon, the room left from the dark room has traps that stop just before the doorway. After a condition
+        // is met, they then travel the full distance. I'm not sure what that condition is, but in this port it's when they 
+        // manage to return to their original position at least once. This only affects classic camera.
+        private int _top;
+        private int _bottom;
+        private bool _useWarning;
+        private bool _warningShot;
+
         private Vector2 _startPosition;
         private float _movePosition;
         private int _moveDir;
@@ -34,7 +42,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         public EnemyBladeTrap() : base("bladeTrap") { }
 
-        public EnemyBladeTrap(Map.Map map, int posX, int posY, int left, int right, int top, int bottom) : base(map)
+        public EnemyBladeTrap(Map.Map map, int posX, int posY, int left, int right, int top, int bottom, bool warning) : base(map)
         {
             Tags = Values.GameObjectTag.Damage;
 
@@ -43,6 +51,11 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _startPosition = new Vector2(posX, posY);
             CanReset = true;
             OnReset += Reset;
+
+            // Used for warning shot: trap doesn't travel full distance up/down for first movement.
+            _top = top;
+            _bottom = bottom;
+            _useWarning = warning;
 
             _cTimer = _cReset;
 
@@ -58,8 +71,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _maxPosition[0] = left * 16;
             _maxPosition[1] = right * 16;
-            _maxPosition[2] = top * 16;
-            _maxPosition[3] = bottom * 16;
+
+            // Used to limit movement for warning shot.
+            int extra = 0;
+            if (Camera.ClassicMode && warning) 
+                extra = 8;
+
+            _maxPosition[2] = top * 16 - extra;
+            _maxPosition[3] = bottom * 16 - extra;
 
             _collisionRectangles[0] = new RectangleF(posX - left * 16 - 16, posY + 8 - TriggerHalfWidth, left * 16 + 16, TriggerHalfWidth * 2);
             _collisionRectangles[1] = new RectangleF(posX + 16, posY + 8 - TriggerHalfWidth, right * 16 + 16, TriggerHalfWidth * 2);
@@ -200,7 +219,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             {
                 _movePosition = 0;
                 _aiComponent.ChangeState("cooldown");
-            
+
+                // If it fired it's warning shot, fix the travel distances.
+                if (_useWarning && !_warningShot)
+                {
+                    _warningShot = true;
+                    _maxPosition[2] = _top * 16;
+                    _maxPosition[3] = _bottom * 16;
+                }
             }
             // Update the trap's position until it reaches it's original position.
             UpdatePosition();
