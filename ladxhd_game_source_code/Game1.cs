@@ -106,7 +106,8 @@ namespace ProjectZ
         public static bool InProgress;
         
         // Stores classic cam setting for ending.
-        static public bool StoredClassicCam;
+        static public bool StoredCameraSet = false;
+        static public bool StoredClassicCam = false;
 
         public static bool FinishedLoading => _finishedLoading;
 

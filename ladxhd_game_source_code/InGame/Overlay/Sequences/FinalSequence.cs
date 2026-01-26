@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Map;
+using ProjectZ.InGame.Pages;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
 
@@ -782,8 +783,15 @@ namespace ProjectZ.InGame.Overlay.Sequences
             Game1.ScaleChanged = true;
             Game1.ScreenManager.ChangeScreen(Values.ScreenNameIntro);
             Game1.GameManager.InGameOverlay.CloseOverlay();
+            Game1.StoredCameraSet = false;
             Game1.StoredClassicCam = false;
 
+            // Apply the classic camera setting to the page setting.
+            if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(CameraSettingsPage), out var camPage))
+            {
+                var CameraSettingsPage = (CameraSettingsPage)camPage;
+                CameraSettingsPage.SetCameraMode(GameSettings.ClassicCamera);
+            }
             // Set the save file's cleared state and save.
             Game1.GameManager.GameCleared = true;
             SaveGameSaveLoad.SaveGame(Game1.GameManager, true);

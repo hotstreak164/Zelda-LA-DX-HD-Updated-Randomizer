@@ -6219,14 +6219,14 @@ namespace ProjectZ.InGame.GameObjects
         public void UpdateMapTransitionIn(float state)
         {
             // Kind of a hacky solution: "ObjFinalBackground" object sets "IsFinalMap" via "Game1.GameManager.SetFinalMap();".
-            if (Map.IsFinalMap)
+            if (Map.IsFinalMap && !Game1.StoredCameraSet)
             {
                 // Store the classic camera setting. It is restored after the ending is finished.
                 Game1.StoredClassicCam = GameSettings.ClassicCamera;
-                GameSettings.ClassicCamera = false;
                 Game1.ScaleChanged = true;
+                Game1.StoredCameraSet = true;
+                GameSettings.ClassicCamera = false;
             }
-
             // Check if the transition state is "state 0".
             if (state == 0)
             {
