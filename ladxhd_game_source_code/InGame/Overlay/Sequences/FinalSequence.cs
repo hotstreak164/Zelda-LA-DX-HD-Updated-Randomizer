@@ -420,9 +420,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
                 Game1.GameManager.SaveManager.SetString("final_state", "1");
                 Game1.GameManager.SaveManager.SetString("activate_fountain", "1");
                 Game1.GameManager.InGameOverlay.CloseOverlay();
-
                 Game1.GameManager.StopMusic();
-
                 MapManager.ObjLink.InitEnding();
             }
         }

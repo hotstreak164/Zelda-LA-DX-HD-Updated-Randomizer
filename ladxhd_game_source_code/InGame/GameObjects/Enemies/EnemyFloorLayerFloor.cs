@@ -21,8 +21,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             CanReset = false;
 
             // remove the underlying objects
-            Map.Objects.GetObjectsOfType(_underlyingObjects, typeof(ObjHole), posX, posY, 16, 16);
-            Map.Objects.GetObjectsOfType(_underlyingObjects, typeof(ObjLava), posX, posY, 16, 16);
+            _underlyingObjects.Clear();
+            Map.Objects.GetGameObjectsWithTag(_underlyingObjects, Values.GameObjectTag.Hole | Values.GameObjectTag.Trap, posX, posY, 16, 16);
             SetHoleState(false);
 
             AddComponent(DrawComponent.Index, new DrawSpriteComponent("d8 floor", EntityPosition, Vector2.Zero, Values.LayerBottom));
@@ -32,10 +32,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             foreach (var gameObject in _underlyingObjects)
             {
-                if (gameObject is ObjHole && gameObject.EntityPosition.Position == EntityPosition.Position)
-                    gameObject.IsActive = active;
-                if (gameObject is ObjLava objLava && gameObject.EntityPosition.Position == EntityPosition.Position)
-                    objLava.SetActive(active);
+                if (gameObject.EntityPosition.Position != EntityPosition.Position)
+                    continue;
+                if (gameObject is ObjHole hole)
+                    hole.IsActive = active;
+                else if (gameObject is ObjLava lava)
+                    lava.SetActive(active);
             }
         }
     }

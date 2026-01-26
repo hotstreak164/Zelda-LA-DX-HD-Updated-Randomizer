@@ -226,17 +226,32 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _aiComponent.ChangeState("dead");
             }
         }
-
         private bool CheckForHole(int posX, int posY)
         {
+            // Find holes and lava by using their associated tags.
             _deactivatedGameObjects.Clear();
-            Map.Objects.GetObjectsOfType(_deactivatedGameObjects, typeof(ObjHole), posX, posY, 16, 16);
-            Map.Objects.GetObjectsOfType(_deactivatedGameObjects, typeof(ObjLava), posX, posY, 16, 16);
-            foreach (var gameObject in _deactivatedGameObjects)
-                if (gameObject.IsActive &&
-                    gameObject.EntityPosition.Position == new Vector2(posX, posY))
-                    return true;
+            Map.Objects.GetGameObjectsWithTag(_deactivatedGameObjects, Values.GameObjectTag.Hole | Values.GameObjectTag.Trap, posX, posY, 16, 16);
 
+            // Loop through the objects that are found.
+            for (int i = 0; i < _deactivatedGameObjects.Count; i++)
+            {
+                // Reference the current loop object.
+                var tile = _deactivatedGameObjects[i];
+
+                // We are looking for a hole or lava tile in the same position.
+                if (!tile.IsActive || tile.EntityPosition.Position.X != posX || tile.EntityPosition.Position.Y != posY)
+                    continue;
+
+                // If a hole is found return true.
+                if ((tile.Tags & Values.GameObjectTag.Hole) != 0)
+                    if (tile is ObjHole)
+                        return true;
+
+                // If lava is found return true.
+                if ((tile.Tags & Values.GameObjectTag.Trap) != 0)
+                    if (tile is ObjLava)
+                        return true;
+            }
             return false;
         }
     }
