@@ -679,14 +679,21 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _fountainSeqInit = true;
                 EntityPosition.Set(new Vector2(EntityPosition.X, EntityPosition.Y - 8));
 
-                // If Link dodges Marin the PhotoMouse is already spawned, so set the facing animation
-                // pointing upward. Also disable interactions with the PhotoMouse while we are here.
-                var objects = Map.Objects.GetObjectsOfType(typeof(ObjPhotoMouse));
-                if (objects.Count > 0)
+                // Build a list of the map objects.
+                var objects = new List<GameObject>();
+                Map.Objects.GetComponentList(objects, 0, 0, 160, 128, BodyComponent.Mask );
+
+                // Loop through that list.
+                for (int i = 0; i < objects.Count; i++)
                 {
-                    var photoMouse = (ObjPhotoMouse)objects[0];
-                    photoMouse.DisableInteractions();
-                    photoMouse.PlayAnimation("stand_1");
+                    // We are looking for the Photo Mouse.
+                    if (objects[i] is ObjPhotoMouse photoMouse)
+                    {
+                        // Disable interactions and make it face north.
+                        photoMouse.DisableInteractions();
+                        photoMouse.PlayAnimation("stand_1");
+                        break;
+                    }
                 }
             }
             // Marin has fallen and hit the ground.
