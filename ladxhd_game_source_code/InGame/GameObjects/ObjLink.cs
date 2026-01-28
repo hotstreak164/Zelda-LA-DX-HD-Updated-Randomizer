@@ -210,6 +210,7 @@ namespace ProjectZ.InGame.GameObjects
         private Vector2 _hitVelocity;
         private Vector2 _repelVelocity;
         private Vector2 _shieldVelocity;
+        private Vector2 _knockBackVelocity;
 
         private float _baseRepelStrength = 2.45f;
         private float _swimRepelStrength = 2.20f;
@@ -2087,28 +2088,35 @@ namespace ProjectZ.InGame.GameObjects
             if (CurrentState == State.Idle && _bootsWasRunning)
             {
                 var knockBack = false;
+                var pushUpward = 2.65f;
+                var pushBackward = 1.85f;
+                _knockBackVelocity = Vector2.Zero;
 
                 if ((collision & Values.BodyCollision.Horizontal) != 0 && Direction % 2 == 0)
                 {
                     var dirX = (collision & Values.BodyCollision.Left) != 0 ? -1 : 1;
                     _body.Velocity.X = -dirX;
+                    _knockBackVelocity.X = -dirX * pushBackward;
+                    knockBack = true;
+
                     if (GameSettings.ScreenShake)
                         Game1.GameManager.ShakeScreen(750, 2, 1, 5.5f, 2.5f, dirX, 1);
-                    knockBack = true;
                 }
                 if ((collision & Values.BodyCollision.Vertical) != 0 && Direction % 2 != 0)
                 {
                     var dirY = (collision & Values.BodyCollision.Top) != 0 ? -1 : 1;
                     _body.Velocity.Y = -dirY;
+                    _knockBackVelocity.Y = -dirY * pushBackward;
+                    knockBack = true;
+
                     if (GameSettings.ScreenShake)
                         Game1.GameManager.ShakeScreen(750, 1, 2, 2.5f, 5.5f, 1, dirY);
-                    knockBack = true;
                 }
                 if (knockBack)
                 {
                     _bootsRunning = false;
                     _bootsCounter = 0;
-                    _body.Velocity.Z = 2.0f;
+                    _body.Velocity.Z = pushUpward;
                     CurrentState = State.BootKnockback;
 
                     var damageOrigin = BodyRectangle.Center;
@@ -2239,6 +2247,7 @@ namespace ProjectZ.InGame.GameObjects
                     _hitVelocity = Vector2.Zero;
                     _repelVelocity = Vector2.Zero;
                     _shieldVelocity = Vector2.Zero;
+                    _knockBackVelocity = Vector2.Zero;
                     _body.Velocity = Vector3.Zero;
                     break;                            
                 }
@@ -2264,7 +2273,9 @@ namespace ProjectZ.InGame.GameObjects
             // Move the player by calculating the target velocity.
             if (CurrentState != State.Hookshot)
             {
-                if (!Map.Is2dMap)
+                if (CurrentState == State.BootKnockback)
+                    _body.VelocityTarget = _knockBackVelocity;
+                else if (!Map.Is2dMap)
                     _body.VelocityTarget = finalMove;
                 else
                     _body.VelocityTarget = _moveVector2D * moveMultiplier + _hitVelocity + _repelVelocity + _shieldVelocity;
@@ -2343,6 +2354,44 @@ namespace ProjectZ.InGame.GameObjects
             // Zero out hit velocity when it doesn't meet the thresholds.
             else
                 _hitVelocity = Vector2.Zero;
+
+            //-----------------------------------------------------------------------------------------------------
+            // Pegasus Boots Knockback: Knockback when smashing into the wall with pegasus Boots.
+            //-----------------------------------------------------------------------------------------------------
+            if (CurrentState == State.BootKnockback && _knockBackVelocity.Length() > 0.01f)
+            {
+                // Decay Z velocity over time to create an arc.
+                float decayZ = 0.15f;
+                _body.Velocity.Z -= decayZ * Game1.TimeMultiplier;
+    
+                // Normalize the boots knockback velocity.
+                var knockbackNormal = _knockBackVelocity;
+                knockbackNormal.Normalize();
+
+                // Apply slowdown over time.
+                float slowDownAmount = 0.08f;
+                _knockBackVelocity -= knockbackNormal * slowDownAmount * Game1.TimeMultiplier;
+
+                // Snap to zero when velocity reaches the threshold.
+                if (_knockBackVelocity.Length() < 0.2f)
+                    _knockBackVelocity = Vector2.Zero;
+
+                // Check if player has hit the ground and remove all velocities.
+                if (_body.Position.Z <= 0 && _body.Velocity.Z <= 0)
+                {
+                    _body.Position.Z = 0;
+                    _body.Velocity.Z = 0;
+                    _knockBackVelocity = Vector2.Zero;
+                    CurrentState = State.Idle;
+                }
+                // This will probably never occur, but prevent a knockback into another field.
+                PreventFieldKnockback();
+            }
+            else if (CurrentState == State.BootKnockback)
+            {
+                _knockBackVelocity = Vector2.Zero;
+                CurrentState = State.Idle;
+            }
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
