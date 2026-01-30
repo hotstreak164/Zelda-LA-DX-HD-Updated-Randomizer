@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
@@ -34,6 +35,8 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private bool _wasHit;
 
         private readonly string _saveKey;
+
+        public List<MBossStoneHinoxStone> HinoxStones = new List<MBossStoneHinoxStone>();
 
         public MBossStoneHinox() : base("stone hinox") { }
 
@@ -183,10 +186,24 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void SpawnStone()
         {
-            var objStone = new MBossStoneHinoxStone(Map,
-                new Vector3(_spawnPosition.X + Game1.RandomNumber.Next(0, 120) - 60, _spawnPosition.Y - 8 - Game1.RandomNumber.Next(0, 8), 16),
-                new Vector3(0, 1, 1), (int)_spawnPosition.X);
+            // Don't spawn new stones if the boss is already dead.
+            if (_aiDamageState.CurrentLives <= 0)
+                return;
+
+            // Spawn a stone at a random position.
+            var position = new Vector3(_spawnPosition.X + Game1.RandomNumber.Next(0, 120) - 60, _spawnPosition.Y - 8 - Game1.RandomNumber.Next(0, 8), 16);
+            var direction = new Vector3(0, 1, 1);
+            var centerX = (int)_spawnPosition.X;
+            var objStone = new MBossStoneHinoxStone(Map, this, position, direction, centerX);
             Map.Objects.SpawnObject(objStone);
+            HinoxStones.Add(objStone);
+        }
+
+        private void DestroyStones()
+        {
+            // Loop through the collection of stones and destroy them all.
+            foreach (var stone in HinoxStones.ToArray())
+                stone.DestroyStone();
         }
 
         private void InitPostAttack()
@@ -315,6 +332,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 _hitComponent.IsActive = false;
                 _body.VelocityTarget = Vector2.Zero;
                 _animator.Pause();
+                DestroyStones();
             }
 
             if (hitCollision != Values.HitCollision.None)

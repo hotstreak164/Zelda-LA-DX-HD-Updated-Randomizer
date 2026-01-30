@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
+using ProjectZ.InGame.GameObjects.Effects;
 using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Things;
@@ -12,6 +13,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 {
     class MBossStoneHinoxStone : GameObject
     {
+        private readonly MBossStoneHinox _owner;
         private readonly BodyComponent _body;
         private readonly CSprite _sprite;
 
@@ -20,9 +22,11 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         
         private int _collisionCount;
 
-        public MBossStoneHinoxStone(Map.Map map, Vector3 position, Vector3 direction, int centerX) : base(map)
+        public MBossStoneHinoxStone(Map.Map map, MBossStoneHinox owner, Vector3 position, Vector3 direction, int centerX) : base(map)
         {
             Tags = Values.GameObjectTag.Enemy;
+
+            _owner = owner;
 
             EntityPosition = new CPosition(position.X, position.Y, position.Z);
             EntitySize = new Rectangle(-8, -32, 16, 32);
@@ -66,12 +70,13 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             if (_collisionCount > 3 || EntityPosition.Y > _spawnY + Values.FieldHeight - 32)
             {
+                _owner.HinoxStones.Remove(this);
                 Map.Objects.DeleteObjects.Add(this);
                 return;
             }
-
             // set a new random direction
             _body.Velocity.X = -1 + Game1.RandomNumber.Next(0, 100) / 50f;
+
             // make sure that we do not get to far away from the center of the room
             if (MathF.Abs(EntityPosition.X - _centerX) > 64)
                 _body.Velocity.X = MathF.Sign(_centerX - EntityPosition.X);
@@ -80,6 +85,14 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             // flip the sprite
             _sprite.SpriteEffect ^= SpriteEffects.FlipHorizontally;
+        }
+
+        public void DestroyStone()
+        {
+            var explosionAnimation = new ObjSpawningEffect(Map, (int)EntityPosition.X, (int)EntityPosition.Y, -8, -26);
+            Map.Objects.SpawnObject(explosionAnimation);
+            Map.Objects.DeleteObjects.Add(this);
+            _owner.HinoxStones.Remove(this);
         }
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
