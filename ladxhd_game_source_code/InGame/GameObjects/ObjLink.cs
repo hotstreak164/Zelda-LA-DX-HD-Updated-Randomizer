@@ -2686,7 +2686,7 @@ namespace ProjectZ.InGame.GameObjects
             if (isBlocking)
             {
                 // Set the blocking animation for either walking or standing.
-                targetAnimation = targetAnimation = _isWalking
+                targetAnimation = _isWalking
                     ? "walkb" + shieldString + animDirection
                     : "standb" + shieldString + animDirection;
             }
