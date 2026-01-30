@@ -237,6 +237,7 @@ namespace ProjectZ.InGame.GameObjects
         private bool _shownSwordLv2Dialog;
 
         // Prevents sword from colliding with NPCs.
+        private int _avoidanceDirection;
         private bool _npcSwordCross;
         private bool _npcCrossSword;
 
@@ -2363,7 +2364,7 @@ namespace ProjectZ.InGame.GameObjects
                 // Decay Z velocity over time to create an arc.
                 float decayZ = 0.15f;
                 _body.Velocity.Z -= decayZ * Game1.TimeMultiplier;
-    
+
                 // Normalize the boots knockback velocity.
                 var knockbackNormal = _knockBackVelocity;
                 knockbackNormal.Normalize();
@@ -2939,7 +2940,7 @@ namespace ProjectZ.InGame.GameObjects
             _npcSwordCross = CheckNPCAvoidance();
 
             // When sword is no longer within NPC hitbox and Link is holding sword, restore charging state.
-            if (!_npcSwordCross && _isHoldingSword && _npcCrossSword)
+            if (!_npcSwordCross && _isHoldingSword && _npcCrossSword && _avoidanceDirection != Direction)
             {
                 _npcCrossSword = false;
                 Animation.Play("stand" + Direction);
@@ -3984,6 +3985,7 @@ namespace ProjectZ.InGame.GameObjects
                     _npcCrossSword = true;
                     CurrentState = State.Idle;
                     _isHoldingSword = false;
+                    _avoidanceDirection = Direction;
                     return;
                 }
                 // Start poking?
