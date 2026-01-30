@@ -220,8 +220,8 @@ namespace ProjectZ.InGame.GameSystems
             if (CurrentState == TransitionState.Idle)
                 return;
 
-            // Hide Link behind the circle shader effect on the first load into the world.
-            if (Camera.ClassicMode || MapManager.ObjLink.BlackScreenOverride)
+            // Hide Link behind the circle shader effect if Classic Camera, Modern Camera + Only Overworld, or on the first load into the world.
+            if (GameSettings.ClassicCamera || (!GameSettings.ClassicCamera && GameSettings.ModernOverworld) || MapManager.ObjLink.BlackScreenOverride)
                 Game1.GameManager.DrawPlayerOnTopPercentage = 0;
 
             _transitionObject.Draw(spriteBatch);
