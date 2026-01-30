@@ -6384,14 +6384,16 @@ namespace ProjectZ.InGame.GameObjects
             // Manbo's song transition can freeze the game so unfreeze it now.
             FreezeAnimations(false);
 
-            // When classic camera is enabled don't reset objects immediately after transition. Also enable
-            // the "BlackScreenOverride" which draws Link behind the circle shader for the first load in.
+            // When classic camera is enabled don't reset objects immediately after transition. 
             if (Camera.ClassicMode)
             {
                 PreventReset = true;
                 PreventResetTimer = 200f;
-                BlackScreenOverride = false;
             }
+            // Disable black screen override for modern camera.
+            else
+                BlackScreenOverride = false;
+
             // Always clear the list of camera field objects if loading into the overworld.
             Game1.ClassicCamera.ClearList();
 
