@@ -33,7 +33,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private float _lastStartDistance;
         private float _moveDistance;
 
-        private int _fallHeight = 128;
+        private int _fallHeight = 256;
         private int _lives = ObjLives.SlimeEye;
 
         public BossSlimeEye() : base("slime_eye") { }
@@ -169,8 +169,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void UpdateFalling()
         {
-            _sprite.Color = Color.White *
-                            MathF.Min((_fallHeight - EntityPosition.Z) / 15f, 1);
+            _sprite.Color = Color.White * MathF.Min((_fallHeight - EntityPosition.Z) / 15f, 1);
 
             if (_body.IsGrounded)
             {
