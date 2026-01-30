@@ -2676,6 +2676,31 @@ namespace ProjectZ.InGame.GameObjects
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //  ANIMATION / GRAPHICS CODE
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        private void PlayWalkAndBlockAnimations(string shieldString, int animDirection, bool isBlocking)
+        {
+            // Default to standard walking animation.
+            string targetAnimation = "walk" + shieldString + animDirection;
+
+            // Check if the player is blocking.
+            if (isBlocking)
+            {
+                // Set the blocking animation for either walking or standing.
+                targetAnimation = targetAnimation = _isWalking
+                    ? "walkb" + shieldString + animDirection
+                    : "standb" + shieldString + animDirection;
+            }
+            // If already playing the correct animation we can exit now.
+            if (Animation.AnimationID == targetAnimation)
+                return;
+
+            // Retrieve the previous frame information.
+            int prevFrame = Animation.CurrentFrameIndex;
+            double prevTime = Animation.FrameCounter % Animation.CurrentFrame.FrameTime;
+
+            // Play the new animation and pass on the current frame and duration.
+            Animation.Play(targetAnimation, prevFrame, prevTime);
+        }
 
         private void UpdateAnimation()
         {
@@ -2751,12 +2776,10 @@ namespace ProjectZ.InGame.GameObjects
             }
             else if (CurrentState == State.ChargeJumping)
                 Animation.Play("cjump" + shieldString + animDirection);
-            else if ((CurrentState == State.Idle ||
-                CurrentState == State.Charging ||
-                CurrentState == State.Rafting) && _isWalking)
-                Animation.Play("walk" + shieldString + animDirection);
+            else if ((CurrentState == State.Idle || CurrentState == State.Charging || CurrentState == State.Rafting) && _isWalking)
+                PlayWalkAndBlockAnimations(shieldString, animDirection, false);
             else if (CurrentState == State.Blocking || CurrentState == State.ChargeBlocking)
-                Animation.Play((!_isWalking ? "standb" : "walkb") + shieldString + animDirection);
+                PlayWalkAndBlockAnimations(shieldString, animDirection, true);
             else if ((CurrentState == State.Carrying || CurrentState == State.CarryingItem) && !_isFlying)
                 Animation.Play((!_isWalking ? "standc_" : "walkc_") + animDirection);
             else if (IsFlying())
