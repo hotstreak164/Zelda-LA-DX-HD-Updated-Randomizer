@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.GameObjects.Base;
@@ -33,6 +34,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _throwCounter;
         private bool _throwBone;
+
+        public bool WasSpawned;
 
         public EnemyStalfosOrange() : base("stalfos orange") { }
 
@@ -98,6 +101,33 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void Reset()
         {
+            // Check if it spawned from a Gibdo.
+            if (IsActive && WasSpawned && !IsDead)
+            {
+                List<GameObject> enemyTriggers = new List<GameObject>();
+
+                // Respawn the Gibdo if the Stalfos is still alive. 
+                var newGibdo = new EnemyGibdo(Map, (int)ResetPosition.X - 8, (int)ResetPosition.Y - 16);
+                Map.Objects.SpawnObject(newGibdo);
+
+                // If there is utility objects in the room find them.
+                Map.Objects.GetGameObjectsWithTag(enemyTriggers, Values.GameObjectTag.Utility,
+                    (int)_body.FieldRectangle.X, (int)_body.FieldRectangle.Y, (int)_body.FieldRectangle.Width, (int)_body.FieldRectangle.Height);
+
+                // Loop through the list of utility objects.
+                foreach (var trigger in enemyTriggers) 
+                {
+                    // If it's an enemy trigger add the Gibdo.
+                    if (trigger is ObjEnemyTrigger etrig)
+                    {
+                        etrig.EnemyTriggerList.Add(newGibdo);
+                        newGibdo.AddToEnemyTriggerGroup(etrig);
+                    }
+                }
+                // Remove the stalfos.
+                Map.Objects.DeleteObjects.Add(this);
+                return;
+            }
             _animator.Continue();
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;

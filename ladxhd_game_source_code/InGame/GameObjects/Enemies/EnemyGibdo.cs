@@ -20,6 +20,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly HittableComponent _hitComponent;
         private readonly PushableComponent _pushComponent;
 
+        private readonly EnemyStalfosOrange _stalfos;
+
         private const float MoveSpeed = 0.5f;
 
         private int _direction;
@@ -75,6 +77,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var pushableBox = new CBox(EntityPosition, -6, -13, 0, 12, 13, 4);
             var hittableBox = new CBox(EntityPosition, -7, -15, 14, 15, 8);
 
+            _stalfos = new EnemyStalfosOrange(Map, posX, posY, true) { IsActive = false, WasSpawned = true };
+            Map.Objects.SpawnObject(_stalfos);
+
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 4));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
@@ -115,13 +120,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (_aiComponent.CurrentStateId == "burning")
             {
                 Map.Objects.DeleteObjects.Add(this);
-                // spawn the stalfos orange
-                Map.Objects.SpawnObject(new EnemyStalfosOrange(Map, (int)EntityPosition.X - 8, (int)EntityPosition.Y - 16, true));
+
+                // Spawn the Stalfos.
+                _stalfos.EntityPosition.Set(new Vector2(EntityPosition.X, (int)EntityPosition.Y));
+                _stalfos.IsActive = true;
+                return;
             }
-            else
-            {
-                _damageState.BaseOnDeath(pieceOfPower);
-            }
+            _damageState.BaseOnDeath(pieceOfPower);
+            Map.Objects.DeleteObjects.Add(_stalfos);
         }
 
         private void InitWalking()
@@ -186,6 +192,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _pushComponent.IsActive = false;
             }
             return _damageState.OnHit(gameObject, direction, hitType, damage, pieceOfPower);
+        }
+
+        public void AddToEnemyTriggerGroup(ObjEnemyTrigger etrigger)
+        {
+            // If respawned in a room with an enemy trigger, this is a means 
+            // to adding the Stalfos spawned with the Gibdo to the trigger list.
+            etrigger.EnemyTriggerList.Add(_stalfos);
         }
     }
 }
