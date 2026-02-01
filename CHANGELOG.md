@@ -1,5 +1,25 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.5.7**
+### The "Slip Slide and Shake" Update
+  * The game has been updated to build with .NET 8.0 instead of .NET 6.0 which is outdated.
+  * Dynamically reduce the hitbox size of sword-bearing enemies and allow swords to have more pixel overlap.
+  * Link is only drawn over transition circle effect during Modern Camera with "Overworld Only" disabled.
+  * Lock and center camera when switching to "Modern Camera" in hybrid modes (Overworld Only/Dungeons Only).
+  * Fix "Modern Camera" transition circle effect to not draw over top of Link when tranisitioning maps.
+  * Fix walking and blocking simultaneously make Link appear as if he's sliding across the ground.
+  * Fix the "Classic Sword" option to cut the tile that is directly in front of Link when facing up or down.
+  * Fix NPC sword avoidance to not cause the sword to "flicker" when holding the sword over a NPC's sprite.
+  * Fix screen shake effects to be closer to the original game. Add additional "Extra" screen shake effects.
+  * Fix knockback distance of Pegasus Boots and add an "arc" which more closely matches the original game.
+  * Fix 2D "one way colliders" from teleporting the player upwards when enemies bump into them.
+  * Fix enemy "Gibdo" burned to "Stalfos" to be added to enemy triggers (used in level 8 dungeon for key).
+  * Fix miniboss "Stone Hinox" to clear out all currently falling rocks as soon as it is defeated.
+  * Fix boss "Slime Eye" starting height so his fall duration is closer to the original game.
+  * Fix boss "Angler Fish" spawned fish "Angler Fry" to actually spawn more often with Classic Camera.
+  * Fix boss "Slime Eel" intro sound effects to match the original game when about to burst through the floor.
+  * Fix new save files to start with "Auto-Select" for Game Scale as the default selected option.
+
 ## **v1.5.6**
 ### The "Even More Accuracy?!" Update
   * Implement new options for "Restore Defaults" and "Presets" which can automatically set option groups.
