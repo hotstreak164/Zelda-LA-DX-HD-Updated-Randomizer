@@ -2230,6 +2230,44 @@ namespace ProjectZ.InGame.GameObjects
         //  MOVEMENT PHYSICS CODE
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        private static int BarrierToFacingDirection(int fieldBarrierIndex)
+        {
+            // The field barrier vs. the direction Link needs to be facing
+            // to be knocked back into the nearby field. 
+            return fieldBarrierIndex switch
+            {
+                0 => 3,  // - Top field, facing Down.
+                1 => 1,  // - Bottom field, facing Up.
+                2 => 2,  // - Left field, facing Right.
+                3 => 0,  // - Right field, facing Left.
+            };
+        }
+
+        private void CancelBootsVelocity(int Index)
+        {
+            // If knockback direction would cross into another field, cancel it
+            if (Direction == BarrierToFacingDirection(Index))
+            {
+                _knockBackVelocity = Vector2.Zero;
+                _body.Velocity = Vector3.Zero;
+                _body.VelocityTarget = Vector2.Zero;
+                CurrentState = State.Idle;
+            }
+        }
+
+        private void CancelRepelVelocities()
+        {
+            // Eliminate all knockback velocities.
+            _hitVelocity = Vector2.Zero;
+            _repelVelocity = Vector2.Zero;
+            _shieldVelocity = Vector2.Zero;
+            _body.VelocityTarget = Vector2.Zero;
+
+            // Also fully eliminate any body velocity.
+            _body.Velocity.X = 0;
+            _body.Velocity.Y = 0;
+        }
+
         private void PreventFieldKnockback()
         {
             // If it's null then Classic Camera is disabled.
@@ -2237,21 +2275,22 @@ namespace ProjectZ.InGame.GameObjects
                 return;
 
             // Loop through the field barriers.
-            foreach (var barrier in FieldBarrier)
+            for (int i = 0; i < FieldBarrier.Length; i++)
             {
                 // Create a new box that is slightly larger than the field barrier box.
                 int buffer = 2;
-                Box fieldBox = new Box(barrier.Position.X - buffer, barrier.Position.Y - buffer, 0, barrier.Width + buffer * 2, barrier.Height + buffer * 2, 16);
+                Box fieldBox = new Box(FieldBarrier[i].Position.X - buffer, FieldBarrier[i].Position.Y - buffer, 0, FieldBarrier[i].Width + buffer * 2, FieldBarrier[i].Height + buffer * 2, 16);
 
                 // If knocked into it then stop all velocities.
                 if (_body.BodyBox.Box.Intersects(fieldBox))
                 {
-                    _hitVelocity = Vector2.Zero;
-                    _repelVelocity = Vector2.Zero;
-                    _shieldVelocity = Vector2.Zero;
-                    _knockBackVelocity = Vector2.Zero;
-                    _body.Velocity = Vector3.Zero;
-                    break;                            
+                    // Cancel repel velocities. Boots knockback uses a different function so it's possible
+                    // to still be knocked back while inside a field barrier if parallel to the field.
+                    if (CurrentState != State.BootKnockback)
+                        CancelRepelVelocities();
+                    else
+                        CancelBootsVelocity(i);
+                    return;  
                 }
             }
         }
@@ -2322,7 +2361,7 @@ namespace ProjectZ.InGame.GameObjects
                 shieldRepelNormal.Normalize();
 
                 // Decelerate when velocity is still strong.
-                float slowDownAmount = 0.12f + (_repelVelocity.Length() * 0.015f);
+                float slowDownAmount = 0.12f + (_shieldVelocity.Length() * 0.015f);
                 _shieldVelocity -= shieldRepelNormal * slowDownAmount * Game1.TimeMultiplier;
 
                 // Snap to zero when velocity reaches the threshold.
