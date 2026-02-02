@@ -222,7 +222,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)
         {
-            // Remove damage knockback when final hit is with sword.
+            // Remove gold leaf crow damage knockback when final hit is with sword.
             if (_goldLeaf && (damage >= 2 || _damageState.CurrentLives <= 1) && (hitType & HitType.Sword) != 0)
                 _damageState.MoveBody = false;
 
@@ -246,6 +246,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (_damageState.CurrentLives <= 0)
             {
+                // Stop the gold leaf crow dead in its tracks when it dies.
+                if (_goldLeaf)
+                {
+                    _body.Velocity = Vector3.Zero;
+                    _body.VelocityTarget = Vector2.Zero;
+                }
                 _damageField.IsActive = false;
                 _hitComponent.IsActive = false;
                 _pushComponent.IsActive = false;
