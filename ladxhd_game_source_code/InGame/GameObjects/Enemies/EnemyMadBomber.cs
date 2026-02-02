@@ -79,6 +79,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _damageState = new AiDamageState(this, body, _aiComponent, _sprite, _lives, false)
             {
+                MoveBody = false,
                 IsActive = false,
                 SpawnItems = false,
                 HitMultiplierX = 0,
