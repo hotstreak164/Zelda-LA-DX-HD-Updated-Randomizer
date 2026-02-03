@@ -1,5 +1,18 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.5.8**
+### "Tying up Some Loose Ends" Update
+  * It's now possible to replace text with a custom ".lng" file in the Mods folder (see wiki for more info).
+  * The Redux option "Dungeon Teleport" has been transformed into a new option named "Map Teleport".
+  * Redux option "Map Teleport" allows teleporting to cleared dungeons via map, Manbo's song, or both.
+  * Remove damage launch of Golden Leaf carrying enemies: Crow and Mad Bomber so it is easier to collect.
+  * Sword carrying enemies now aggro at shorter distance 50 pixels (from 60) and follow up to 65 pixels.
+  * Fix the shield to no longer take false hits from direct damage from some enemies (especially swords).
+  * Fix Classic Camera music cues to match field transitions that now line up with Link's "center".
+  * Fix Link floating with Classic Camera when jumping + spinning + transitioning fields.
+  * Fix sword carrying enemies so that their swords actually use the damage box (instead of collision box).
+  * Fix sword carrying enemies so that their swords disable "hittable" & "pushable" components when burned.
+
 ## **v1.5.7**
 ### The "Slip Slide and Shake" Update
   * The game has been updated to build with .NET 8.0 instead of .NET 6.0 which is outdated.
