@@ -20,9 +20,14 @@ namespace ProjectZ.InGame.Things
         public void Load()
         {
             // go through the .lng files and fill the _languageStrings dictionary array
-            var files = Directory.EnumerateFiles(Values.PathLanguageFolder, "*.lng", SearchOption.AllDirectories)
-                .Concat(Directory.EnumerateFiles(Values.PathMods, "*.lng", SearchOption.AllDirectories))
-                .ToArray();
+            var files = (Directory.Exists(Values.PathLanguageFolder)
+                            ? Directory.EnumerateFiles(Values.PathLanguageFolder, "*.lng", SearchOption.AllDirectories)
+                            : Enumerable.Empty<string>())
+                        .Concat(Directory.Exists(Values.PathMods)
+                            ? Directory.EnumerateFiles(Values.PathMods, "*.lng", SearchOption.AllDirectories)
+                            : Enumerable.Empty<string>())
+                        .OrderBy(f => f)
+                        .ToArray();
 
             var languageStrings = new Dictionary<string, Dictionary<string, string>>();
 
@@ -58,6 +63,53 @@ namespace ProjectZ.InGame.Things
 
             _languageStrings = LanguageCode.Select(k => languageStrings[k]).ToArray();
             CurrentLanguageIndex = Math.Clamp(CurrentLanguageIndex, 0, _languageStrings.Length - 1);
+        }
+
+        public void LoadFile(Dictionary<string, string> dictionary, string fileName)
+        {
+            var reader = new StreamReader(fileName);
+
+            while (!reader.EndOfStream)
+            {
+                var strLine = reader.ReadLine();
+                var spacePosition = strLine.IndexOf(' ');
+
+                if (spacePosition < 0 || strLine.StartsWith("//"))
+                    continue;
+
+                var strKey = strLine.Substring(0, spacePosition);
+
+                // empty string
+                if (spacePosition + 1 >= strLine.Length)
+                {
+                    dictionary.Add(strKey, "");
+                    continue;
+                }
+                var strValue = strLine.Substring(spacePosition + 1);
+
+                dictionary[strKey] = strValue;
+            }
+            reader.Close();
+        }
+
+        public string GetString(string strKey, string defaultString)
+        {
+            if (strKey == null)
+                return "null";
+
+            if (Strings.TryGetValue(strKey, out var value))
+                return value;
+
+            // use the english text if there is no translation
+            if (_languageStrings[0].TryGetValue(strKey, out value))
+                return value;
+
+            return defaultString;
+        }
+
+        public void ToggleLanguage()
+        {
+            CurrentLanguageIndex = (CurrentLanguageIndex + 1) % _languageStrings.Length;
         }
 
         public string ReplacePlaceholderTag(string inputString)
@@ -112,53 +164,6 @@ namespace ProjectZ.InGame.Things
             inputString = inputString.Replace("[X]", X);
             inputString = inputString.Replace("[Y]", Y);
             return inputString;
-        }
-
-        public void LoadFile(Dictionary<string, string> dictionary, string fileName)
-        {
-            var reader = new StreamReader(fileName);
-
-            while (!reader.EndOfStream)
-            {
-                var strLine = reader.ReadLine();
-                var spacePosition = strLine.IndexOf(' ');
-
-                if (spacePosition < 0 || strLine.StartsWith("//"))
-                    continue;
-
-                var strKey = strLine.Substring(0, spacePosition);
-
-                // empty string
-                if (spacePosition + 1 >= strLine.Length)
-                {
-                    dictionary.Add(strKey, "");
-                    continue;
-                }
-                var strValue = strLine.Substring(spacePosition + 1);
-
-                dictionary[strKey] = strValue;
-            }
-            reader.Close();
-        }
-
-        public string GetString(string strKey, string defaultString)
-        {
-            if (strKey == null)
-                return "null";
-
-            if (Strings.ContainsKey(strKey))
-                defaultString = Strings[strKey];
-
-            // use the english text if there is no translation
-            else if (_languageStrings[0].ContainsKey(strKey))
-                defaultString = _languageStrings[0][strKey];
-
-            return defaultString;
-        }
-
-        public void ToggleLanguage()
-        {
-            CurrentLanguageIndex = (CurrentLanguageIndex + 1) % _languageStrings.Length;
         }
     }
 }
