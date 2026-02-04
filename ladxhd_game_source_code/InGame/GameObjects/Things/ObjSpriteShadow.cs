@@ -75,6 +75,9 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             if (_host.Map == null)
                 Destroy();
+
+            if (!_host.IsActive)
+                Destroy();
         }
 
         private void UpdatePosition()
