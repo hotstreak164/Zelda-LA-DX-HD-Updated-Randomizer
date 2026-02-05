@@ -86,15 +86,34 @@ namespace LADXHD_Patcher
         public static void RemovePath(this string InputPath)
         {
             // If the path is empty then it does not exist.
-            if (InputPath == null || InputPath == "")
+            if (string.IsNullOrEmpty(InputPath) || !InputPath.TestPath())
                 return;
 
-            // If the path exists call the type needed to remove it.
-            if (InputPath.TestPath())
-                if (File.GetAttributes(InputPath) == FileAttributes.Directory)
-                    Directory.Delete(InputPath, true);
-                else
-                    File.Delete(InputPath);
+            // Set up a loop for retries if a file is still locked when trying to delete it.
+            for (int i = 0; i < 6; i++)
+            {
+                try
+                {
+                    // If the path exists call the type needed to remove it.
+                    if (File.GetAttributes(InputPath).HasFlag(FileAttributes.Directory))
+                        Directory.Delete(InputPath, true);
+                    else
+                    {
+                        File.SetAttributes(InputPath, FileAttributes.Normal);
+                        File.Delete(InputPath);
+                    }
+                    return;
+                }
+                // Catch any exceptions if it didn't delete and try again.
+                catch (IOException)
+                {
+                    System.Threading.Thread.Sleep(200);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    System.Threading.Thread.Sleep(200);
+                }
+            }
         }
 
         public static void MovePath(this string SourcePath, string DestinationPath, bool Overwrite)

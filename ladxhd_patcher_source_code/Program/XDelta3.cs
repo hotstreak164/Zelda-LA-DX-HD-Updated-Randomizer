@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System;
 
 namespace LADXHD_Patcher
 {
@@ -69,6 +68,7 @@ namespace LADXHD_Patcher
             xDelta.StartInfo = startInfo;
             xDelta.Start();
             xDelta.WaitForExit();
+            xDelta.Dispose();
         }
 
         public static void Execute(Operation action, string input, string diff, string output, string target = "")
