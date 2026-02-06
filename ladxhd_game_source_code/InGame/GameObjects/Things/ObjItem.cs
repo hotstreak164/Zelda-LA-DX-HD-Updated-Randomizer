@@ -62,6 +62,8 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public ObjItem(Map.Map map, int posX, int posY, string strType, string saveKey, string itemName, string locationBound, bool despawn = false) : base(map)
         {
+            Tags = Values.GameObjectTag.Item;
+
             IsVisible = true;
 
             if (!string.IsNullOrEmpty(saveKey))

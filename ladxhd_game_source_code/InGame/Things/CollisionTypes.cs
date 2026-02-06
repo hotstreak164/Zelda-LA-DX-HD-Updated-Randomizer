@@ -71,7 +71,8 @@ namespace ProjectZ.InGame.Things
             Hole    = 8,
             Lamp    = 16,
             Ocarina = 32,
-            Utility = 64
+            Utility = 64,
+            Item    = 128
         }
     }
 }

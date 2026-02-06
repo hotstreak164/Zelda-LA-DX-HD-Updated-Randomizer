@@ -27,6 +27,8 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public ObjRollBand(Map.Map map, int posX, int posY, int direction) : base(map)
         {
+            Tags = Values.GameObjectTag.Utility;
+
             _sourceRectangle = Resources.SourceRectangle("rollband_0");
 
             EntityPosition = new CPosition(posX, posY, 0);

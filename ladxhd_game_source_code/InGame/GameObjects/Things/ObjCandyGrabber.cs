@@ -21,6 +21,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly Rectangle _recGrabberLeftClosed;
         private readonly Rectangle _recGrabberRightClosed;
         private readonly Rectangle _recLine;
+        private readonly Rectangle _fieldRectangle;
 
         private readonly List<GameObject> _collidingObjects = new List<GameObject>();
 
@@ -37,6 +38,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private float _waitCounter;
 
         private bool _marinGame;
+        private bool _alwaysAnimate;
 
         private BodyComponent _grabbedBody;
 
@@ -61,6 +63,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _recGrabberRightClosed = Resources.SourceRectangle("candy_grabber_right_closed");
             _recLine = Resources.SourceRectangle("candy_grabber_line");
             _vecStart = new Vector2(posX, posY + 38);
+            _fieldRectangle = Map.GetField(posX, posY);
 
             var shadowSourceRectangle = new Rectangle(0, 0, 65, 66);
             var shadowComponent = new DrawShadowSpriteComponent(Resources.SprShadow, EntityPosition, shadowSourceRectangle, new Vector2(0, -5), 1.0f, 0.0f);
@@ -73,10 +76,29 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(DrawShadowComponent.Index, shadowComponent);
 
             new ObjSpriteShadow("sprshadowl", this, Values.LayerPlayer, 0, -14, map);
+
+            Map.Objects.RegisterAlwaysAnimateObject(this);
+        }
+
+        private void AlwaysAnimateTrendyItems()
+        {
+            var objectList = new List<GameObject>();
+
+            Map.Objects.GetGameObjectsWithTag(objectList, Values.GameObjectTag.Item | Values.GameObjectTag.Utility,
+                _fieldRectangle.X, _fieldRectangle.Y, _fieldRectangle.Width, _fieldRectangle.Height);
+
+            foreach (var obj in objectList) 
+                if (obj is ObjItem or ObjRollBand)
+                    Map.Objects.RegisterAlwaysAnimateObject(obj);
         }
 
         private void Update()
         {
+            if (!_alwaysAnimate)
+            {
+                AlwaysAnimateTrendyItems();
+                _alwaysAnimate = true;
+            }
             _blinkCount = (_blinkCount + Game1.DeltaTime) % 500;
             _grabberRectangle = new Box(EntityPosition.X + 6, EntityPosition.Y - 3, 0, 4, 4, 2);
 

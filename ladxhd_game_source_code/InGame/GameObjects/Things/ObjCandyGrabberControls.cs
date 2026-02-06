@@ -51,6 +51,8 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerBottom, EntityPosition));
+
+            Map.Objects.RegisterAlwaysAnimateObject(this);
         }
 
         public void Update()
