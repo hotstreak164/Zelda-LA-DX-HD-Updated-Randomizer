@@ -26,6 +26,11 @@ namespace LADXHD_Patcher
             button_Exit.Enabled = toggle;
         }
 
+        public void UpdateProgressBar(int value)
+        {
+            progressBar.Value = value;
+        }
+
         private void button_Patch_Click(object sender, EventArgs e)
         {
             Functions.StartPatching();

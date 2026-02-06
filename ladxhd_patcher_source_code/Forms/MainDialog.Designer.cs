@@ -34,12 +34,13 @@
             this.button_ChangeLog = new System.Windows.Forms.Button();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
             this.picturebox_Main = new System.Windows.Forms.PictureBox();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.picturebox_Main)).BeginInit();
             this.SuspendLayout();
             // 
             // button_Patch
             // 
-            this.button_Patch.Location = new System.Drawing.Point(9, 384);
+            this.button_Patch.Location = new System.Drawing.Point(9, 407);
             this.button_Patch.Name = "button_Patch";
             this.button_Patch.Size = new System.Drawing.Size(106, 30);
             this.button_Patch.TabIndex = 0;
@@ -49,7 +50,7 @@
             // 
             // button_Exit
             // 
-            this.button_Exit.Location = new System.Drawing.Point(251, 384);
+            this.button_Exit.Location = new System.Drawing.Point(251, 407);
             this.button_Exit.Name = "button_Exit";
             this.button_Exit.Size = new System.Drawing.Size(106, 30);
             this.button_Exit.TabIndex = 1;
@@ -59,7 +60,7 @@
             // 
             // button_ChangeLog
             // 
-            this.button_ChangeLog.Location = new System.Drawing.Point(130, 384);
+            this.button_ChangeLog.Location = new System.Drawing.Point(130, 407);
             this.button_ChangeLog.Name = "button_ChangeLog";
             this.button_ChangeLog.Size = new System.Drawing.Size(106, 30);
             this.button_ChangeLog.TabIndex = 3;
@@ -87,11 +88,19 @@
             this.picturebox_Main.TabIndex = 4;
             this.picturebox_Main.TabStop = false;
             // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(9, 384);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(347, 16);
+            this.progressBar.TabIndex = 6;
+            // 
             // Form_MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 423);
+            this.ClientSize = new System.Drawing.Size(368, 443);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.groupBox_Main);
             this.Controls.Add(this.picturebox_Main);
             this.Controls.Add(this.button_ChangeLog);
@@ -116,6 +125,7 @@
         private System.Windows.Forms.Button button_ChangeLog;
         private System.Windows.Forms.PictureBox picturebox_Main;
         public System.Windows.Forms.GroupBox groupBox_Main;
+        public System.Windows.Forms.ProgressBar progressBar;
     }
 }
 

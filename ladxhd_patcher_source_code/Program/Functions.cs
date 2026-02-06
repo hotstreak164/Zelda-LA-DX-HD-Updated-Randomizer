@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using System.IO;
 using System.Linq;
 using static LADXHD_Patcher.XDelta3;
@@ -8,6 +9,9 @@ namespace LADXHD_Patcher
 {
     internal class Functions
     {
+        private static int    PatchProgress;
+        private static int    FileCount;
+        private static int    TotalCount;
         private static int    filesPatched;
         private static bool   silentMode;
         private static bool   patchFromBackup;
@@ -122,6 +126,39 @@ namespace LADXHD_Patcher
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        PROGRESS CODE : TRACK AND UPDATE THE PROGRESS BAR BY KEEPING TRACK OF THE FILE COUNTS.
+       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        private static void ResetProgress()
+        {
+            // Reset the variables.
+            FileCount = 0;
+            TotalCount = 0;
+            PatchProgress = 0;
+
+            // Update the bar to have zero progress.
+            Forms.mainDialog.UpdateProgressBar(PatchProgress);
+        }
+
+        private static void UpdateProgress()
+        {
+            // Update the file count.
+            FileCount++;
+
+            // Get the percentage of progress.
+            int progress = (int)(FileCount * 100.0 / TotalCount);
+
+            // Update the progress bar with the value.
+            if (FileCount % 10 == 0 || FileCount == TotalCount)
+                Forms.mainDialog.UpdateProgressBar(progress);
+
+            // Call do events to update the progress bar.
+            Application.DoEvents();
+        }
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
         PATCHING CODE : PATCH FILES USING XDELTA PATCHES FROM "Resources.resx" TO UPDATE TO THE LATEST VERSION.
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -169,8 +206,18 @@ namespace LADXHD_Patcher
             RemoveBadBackupFiles();
             filesPatched = 0;
 
-            foreach (string file in Config.baseFolder.GetFiles("*", true))
+            // Get all files found in the base folder recursively.
+            var fileCollection = Config.baseFolder.GetFiles("*", true);
+
+            // Get a count of how many files there are.
+            TotalCount = fileCollection.Count;
+
+            // Loop through all files in the collection.
+            foreach (string file in fileCollection)
             {
+                // We don't need a perfect representation of progress just a rough idea of the time left.
+                UpdateProgress();
+
                 // Get the file as a file item which gives us some cool properties to reference.
                 FileItem fileItem = new FileItem(file);
 
@@ -302,11 +349,13 @@ namespace LADXHD_Patcher
         public static void StartPatching()
         {
             SetSourceFiles();
+            ResetProgress();
 
             if (!ValidateExist()) return;
             if (!ValidateStart()) return;
 
             Forms.mainDialog.ToggleDialog(false);
+            Config.tempFolder.RemovePath();
             Config.tempFolder.CreatePath(true);
             ZipPatches.ExtractPatches();
 
