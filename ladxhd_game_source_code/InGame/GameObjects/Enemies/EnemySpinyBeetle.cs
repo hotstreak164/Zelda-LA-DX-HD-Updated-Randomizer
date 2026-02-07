@@ -291,7 +291,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if ((hitType & HitType.CrystalSmash) != 0 || (hitType & HitType.ClassicSword) != 0)
                 return Values.HitCollision.None;
 
-            if (!_objectDestroyed && (_type == 0 || (_type == 2 && GameSettings.SwBreakPots)))
+            // Conditions to break the "skull" type beetle with level 2 sword.
+            var lvl2SwordSkullBreak = _type == 2 && GameSettings.SwBreakPots && 
+                ((hitType & HitType.Sword2) != 0 || 
+                Game1.GameManager.GetItem("sword2") != null && ((hitType & HitType.SwordShot) != 0 || 
+                (hitType & HitType.PegasusBootsSword) != 0));
+
+            // If it's a bush it can always be destroyed. If it's a skull, check the conditions laid out above.
+            if (!_objectDestroyed && (_type == 0 || lvl2SwordSkullBreak))
             {
                 _objectDestroyed = true;
 
