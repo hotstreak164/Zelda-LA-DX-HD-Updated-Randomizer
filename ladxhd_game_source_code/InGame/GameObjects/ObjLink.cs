@@ -5395,7 +5395,7 @@ namespace ProjectZ.InGame.GameObjects
             if (_ocarinaSong == 1)
             {
                 // The value for MapTeleport must be 2 or 3 to use the map to warp with Manbo's song.
-                if (GameSettings.MapTeleport >= 2)
+                if (GameSettings.MapTeleport >= 2 && !Map.DungeonMode && !Map.DungeonMapless)
                 {
                     // Open a new instance of the map overlay and set the flag 'ManboTeleport' that signifies it was an ocarina warp.
                     ManboTeleport = true;
