@@ -250,10 +250,6 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_type == 0 && !string.IsNullOrEmpty(_strKey))
                 Game1.GameManager.SaveManager.SetString(_strKey, "1");
 
-            // set the direction key
-            if (_type == 0 && !string.IsNullOrEmpty(_strKeyDir))
-                Game1.GameManager.SaveManager.SetString(_strKeyDir, _moveDirection.ToString());
-
             if (_isResetting)
             {
                 _isResetting = false;
