@@ -803,6 +803,9 @@ namespace ProjectZ.InGame.Overlay.Sequences
             // Set the save file's cleared state and save.
             Game1.GameManager.GameCleared = true;
             SaveGameSaveLoad.SaveGame(Game1.GameManager, true);
+
+            // Remove the lock on the options menu.
+            MapManager.ObjLink.DisableOptions(false);
         }
 
         private bool NextCredits()

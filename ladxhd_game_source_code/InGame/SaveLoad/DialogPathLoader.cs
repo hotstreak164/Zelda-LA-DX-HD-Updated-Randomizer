@@ -238,6 +238,10 @@ namespace ProjectZ.InGame.SaveLoad
             {
                 path.Action.Add(new DialogActionSaveHistory(bool.Parse(stringSplit[1])));
             }
+            else if (stringSplit[0] == "disable_options")
+            {
+                path.Action.Add(new DialogDisableOptions(bool.Parse(stringSplit[1])));
+            }
             else if (stringSplit[0] == "disable_inventory")
             {
                 path.Action.Add(new DialogDisableInventory(bool.Parse(stringSplit[1])));

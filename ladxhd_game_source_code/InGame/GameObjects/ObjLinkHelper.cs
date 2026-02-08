@@ -38,6 +38,7 @@ namespace ProjectZ.InGame.GameObjects
 
         //-------------------------------------------------------------------------------------------------------
         // Enable/Disable game states by using a SaveManager key-value pair.
+        public void DisableOptions(bool disable) => Game1.GameManager.SaveManager.SetString("disable_options", disable ? "1" : "0");
         public void DisableInventory(bool disable) => Game1.GameManager.SaveManager.SetString("disable_inventory", disable ? "1" : "0");
         public void FreezeAnimations(bool freeze)  => Game1.GameManager.SaveManager.SetString("freezeGame", freeze ? "1" : "0");
 

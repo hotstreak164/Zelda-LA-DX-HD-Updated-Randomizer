@@ -918,6 +918,24 @@ namespace ProjectZ.InGame.Overlay
             return true;
         }
     }
+
+    class DialogDisableOptions : DialogAction
+    {
+        private bool _enable;
+
+        public DialogDisableOptions(bool enable)
+        {
+            _enable = enable;
+        }
+
+        public override bool Execute()
+        {
+            var enable = Convert.ToInt32(_enable).ToString();
+            Game1.GameManager.SaveManager.SetString("disable_options", enable);
+            return true;
+        }
+    }
+
     class DialogDisableInventory : DialogAction
     {
         private bool _enable;

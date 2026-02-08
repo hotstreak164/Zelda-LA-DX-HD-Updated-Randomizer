@@ -163,10 +163,11 @@ namespace ProjectZ.InGame.Overlay
         public void Update()
         {
             // See if the inventory was disabled in "script.zScript".
+            bool disableOptions = Game1.GameManager.SaveManager.GetString("disable_options", "0") == "1";
             bool disableInventory = Game1.GameManager.SaveManager.GetString("disable_inventory", "0") == "1";
 
             // Toggle Game Options Menu Overlay
-            if ((_currentMenuState == MenuState.None || _currentMenuState == MenuState.Menu) && ControlHandler.ButtonPressed(CButtons.Select))
+            if ((_currentMenuState == MenuState.None || _currentMenuState == MenuState.Menu) && ControlHandler.ButtonPressed(CButtons.Select) && !disableOptions)
                 ToggleState(MenuState.Menu);
 
             // Toggle the Inventory / Map Overlay
