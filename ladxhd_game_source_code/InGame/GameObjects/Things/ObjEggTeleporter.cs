@@ -44,6 +44,8 @@ namespace ProjectZ.InGame.GameObjects.Things
         private bool _initLight;
         private bool _foundPath;
 
+        private float _classicTimerFix;
+
         public ObjEggTeleporter() : base("editor egg teleport")
         {
             EditorColor = Color.Green * 0.5f;
@@ -92,6 +94,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 var offset = new Vector2(0, Values.FieldHeight);
                 var newpos = new Vector2(MapManager.ObjLink.EntityPosition.X, MapManager.ObjLink.EntityPosition.Y) + offset;
+
                 Camera.SnapCameraTimer = 50f;
                 MapManager.ObjLink.EntityPosition.Set(newpos);
 
@@ -111,6 +114,12 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void Update()
         {
+            // The classic timer fix is used for classic camera when finding the correct route to the pit that leads
+            // to the final boss. When the pit is found, "OffsetPlayer" is ran several times concurrently causing the
+            // "SnapCameraTimer" to lock at 25ms. This "breaks" the camera transition as we only want to run it once.
+            if (_classicTimerFix >= 0)
+                _classicTimerFix -= Game1.DeltaTime;
+
             LeaveEggTeleportHack();
 
             if (!_initLight)
@@ -285,41 +294,41 @@ namespace ProjectZ.InGame.GameObjects.Things
             // Up (Classic Camera): The path to the jump has been found. Room Y remains 1 during classic camera.
             if (_foundPath && posY < roomY * Values.FieldHeight + dist && (roomX == 1 || roomX == 2) && roomY == 1)
             {
-                OffsetPlayer(roomX == 1 ? 0 : -1, 0);
+                // This ensures that "OffsetPlayer" only runs a single time when the final path is found. Running it
+                // multiple times breaks the "camera scroll effect" and causes the camera to snap to the new field.
+                if (_classicTimerFix <= 0)
+                {
+                    OffsetPlayer(roomX == 1 ? 0 : -1, 0);
+                    _classicTimerFix = 100f;
+                }
             }
             // Up (Normal Camera): The path to the jump has been found. Room Y remains 2 during normal camera.
             else if (_foundPath && posY < roomY * Values.FieldHeight + dist && (roomX == 1 || roomX == 2) && roomY == 2)
-            {
                 OffsetPlayer(roomX == 1 ? 0 : -1, -1);
-            }
+            
             // Left
             else if (posX < 80 + dist && roomX == 1 && (roomY == 1 || roomY == 2))
-            {
                 OffsetPlayer(1, 0);
-            }
+            
             // Right
             else if (posX > 80 + Values.FieldWidth * 2 - dist && roomX == 2 && (roomY == 1 || roomY == 2))
-            {
                 OffsetPlayer(-1, 0);
-            }
+            
             // Down
             else if (posY > (roomY + 1) * Values.FieldHeight - dist && roomX == 2 && (roomY == 2))
-            {
                 OffsetPlayer(-1, 0);
-            }
+            
             // Up: With normal camera, always teleport the player from the top room to the room just above the exit.
-            else if (!Camera.ClassicMode && !_foundPath && (roomX == 1 || roomX == 2) && roomY == 1 &&
-                !RoomStates[roomX, roomY - 1].Lit && RoomStates[roomX, roomY - 1].Light == RoomStates[roomX, roomY - 1].LightTarget &&
-                !RoomStates[roomX, roomY + 1].Lit && RoomStates[roomX, roomY + 1].Light == RoomStates[roomX, roomY + 1].LightTarget)
-            {
+            else if (!Camera.ClassicMode && !_foundPath && (roomX == 1 || roomX == 2) && (roomY == 1) &&
+                (!RoomStates[roomX, roomY - 1].Lit) && (RoomStates[roomX, roomY - 1].Light) == (RoomStates[roomX, roomY - 1].LightTarget) &&
+                (!RoomStates[roomX, roomY + 1].Lit) && (RoomStates[roomX, roomY + 1].Light) == (RoomStates[roomX, roomY + 1].LightTarget))
                 OffsetPlayer(roomX == 2 ? -1 : 0, 1);
-            }
+            
             // Up: With classic camera, always teleport the player back to the top room and rely on the teleport hack to move to the exit.
-            else if (Camera.ClassicMode && !_foundPath && (roomX == 1 || roomX == 2) && roomY == 1 && 
-                posY < roomY * Values.FieldHeight + dist && AnimationHelper.GetDirection(MapManager.ObjLink.LastMoveVector) == 1)
-            {
+            else if (Camera.ClassicMode && !_foundPath && (roomX == 1 || roomX == 2) && (roomY == 1) && 
+                (posY < roomY * Values.FieldHeight + dist) && AnimationHelper.GetDirection(MapManager.ObjLink.LastMoveVector) == 1)
                 OffsetPlayer(roomX == 2 ? -1 : 0, 1);
-            }
+
         }
 
         private void OffsetPlayer(int offsetX, int offsetY)
@@ -328,6 +337,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             for (int y = 0; y < RoomStates.GetLength(1); y++)
                 for (int x = 0; x < RoomStates.GetLength(0); x++)
                     tempRoomStates[x, y] = RoomStates[x, y];
+
             for (int y = 0; y < RoomStates.GetLength(1); y++)
                 for (int x = 0; x < RoomStates.GetLength(0); x++)
                     RoomStates[
