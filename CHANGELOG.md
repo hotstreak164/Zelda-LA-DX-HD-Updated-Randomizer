@@ -1,6 +1,23 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
-## **v1.5.8**
+## **v1.5.9**
+### The "Squashing the Eldest Bugs" Update
+  * Patcher: Add progress bar and fix an issue where it could fail to delete the temp folder for some users.
+  * Add a new way to disable the in-game "Options" menu and disable the menu during the ending sequence.
+  * Knockback velocity while in the air continues to be applied until the player hits the ground.
+  * Fix fishing minigame so Link has correct Tunic color and fix casting directional press and block buttons.
+  * Fix Trendy Game items and roll bands to remain animated while being partially outside of the camera bounds.
+  * Fix sprite shadows (which are active with Dynamic Shadows disabled) to not be active on inactive enemies.
+  * Fix the sword modifier to break pots/skulls to not allow breaking Spiny Beetle skulls with level 1 sword.
+  * Fix moblin cave "ObjPushButton" to not be activated until the first instrument has been collected.
+  * Fix dungeon doors to remain closed after grabbing the instrument. A return visit will open the doors.
+  * Fix dungeon 7 teleporter to center classic camera on first version of top floor (before pillars destroyed).
+  * Fix dungeon 7 nightmare key block puzzle solving in classic camera when pushing blocks outward and resetting.
+  * Fix map teleport via Manbo's song to not appear while inside dungeons and instead warp to the entrance.
+  * Fix Classic Camera panning effect when transitioning to the final room in the Egg with the pit to final boss.
+  * Fix ending sequence properly setting "modern" camera depending on which options were enabled when starting.
+
+## **v1.5.8** 
 ### "Tying up Some Loose Ends" Update
   * It's now possible to replace text with a custom ".lng" file in the Mods folder (see wiki for more info).
   * The Redux option "Dungeon Teleport" has been transformed into a new option named "Map Teleport".
