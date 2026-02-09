@@ -2338,14 +2338,26 @@ namespace ProjectZ.InGame.GameObjects
                 var repelNormal = _repelVelocity;
                 repelNormal.Normalize();
 
-                // Decelerate when velocity is still strong.
-                float slowDownAmount = 0.12f + (_repelVelocity.Length() * 0.015f);
-                _repelVelocity -= repelNormal * slowDownAmount * Game1.TimeMultiplier;
-
+                // Reduce velocity gradually while on the ground.
+                if (_body.IsGrounded)
+                {
+                    float slowDownAmount = 0.12f + (_repelVelocity.Length() * 0.015f);
+                    _repelVelocity -= repelNormal * slowDownAmount * Game1.TimeMultiplier;
+                }
+                // Also reduce velocity while in the air but only up to a certain point.
+                else
+                {
+                    if (_repelVelocity.Length() > 1.20)
+                    {
+                        float slowDownAmount = 0.05f + (_repelVelocity.Length() * 0.015f);
+                        _repelVelocity -= repelNormal * slowDownAmount * Game1.TimeMultiplier;
+                    }
+                }
                 // Snap to zero when velocity reaches the threshold.
-                if (_repelVelocity.Length() < 0.35f)
+                if (_repelVelocity.Length() < 0.25f)
+                {
                     _repelVelocity = Vector2.Zero;
-
+                }
                 // If the repel crosses into the field barrier then cancel the velocity.
                 PreventFieldKnockback();
             }
@@ -2363,14 +2375,26 @@ namespace ProjectZ.InGame.GameObjects
                 var shieldRepelNormal = _shieldVelocity;
                 shieldRepelNormal.Normalize();
 
-                // Decelerate when velocity is still strong.
-                float slowDownAmount = 0.12f + (_shieldVelocity.Length() * 0.015f);
-                _shieldVelocity -= shieldRepelNormal * slowDownAmount * Game1.TimeMultiplier;
-
+                // Reduce velocity gradually while on the ground.
+                if (_body.IsGrounded)
+                {
+                    float slowDownAmount = 0.12f + (_shieldVelocity.Length() * 0.015f);
+                    _shieldVelocity -= shieldRepelNormal * slowDownAmount * Game1.TimeMultiplier;
+                }
                 // Snap to zero when velocity reaches the threshold.
-                if (_shieldVelocity.Length() < 0.35f)
+                if (_shieldVelocity.Length() < 0.25f)
+                {
                     _shieldVelocity = Vector2.Zero;
-
+                }
+                // Also reduce velocity while in the air but only up to a certain point.
+                else
+                {
+                    if (_shieldVelocity.Length() > 1.20)
+                    {
+                        float slowDownAmount = 0.12f + (_shieldVelocity.Length() * 0.015f);
+                        _shieldVelocity -= shieldRepelNormal * slowDownAmount * Game1.TimeMultiplier;
+                    }
+                }
                 // If the repel crosses into the field barrier then cancel the velocity.
                 PreventFieldKnockback();
             }
@@ -2388,10 +2412,26 @@ namespace ProjectZ.InGame.GameObjects
                 var hitNormal = _hitVelocity;
                 hitNormal.Normalize();
 
-                // Apply slowdown over time.
-                var slowDownAmount = 0.05f + MathHelper.Clamp(_hitVelocity.Length() / 25f, 0, 0.05f);
-                _hitVelocity -= hitNormal * slowDownAmount * Game1.TimeMultiplier;
-
+                // Reduce velocity gradually while on the ground.
+                if (_body.IsGrounded)
+                {
+                    var slowDownAmount = 0.05f + MathHelper.Clamp(_hitVelocity.Length() / 25f, 0, 0.05f);
+                    _hitVelocity -= hitNormal * slowDownAmount * Game1.TimeMultiplier;
+                }
+                // Also reduce velocity while in the air but only up to a certain point.
+                else
+                {
+                    if (_hitVelocity.Length() > 1.20)
+                    {
+                        float slowDownAmount = 0.05f + (_hitVelocity.Length() * 0.015f);
+                        _hitVelocity -= hitNormal * slowDownAmount * Game1.TimeMultiplier;
+                    }
+                }
+                // Snap to zero when velocity reaches the threshold.
+                if (_hitVelocity.Length() < 0.25f)
+                {
+                    _hitVelocity = Vector2.Zero;
+                }
                 // If the hit crosses into the field barrier then cancel the velocity.
                 PreventFieldKnockback();
             }
