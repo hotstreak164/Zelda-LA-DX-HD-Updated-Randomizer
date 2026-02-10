@@ -370,10 +370,6 @@ namespace ProjectZ.InGame.GameObjects.Things
             ItemDrawHelper.DrawItem(spriteBatch, _item,
                 new Vector2(EntityPosition.X - _sourceRectangle.Width / 2.0f, EntityPosition.Y - EntityPosition.Z - _sourceRectangle.Height + _fadeOffset), _color, 1, true);
 
-            var baseRect = _collectionRect.Rectangle;
-            var setColor = new Color(0, 0, 255) * 1.00f;
-            Map.Objects.DrawRectangle(spriteBatch, baseRect, setColor);
-
             if (!_isFlying)
                 return;
 
