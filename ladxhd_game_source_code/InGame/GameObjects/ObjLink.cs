@@ -2338,8 +2338,8 @@ namespace ProjectZ.InGame.GameObjects
                 var repelNormal = _repelVelocity;
                 repelNormal.Normalize();
 
-                // Reduce velocity gradually while on the ground.
-                if (_body.IsGrounded)
+                // Reduce velocity gradually while on the ground or while swimming.
+                if (_body.IsGrounded || CurrentState == State.Swimming)
                 {
                     float slowDownAmount = 0.12f + (_repelVelocity.Length() * 0.015f);
                     _repelVelocity -= repelNormal * slowDownAmount * Game1.TimeMultiplier;
@@ -2375,8 +2375,8 @@ namespace ProjectZ.InGame.GameObjects
                 var shieldRepelNormal = _shieldVelocity;
                 shieldRepelNormal.Normalize();
 
-                // Reduce velocity gradually while on the ground.
-                if (_body.IsGrounded)
+                // Reduce velocity gradually while on the ground or while swimming.
+                if (_body.IsGrounded || CurrentState == State.Swimming)
                 {
                     float slowDownAmount = 0.12f + (_shieldVelocity.Length() * 0.015f);
                     _shieldVelocity -= shieldRepelNormal * slowDownAmount * Game1.TimeMultiplier;
@@ -2412,8 +2412,8 @@ namespace ProjectZ.InGame.GameObjects
                 var hitNormal = _hitVelocity;
                 hitNormal.Normalize();
 
-                // Reduce velocity gradually while on the ground.
-                if (_body.IsGrounded)
+                // Reduce velocity gradually while on the ground or while swimming.
+                if (_body.IsGrounded || CurrentState == State.Swimming)
                 {
                     var slowDownAmount = 0.05f + MathHelper.Clamp(_hitVelocity.Length() / 25f, 0, 0.05f);
                     _hitVelocity -= hitNormal * slowDownAmount * Game1.TimeMultiplier;
