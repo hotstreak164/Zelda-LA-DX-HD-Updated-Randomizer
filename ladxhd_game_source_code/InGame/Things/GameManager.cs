@@ -1448,14 +1448,14 @@ namespace ProjectZ.InGame.Things
                     return;
                 }
             }
+            // The item picked up is not an equippable item.
             else
             {
-                // search if the player already owns the item
+                // Search if the player already owns the item.
                 var found = false;
                 for (var i = 0; i < CollectedItems.Count; i++)
                 {
-                    if (CollectedItems[i].Name == item.Name &&
-                        CollectedItems[i].LocationBounding == itemCollected.LocationBounding)
+                    if ((CollectedItems[i].Name == item.Name) && (CollectedItems[i].LocationBounding == itemCollected.LocationBounding))
                     {
                         CollectedItems[i].Count += itemCollected.Count;
 
@@ -1466,18 +1466,13 @@ namespace ProjectZ.InGame.Things
                         break;
                     }
                 }
-
                 if (!found)
-                {
-                    // add new item
                     CollectedItems.Add(itemCollected);
-                }
 
-                if (item.Name == "heartMeter")
+                // A Piece of Heart or a Heart Container was picked up.
+                if (item.Name == "heartMeter" || item.Name == "heartMeterFull")
                 {
-                    var heart = GetItem("heartMeter");
-
-                    // expand hearts?
+                    var heart = GetItem(item.Name);
                     while (heart?.Count >= 4)
                     {
                         heart.Count -= 4;
@@ -1486,6 +1481,8 @@ namespace ProjectZ.InGame.Things
                         ItemDrawHelper.EnableHeartAnimationSound();
                     }
                 }
+
+                // The flippers were picked up.
                 else if (item.Name == "flippers")
                     Link.HasFlippers = true;
             }

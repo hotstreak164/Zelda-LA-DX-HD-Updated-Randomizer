@@ -32,16 +32,16 @@ namespace ProjectZ.InGame.GameObjects.Things
         private BodyDrawComponent _bodyDrawComponent;
         private BoxCollisionComponent _collisionComponent;
         private HittableComponent _hitComponent;
-        private CRectangle _collectionRectangle;
+
+        private CBox _collectionBox;
+        private CRectangle _collectionRect;
 
         private Rectangle _sourceRectangle;
         private Rectangle _sourceRectangleWing = new Rectangle(2, 250, 8, 15);
-
-        private Color _color = Color.White;
         private Rectangle _shadowSourceRectangle = new Rectangle(0, 0, 65, 66);
+        private Color _color = Color.White;
 
         private float _fadeOffset;
-
         private double _deepWaterCounter;
         private float _despawnCount;
         private int _despawnTime = 350;
@@ -62,34 +62,21 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public ObjItem(Map.Map map, int posX, int posY, string strType, string saveKey, string itemName, string locationBound, bool despawn = false) : base(map)
         {
-            Tags = Values.GameObjectTag.Item;
-
-            IsVisible = true;
-
-            if (!string.IsNullOrEmpty(saveKey))
-            {
-                SaveKey = saveKey;
-
-                // item has already been collected
-                if (Game1.GameManager.SaveManager.GetString(SaveKey) == "1")
-                {
-                    IsDead = true;
-                    return;
-                }
-            }
-
+            // Start by getting basic properties of the item.
             _item = Game1.GameManager.ItemManager[itemName];
             _itemName = itemName;
             _locationBound = locationBound;
             _despawn = despawn;
 
-            if (_item == null)
-            {
-                IsDead = true;
+            Tags = Values.GameObjectTag.Item;
+            IsVisible = true;
+
+            // Checks if item is valid and has not been collected while also setting the save key.
+            if (!ItemAndSaveKeyValid(_item, saveKey))
                 return;
-            }
 
             var baseItem = _item.SourceRectangle.HasValue ? _item : Game1.GameManager.ItemManager[_item.Name];
+
             if (baseItem.MapSprite != null)
                 _sourceRectangle = baseItem.MapSprite.SourceRectangle;
             else
@@ -97,6 +84,12 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             EntityPosition = new CPosition(posX + 8, posY + 8 + 3, 0);
             EntitySize = new Rectangle(-9, -16, 18, 18);
+
+            // The heart container piece needs additional offset on the Y axis.
+            if (_itemName == "heartMeter")
+                EntityPosition.Y += 5;
+            if (_item.TradeItem)
+                EntityPosition.Y += 3;
 
             // add sound for the bounces
             _body = new BodyComponent(EntityPosition, -4, -8, 8, 8, 8)
@@ -111,52 +104,12 @@ namespace ProjectZ.InGame.GameObjects.Things
                 MoveCollision = OnMoveCollision
             };
 
-            if (!string.IsNullOrEmpty(strType))
-            {
-                // jumping item
-                if (strType == "j")
-                {
-                    IsJumping = true;
-                    if (!Map.Is2dMap)
-                        _body.Velocity.Z = 1f;
-                    else
-                    {
-                        Collectable = true;
-                        _body.Velocity.Y = -1f;
-                    }
+            // Attempt to apply attributes if the item type is set.
+            TrySetItemType(strType);
 
-                    // needed because at the first frame the value is still true
-                    _body.IsGrounded = false;
-                }
-                // fall from the sky
-                else if (strType == "d")
-                {
-                    IsJumping = true;
-                    EntityPosition.Z = 60;
+            var stateIdle = new AiState(UpdateIdle);
 
-                    // needed because at the first frame the value is still true
-                    _body.IsGrounded = false;
-                    _body.RestAdditionalMovement = true;
-                    new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
-                }
-                // fly
-                else if (strType == "w")
-                {
-                    _body.IsActive = false;
-                    EntityPosition.Z = 10;
-                    Collectable = true;
-                    _isFlying = true;
-                    new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
-                }
-                // item is in the water
-                else if (strType == "s")
-                    _isSwimming = true;
-            }
-            else
-                Collectable = true;
-
-            var stateIdle = new AiState(UpdateIdle);                                                                                                                                                                                                                                                                                                                                                                                                                    
-            // despawn after 15sec, but only if it was jumping or fall from the sky
+            // Despawn after 15 seconds, but only if it was jumping or fall from the sky.
             if (string.IsNullOrEmpty(saveKey) && !_isFlying && !Collectable)
                 stateIdle.Trigger.Add(new AiTriggerCountdown(15000, null, ToFading));
 
@@ -165,14 +118,12 @@ namespace ProjectZ.InGame.GameObjects.Things
             stateHoleFall.Trigger.Add(new AiTriggerCountdown(125, null, HoleDespawn));
             stateDelay.Trigger.Add(_delayCountdown = new AiTriggerCountdown(0, null, () =>
             {
-                _aiComponent.ChangeState("idle");
                 IsVisible = true;
-                if (!Map.Is2dMap)
-                    _body.Velocity.Z = 1f;
-                else
-                    _body.Velocity.Y = -1f;
+                _aiComponent.ChangeState("idle");
+                _body.Velocity.Z = Map.Is2dMap ? -1f : 1f;
                 EntityPosition.Set(new Vector3(EntityPosition.X, EntityPosition.Y, 0));
             }));
+
             _aiComponent = new AiComponent();
             _aiComponent.States.Add("idle", stateIdle);
             _aiComponent.States.Add("boomerang", new AiState());
@@ -181,57 +132,48 @@ namespace ProjectZ.InGame.GameObjects.Things
             _aiComponent.States.Add("holeFall", stateHoleFall);
             _aiComponent.ChangeState("idle");
 
-            // Use the size of the rectangle for the height unless it exceeds 12 pixels.
-            var width  = _sourceRectangle.Width + 2;
-            var height = Math.Min(_sourceRectangle.Height, 12);
+            Rectangle collectRect = _item.CreateCollectRectangle(_sourceRectangle);
 
-            // Guardian acorn and rupees are two special cases where we want height to
-            // exceed 12 pixels for sword collection purposes.
-            if (_item.Name == "guardianAcorn")
-                height = 16;
-            else if (_item.Name == "ruby")
-                height = 14;
-
-            Rectangle collectRect = new Rectangle(-_sourceRectangle.Width / 2 - 1, -height, width, height);
-            _collectionRectangle = new CRectangle(EntityPosition, collectRect);
-
-            var box = new CBox(EntityPosition, -_sourceRectangle.Width / 2, -height, _sourceRectangle.Width, height, 16);
+            _collectionBox = new CBox(EntityPosition, -_sourceRectangle.Width / 2, collectRect.Y, _sourceRectangle.Width, collectRect.Height, 16);
+            _collectionRect = new CRectangle(EntityPosition, collectRect);
 
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
-            AddComponent(ObjectCollisionComponent.Index, new ObjectCollisionComponent(_collectionRectangle, OnCollision));
-            AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(box, Values.CollisionTypes.Item));
-            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(box, OnHit));
+            AddComponent(ObjectCollisionComponent.Index, new ObjectCollisionComponent(_collectionRect, OnCollision));
+            AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(_collectionBox, Values.CollisionTypes.Item));
+            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(_collectionBox, OnHit));
 
             if (_item.Instrument)
                 _collisionComponent.CollisionType = Values.CollisionTypes.Item | Values.CollisionTypes.Instrument;
 
-            _shadowComponent = new DrawShadowSpriteComponent(
-                Resources.SprShadow, EntityPosition, _shadowSourceRectangle,
-                new Vector2(-_sourceRectangle.Width / 2 - 1, -_sourceRectangle.Width / 4 - 2), 1.0f, 0.0f);
+            // Create the body draw component but don't add it yet.
+            _bodyDrawComponent = new BodyDrawComponent(_body, Draw, Values.LayerPlayer);
+
+            // Create the shadow component but don't add it yet.
+            var offsetX = -_sourceRectangle.Width / 2 - 1;
+            var offsetY = -_sourceRectangle.Width / 4 - 2;
+            var drawOffset = new Vector2(offsetX, offsetY);
+            _shadowComponent = new DrawShadowSpriteComponent(Resources.SprShadow, EntityPosition, _shadowSourceRectangle, drawOffset, 1.0f, 0.0f);
             _shadowComponent.Width = _sourceRectangle.Width + 2;
             _shadowComponent.Height = _sourceRectangle.Width / 2 + 2;
 
-            _bodyDrawComponent = new BodyDrawComponent(_body, Draw, Values.LayerPlayer);
-
+            // Add the body and shadow components if it's not underwater.
             if (!_isSwimming)
             {
                 AddComponent(DrawComponent.Index, _bodyDrawComponent);
                 AddComponent(DrawShadowComponent.Index, _shadowComponent);
             }
+
+            // If it's a shell present don't draw a shadow and draw on the bottom layer.
             if (_itemName == "shellPresent")
             {
                 _shadowComponent.IsActive = false;
                 _bodyDrawComponent.Layer = Values.LayerBottom;
-                _collectionRectangle.OffsetSize.X = -4;
-                _collectionRectangle.OffsetSize.Y = -8;
-                _collectionRectangle.OffsetSize.Width = 8;
-                _collectionRectangle.OffsetSize.Height = 8;
-                _collectionRectangle.UpdateRectangle(EntityPosition);
             }
             if (_itemName == "sword2")
                 _bodyDrawComponent.Layer = Values.LayerBottom;
 
+            // Create the sprite shadows.
             if (shadowListSmall.Contains(itemName))
                 new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadows");
             if (shadowListMedium.Contains(itemName))
@@ -248,11 +190,84 @@ namespace ProjectZ.InGame.GameObjects.Things
             return SystemBody.GetFieldState(_body);
         }
 
+        private bool ItemAndSaveKeyValid(GameItem item, string saveKey)
+        {
+            // Default to "true" which creates the item.
+            bool valid = true;
+
+            // If the item is null then return false.
+            if (item == null)
+                valid = false;
+
+            // Check if a save key has been defined.
+            if (valid && !string.IsNullOrEmpty(saveKey))
+            {
+                // Store the save key name.
+                SaveKey = saveKey;
+
+                // Check if the item has already been collected.
+                if (Game1.GameManager.SaveManager.GetString(SaveKey) == "1")
+                    valid = false;
+            }
+            // If the item is null or it's already been collected set that it is dead.
+            if (!valid)
+                IsDead = true;
+
+            // Return whatever the result is.
+            return valid;
+        }
+
+        private void TrySetItemType(string strType)
+        {
+            // Check if the type of item has been set.
+            if (!string.IsNullOrEmpty(strType))
+            {
+                // Jumping Item
+                if (strType == "j")
+                {
+                    IsJumping = true;
+                    if (!Map.Is2dMap)
+                        _body.Velocity.Z = 1f;
+                    else
+                    {
+                        Collectable = true;
+                        _body.Velocity.Y = -1f;
+                    }
+                    _body.IsGrounded = false;
+                }
+                // Falling from the Sky
+                else if (strType == "d")
+                {
+                    IsJumping = true;
+                    EntityPosition.Z = 60;
+
+                    _body.IsGrounded = false;
+                    _body.RestAdditionalMovement = true;
+                    new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
+                }
+                // Flying Item
+                else if (strType == "w")
+                {
+                    _body.IsActive = false;
+                    EntityPosition.Z = 10;
+                    Collectable = true;
+                    _isFlying = true;
+                    new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
+                }
+                // Underwater Item
+                else if (strType == "s")
+                    _isSwimming = true;
+            }
+            // If the item type has not been set just make it "Collectable".
+            else
+                Collectable = true;
+        }
+
         public void SpawnBoatSequence()
         {
             // shrink the collection rectangle
-            _collectionRectangle.OffsetSize.X = (int)(_collectionRectangle.OffsetSize.X * 0.25f);
-            _collectionRectangle.OffsetSize.Width = (int)(_collectionRectangle.OffsetSize.Width * 0.25f);
+            _collectionRect.OffsetSize.X = (int)(_collectionRect.OffsetSize.X * 0.25f);
+            _collectionRect.OffsetSize.Width = (int)(_collectionRect.OffsetSize.Width * 0.25f);
             _bodyDrawComponent.Layer = Values.LayerTop;
 
             _body.Velocity = new Vector3(1, -2.25f, 0);
@@ -355,10 +370,15 @@ namespace ProjectZ.InGame.GameObjects.Things
             ItemDrawHelper.DrawItem(spriteBatch, _item,
                 new Vector2(EntityPosition.X - _sourceRectangle.Width / 2.0f, EntityPosition.Y - EntityPosition.Z - _sourceRectangle.Height + _fadeOffset), _color, 1, true);
 
+            var baseRect = _collectionRect.Rectangle;
+            var setColor = new Color(0, 0, 255) * 1.00f;
+            Map.Objects.DrawRectangle(spriteBatch, baseRect, setColor);
+
             if (!_isFlying)
                 return;
 
             var wingFlap = (Game1.TotalGameTime % (16 / 60f * 1000)) < (8 / 60f * 1000) ? SpriteEffects.FlipVertically : SpriteEffects.None;
+
             // left wing
             spriteBatch.Draw(Resources.SprItem, new Vector2(
                     EntityPosition.X - _sourceRectangleWing.Width - 4f,

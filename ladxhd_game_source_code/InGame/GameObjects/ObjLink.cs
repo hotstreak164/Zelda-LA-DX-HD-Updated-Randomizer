@@ -3668,7 +3668,7 @@ namespace ProjectZ.InGame.GameObjects
             // the base item has the max count and other information
             var baseItem = Game1.GameManager.ItemManager[item.Name];
 
-            // save the game before entering the show animation to support exiting the game while the item is shown
+            // Save the game before entering the show animation to support exiting the game while the item is shown.
             _savedPreItemPickup = true;
             if (item.PickUpDialog != null && !Game1.GameManager.SaveManager.HistoryEnabled)
             {
@@ -3680,16 +3680,21 @@ namespace ProjectZ.InGame.GameObjects
             _pickingUpSword = false;
             _pickingUpAnglerKey = false;
 
+            // Used to replace sword, shield, or power bracelet with a higher level.
             var equipmentPosition = 0;
+
+            // Picking up the Sword off the beach.
             if (item.Name == "sword1")
             {
-                // Pick up the sword off the beach.
+                // The variable below freezes the world around Link and disables the inventory.
                 _pickingUpSword = true;
                 Game1.GameManager.SetMusic(14, 2);
 
                 // Freeze the game. The "sword1Collected:0" event in "scripts.zScript" will unfreeze after a time.
                 FreezeAnimations(true);
             }
+
+            // Level 2 Sword was collected from Seashell Mansion.
             else if (item.Name == "sword2")
             {
                 equipmentPosition = Game1.GameManager.GetEquipmentSlot("sword1");
@@ -3697,19 +3702,18 @@ namespace ProjectZ.InGame.GameObjects
                 Game1.GameManager.CollectItem(itemCollected, equipmentPosition);
                 Game1.GameManager.SetMusic(14, 2);
             }
-            // Don't temporarily freeze the desert quicksand when picking up the key.
+
+            // The Angler Key (level 3 dungeon) was collected.
             else if (item.Name == "dkey3")
             {
+                // Don't temporarily freeze the desert quicksand when picking up the key.
                 _pickingUpAnglerKey = true;
             }
-            else if (item.Name == "mirrorShield")
-            {
-                equipmentPosition = Game1.GameManager.GetEquipmentSlot("shield");
-                Game1.GameManager.RemoveItem("shield", 99);
-                Game1.GameManager.CollectItem(itemCollected, equipmentPosition);
-            }
+            
+            // A Shield was collected.
             else if (baseItem.Name == "shield")
             {
+                // I'm honestly not sure what is supposed to be happening here.
                 var mirrorShield = Game1.GameManager.GetItem("mirrorShield");
                 if (mirrorShield != null)
                 {
@@ -3717,76 +3721,101 @@ namespace ProjectZ.InGame.GameObjects
                     return;
                 }
             }
+
+            // The Mirror Shield was collected.
+            else if (item.Name == "mirrorShield")
+            {
+                // Replace the shield with the mirror shield.
+                equipmentPosition = Game1.GameManager.GetEquipmentSlot("shield");
+                Game1.GameManager.RemoveItem("shield", 99);
+                Game1.GameManager.CollectItem(itemCollected, equipmentPosition);
+            }
+
+            // The level 2 Power Bracelet was collected.
             else if (itemCollected.Name == "stonelifter2")
             {
                 equipmentPosition = Game1.GameManager.GetEquipmentSlot("stonelifter");
                 Game1.GameManager.RemoveItem("stonelifter", 99);
                 Game1.GameManager.CollectItem(itemCollected, equipmentPosition);
             }
-            else if (itemCollected.Name == "heartMeterFull")
-            {
-                Game1.GameManager.SetMusic(36, 2);
-            }
+
+            // A Piece of Heart was collected.
             else if (itemCollected.Name == "heartMeter")
             {
+                // Check if a full heart container is finished and start "heartMeterFilled" path in "script.zScript". 
                 var heart = Game1.GameManager.GetItem("heartMeter");
-                // hearts was expanded => show different dialog
                 if (heart?.Count == 3 && !GameSettings.NoHelperText)
                     _additionalPickupDialog = "heartMeterFilled";
             }
+
+            // A full Heart Container was collected.
+            else if (itemCollected.Name == "heartMeterFull")
+            {
+                // Interestingly, this starts track 36 which is the heart container pickup sound + the "dungeon cleared" music that follows. But the only part of this
+                // that is played is the heart pickup sound. The music is started more quickly in "script.zScript" where it plays track 23 which is the dungeon cleared
+                // music without the sound effect. This allows the music to play more quickly after the heart pickup, as there is a delay after the sound in track 36.
+                Game1.GameManager.SetMusic(36, 2);
+            }
+
+            // A Seashell present at the mansion was collected.
             else if (itemCollected.Name == "shellPresent")
             {
-                var currentShells = Game1.GameManager.SaveManager.GetString("shell_presents", "0");
+                // Get the number of shell presents the player has collected.
+                var currentShellPresents = Game1.GameManager.SaveManager.GetString("shell_presents", "0");
 
-                if (int.TryParse(currentShells, out int shellsAsInt))
+                // Add to the total number of shell presents that have been collected so far. These are tracked for "Nothing is Missable" options so that the player can
+                // collect the shell presents even if the number of shells exceeds the number required at Seashell Mansion (for example: 7 shells spawns 5 shell present).
+                if (int.TryParse(currentShellPresents, out int shellPresents))
                 {
-                    shellsAsInt++;
-                    Game1.GameManager.SaveManager.SetString("shell_presents", shellsAsInt.ToString());
+                    shellPresents++;
+                    Game1.GameManager.SaveManager.SetString("shell_presents", shellPresents.ToString());
                 }
             }
-            // hearts
+
+            // A Heart was collected.
             if (item.Name == "heart")
             {
                 // Play the healing sound effect if HP is lower than current max.
                 if (Game1.GameManager.CurrentHealth < Game1.GameManager.MaxHearts * 4)
                     Game1.GameManager.PlaySoundEffect("D370-06-06");
 
-                // Add 4 HP to current health.
+                // Add 4 hit points to current health.
                 Game1.GameManager.CurrentHealth += itemCollected.Count * 4;
 
                 // If the amount of healing exceeds max health then correct it to max.
                 if (Game1.GameManager.CurrentHealth > Game1.GameManager.MaxHearts * 4)
                     Game1.GameManager.CurrentHealth = Game1.GameManager.MaxHearts * 4;
             }
-            // pick up item is an accessory
+
+            // The item picked up is an accessory.
             else if ((item.ShowAnimation == 1 || item.ShowAnimation == 2) && showItem)
             {
                 // Reset the block button sound effect.
                 _blockButton = false;
 
-                // stop player movement
-                _body.Velocity = Vector3.Zero;
-                _body.VelocityTarget = Vector2.Zero;
+                // Stop all player movement.
                 _moveVelocity = Vector2.Zero;
                 _hitVelocity = Vector2.Zero;
+                _repelVelocity = Vector2.Zero;
+                _shieldVelocity = Vector2.Zero;
+                _knockBackVelocity = Vector2.Zero;
+                _body.Velocity = Vector3.Zero;
+                _body.VelocityTarget = Vector2.Zero;
 
-                // pick up and show an item
+                // Sets the item Link holds over his head.
                 ShowItem = item;
 
-                // hold the item over the head with one or two hands (to the left side or the middle)
-                if (item.ShowAnimation == 1)
-                    _showItemOffset.X = 0;
-                else
-                    _showItemOffset.X = -4;
-
+                // Hold the item over the head with one or two hands (to the left side or the middle).
+                _showItemOffset.X = item.ShowAnimation == 1 ? 0 : -4;
                 _showItemOffset.Y = -15;
 
+                // Initialize the powerup state if it's a powerup item.
                 if (ShowItem.Name == "guardianAcorn")
                     Game1.GameManager.InitGuardianAcorn();
                 else if (ShowItem.Name == "pieceOfPower")
                     Game1.GameManager.InitPieceOfPower();
 
-                // @HACK: piece of power shows the sword image when picked up
+                // Show Link holding the sword when picking up a Piece of Power.
                 if (ShowItem.Name == "pieceOfPower")
                 {
                     var swordItem = Game1.GameManager.GetItem("sword1");
