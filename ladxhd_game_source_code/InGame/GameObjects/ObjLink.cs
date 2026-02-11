@@ -4053,6 +4053,7 @@ namespace ProjectZ.InGame.GameObjects
             _stopCharging = false;
             _swordPoked = false;
             _shotSword = false;
+            _isSwordSpinAttack = false;
 
             _swordChargeCounter = sword_charge_time;
             _beamDirection = Direction;
