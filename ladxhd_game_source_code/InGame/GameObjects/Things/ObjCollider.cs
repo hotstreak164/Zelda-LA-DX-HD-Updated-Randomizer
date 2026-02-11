@@ -37,6 +37,9 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public ObjCollider(Map.Map map, int posX, int posY, bool grabComponent, int height, Rectangle rectangle, Values.CollisionTypes type, int level) : base(map)
         {
+            if (type == Values.CollisionTypes.NonWater)
+                _editorColor = Color.DarkBlue * 0.65f;
+
             EditorIconSource = new Rectangle(0, 0, 16, 16);
 
             EntityPosition = new CPosition(posX, posY, 0);

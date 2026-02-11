@@ -52,9 +52,11 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _body = new BodyComponent(EntityPosition, -6, -20, 12, 8, 8)
             {
-                IgnoresZ = true,
+                IgnoresZ = false,
                 IgnoreHoles = true,
                 CollisionTypes = Values.CollisionTypes.NPCWall |
+                                 Values.CollisionTypes.Field,
+                AvoidTypes     = Values.CollisionTypes.NPCWall |
                                  Values.CollisionTypes.Field,
                 MoveCollision = OnCollision,
                 FieldRectangle = fieldRectangle
@@ -91,7 +93,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void Reset()
         {
-            _body.IgnoresZ = true;
             _body.IgnoreHoles = true;
             _body.VelocityTarget = Vector2.Zero;
             _damageField.IsActive = true;
@@ -104,7 +105,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void OnBurn()
         {
-            _body.IgnoresZ = false;
             _body.IgnoreHoles = false;
             _damageField.IsActive = false;
             _hitComponent.IsActive = false;
