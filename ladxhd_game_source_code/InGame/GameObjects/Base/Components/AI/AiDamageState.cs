@@ -296,22 +296,37 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             }
             _pieceOfPowerCounter -= Game1.DeltaTime;
 
-            var collision = false;
+            // Filter out any extremely small velocities.
+            float epsilon  = 0.001f;
 
-            if ((_body.LastVelocityCollision & Values.BodyCollision.Horizontal) != 0)
+            // Store the current velocities so they can be referenced.
+            var bodyVelX = _body.Velocity.X;
+            var bodyVelY = _body.Velocity.Y;
+            var lastCollision = _body.LastVelocityCollision;
+
+            // Test for collision along the X axis.
+            bool collideL = (bodyVelX < -epsilon) && (lastCollision & Values.BodyCollision.Left) != 0;
+            bool collideR = (bodyVelX > epsilon) && (lastCollision & Values.BodyCollision.Right) != 0;
+            bool blockedX = collideL || collideR;
+
+            // Test for collision along the Y axis.
+            bool collideT = (bodyVelY < -epsilon) && (lastCollision & Values.BodyCollision.Top) != 0;
+            bool collideB = (bodyVelY > epsilon) && (lastCollision & Values.BodyCollision.Bottom) != 0;
+            bool blockedY = collideT || collideB;
+
+            // If a collision took place then cancel the corresponding velocity.
+            if (blockedX)
                 _body.Velocity.X = 0;
-            if ((_body.LastVelocityCollision & Values.BodyCollision.Vertical) != 0)
+            if (blockedY)
                 _body.Velocity.Y = 0;
 
             // Glide on the wall depending on the angle the body moved towards the wall.
-            if (((_body.LastVelocityCollision & Values.BodyCollision.Horizontal) != 0 && MathF.Abs(_body.Velocity.X) > MathF.Abs(_body.Velocity.Y)) ||
-                ((_body.LastVelocityCollision & Values.BodyCollision.Vertical) != 0 && MathF.Abs(_body.Velocity.Y) > MathF.Abs(_body.Velocity.X)))
-            {
-                collision = true;
-            }
+            bool collisionX = blockedX && MathF.Abs(bodyVelX) > MathF.Abs(bodyVelY);
+            bool collisionY = blockedY && MathF.Abs(bodyVelY) > MathF.Abs(bodyVelX);
+            bool collision  = collisionX || collisionY;
 
-            // last collision
-            if ((collision && _pieceOfPowerDeathCount > 1) || _pieceOfPowerDeathCount > 5)
+            // If both collisions happened or the counter has reached 5 iterations.
+            if ((collision && _pieceOfPowerDeathCount > 1) || (_pieceOfPowerDeathCount > 5))
             {
                 _pieceOfPower = false;
                 _body.Drag = _bodyDrag;
