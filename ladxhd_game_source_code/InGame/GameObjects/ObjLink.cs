@@ -230,6 +230,7 @@ namespace ProjectZ.InGame.GameObjects
         private Point[] _pokeAnimationOffset;
         private bool _isHoldingSword;
         private bool _isSwordSpinning;
+        private bool _isSwordSpinAttack;
         public bool CarrySword;
 
         // Sword Level 2
@@ -3549,6 +3550,8 @@ namespace ProjectZ.InGame.GameObjects
             // stop attacking
             if (IsAttackingState() && !Animation.IsPlaying)
             {
+                _isSwordSpinAttack = false;
+
                 if (_isSwordSpinning)
                 {
                     Vector2 vecMoved = ControlHandler.GetMoveVector2();
@@ -4253,6 +4256,7 @@ namespace ProjectZ.InGame.GameObjects
             Game1.GameManager.PlaySoundEffect("D378-03-03");
 
             _swordChargeCounter = sword_charge_time;
+            _isSwordSpinAttack = true;
         }
 
         public bool ClassicSword { get => GameSettings.ClassicSword && !_isSwordSpinning; }
@@ -4307,7 +4311,7 @@ namespace ProjectZ.InGame.GameObjects
             var damage = Game1.GameManager.SwordLevel == 1 ? 1 : 2;
 
             // If it's a sword spin, double the damage and add "SwordSpin" damage type.
-            if (_isSwordSpinning)
+            if (_isSwordSpinAttack)
             {
                 damage *= 2;
                 hitType |= HitType.SwordSpin;
