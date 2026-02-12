@@ -44,6 +44,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerTop));
+            Map.Objects.RegisterAlwaysAnimateObject(this);
         }
 
         private void Update()

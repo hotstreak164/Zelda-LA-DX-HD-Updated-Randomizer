@@ -188,7 +188,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _directionChangeTime = Game1.TotalGameTime;
                 _moveDir = (_moveDir + (_goingClockwise ? 1 : 3)) % 4;
             }
-
             _wasTouchingWall = positionChange.Length() == 0.0f;
 
             var moveVelocity = new Vector2(
