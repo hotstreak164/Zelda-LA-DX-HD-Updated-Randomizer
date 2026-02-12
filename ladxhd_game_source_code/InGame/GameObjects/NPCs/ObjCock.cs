@@ -168,22 +168,32 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (Map == null)
                 return;
 
-            // do not follow the player into dungeons
+            // Do not follow the player into dungeons.
             if (Map.DungeonMode && _resurrected)
                 SetActive(false);
             if (!Map.DungeonMode && _resurrected)
                 SetActive(true);
 
+            // Freeze Link during the spawning sequence.
             if (_freezePlayer)
                 MapManager.ObjLink.FreezePlayer();
 
-            if (_spriteShadow == null || _map != Map)
+            // Detect a map change.
+            if (Map != _map)
             {
+                // Update the map to the new map.
+                _map = Map;
+
+                // If a sprite shadow already exists remove it.
+                if (_spriteShadow != null)
+                    Map.Objects.DeleteObjects.Add(_spriteShadow);
+
+                // Check if the rooster is currently alive.
                 if (_aiComponent.States.Keys.ToList().IndexOf(_aiComponent.CurrentStateId) > 5)
                 {
-                    IsVisible = _resurrected;
-                    _map = Map;
-                    _spriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
+                    // Spawn a new sprite shadow on this map and always animate it.
+                    _spriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm") { ForceDraw = true };
+                    Map.Objects.RegisterAlwaysAnimateObject(_spriteShadow);
                 }
             }
         }
@@ -197,18 +207,21 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void InitParticle()
         {
+            // Make Link face the rooster and freeze him in place.
+            MapManager.ObjLink.Direction = 1;
             _freezePlayer = true;
 
+            // Change the music to the resurrection music.
             Game1.GameManager.SetMusic(84, 2);
 
-            // spawn the particle
+            // Spawn the rooster's spirit which flies into the body.
             _objParticle = new ObjCockParticle(Map, new Vector2(EntityPosition.X, EntityPosition.Y - 8));
             Map.Objects.SpawnObject(_objParticle);
         }
 
         private void UpdateParticle()
         {
-            // start blinking when the particle hits the skeleton
+            // Start blinking when the spirit reaches the skeleton.
             if (!_objParticle.IsRunning())
                 _aiComponent.ChangeState("blinking");
         }
@@ -226,19 +239,23 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void ToSpawn()
         {
-            // explosion
-            _animator.Play("spawn");
-            ToActiveState();
-
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
-            Game1.GameManager.SetMusic(-1, 2);
-
-            // spawn explosion effect
+            // Spawn an explosion effect.
             var objAnimation = new ObjAnimator(Map, (int)EntityPosition.X, (int)EntityPosition.Y - 8, Values.LayerTop, "Particles/explosionBomb", "run", true);
             Map.Objects.SpawnObject(objAnimation);
 
+            // Play the explosion sound effect and restore the music.
+            Game1.GameManager.PlaySoundEffect("D378-12-0C");
+            Game1.GameManager.SetMusic(-1, 2);
+
+            // Play the spawn animation, change the AI state, and spawn a sprite shadow.
+            _animator.Play("spawn");
             _aiComponent.ChangeState("spawn");
+            _spriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm") { ForceDraw = true };
+
+            // Always animate both the rooster and the sprite shadow.
             Map.Objects.RegisterAlwaysAnimateObject(this);
+            Map.Objects.RegisterAlwaysAnimateObject(_spriteShadow);
+            ToActiveState();
         }
 
         private void StartFollowing()
