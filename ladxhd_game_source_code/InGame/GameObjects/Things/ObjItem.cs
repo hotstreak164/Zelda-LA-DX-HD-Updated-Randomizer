@@ -55,8 +55,8 @@ namespace ProjectZ.InGame.GameObjects.Things
         public bool IsVisible { get; internal set; }
         private bool _despawn;
 
-        private string[] _shadowListSmall  = { "heart" };
-        private string[] _shadowListMedium = { "ruby", "pieceOfPower", "guardianAcorn" };
+        private string[] _shadowListSmall  = { "heart", "arrow_1" };
+        private string[] _shadowListMedium = { "ruby", "bomb_1", "pieceOfPower", "guardianAcorn" };
 
         public ObjSpriteShadow SpriteShadow;
 
