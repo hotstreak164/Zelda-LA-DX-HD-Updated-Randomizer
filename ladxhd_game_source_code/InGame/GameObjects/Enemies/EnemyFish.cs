@@ -134,7 +134,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void StartJump()
         {
-            _damageState.IsActive = true;
             _body.VelocityTarget = Vector2.Zero;
             _body.Velocity = new Vector3(_direction * 0.85f, 0, 1.5f);
             _body.DragAir = 1.0f;
@@ -145,6 +144,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void UpdateJump()
         {
             _animator.Play(_body.Velocity.Z > 0 ? "jump_up" : "jump_down");
+            _damageState.IsActive = true;
             _sprite.SpriteEffect = _direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
         }
 
