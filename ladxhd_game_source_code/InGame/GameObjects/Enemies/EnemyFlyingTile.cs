@@ -112,7 +112,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 else
                     Game1.GameManager.SaveManager.SetString(_strKey, "0");
             }
-            new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
+            new ObjSpriteShadow(map, this, -8, -10, Values.LayerPlayer, "sprshadowm");
         }
 
         private void OnBurn()
