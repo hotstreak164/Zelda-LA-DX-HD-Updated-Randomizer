@@ -564,7 +564,6 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
 
             // Spawn: Guardian Acorn.
             // A simpler check since it's a static 12 kills. 
-
             if (acorn_threshold >= 12)
             {
                 Game1.GameManager.GuardianAcornCount -= acorn_threshold;
@@ -573,12 +572,12 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
                     var objItem = new ObjItem(_gameObject.Map, 0, 0, "j", null, "guardianAcorn", null, true);
                     objItem.EntityPosition.Set(new Vector3(bodyCenter.X, bodyCenter.Y, _body.Position.Z));
                     _gameObject.Map.Objects.SpawnObject(objItem);
+                    objItem.SpriteShadow = new ObjSpriteShadow(_gameObject.Map, objItem, Values.LayerPlayer, "sprshadowm");
                 }
             }
             
             // Spawn: Piece of Power:
             // When the threshold was met, subtract the triggering value and spawn a piece of power.
-
             else if (pop_threshold > 0)
             {
                 Game1.GameManager.PieceOfPowerCount -= pop_threshold;
@@ -587,17 +586,22 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
                     var objItem = new ObjItem(_gameObject.Map, 0, 0, "j", null, "pieceOfPower", null, true);
                     objItem.EntityPosition.Set(new Vector3(bodyCenter.X, bodyCenter.Y, _body.Position.Z));
                     _gameObject.Map.Objects.SpawnObject(objItem);
+                    objItem.SpriteShadow = new ObjSpriteShadow(_gameObject.Map, objItem, Values.LayerPlayer, "sprshadowm");
                 }
             }
             
             // Spawn: Heart or Rupee
             // The powerups take priority even though the logic for this drop was done first.
-            
             else if (strObject != null)
             {
                 var objItem = new ObjItem(_gameObject.Map, 0, 0, "j", null, strObject, null, true);
                 objItem.EntityPosition.Set(new Vector3(bodyCenter.X, bodyCenter.Y, _body.Position.Z));
                 _gameObject.Map.Objects.SpawnObject(objItem);
+
+                if (strObject == "heart")
+                    objItem.SpriteShadow = new ObjSpriteShadow(_gameObject.Map, objItem, Values.LayerPlayer, "sprshadows");
+                else
+                    objItem.SpriteShadow = new ObjSpriteShadow(_gameObject.Map, objItem, Values.LayerPlayer, "sprshadowm");
             }
         }
     }

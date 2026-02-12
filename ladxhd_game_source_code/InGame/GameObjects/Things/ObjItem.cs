@@ -58,7 +58,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private string[] _shadowListSmall  = { "heart" };
         private string[] _shadowListMedium = { "ruby", "pieceOfPower", "guardianAcorn" };
 
-        private ObjSpriteShadow _spriteShadow;
+        public ObjSpriteShadow SpriteShadow;
 
         public ObjItem() : base("item") { }
 
@@ -177,9 +177,9 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // Create the sprite shadows.
             if (_shadowListSmall.Contains(itemName))
-                _spriteShadow = new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadows");
+                SpriteShadow = new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadows");
             if (_shadowListMedium.Contains(itemName))
-                _spriteShadow = new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
+                SpriteShadow = new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
         }
 
         public override void Init()
@@ -245,7 +245,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
                     _body.IsGrounded = false;
                     _body.RestAdditionalMovement = true;
-                    _spriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
+                    SpriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
                 }
                 // Flying Item
                 else if (strType == "w")
@@ -254,7 +254,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                     EntityPosition.Z = 10;
                     Collectable = true;
                     _isFlying = true;
-                    _spriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
+                    SpriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
                 }
                 // Underwater Item
                 else if (strType == "s")
@@ -341,8 +341,8 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void ToFading()
         {
-            if (_spriteShadow != null)
-                _spriteShadow.ForceDraw = true;
+            if (SpriteShadow != null)
+                SpriteShadow.ForceDraw = true;
             _body.IgnoresZ = true;
             _aiComponent.ChangeState("fading");
         }

@@ -91,6 +91,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 // Always animate both the items and roll bands.
                 if (obj is ObjItem or ObjRollBand)
                     Map.Objects.RegisterAlwaysAnimateObject(obj);
+
                 // Add sprite shadows to the items.
                 if (obj is ObjItem)
                     new ObjSpriteShadow(Map, obj, Values.LayerPlayer, "sprshadowm");
