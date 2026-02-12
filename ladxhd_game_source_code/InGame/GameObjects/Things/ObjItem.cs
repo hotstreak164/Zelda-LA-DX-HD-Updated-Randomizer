@@ -341,7 +341,8 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void ToFading()
         {
-            _spriteShadow.ForceDraw = true;
+            if (_spriteShadow != null)
+                _spriteShadow.ForceDraw = true;
             _body.IgnoresZ = true;
             _aiComponent.ChangeState("fading");
         }
