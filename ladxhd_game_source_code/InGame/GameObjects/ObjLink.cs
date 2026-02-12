@@ -2902,27 +2902,25 @@ namespace ProjectZ.InGame.GameObjects
                 if (_spriteShadow == null)
                 {
                     _spriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
+                    Map.Objects.RegisterAlwaysAnimateObject(_spriteShadow);
                 }
             }
             // Remove the sprite shadow if shadows was enabled.
-            else
+            else if (_spriteShadow != null)
             {
-                if (_spriteShadow != null)
-                {
-                    Map.Objects.RemoveObject(_spriteShadow);
-                    _spriteShadow = null;
-                }
+                Map.Objects.RemoveObject(_spriteShadow);
+                _spriteShadow = null;
             }
-            // If the shadow is spawned.
-            if (_spriteShadow != null)
+            // If the shadow is spawned but the map has changed.
+            if (_spriteShadow != null && _spriteShadow.Map != Map)
             {
-                // But currently spawned on this map.
-                if (_spriteShadow.Map != Map)
-                {
-                    // Spawn the shadow.
-                    _spriteShadow.Map = Map;
-                    Map.Objects.SpawnObject(_spriteShadow);
-                }
+                // Remove the old sprite shadow.
+                Map.Objects.RemoveObject(_spriteShadow);
+
+                // Spawn the shadow.
+                _spriteShadow.Map = Map;
+                Map.Objects.SpawnObject(_spriteShadow);
+                Map.Objects.RegisterAlwaysAnimateObject(_spriteShadow);
             }
         }
 
