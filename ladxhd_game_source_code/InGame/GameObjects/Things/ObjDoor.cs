@@ -198,10 +198,18 @@ namespace ProjectZ.InGame.GameObjects.Things
                         transitionEnd.Y = _collisionRectangle.Y + _collisionRectangle.Height + MapManager.ObjLink._body.Height + _positionOffset;
                 }
                 // walk on the ground
-                if (Map.Is2dMap && (_direction % 2) == 0)
+                if (Map.Is2dMap)
                 {
-                    transitionStart.Y = _collisionRectangle.Bottom;
-                    transitionEnd.Y = _collisionRectangle.Bottom;
+                    if ((_direction % 2) == 0)
+                    {
+                        transitionStart.Y = _collisionRectangle.Bottom;
+                        transitionEnd.Y = _collisionRectangle.Bottom;
+                    }
+                    // Increase offsets of 2D ladder entry to prevent accidental exits.
+                    if (_direction == 1)
+                        transitionEnd.Y -= 4;
+                    if (_direction == 3)
+                        transitionEnd.Y += 4;
                 }
             }
             else if (_mode == 2)
