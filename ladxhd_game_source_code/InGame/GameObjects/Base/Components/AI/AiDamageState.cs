@@ -527,7 +527,6 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
 
             // Piece of Power Conditions:
             // Set up now to make things easier later. It's a 25% chance to spawn between 40-44 enemies killed with a guaranteed spawn at 45.
-
             int count = Game1.GameManager.PieceOfPowerCount;
             int pop_threshold = 0;
 
@@ -541,13 +540,11 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             
             // Guardian Acorn Conditions:
             // Kill 12 enemies without getting hit. Easy enough.
-
             int acorn_threshold = Game1.GameManager.GuardianAcornCount;
 
             // Heart or Rupee Conditions:
             // From what I can tell from the disassembly, it uses a lookup table and the values can fluctuate from
             // monster to monster. So here, let's just do 35% to spawn an item then a 50/50 split for heart or rupee.
-
             string strObject = SpawnItem;
 
             if (strObject == null)
