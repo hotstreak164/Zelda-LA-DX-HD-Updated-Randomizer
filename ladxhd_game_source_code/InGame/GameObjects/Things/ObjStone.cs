@@ -191,7 +191,6 @@ namespace ProjectZ.InGame.GameObjects.Things
             }
         }
 
-
         private void SpawnItem()
         {
             if (_spawnItem != null)
