@@ -51,9 +51,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_talkCount > 0)
                 _talkCount -= Game1.DeltaTime;
             else
-            {
                 Animator.Play("stand");
-            }
         }
 
         private bool Interact()

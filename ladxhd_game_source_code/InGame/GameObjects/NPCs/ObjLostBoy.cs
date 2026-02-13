@@ -29,7 +29,10 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _sprite = new CSprite(EntityPosition);
             var animationComponent = new AnimationComponent(_animator, _sprite, Vector2.Zero);
 
-            _body = new BodyComponent(EntityPosition, -7, -12, 14, 12, 8);
+            _body = new BodyComponent(EntityPosition, -7, -12, 14, 12, 8)
+            {
+                FieldRectangle = map.GetField(posX, posY)
+            };
 
             AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(KeyChanged));
             AddComponent(BodyComponent.Index, _body);
@@ -43,6 +46,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void Update()
         {
+            if (!_body.FieldRectangle.Contains(MapManager.ObjLink.EntityPosition.Position))
+                return;
+
             if (_eating)
                 return;
 

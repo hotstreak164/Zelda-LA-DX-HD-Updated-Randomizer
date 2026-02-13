@@ -2735,9 +2735,9 @@ namespace ProjectZ.InGame.GameObjects
                 CurrentState != State.Drowning &&
                 CurrentState != State.Drowned && _body.IsGrounded)
             {
-                var bodyCenter = new Vector2(EntityPosition.X, EntityPosition.Y - _body.Height / 2f);
                 // center the position
                 // can lead to the position being inside something
+                var bodyCenter = new Vector2(EntityPosition.X, EntityPosition.Y - _body.Height / 2f);
                 bodyCenter.X = (int)(bodyCenter.X / 16) * 16 + 8;
                 bodyCenter.Y = (int)(bodyCenter.Y / 16) * 16 + 8 + _body.Height / 2f;
 
@@ -2990,6 +2990,7 @@ namespace ProjectZ.InGame.GameObjects
             foreach (var fBarrier in FieldBarrier)
                 Map.Objects.RemoveObject(fBarrier);
 
+            PreventReset = false;
             FieldBarrier = null;
         }
 
@@ -3028,10 +3029,7 @@ namespace ProjectZ.InGame.GameObjects
             }
             // Destroy the barrier if "Classic Camera" is not active.
             else
-            {
                 DestroyFieldBarrier();
-                PreventReset = false;
-            }
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
