@@ -51,6 +51,11 @@ namespace ProjectZ.Base
                    Top <= position.Y && position.Y <= Bottom;
         }
 
+        public Rectangle ToRectangle()
+        {
+            return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+        }
+
         public RectangleF GetIntersection(RectangleF second)
         {
             var left = Math.Max(Left, second.Left);

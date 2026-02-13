@@ -20,6 +20,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly CBox _damageBox;
         private readonly CBox _collisionBox;
 
+        private Rectangle _fieldRect;
         private Vector2 _difference;
         private double _lastHitTime;
         private int _direction;
@@ -29,6 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _owner = owner;
             _owner.EntityPosition.AddPositionListener(typeof(EnemyDarknutSword), PositionChange);
 
+            _fieldRect = _owner.Body.FieldRectangle.ToRectangle();
             _direction = _owner.Direction;
 
             EntityPosition = new CPosition(owner.EntityPosition.X, owner.EntityPosition.Y - 1, owner.EntityPosition.Z);
@@ -42,8 +44,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _damageBox = new CBox(0, 0, 0, 0, 0, 4);
             _collisionBox = new CBox(0, 0, 0, 0, 0, 4);
-
-            UpdateBoxes();
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(_damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(_collisionBox, OnHit));
@@ -60,6 +60,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void Update()
         {
+            // Optimization: Skip the update function if Link is not in the same rect as the enemy.
+            if (!_fieldRect.Contains(MapManager.ObjLink.EntityPosition.Position))
+                return;
+
             // Get the difference between the X and Y positions between Link and the Darknut.
             _difference = new Vector2(MapManager.ObjLink.EntityPosition.X - _owner.EntityPosition.X, MapManager.ObjLink.EntityPosition.Y - _owner.EntityPosition.Y);
 
