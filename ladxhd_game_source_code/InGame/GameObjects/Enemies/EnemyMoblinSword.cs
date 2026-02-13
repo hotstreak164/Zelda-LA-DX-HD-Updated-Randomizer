@@ -114,8 +114,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             AddComponent(DrawShadowComponent.Index, new DrawShadowCSpriteComponent(_sprite));
 
             _sword = new EnemyMoblinSwordSword(Map, this);
-
-            new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
         }
 
         private void Reset()

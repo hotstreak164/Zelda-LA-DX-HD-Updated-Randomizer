@@ -87,8 +87,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             AddComponent(DrawShadowComponent.Index, new DrawShadowCSpriteComponent(sprite));
 
             _aiComponent.ChangeState("walking");
-
-            new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
         }
 
         private void Reset()

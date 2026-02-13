@@ -91,8 +91,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(DrawComponent.Index, new BodyDrawComponent(_body, sprite, Values.LayerPlayer));
             AddComponent(DrawShadowComponent.Index, new DrawShadowCSpriteComponent(sprite));
-
-            new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
         }
 
         private void Reset()
