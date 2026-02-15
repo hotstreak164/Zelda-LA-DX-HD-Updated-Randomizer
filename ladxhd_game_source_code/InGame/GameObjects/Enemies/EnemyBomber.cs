@@ -55,6 +55,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             {
                 CollisionTypes = Values.CollisionTypes.NPCWall |
                                  Values.CollisionTypes.Field,
+                FieldRectangle = map.GetField(posX, posY),
                 DragAir = 0.975f,
                 Gravity = -0.175f,
                 IgnoreHoles = true,
@@ -114,11 +115,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _body.VelocityTarget = Vector2.Zero;
 
-            var playerDistance = MapManager.ObjLink.EntityPosition.Position - EntityPosition.Position;
+            var positionLink = MapManager.ObjLink.EntityPosition.Position;
+            var playerDistance = positionLink - EntityPosition.Position;
             var distance = playerDistance.Length();
 
             // bomb
-            if (distance < 80 && Game1.RandomNumber.Next(0, 4) != 4)
+            if (distance < 80 && Game1.RandomNumber.Next(0, 4) != 4 && _body.FieldRectangle.Contains(positionLink))
             {
                 Vector2 throwDirection;
 

@@ -39,8 +39,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var sprite = new CSprite(EntityPosition);
             var animationComponent = new AnimationComponent(_animator, sprite, new Vector2(-8, -16));
 
-            var fieldRectangle = map.GetField(posX, posY);
-
             _body = new BodyComponent(EntityPosition, -7, -10, 14, 10, 8)
             {
                 MoveCollision = OnCollision,
@@ -50,7 +48,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                                  Values.CollisionTypes.Player,
                 AvoidTypes =     Values.CollisionTypes.Hole |
                                  Values.CollisionTypes.NPCWall,
-                FieldRectangle = fieldRectangle,
+                FieldRectangle = map.GetField(posX, posY),
                 Bounciness = 0.25f,
                 Drag = 0.85f
             };
