@@ -35,7 +35,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _changeDirCount;
         private int _dir = 1;
         private const int SpriteOffsetY = 7;
-        private int _lives = ObjLives.MiniMoldorm;
+        private int _lives = EnemyLives.MiniMoldorm;
 
         public EnemyMiniMoldorm(Map.Map map, int posX, int posY) : base(map, "miniMoldormHead0")
         {
@@ -99,7 +99,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _aiComp.ChangeState("walking");
             _aiComp.ChangeState("walking");
-            _damageState.CurrentLives = ObjLives.MiniMoldorm;
+            _damageState.CurrentLives = EnemyLives.MiniMoldorm;
         }
 
         private void UpdateHeadSprite(Vector2 direction)

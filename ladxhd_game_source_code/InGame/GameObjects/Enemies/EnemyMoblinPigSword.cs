@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private const int FollowRange = 65;
 
         private Rectangle _fieldRectangle;
-        private int _lives = ObjLives.MoblinPigSword;
+        private int _lives = EnemyLives.MoblinPigSword;
         private int _direction;
         private bool _isActive = true;
 
@@ -135,7 +135,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
             _aiComponent.ChangeState("idle");
-            _damageState.CurrentLives = ObjLives.MoblinPigSword;
+            _damageState.CurrentLives = EnemyLives.MoblinPigSword;
         }
 
         private void OnBurn()

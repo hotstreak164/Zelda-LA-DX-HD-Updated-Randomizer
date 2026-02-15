@@ -36,7 +36,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private Vector2 _targetPosition;
         private int _circleDirection;
-        private int _lives = ObjLives.Vire;
+        private int _lives = EnemyLives.Vire;
 
         public EnemyVire() : base("vire") { }
 
@@ -141,7 +141,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("idle");
             _body.Velocity = Vector3.Zero;
             _body.VelocityTarget = Vector2.Zero;
-            _damageState.CurrentLives = ObjLives.Vire;
+            _damageState.CurrentLives = EnemyLives.Vire;
 
             if (_batLeft == null || _batLeft.IsDead)
                 _batLeft = new EnemyVireBat(Map, EntityPosition.ToVector3(), new Vector2(-0.75f, 0)) { IsActive = false };

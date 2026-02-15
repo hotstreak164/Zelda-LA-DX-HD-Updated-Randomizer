@@ -24,7 +24,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private readonly float _movementSpeed;
         private readonly string _strColor;
-        private int _lives = ObjLives.CamoGoblin;
+        private int _lives = EnemyLives.CamoGoblin;
 
         public EnemyCamoGoblin() : base("camo goblin") { }
 

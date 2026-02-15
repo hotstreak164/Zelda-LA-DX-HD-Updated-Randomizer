@@ -57,7 +57,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private int _direction = -1;
         private int _boxCount;
         private int _jumpFollowDelay;
-        private int _lives = ObjLives.Blaino;
+        private int _lives = EnemyLives.Blaino;
 
         private bool _drawGlove;
 

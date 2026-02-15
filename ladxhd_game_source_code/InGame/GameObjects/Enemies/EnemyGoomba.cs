@@ -23,7 +23,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly PushableComponent _pushComponent;
         private readonly AiDamageState _damageState;
 
-        private int _lives = ObjLives.Goomba;
+        private int _lives = EnemyLives.Goomba;
         private int FadeTime = 75;
         private float _directionCounter;
         private const float WalkSpeed = 0.5f;

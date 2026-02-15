@@ -21,7 +21,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly DamageFieldComponent _damageField;
 
         private float _jumpVelocity = 1.0f;
-        private int _lives = ObjLives.PolsVoice;
+        private int _lives = EnemyLives.PolsVoice;
 
         public EnemyPolsVoice() : base("pols voice") { }
 
@@ -87,7 +87,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _aiComponent.ChangeState("waiting");
             _aiComponent.ChangeState("waiting");
-            _damageState.CurrentLives = ObjLives.PolsVoice;
+            _damageState.CurrentLives = EnemyLives.PolsVoice;
         }
 
         private void OnSongPlayed(int songIndex)

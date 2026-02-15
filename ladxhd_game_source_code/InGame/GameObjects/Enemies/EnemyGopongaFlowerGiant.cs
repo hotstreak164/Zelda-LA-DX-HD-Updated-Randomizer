@@ -22,7 +22,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private CBox _collisionBox;
 
         private bool _dealsDamage = true;
-        private int _lives = ObjLives.GopongaGiant;
+        private int _lives = EnemyLives.GopongaGiant;
 
         private float _soundCooldown;
         private bool _blockSound = false;

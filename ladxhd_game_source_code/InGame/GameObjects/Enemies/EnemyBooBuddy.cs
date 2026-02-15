@@ -36,7 +36,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private bool _cooldownPosition;
 
         private int _fadeTime = 250;
-        private int _lives = ObjLives.BooBuddy;
+        private int _lives = EnemyLives.BooBuddy;
 
         public EnemyBooBuddy() : base("boo buddy") { }
 

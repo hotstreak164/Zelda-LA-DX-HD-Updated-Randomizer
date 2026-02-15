@@ -28,7 +28,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Rectangle _fieldRectangle;
         private readonly Vector2 _centerPosition;
 
-        private int _lives = ObjLives.Pairodd;
+        private int _lives = EnemyLives.Pairodd;
 
         public EnemyPairodd() : base("pairodd") { }
 
@@ -103,7 +103,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _shootCountdown.Stop();
             _sprite.IsVisible = true;
-            _damageState.CurrentLives = ObjLives.Pairodd;
+            _damageState.CurrentLives = EnemyLives.Pairodd;
             ToIdle();
         }
 

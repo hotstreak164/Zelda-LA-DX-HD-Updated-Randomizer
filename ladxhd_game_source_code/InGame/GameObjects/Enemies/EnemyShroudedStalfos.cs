@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _moveSpeed = 0.5f;
         private int _direction;
-        private int _lives = ObjLives.ShroudedStalfos;
+        private int _lives = EnemyLives.ShroudedStalfos;
 
         public EnemyShroudedStalfos() : base("shrouded stalfos") { }
 
@@ -103,7 +103,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _direction = Game1.RandomNumber.Next(0, 4);
             _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "walking" : "idle");
             _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "walking" : "idle");
-            _damageState.CurrentLives = ObjLives.ShroudedStalfos;
+            _damageState.CurrentLives = EnemyLives.ShroudedStalfos;
         }
 
         private void OnBurn()

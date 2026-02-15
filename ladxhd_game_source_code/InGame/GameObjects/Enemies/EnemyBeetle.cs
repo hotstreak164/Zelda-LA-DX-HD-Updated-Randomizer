@@ -24,7 +24,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _walkSpeed = 0.5f;
         private int _direction;
-        private int _lives = ObjLives.Beetle;
+        private int _lives = EnemyLives.Beetle;
 
         private bool _finishedSpawning;
 

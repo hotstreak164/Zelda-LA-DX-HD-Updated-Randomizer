@@ -130,8 +130,8 @@ namespace ProjectZ.InGame.Pages
 
         private string EnemyHPSliderAdjustment(int number)
         {
-            ObjLives.RestoreDefaultHP();
-            ObjLives.AddToEnemyHP(number);
+            EnemyLives.RestoreDefaultHP();
+            EnemyLives.AddToEnemyHP(number);
             return ": " + number;
         }
 

@@ -29,8 +29,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private int _bombThrowCounter;
 
         private const float JumpSpeed = 0.25f;
-        private int _lives = ObjLives.BonePutter;
-        private int _livesWings = ObjLives.BonePutterWing;
+        private int _lives = EnemyLives.BonePutter;
+        private int _livesWings = EnemyLives.BonePutterWing;
         private bool _hasWings;
 
         public EnemyBonePutter() : base("bone putter") { }

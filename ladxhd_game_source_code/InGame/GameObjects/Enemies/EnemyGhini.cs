@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private double _direction;
 
-        private int _lives = ObjLives.Ghini;
+        private int _lives = EnemyLives.Ghini;
 
         private float _flyHeight = 14;
         private float _rotationDirection;
@@ -105,7 +105,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             {
                 _aiComponent.ChangeState("flying");
                 _aiComponent.ChangeState("flying");
-                _damageState.CurrentLives = ObjLives.Ghini;
+                _damageState.CurrentLives = EnemyLives.Ghini;
             }
             // ToDo: Spawned Ghinis might need "ObjOnPushKeySetter" to be reset somehow...
             else

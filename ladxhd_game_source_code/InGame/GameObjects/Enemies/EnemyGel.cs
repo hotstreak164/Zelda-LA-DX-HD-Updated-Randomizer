@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private int _grabY;
         private int _dir;
         private int _timerOffset;
-        private int _lives = ObjLives.Gel;
+        private int _lives = EnemyLives.Gel;
 
         // Used to respawn Red Zol if both Gels are alive.
         private Vector2 ZolRespawnPos;

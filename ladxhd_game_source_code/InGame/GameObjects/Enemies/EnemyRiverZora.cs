@@ -23,7 +23,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Rectangle _fieldPosition;
 
         private float _floatCount;
-        private int _lives = ObjLives.RiverZora;
+        private int _lives = EnemyLives.RiverZora;
         private bool _playSplash = true;
 
         public EnemyRiverZora() : base("river zora") { }

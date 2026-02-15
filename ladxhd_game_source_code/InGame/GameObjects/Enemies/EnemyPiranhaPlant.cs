@@ -23,7 +23,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly CPosition _headPosition;
         private readonly CBox _headBox;
 
-        private int _lives = ObjLives.PiranhaPlant;
+        private int _lives = EnemyLives.PiranhaPlant;
         public EnemyPiranhaPlant() : base("piranha plant") { }
 
         public EnemyPiranhaPlant(Map.Map map, int posX, int posY) : base(map)

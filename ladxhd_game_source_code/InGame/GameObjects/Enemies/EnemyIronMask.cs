@@ -23,7 +23,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _moveSpeedUnprotected = 0.75f;
         private int _direction;
         private bool _isUnprotected;
-        private int _lives = ObjLives.IronMask;
+        private int _lives = EnemyLives.IronMask;
 
         public EnemyIronMask() : base("iron mask") { }
 

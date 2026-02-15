@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private Vector2 _walkDirection;
 
-        private int _lives = ObjLives.AntiKirby;
+        private int _lives = EnemyLives.AntiKirby;
         private int _direction;
         private bool _hasPlayerTrapped;
         private bool _endMove;
@@ -120,7 +120,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("idle");
             _hitComponent.IsActive = true;
             _damageField.IsActive = false;
-            _damageState.CurrentLives = ObjLives.AntiKirby;
+            _damageState.CurrentLives = EnemyLives.AntiKirby;
             _suckParticles.Animator.Play("hidden");
         }
 

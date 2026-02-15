@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private const float MoveSpeed = 1.2f;
 
-        private int _lives = ObjLives.RollingBones;
+        private int _lives = EnemyLives.RollingBones;
 
         private Vector2 _moveDirection;
 

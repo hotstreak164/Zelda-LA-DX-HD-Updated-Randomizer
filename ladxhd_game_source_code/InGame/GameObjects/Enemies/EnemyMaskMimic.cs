@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private Vector2 _lastPosition;
         private int _direction;
         private bool _wasColliding;
-        private int _lives = ObjLives.MaskMimic;
+        private int _lives = EnemyLives.MaskMimic;
 
         public EnemyMaskMimic() : base("mask mimic") { }
 
@@ -92,7 +92,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
             _aiComponent.ChangeState("idle");
-            _aiDamageState.CurrentLives = ObjLives.MaskMimic;
+            _aiDamageState.CurrentLives = EnemyLives.MaskMimic;
             _body.VelocityTarget = Vector2.Zero;
         }
 

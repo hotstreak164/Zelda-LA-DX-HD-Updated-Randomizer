@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _moveSpeed = 0.5f;
         private int _direction;
-        private int _lives = ObjLives.DarknutSpear;
+        private int _lives = EnemyLives.DarknutSpear;
 
         public EnemyDarknutSpear() : base("darknut spear") { }
 
@@ -99,7 +99,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
             _aiComponent.ChangeState("idle");
-            _damageState.CurrentLives = ObjLives.DarknutSpear;
+            _damageState.CurrentLives = EnemyLives.DarknutSpear;
         }
 
         private void OnBurn()

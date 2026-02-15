@@ -26,7 +26,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private string _saveKey;
         private int _jumpCount;
         private bool _hitRepelling = true;
-        private int _lives = ObjLives.ArmosKnight;
+        private int _lives = EnemyLives.ArmosKnight;
 
         private const int ShakeTime = 500;
         private const float WalkSpeed = 0.6f;

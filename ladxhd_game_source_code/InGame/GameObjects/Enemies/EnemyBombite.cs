@@ -26,7 +26,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private RectangleF _fieldRect;
 
         private int _direction;
-        private int _lives = ObjLives.Bombite;
+        private int _lives = EnemyLives.Bombite;
 
         public EnemyBombite() : base("bombite") { }
 

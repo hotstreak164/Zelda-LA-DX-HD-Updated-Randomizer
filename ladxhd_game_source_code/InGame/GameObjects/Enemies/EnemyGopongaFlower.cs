@@ -22,7 +22,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private readonly int _animationLength;
         private bool _dealsDamage = true;
-        private int _lives = ObjLives.GopongaFlower;
+        private int _lives = EnemyLives.GopongaFlower;
 
         private float _soundCooldown;
         private bool _blockSound = false;

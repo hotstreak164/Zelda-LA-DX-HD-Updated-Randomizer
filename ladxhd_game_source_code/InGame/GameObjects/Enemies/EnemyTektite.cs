@@ -23,7 +23,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private readonly Rectangle _fieldRectangle;
 
-        private int _lives = ObjLives.Tektite;
+        private int _lives = EnemyLives.Tektite;
 
         public EnemyTektite() : base("tektite") { }
 
@@ -93,7 +93,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
             _aiComponent.ChangeState("idle");
-            _damageState.CurrentLives = ObjLives.Tektite;
+            _damageState.CurrentLives = EnemyLives.Tektite;
         }
 
         private void OnBurn()

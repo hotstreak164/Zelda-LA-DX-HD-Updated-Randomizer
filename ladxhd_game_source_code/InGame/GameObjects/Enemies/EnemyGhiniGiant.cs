@@ -33,7 +33,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _transparency;
 
         private int _flyHeight = 7;
-        private int _lives = ObjLives.GhiniGiant;
+        private int _lives = EnemyLives.GhiniGiant;
 
         public bool IsVisible { get; private set; }
 

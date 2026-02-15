@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private Vector2 _startPosition;
 
         private float _flyHeight = 14;
-        private int _lives = ObjLives.Bomber;
+        private int _lives = EnemyLives.Bomber;
 
         private bool fairySpawn;
 
@@ -145,6 +145,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _objBomb.Body.DragAir = 1.0f;
                 _objBomb.Body.Bounciness = 0.5f;
                 Map.Objects.SpawnObject(_objBomb);
+                Map.Objects.RegisterAlwaysAnimateObject(_objBomb);
                 new ObjSpriteShadow(Map, _objBomb, Values.LayerPlayer, "sprshadowm");
             }
         }

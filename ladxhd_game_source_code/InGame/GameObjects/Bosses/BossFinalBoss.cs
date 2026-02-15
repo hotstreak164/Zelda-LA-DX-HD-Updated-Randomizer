@@ -53,11 +53,11 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private string _saveKey;
 
         // Group up the lives in one place.
-        private int _giantZolLives = ObjLives.F_GiantZol;
-        private int _agahnimLives = ObjLives.F_Agahnim;
-        private int _ganonLives = ObjLives.F_Ganon;
-        private int _moldormLives = ObjLives.F_Moldorm;
-        private int _dethILives = ObjLives.F_DethI;
+        private int _giantZolLives = EnemyLives.F_GiantZol;
+        private int _agahnimLives = EnemyLives.F_Agahnim;
+        private int _ganonLives = EnemyLives.F_Ganon;
+        private int _moldormLives = EnemyLives.F_Moldorm;
+        private int _dethILives = EnemyLives.F_DethI;
 
         // State: Giant Zol
         private const int GiantZolDamageTime = 2200;

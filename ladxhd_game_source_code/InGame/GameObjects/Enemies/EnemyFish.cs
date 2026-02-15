@@ -26,7 +26,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _speed = 0.5f;
         private int _direction;
-        private int _lives = ObjLives.Fish;
+        private int _lives = EnemyLives.Fish;
 
         // blinking
         public EnemyFish() : base("fish") { }

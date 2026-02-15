@@ -48,7 +48,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private int _partBreakIndex;
         private float _partCounter = -500;
 
-        private int _lives = ObjLives.TurtleRock;
+        private int _lives = EnemyLives.TurtleRock;
         private string _saveKey;
         private bool _attackable = false;
         private bool _isDead = false;
@@ -218,7 +218,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             _animator.Play("stone");
             _aiComponent.ChangeState("stone");
-            _aiDamageState.CurrentLives = ObjLives.TurtleRock;
+            _aiDamageState.CurrentLives = EnemyLives.TurtleRock;
             Game1.GameManager.SetMusic(-1, 2);
         }
 

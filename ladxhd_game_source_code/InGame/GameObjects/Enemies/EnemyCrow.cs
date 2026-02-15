@@ -33,7 +33,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private int _dirIndex;
         private bool _goldLeaf;
         private bool _startAttack;
-        private int _lives = ObjLives.Crow;
+        private int _lives = EnemyLives.Crow;
 
         private const string _leafSaveKey = "ow_goldLeafCrow";
 

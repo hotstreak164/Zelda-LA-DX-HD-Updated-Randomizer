@@ -37,7 +37,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _walkSpeed = 0.5f;
         private int _direction;
         private float _flyCounter;
-        private int _lives = ObjLives.OctorokWinged;
+        private int _lives = EnemyLives.OctorokWinged;
         private float _shotCooldown = 2000;
 
         public EnemyOctorokWinged() : base("winged octorok") { }

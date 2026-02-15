@@ -49,7 +49,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private int _colorIndex;
         private int _lastcolorIndex;
 
-        private int _lives = ObjLives.HardHitBeetle;
+        private int _lives = EnemyLives.HardHitBeetle;
         private bool _isDead;
 
         private float _stalfosCounter;

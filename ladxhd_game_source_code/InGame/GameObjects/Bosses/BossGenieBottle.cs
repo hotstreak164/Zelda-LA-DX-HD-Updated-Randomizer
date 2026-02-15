@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private const float SpawnMoveSpeed = 0.5f;
         private const float FollowSpeed = 0.75f;
 
-        private int _lives = ObjLives.GenieBottle;
+        private int _lives = EnemyLives.GenieBottle;
         private bool _showedStunnedMessage;
 
         public BossGenieBottle() : base("genie") { }

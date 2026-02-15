@@ -21,7 +21,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _currentSpeed;
         private int _currentDir;
-        private int _lives = ObjLives.WaterTektite;
+        private int _lives = EnemyLives.WaterTektite;
 
         public static Vector2[] Directions =
         {

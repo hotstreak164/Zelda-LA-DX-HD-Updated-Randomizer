@@ -31,7 +31,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private readonly string _saveKey;
 
         private const float MoveSpeed = 2f;
-        private int _lives = ObjLives.HotHead;
+        private int _lives = EnemyLives.HotHead;
 
         private Vector2[] _facePosition = new Vector2[2];
 

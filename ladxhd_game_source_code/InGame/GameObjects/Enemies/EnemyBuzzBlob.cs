@@ -26,7 +26,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly float _moveSpeed = 0.33f;
         private const int ShockTime = 550;
         private bool _isCukeman;
-        private int _lives = ObjLives.BuzzBlob;
+        private int _lives = EnemyLives.BuzzBlob;
 
         public EnemyBuzzBlob() : base("buzz blob") { }
 
@@ -98,7 +98,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
-            _damageState.CurrentLives = ObjLives.BuzzBlob;
+            _damageState.CurrentLives = EnemyLives.BuzzBlob;
             Game1.GameManager.UseShockEffect = false;
         }
 

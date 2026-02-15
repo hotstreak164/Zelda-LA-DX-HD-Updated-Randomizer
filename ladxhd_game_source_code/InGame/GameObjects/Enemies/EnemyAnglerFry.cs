@@ -19,7 +19,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private const float MovementSpeed = 0.5f;
         private const int SpawnTime = 100;
 
-        private int _lives = ObjLives.AnglerFry;
+        private int _lives = EnemyLives.AnglerFry;
         private float _swimCounter;
 
         public EnemyAnglerFry() : base("anglerFry") { }

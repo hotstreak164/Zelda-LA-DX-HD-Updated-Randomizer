@@ -28,7 +28,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _jumpAcceleration = 1.5f;
 
         private bool _spawnSmallZols = true;
-        private int _lives = ObjLives.RedZol;
+        private int _lives = EnemyLives.RedZol;
 
         public EnemyRedZol() : base("red zol") { }
 

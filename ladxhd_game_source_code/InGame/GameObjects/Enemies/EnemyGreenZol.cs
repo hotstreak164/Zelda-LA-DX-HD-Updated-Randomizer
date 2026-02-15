@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private readonly bool _fallMode;
 
-        private int _lives = ObjLives.GreenZol;
+        private int _lives = EnemyLives.GreenZol;
         private int _jumpsLeft;
         private bool _pushable = false;
 

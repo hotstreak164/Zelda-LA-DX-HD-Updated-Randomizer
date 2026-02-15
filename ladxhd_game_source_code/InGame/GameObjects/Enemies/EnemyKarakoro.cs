@@ -43,7 +43,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _initShakeSpriteOffsetX;
         private bool _smallBody;
         private bool _throwDamage;
-        private int _lives = ObjLives.Karakoro;
+        private int _lives = EnemyLives.Karakoro;
 
         private Vector2 _holeStartPosition;
         private Vector2 _holeTargetPosition;

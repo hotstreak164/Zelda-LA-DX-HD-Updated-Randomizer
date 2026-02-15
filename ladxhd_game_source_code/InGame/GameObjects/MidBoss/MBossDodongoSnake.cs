@@ -54,7 +54,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private bool _encountered;
         private int _bossCount;
-        private int _lives = ObjLives.DodongoSnake;
+        private int _lives = EnemyLives.DodongoSnake;
 
         // @TODO: it looks like the body gets left behind when we move out of the screen
         public MBossDodongoSnake() : base("snake blue") { }
@@ -145,7 +145,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _bodyOffset.Y = 0;
             _bodyPosition = ResetPosition.Position;
             _lastHeadPosition = ResetPosition.Position;
-            _lives = ObjLives.DodongoSnake;
+            _lives = EnemyLives.DodongoSnake;
             ChangeDirection();
         }
 

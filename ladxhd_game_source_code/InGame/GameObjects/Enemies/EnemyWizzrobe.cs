@@ -26,7 +26,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private const int BlinkTime = 600;
         private int _direction;
-        private int _lives = ObjLives.Wizzrobe;
+        private int _lives = EnemyLives.Wizzrobe;
 
         public EnemyWizzrobe() : base("wizzrobe") { }
 
@@ -104,7 +104,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = false;
             _aiComponent.ChangeState("hidden");
             _aiComponent.ChangeState("hidden");
-            _damageState.CurrentLives = ObjLives.Wizzrobe;
+            _damageState.CurrentLives = EnemyLives.Wizzrobe;
         }
 
         private void InitSpawn()

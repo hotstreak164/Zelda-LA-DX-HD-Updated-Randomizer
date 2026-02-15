@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _fadeOutTime = 750;
         private double _dirRadius;
         private int _dirIndex;
-        private int _lives = ObjLives.Raven;
+        private int _lives = EnemyLives.Raven;
 
         public EnemyRaven() : base("raven") { }
 

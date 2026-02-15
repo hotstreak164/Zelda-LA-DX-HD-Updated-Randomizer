@@ -28,7 +28,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private readonly string _saveKey;
 
         private const int GrabTime = 300;
-        private int _lives = ObjLives.Hinox;
+        private int _lives = EnemyLives.Hinox;
 
         private Vector3 _grabStartPosition;
         private int _grabDirection;
@@ -128,7 +128,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             // Restore idle state and heal the boss.
             _aiComponent.ChangeState("idle");
-            _aiDamageState.CurrentLives = ObjLives.Hinox;
+            _aiDamageState.CurrentLives = EnemyLives.Hinox;
         }
 
         private void Update()

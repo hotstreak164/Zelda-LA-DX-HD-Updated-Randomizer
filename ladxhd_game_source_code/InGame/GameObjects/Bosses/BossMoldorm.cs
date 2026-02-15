@@ -49,7 +49,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private float _runCounter;
         private int _changeDirCount;
         private int _dir = 1;
-        private int _lives = ObjLives.Moldorm;
+        private int _lives = EnemyLives.Moldorm;
 
         private int _dyingState = 4;
         private int _tailState = 2;

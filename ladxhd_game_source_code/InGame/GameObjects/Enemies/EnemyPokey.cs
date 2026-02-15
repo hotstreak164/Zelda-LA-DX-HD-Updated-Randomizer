@@ -26,7 +26,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _moveSpeed = 1 / 3f;
         private int _direction;
         private int _state;
-        private int _lives = ObjLives.Pokey;
+        private int _lives = EnemyLives.Pokey;
 
         public EnemyPokey() : base("pokey") { }
 
@@ -86,7 +86,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _state = 0;
             _sprite.SetSprite(_spriteBody);
-            _damageState.CurrentLives = ObjLives.Pokey;
+            _damageState.CurrentLives = EnemyLives.Pokey;
         }
 
         private void InitWalking()

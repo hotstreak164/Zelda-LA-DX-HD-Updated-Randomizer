@@ -39,7 +39,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly int _type;
         private bool _objectPickedUp;
         private bool _objectDestroyed;
-        private int _lives = ObjLives.SpinyBeetle;
+        private int _lives = EnemyLives.SpinyBeetle;
 
         private float moveTimer;
 

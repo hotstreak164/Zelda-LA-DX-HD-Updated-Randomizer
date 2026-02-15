@@ -34,7 +34,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private float _moveDistance;
 
         private int _fallHeight = 256;
-        private int _lives = ObjLives.SlimeEye;
+        private int _lives = EnemyLives.SlimeEye;
 
         public BossSlimeEye() : base("slime_eye") { }
 

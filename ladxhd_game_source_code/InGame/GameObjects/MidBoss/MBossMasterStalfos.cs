@@ -58,8 +58,8 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private bool _instantFall;
         private bool _vulnerable;
 
-        private int _lives = ObjLives.MStalfos;
-        private int _livesMid = ObjLives.MStalfosMid;
+        private int _lives = EnemyLives.MStalfos;
+        private int _livesMid = EnemyLives.MStalfosMid;
 
         private const int FleeTime = 400;
 

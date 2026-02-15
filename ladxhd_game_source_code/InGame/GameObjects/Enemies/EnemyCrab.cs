@@ -19,7 +19,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly PushableComponent _pushComponent;
 
         private int _currentDirection;
-        private int _lives = ObjLives.Crab;
+        private int _lives = EnemyLives.Crab;
 
         public EnemyCrab() : base("crab") { }
 

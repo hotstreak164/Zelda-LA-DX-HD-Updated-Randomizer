@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private Rectangle _fieldRectangle;
         private int _direction;
-        private int _lives = ObjLives.Darknut;
+        private int _lives = EnemyLives.Darknut;
         private bool _isActive = true;
 
         public bool FinishedSpawning = true;
@@ -137,7 +137,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
-            _damageState.CurrentLives = ObjLives.Darknut;
+            _damageState.CurrentLives = EnemyLives.Darknut;
             _aiComponent.ChangeState("idle");
             _aiComponent.ChangeState("idle");
         }

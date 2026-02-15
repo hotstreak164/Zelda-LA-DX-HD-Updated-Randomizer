@@ -39,7 +39,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private int _jumpCounter;
         private bool _wasHit;
         private bool _attackable;
-        private int _lives = ObjLives.GiantBuzzBlob;
+        private int _lives = EnemyLives.GiantBuzzBlob;
 
         public MBossGiantBuzzBlob() : base("giant buzz blob") { }
 

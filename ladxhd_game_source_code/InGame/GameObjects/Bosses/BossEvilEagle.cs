@@ -34,7 +34,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private Vector2 _slowStart;
         private float _slowCounter;
         private float _transparency = 0;
-        private int _lives = ObjLives.EvilEagle;
+        private int _lives = EnemyLives.EvilEagle;
         private int _spawnIndex;
         private int _direction;
         private bool _disablePlayer;

@@ -32,7 +32,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private readonly CSprite _sprite;
 
         private readonly string _saveKey;
-        private int _lives = ObjLives.Genie;
+        private int _lives = EnemyLives.Genie;
 
         private const float FollowSpeed = 1.5f;
         private const int AttackTime = 10000;

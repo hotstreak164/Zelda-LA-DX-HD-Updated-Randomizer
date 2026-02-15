@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private readonly Vector2 _spawnPosition;
         private Vector2 _targetPosition;
 
-        private int _lives = ObjLives.StoneHinox;
+        private int _lives = EnemyLives.StoneHinox;
         private int _lastWalkFrame;
         private int _jumpCount = 0;
         private bool _wasHit;

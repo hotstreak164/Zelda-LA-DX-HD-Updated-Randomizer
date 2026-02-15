@@ -28,7 +28,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _walkSpeed = 0.5f;
         private int _direction;
-        private int _lives = ObjLives.Octorok;
+        private int _lives = EnemyLives.Octorok;
         private float _shotCooldown = 2000;
 
         public bool IsVisible { get; internal set; }

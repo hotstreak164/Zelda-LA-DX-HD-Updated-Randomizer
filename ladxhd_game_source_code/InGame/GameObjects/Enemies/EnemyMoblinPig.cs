@@ -23,13 +23,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private readonly Vector2[] _shotOffset =
         {
-            new Vector2(-8, -1),new Vector2(0, -3),
-            new Vector2(8, -1),new Vector2(0, 2)
+            new Vector2(-8, -1), new Vector2(0, -3),
+            new Vector2(8, -1), new Vector2(0, 2)
         };
 
         private float _moveSpeed = 0.5f;
         private int _direction;
-        private int _lives = ObjLives.MoblinPig;
+        private int _lives = EnemyLives.MoblinPig;
 
         public EnemyMoblinPig() : base("moblinPig") { }
 
@@ -101,7 +101,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
             _aiComponent.ChangeState("idle");
-            _damageState.CurrentLives = ObjLives.MoblinPig;
+            _damageState.CurrentLives = EnemyLives.MoblinPig;
         }
 
         private void OnBurn()
@@ -138,28 +138,29 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (Game1.RandomNumber.Next(0, 2) == 0)
                 return;
 
-            // shoot if the player is in the range and in the right direction
+            // Calculate distance between Moblin and Link.
             var playerDirection = MapManager.ObjLink.EntityPosition.Position - EntityPosition.Position;
+
+            // Throw a spear if the player is in range and in the facing direction.
             if (playerDirection.Length() < 128)
             {
                 if (playerDirection != Vector2.Zero)
                     playerDirection.Normalize();
                 var direction = AnimationHelper.GetDirection(playerDirection);
+
                 if (direction == _direction)
                 {
-                    var box = Box.Empty;
-                    if (!Map.Objects.Collision(new Box(
-                            EntityPosition.X + _shotOffset[_direction].X - 4,
-                            EntityPosition.Y + _shotOffset[_direction].Y - 4, 0, 8, 8, 8),
-                            Box.Empty, Values.CollisionTypes.Normal, 0, _body.Level, ref box))
+                    float offsetX = EntityPosition.X + _shotOffset[_direction].X;
+                    float offsetY = EntityPosition.Y + _shotOffset[_direction].Y;
+
+                    var colBox = new Box(offsetX - 4, offsetY - 4, 0, 8, 8, 8);
+                    var refBox = Box.Empty;
+
+                    if (!Map.Objects.Collision(colBox, Box.Empty, Values.CollisionTypes.Normal, 0, _body.Level, ref refBox))
                     {
-                        // shoot
-                        var shot = new EnemySpear(Map, new Vector3(
-                            EntityPosition.X + _shotOffset[_direction].X,
-                            EntityPosition.Y + _shotOffset[_direction].Y, 3),
-                            AnimationHelper.DirectionOffset[_direction] * 2f,
-                            _direction);
-                        Map.Objects.SpawnObject(shot);
+                        Vector3 position = new Vector3(offsetX, offsetY, 3);
+                        var spear = new EnemySpear(Map, position, AnimationHelper.DirectionOffset[_direction] * 2f, _direction);
+                        Map.Objects.SpawnObject(spear);
                     }
                 }
             }

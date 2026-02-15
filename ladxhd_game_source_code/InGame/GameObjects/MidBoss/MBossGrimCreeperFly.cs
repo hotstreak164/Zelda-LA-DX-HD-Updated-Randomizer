@@ -36,7 +36,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private Vector2 _leaveStart;
         private Vector2 _leaveEnd;
         private float _leaveCounter;
-        private int _lives = ObjLives.GrimCreeperFly;
+        private int _lives = EnemyLives.GrimCreeperFly;
 
         private float _circlingOffset;
         private float _circleSpeed;

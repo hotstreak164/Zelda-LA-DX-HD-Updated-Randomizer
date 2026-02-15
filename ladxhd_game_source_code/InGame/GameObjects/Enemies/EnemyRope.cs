@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private int _animationDirection;
         private int _direction;
-        private int _lives = ObjLives.Rope;
+        private int _lives = EnemyLives.Rope;
 
         public EnemyRope() : base("rope") { }
 

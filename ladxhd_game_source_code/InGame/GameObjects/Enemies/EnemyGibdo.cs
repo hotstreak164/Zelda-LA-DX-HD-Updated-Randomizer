@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private const float MoveSpeed = 0.5f;
 
         private int _direction;
-        private int _lives = ObjLives.Gibdo;
+        private int _lives = EnemyLives.Gibdo;
 
         public EnemyGibdo() : base("gibdo") { }
 

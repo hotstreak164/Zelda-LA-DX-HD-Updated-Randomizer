@@ -39,7 +39,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private const float WalkSpeed = 0.75f;
         private const float CarrySpeed = 0.25f;
 
-        private int _lives = ObjLives.Smasher;
+        private int _lives = EnemyLives.Smasher;
         private int _direction;
         private int _jumpCount;
 

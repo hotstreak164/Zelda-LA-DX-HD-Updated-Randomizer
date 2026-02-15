@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _walkSpeed = 0.5f;
         private float _changeDirCount;
         private int _dir;
-        private int _lives = ObjLives.StalfosOrange;
+        private int _lives = EnemyLives.StalfosOrange;
 
         private float _throwCounter;
         private bool _throwBone;
@@ -134,7 +134,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("walking");
             _aiComponent.ChangeState("walking");
-            _damageState.CurrentLives = ObjLives.StalfosOrange;
+            _damageState.CurrentLives = EnemyLives.StalfosOrange;
         }
 
         private void OnBurn()

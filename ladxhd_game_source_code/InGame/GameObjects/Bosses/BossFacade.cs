@@ -50,7 +50,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private readonly string _tileString;
 
         private int _blinkCount;
-        private int _lives = ObjLives.Facade;
+        private int _lives = EnemyLives.Facade;
 
         private const int DespawnTime = 1150;
 

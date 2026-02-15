@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private readonly float _movementSpeed;
         private int _dir;
-        private int _lives = ObjLives.CheepCheep;
+        private int _lives = EnemyLives.CheepCheep;
         private readonly bool _canJump;
         private bool _stomped;
 

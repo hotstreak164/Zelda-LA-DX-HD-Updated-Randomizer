@@ -28,7 +28,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _flyState;
         private float _turnSpeed;
         private int _dir = 1;
-        private int _lives = ObjLives.Peahat;
+        private int _lives = EnemyLives.Peahat;
 
         public EnemyPeahat() : base("peahat") { }
 
@@ -117,7 +117,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _animator.SpeedMultiplier = 0;
             _aiComponent.ChangeState("start");
             _aiComponent.ChangeState("start");
-            _damageState.CurrentLives = ObjLives.Peahat;
+            _damageState.CurrentLives = EnemyLives.Peahat;
         }
 
         private void OnBurn()

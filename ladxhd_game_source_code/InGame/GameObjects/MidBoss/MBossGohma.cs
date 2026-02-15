@@ -41,7 +41,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         // 1: one of them is dead
         // 2: both parts are dead
         private int _bossState;
-        private int _lives = ObjLives.Ghoma;
+        private int _lives = EnemyLives.Ghoma;
         private string _saveKey;
         private bool _isOnTop;
         private bool _isDying;

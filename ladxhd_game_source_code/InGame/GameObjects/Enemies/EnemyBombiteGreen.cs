@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private int _direction;
         private bool _startedAnimation;
         private bool _follow;
-        private int _lives = ObjLives.BombiteGreen;
+        private int _lives = EnemyLives.BombiteGreen;
         private bool _wasStunned;
 
         public EnemyBombiteGreen() : base("bombiteGreen") { }

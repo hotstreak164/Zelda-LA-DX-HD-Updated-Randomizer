@@ -20,7 +20,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private readonly Vector2 _startPosition;
 
-        private int _lives = ObjLives.Bloober;
+        private int _lives = EnemyLives.Bloober;
 
         public EnemyBloober() : base("bloober") { }
 

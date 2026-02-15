@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _soundCounter;
         private bool _dealsDamage = true;
-        private int _lives = ObjLives.SeaUrchin;
+        private int _lives = EnemyLives.SeaUrchin;
 
         public EnemySeaUrchin() : base("sea urchin") { }
 

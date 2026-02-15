@@ -18,7 +18,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly AiDamageState _aiDamageState;
 
         private int _collisionCount;
-        private int _lives = ObjLives.PokeyPart;
+        private int _lives = EnemyLives.PokeyPart;
 
 
         public EnemyPokeyPart(Map.Map map, float posX, float posY, Vector2 velocityTarget, Vector3 velocity) : base(map)

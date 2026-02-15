@@ -28,7 +28,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private readonly Vector2 _spawnPosition;
         private bool _wasHit;
-        private int _lives = ObjLives.MadBomber;
+        private int _lives = EnemyLives.MadBomber;
 
         public EnemyMadBomber() : base("madBomber") { }
 
@@ -100,7 +100,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _aiComponent.ChangeState("hidden");
             _aiComponent.ChangeState("hidden");
-            _damageState.CurrentLives = ObjLives.MadBomber;
+            _damageState.CurrentLives = EnemyLives.MadBomber;
         }
 
         private void TryReleaseStun()

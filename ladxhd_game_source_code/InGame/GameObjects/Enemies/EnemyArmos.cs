@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _counter;
         private int _direction;
         private bool _collided;
-        private int _lives = ObjLives.Armos;
+        private int _lives = EnemyLives.Armos;
 
         public EnemyArmos() : base("armos") { }
 

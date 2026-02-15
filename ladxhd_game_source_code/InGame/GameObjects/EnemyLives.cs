@@ -7,8 +7,11 @@ using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.GameObjects
 {
-    internal class ObjLives
+    internal class EnemyLives
     {
+        // Holds a list of all enemy HP default values.
+        private static Dictionary<string, int> _defaultValues;
+
         // Enemy Hit Points
         public static int AnglerFry        = 1;
         public static int AntiFairy        = 1;
@@ -40,7 +43,7 @@ namespace ProjectZ.InGame.GameObjects
         public static int GopongaFlower    = 4;
         public static int GopongaGiant     = 4;
         public static int GreenZol         = 1;
-        public static int HardhatBeetle    = 1;   // - Unkillable?
+        public static int HardhatBeetle    = 1;
         public static int IronMask         = 2;
         public static int Karakoro         = 2;
         public static int Keese            = 1;
@@ -118,9 +121,6 @@ namespace ProjectZ.InGame.GameObjects
         public static int SlimeEye         = 2;   // - I think this is how many hits it takes to split?
         public static int SlimeEyeHalf     = 4;
 
-        // Holds a list of all enemy HP default values.
-        private static Dictionary<string, int> _defaultValues;
-
         public static void Initialize()
         {
             // Load in mod file values if present.
@@ -137,11 +137,17 @@ namespace ProjectZ.InGame.GameObjects
         public static void ParseModFile()
         {
             // If a mod file exists load the values from it.
-            string modFile = Path.Combine(Values.PathLAHDMods, "ObjLives.lahdmod");
+            string modFile = Path.Combine(Values.PathLAHDMods, "EnemyLives.lahdmod");
 
+            // Check for the old name of the mod as well since this changed.
             if (!File.Exists(modFile))
-                return;
+            {
+                modFile = Path.Combine(Values.PathLAHDMods, "ObjLives.lahdmod");
 
+                if (!File.Exists(modFile))
+                    return;
+            }
+            // If a mod file exists replace all enemy lives with the custom values from the lahdmod file.
             foreach (string line in File.ReadAllLines(modFile))
             {
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
@@ -154,7 +160,7 @@ namespace ProjectZ.InGame.GameObjects
                 string varName = splitLine[0].Trim();
                 string varValue = splitLine[1].Trim();
 
-                FieldInfo field = typeof(ObjLives).GetField(varName, BindingFlags.Public | BindingFlags.Static);
+                FieldInfo field = typeof(EnemyLives).GetField(varName, BindingFlags.Public | BindingFlags.Static);
                 object convertedValue = Convert.ChangeType(varValue, field.FieldType, CultureInfo.InvariantCulture);
                 field.SetValue(null, convertedValue);
             }
@@ -164,7 +170,7 @@ namespace ProjectZ.InGame.GameObjects
         {
             _defaultValues = new Dictionary<string, int>();
 
-            FieldInfo[] enemyHP = typeof(ObjLives).GetFields(BindingFlags.Public | BindingFlags.Static);
+            FieldInfo[] enemyHP = typeof(EnemyLives).GetFields(BindingFlags.Public | BindingFlags.Static);
             foreach (var enemy in enemyHP)
             {
                 if (enemy.FieldType == typeof(int))
@@ -173,7 +179,7 @@ namespace ProjectZ.InGame.GameObjects
         }
         public static void RestoreDefaultHP()
         {
-            FieldInfo[] enemyHP = typeof(ObjLives).GetFields(BindingFlags.Public | BindingFlags.Static);
+            FieldInfo[] enemyHP = typeof(EnemyLives).GetFields(BindingFlags.Public | BindingFlags.Static);
             foreach (var enemy in enemyHP)
             {
                 if (enemy.FieldType == typeof(int) && _defaultValues.TryGetValue(enemy.Name, out int value))
@@ -183,7 +189,7 @@ namespace ProjectZ.InGame.GameObjects
 
         public static void AddToEnemyHP(int amount)
         {
-            FieldInfo[] enemyHP = typeof(ObjLives).GetFields(BindingFlags.Public | BindingFlags.Static);
+            FieldInfo[] enemyHP = typeof(EnemyLives).GetFields(BindingFlags.Public | BindingFlags.Static);
             foreach (var enemy in enemyHP)
             {
                 if (enemy.FieldType == typeof(int))

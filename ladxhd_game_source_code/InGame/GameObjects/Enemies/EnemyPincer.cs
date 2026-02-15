@@ -37,7 +37,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _attackCounter;
         private int _dirIndex;
-        private int _lives = ObjLives.Pincer;
+        private int _lives = EnemyLives.Pincer;
 
         private float _waitTimer;
         private bool _powderWindow;
@@ -112,7 +112,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("waiting");
             _aiComponent.ChangeState("waiting");
-            _damageState.CurrentLives = ObjLives.Pincer;
+            _damageState.CurrentLives = EnemyLives.Pincer;
         }
 
         private void Update()

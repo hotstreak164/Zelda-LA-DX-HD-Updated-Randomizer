@@ -32,7 +32,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private float _spinTime;
         private const float SpinStepTime = 66.66f;
 
-        private int _lives = ObjLives.CueBall;
+        private int _lives = EnemyLives.CueBall;
         private int _count;
         private int _moveClockwise = 1;
         private int _moveDirection;

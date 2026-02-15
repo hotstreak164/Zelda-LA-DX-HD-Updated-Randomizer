@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private Vector2 _lastPosition;
         private int _direction;
         private bool _wasColliding;
-        private int _lives = ObjLives.ArmMimic;
+        private int _lives = EnemyLives.ArmMimic;
 
         public EnemyArmMimic() : base("armMimic") { }
 
@@ -90,7 +90,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("idle");
             _aiComponent.ChangeState("idle");
-            _damageState.CurrentLives = ObjLives.ArmMimic;
+            _damageState.CurrentLives = EnemyLives.ArmMimic;
             _body.VelocityTarget = Vector2.Zero;
         }
 

@@ -222,7 +222,7 @@ namespace ProjectZ
             UpdateFpsSettings();
 
             // Initialize extra monster hit points set by the user.
-            ObjLives.Initialize();
+            EnemyLives.Initialize();
 
             // If borderless fullscreen is selected we can do it now.
             if (GameSettings.IsFullscreen && !GameSettings.ExFullscreen)

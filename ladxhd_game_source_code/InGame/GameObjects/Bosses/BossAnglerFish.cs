@@ -43,8 +43,8 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private float _deathCount;
         private int _stoneCount;
 
-        private int _lives = ObjLives.AnglerFish;
-        private int _currentLives = ObjLives.AnglerFish;
+        private int _lives = EnemyLives.AnglerFish;
+        private int _currentLives = EnemyLives.AnglerFish;
         private bool _isAlive = true;
 
         private Vector2 _preAttackVelocity;

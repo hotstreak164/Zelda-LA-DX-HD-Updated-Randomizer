@@ -35,7 +35,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly int _index;
 
         private float _soundCounter;
-        private int _lives = ObjLives.FlyingTile;
+        private int _lives = EnemyLives.FlyingTile;
 
         // initial time for the activation
         private float _activationCounter = 1500;

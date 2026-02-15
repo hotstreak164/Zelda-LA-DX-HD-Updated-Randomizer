@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private int _direction;
         private bool _hasPlayerTrapped;
         private bool _stoleShield;
-        private int _lives = ObjLives.LikeLike;
+        private int _lives = EnemyLives.LikeLike;
 
         public EnemyLikeLike() : base("like like") { }
 
@@ -95,7 +95,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _pushComponent.IsActive = true;
             _aiComponent.ChangeState("moving");
             _aiComponent.ChangeState("moving");
-            _damageState.CurrentLives = ObjLives.LikeLike;
+            _damageState.CurrentLives = EnemyLives.LikeLike;
         }
 
         private void OnBurn()

@@ -50,7 +50,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private bool _attackOut;
         private bool _isFullyOut;
-        private int _lives = ObjLives.SlimeEel;
+        private int _lives = EnemyLives.SlimeEel;
 
         private float _moveRotation;
         private float _rotationDir = 1;

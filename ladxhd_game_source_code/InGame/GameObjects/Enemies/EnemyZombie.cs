@@ -22,7 +22,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly HittableComponent _hitComponent;
         private readonly PushableComponent _pushComponent;
 
-        private int _lives = ObjLives.Zombie;
+        private int _lives = EnemyLives.Zombie;
 
         public EnemyZombie() : base("zombie") { }
 

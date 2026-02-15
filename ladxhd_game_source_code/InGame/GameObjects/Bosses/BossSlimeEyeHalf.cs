@@ -28,7 +28,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private readonly string _saveKey;
         private readonly string _halfKey;
 
-        private int _lives = ObjLives.SlimeEyeHalf;
+        private int _lives = EnemyLives.SlimeEyeHalf;
         private int _jumpHeight = 100;
 
         private bool _highJump;

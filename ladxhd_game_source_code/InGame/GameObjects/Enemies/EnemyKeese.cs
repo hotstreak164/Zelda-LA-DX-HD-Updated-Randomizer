@@ -24,7 +24,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _flyState;
         private int _dir;
-        private int _lives = ObjLives.Keese;
+        private int _lives = EnemyLives.Keese;
 
         public EnemyKeese() : base("keese") { }
 

@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private float _walkSpeed = 0.5f;
         private float _runSpeed = 1.5f;
-        private int _lives = ObjLives.SpikedBeetle;
+        private int _lives = EnemyLives.SpikedBeetle;
 
         private bool _playerInsideField;
 

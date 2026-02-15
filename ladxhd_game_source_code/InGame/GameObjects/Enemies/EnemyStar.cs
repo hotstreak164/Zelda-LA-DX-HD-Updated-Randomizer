@@ -18,7 +18,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly HittableComponent _hitComponent;
         private readonly PushableComponent _pushComponent;
 
-        private int _lives = ObjLives.Star;
+        private int _lives = EnemyLives.Star;
 
         public EnemyStar() : base("star") { }
 

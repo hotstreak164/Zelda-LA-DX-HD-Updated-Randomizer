@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private string _strKey;
 
         private float _currentBallSpeed = 300;
-        private int _lives = ObjLives.BaCSoldier;
+        private int _lives = EnemyLives.BaCSoldier;
 
         private const float BallDistance = 10;
         private const float BallDistanceThrow = 56;

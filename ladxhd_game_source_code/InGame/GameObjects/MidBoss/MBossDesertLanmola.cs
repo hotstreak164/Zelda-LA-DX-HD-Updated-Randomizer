@@ -34,7 +34,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private string _saveKey;
         private int _jumpTime;
 
-        private int _lives = ObjLives.DesertLanmola;
+        private int _lives = EnemyLives.DesertLanmola;
 
         private bool _jumpLandSound;
         private bool _playerLeft = true;
@@ -113,7 +113,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void Reset()
         {
-            _lives = ObjLives.DesertLanmola;
+            _lives = EnemyLives.DesertLanmola;
         }
 
         private void OnKeyChange()

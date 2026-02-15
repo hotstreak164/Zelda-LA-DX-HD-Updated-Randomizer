@@ -22,7 +22,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly PushableComponent _pushComponent;
         private readonly Animator _animator;
 
-        private int _lives = ObjLives.AntiFairy;
+        private int _lives = EnemyLives.AntiFairy;
 
         bool _lastEpSafe;
 

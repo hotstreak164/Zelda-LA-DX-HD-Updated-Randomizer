@@ -26,7 +26,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private bool _isFollowing;
         private bool _wasFollowing;
-        private int _lives = ObjLives.HardhatBeetle;
+        private int _lives = EnemyLives.HardhatBeetle;
 
         private float speedChange;
 

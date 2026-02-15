@@ -33,7 +33,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private readonly string _triggerKey;
         private readonly string _saveKey;
 
-        private int _lives = ObjLives.KingMoblin;
+        private int _lives = EnemyLives.KingMoblin;
 
         private double _bounceTime;
         private int _direction;

@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Rectangle _fieldPosition;
 
         private const float MoveSpeed = 0.5f;
-        private int _lives = ObjLives.Leever;
+        private int _lives = EnemyLives.Leever;
 
         public EnemyLeever() : base("leever") { }
 

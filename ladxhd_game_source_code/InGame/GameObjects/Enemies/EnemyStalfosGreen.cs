@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _walkSpeed = 0.5f;
         private float _changeDirCount;
         private int _dir;
-        private int _lives = ObjLives.StalfosGreen;
+        private int _lives = EnemyLives.StalfosGreen;
 
         private bool _jumpMoving;
 
@@ -102,7 +102,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _animator.Continue();
             _aiComponent.ChangeState("walking");
             _aiComponent.ChangeState("walking");
-            _damageState.CurrentLives = ObjLives.StalfosGreen;
+            _damageState.CurrentLives = EnemyLives.StalfosGreen;
             _damageField.IsActive = true;
             _hitComponent.IsActive = true;
             _pushComponent.IsActive = true;
