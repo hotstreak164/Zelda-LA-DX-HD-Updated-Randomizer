@@ -31,9 +31,15 @@ namespace ProjectZ.InGame.Overlay.Sequences
         {
             base.Update();
 
+            // The counter is used to determine how long the photo is shown for.
             _counter += Game1.DeltaTime;
+
+            // Close when counter expires or when skipped. The counter must be reset for the next photo.
             if (_counter > 2500 || ControlHandler.ButtonPressed(CButtons.Start))
+            {
+                _counter = 0;
                 Game1.GameManager.InGameOverlay.CloseOverlay();
+            }
         }
     }
 }
