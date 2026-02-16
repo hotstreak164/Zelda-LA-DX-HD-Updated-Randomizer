@@ -36,7 +36,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private Vector2 _pickupStart;
         private const int PickupTime = 500;
 
-        private const float WalkSpeed = 0.75f;
+        private float WalkSpeed = 0.75f;
         private const float CarrySpeed = 0.25f;
 
         private int _lives = EnemyLives.Smasher;
@@ -102,7 +102,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _aiComponent.ChangeState("waiting");
 
             var damageCollider = new CBox(EntityPosition, -7, -11, 0, 14, 11, 14, true);
-            var hittableBox = new CBox(EntityPosition, -9, -14, 0, 18, 14, 16, true);
+            var hittableBox = new CBox(EntityPosition, -9, -18, 0, 18, 18, 16, true);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 4));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
@@ -223,7 +223,10 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void JumpRandom()
         {
-            // change direction?
+            // When running from the player movement speed is reduced.
+            WalkSpeed = 0.60f;
+
+            // Get a random direction to jump towards.
             if (_jumpCount <= 0)
             {
                 _jumpCount = Game1.RandomNumber.Next(2, 3);
@@ -231,13 +234,16 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 var dirY = Game1.RandomNumber.Next(0, 2) * 2 - 1;
                 _jumpDirection = new Vector2(dirX, dirY * 0.5f);
             }
-
+            // Jump playing the directional animation.
             Jump(_jumpDirection, "up_");
             _jumpCount--;
         }
 
         private void JumpTowardsBall()
         {
+            // When running towards the ball movement speed is increased.
+            WalkSpeed = 0.75f;
+
             // jump toward the ball or pick him up if we are close enough
             var targetPosition = new Vector2(_ball.EntityPosition.X, _ball.EntityPosition.Y);
             if (EntityPosition.Position.X < _ball.EntityPosition.X)
@@ -252,7 +258,6 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 var offset = Math.Clamp(14 + _body.Width / 2 - ((_body.FieldRectangle.Right - 16) - _ball.EntityPosition.X), 0, 32);
                 targetPosition.X += 14 - offset;
             }
-
             var ballDirection = targetPosition - EntityPosition.Position;
 
             if (ballDirection.Length() > 5)
@@ -355,26 +360,30 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_damageState.IsInDamageState())
                 return Values.HitCollision.None;
 
+            // The boss was hit with the ball.
+            if ((hitType & HitType.ThrownObject) != 0)
+            {
+                _damageState.OnHit(gameObject, direction, hitType, damage, pieceOfPower);
+                _body.VelocityTarget = Vector2.Zero;
+            }
+
+    /*  ----------------------------------------------------------------------------
+        Note: These behaviors are not accurate to the original game. Hitting the boss with the sword should
+              not cause knockback, nor should it drop the ball when hit. Not sure why it was designed this way.
+
+            else if (_aiComponent.CurrentStateId != "pickup")
+            {
+                _damageState.HitKnockBack(gameObject, direction, hitType, pieceOfPower, false);
+            }
             if (_aiComponent.CurrentStateId == "carry")
             {
                 _ball.EndPickup();
                 _animator.Play("idle_" + _direction);
                 _aiComponent.ChangeState("walk");
             }
+        ---------------------------------------------------------------------------- */
 
-            // ball was thrown at the boss
-            if ((hitType & HitType.ThrownObject) != 0)
-            {
-                _damageState.OnHit(gameObject, direction, hitType, damage, pieceOfPower);
-                _body.VelocityTarget = Vector2.Zero;
-            }
-            // only knock the boss back
-            else if (_aiComponent.CurrentStateId != "pickup")
-            {
-                _damageState.HitKnockBack(gameObject, direction, hitType, pieceOfPower, false);
-            }
-
-            // remove damage box on death
+            // Remove damage box on death.
             if (_damageState.CurrentLives <= 0)
             {
                 _damageField.IsActive = false;

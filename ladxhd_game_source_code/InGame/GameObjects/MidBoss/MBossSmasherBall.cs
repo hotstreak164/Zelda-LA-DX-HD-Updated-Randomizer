@@ -79,22 +79,16 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 }
             }
         }
-
-        /// <summary>
-        /// Returns if the ball can be picket up by the boss. This is the case if it is laying on the ground and the player is not holding it.
-        /// </summary>
-        /// <returns></returns>
+        
         public bool IsAvailable()
         {
+            // Returns if the ball can be picket up by the boss. This is the case if it is laying on the ground and the player is not holding it.
             return !_isPickedUp && _body.IsGrounded;
         }
 
-        /// <summary>
-        /// Init Pickup by the boss
-        /// </summary>
-        /// <returns></returns>
         public bool InitPickup()
         {
+            // Init Pickup by the boss.
             if (_isPickedUp)
                 return false;
 
