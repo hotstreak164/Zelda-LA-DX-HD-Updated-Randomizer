@@ -92,8 +92,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if ((hitType & HitType.CrystalSmash) != 0 || (hitType & HitType.ClassicSword) != 0)
                 return Values.HitCollision.None;
 
-            OnDeath();
-            
+            OnDeath(true);
+
             return Values.HitCollision.Enemy;
         }
 
@@ -113,7 +113,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                     }
                     // Otherwise kill it.
                     else
-                        OnDeath();
+                        OnDeath(false);
                 }
             }
             // The shot was not reflected so perform the knockback.
@@ -143,12 +143,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.VelocityTarget = reflected;
         }
 
-        private void OnDeath()
+        private void OnDeath(bool playSound)
         {
+            if (playSound)
+                Game1.GameManager.PlaySoundEffect("D360-03-03");
+
             var splashAnimator = new ObjAnimator(Map, 0, 0, 0, 0, Values.LayerTop, "Particles/spawn", "run", true);
             splashAnimator.EntityPosition.Set(EntityPosition.Position - new Vector2(8, 8));
             Map.Objects.SpawnObject(splashAnimator);
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
             Delete();
         }
 
