@@ -141,17 +141,17 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             // Get whether or not the player recieved damage.
             bool damaged = _damageField.DamagePlayer();
 
-            // If player was damaged, delete the object.
-            if (damaged)
+            // If the player was not damaged, check if it should be reflected.
+            if (!damaged && GameSettings.MirrorReflects && Game1.GameManager.ShieldLevel == 2 && !_reflected)
+                Reflect();
+
+            // Whether the player was damaged or it was blocked, destroy the shot.
+            else
             {
                 _aiComponent.ChangeState("despawn");
                 _body.Velocity = new Vector3(-_body.VelocityTarget.X * 0.25f, -_body.VelocityTarget.Y * 0.25f, 1.5f);
                 _body.VelocityTarget = Vector2.Zero;
             }
-            // If player was not damaged, it was blocked.
-            else if (GameSettings.MirrorReflects && Game1.GameManager.ShieldLevel == 2 && !_reflected)
-                Reflect();
-
             // Return the damage state for the damage field component.
             return damaged;
         }
