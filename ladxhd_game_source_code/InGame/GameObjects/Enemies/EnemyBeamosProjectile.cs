@@ -92,7 +92,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 if (!_reflected)
                 {
                     // If the shield is able to reflect the shot.
-                    if (GameSettings.MirrorReflects)
+                    if (GameSettings.MirrorReflects && !MapManager.ObjLink.InDamageState)
                     {
                         Reflect(direction);
                     }

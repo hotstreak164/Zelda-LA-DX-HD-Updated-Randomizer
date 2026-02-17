@@ -106,7 +106,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 if (!_reflected)
                 {
                     // If the shield is able to reflect the shot.
-                    if (GameSettings.MirrorReflects && Game1.GameManager.ShieldLevel == 2)
+                    if (GameSettings.MirrorReflects && Game1.GameManager.ShieldLevel == 2 && !MapManager.ObjLink.InDamageState)
                     {
                         Reflect(direction);
                         return false;

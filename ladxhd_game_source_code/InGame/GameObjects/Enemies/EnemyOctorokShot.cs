@@ -142,7 +142,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             bool damaged = _damageField.DamagePlayer();
 
             // If the player was not damaged, check if it should be reflected.
-            if (!damaged && GameSettings.MirrorReflects && Game1.GameManager.ShieldLevel == 2 && !_reflected)
+            if (!damaged && GameSettings.MirrorReflects && Game1.GameManager.ShieldLevel == 2 && !MapManager.ObjLink.InDamageState && !_reflected)
                 Reflect();
 
             // Whether the player was damaged or it was blocked, destroy the shot.

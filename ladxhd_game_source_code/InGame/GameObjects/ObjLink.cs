@@ -223,6 +223,8 @@ namespace ProjectZ.InGame.GameObjects
         private double _hitRepelTime;
         private double _hitParticleTime;
 
+        public bool InDamageState => _hitCount > 0;
+
         private float _swordChargeCounter = 100;
         private bool _swordPoked;
         private bool _stopCharging;

@@ -167,7 +167,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             else
             {
                 // Mirror shield reflects the shot while normal shield just collides.
-                if (GameSettings.MirrorReflects && Game1.GameManager.ShieldLevel == 2 && !_reflected)
+                if (GameSettings.MirrorReflects && Game1.GameManager.ShieldLevel == 2 && !MapManager.ObjLink.InDamageState && !_reflected)
                     Reflect();
                 else
                     OnCollision(Values.BodyCollision.None);
