@@ -6,7 +6,8 @@ namespace ProjectZ.InGame.Interface
 {
     public class InterfaceLabel : InterfaceElement
     {
-        private SpriteFont Font => Resources.GameFont;
+        private SpriteFont _font;
+        private SpriteFont Font => _font ?? Resources.GameFont;
 
         public Gravities TextAlignment
         {
@@ -18,7 +19,6 @@ namespace ProjectZ.InGame.Interface
                     SetText(Text);
             }
         }
-
         public Color TextColor = Color.White;
 
         public string Text { get; set; }
@@ -37,6 +37,7 @@ namespace ProjectZ.InGame.Interface
 
         public InterfaceLabel(SpriteFont font, string key, Point size, Point margin)
         {
+            _font = font;
             Size = size;
             Margin = margin;
 
@@ -47,18 +48,18 @@ namespace ProjectZ.InGame.Interface
             UpdateLanguageText();
         }
 
-        public InterfaceLabel(string key, Point size, Point margin) : this(Resources.GameFont, key, size, margin)
-        { }
+        public InterfaceLabel(string key, Point size, Point margin) : this(null, key, size, margin) { }
 
         public InterfaceLabel(string key) : this(key, Point.Zero, Point.Zero)
         {
             Size = new Point((int)_textSize.X, (int)_textSize.Y);
         }
-
         public void SetText(string strText)
         {
-            Text = strText;
+            // Debug: If the text crashes, this will let us know which line crashed.
+            // System.Diagnostics.Debug.WriteLine(Text);
 
+            Text = strText;
             _textSize = Font.MeasureString(Text);
 
             if (Size != Point.Zero)

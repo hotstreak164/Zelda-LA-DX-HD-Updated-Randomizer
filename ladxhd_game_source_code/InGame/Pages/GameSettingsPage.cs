@@ -152,6 +152,18 @@ namespace ProjectZ.InGame.Pages
 
             // Refresh any textures that need refreshed.
             Resources.RefreshDynamicResources();
+
+            // If the language is changed, then stored "OverrideText" also needs to be changed for any button that uses it.
+            if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(CameraSettingsPage), out var camPage))
+            {
+                var CameraSettingsPage = (CameraSettingsPage)camPage;
+                CameraSettingsPage.UpdateCameraOverrideText();
+            }
+            if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(ControlSettingsPage), out var controlPage))
+            {
+                var ControlSettingsPage = (ControlSettingsPage)controlPage;
+                ControlSettingsPage.UpdateControllerOverrideText();
+            }
         }
 
         private string MenuBorderScaleSliderAdjustment(int number)

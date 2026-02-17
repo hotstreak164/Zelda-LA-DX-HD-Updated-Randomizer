@@ -32,6 +32,15 @@ namespace ProjectZ.InGame.Pages
         public void SetClassicMove(bool state) => ((InterfaceToggle)_toggleClassicMove.Elements[1]).ToggleState = state;
         public void SetDigitalAnalog(bool state) => ((InterfaceToggle)_toggleDigitalAnalog.Elements[1]).ToggleState = state;
 
+        public void UpdateControllerOverrideText()
+        {
+            // The "OverrideText" is stored so if the language is changed then the text also needs to be updated.
+            string UpdateText = Game1.LanguageManager.GetString("settings_controls_gamepad", "error") + ": " + GameSettings.Controller;
+
+            // Update the label with the properly translated textu.
+            _controllerType.InsideLabel.OverrideText = UpdateText;
+        }
+
         public ControlSettingsPage(int width, int height)
         {
             EnableTooltips = true;
@@ -55,7 +64,7 @@ namespace ProjectZ.InGame.Pages
 
             // Button: Controller Type
             _contentLayout.AddElement(_controllerType = new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(0, 2), "", PressButtonSetController));
-            _controllerType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_controls_gamepad", "error") + ": " + GameSettings.Controller;
+            UpdateControllerOverrideText();
 
             // Button: Remap Settings
             _contentLayout.AddElement(new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(1, 2), 
@@ -142,7 +151,7 @@ namespace ProjectZ.InGame.Pages
             ControlHandler.SetControllerIndex();
 
             // Override the button text with this fancy hack.
-            _controllerType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_controls_gamepad", "error") + ": " + GameSettings.Controller;
+            UpdateControllerOverrideText();
 
             // Update the buttons on the controller page.
             ControlMappingPage.UpdateLabels();

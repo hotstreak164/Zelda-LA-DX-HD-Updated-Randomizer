@@ -36,6 +36,15 @@ namespace ProjectZ.InGame.Pages
         public void SetCameraScreenShake(bool state) => ((InterfaceToggle)_toggleScreenShake.Elements[1]).ToggleState = state;
         public void SetCameraExScreenShake(bool state) => ((InterfaceToggle)_toggleExScreenShake.Elements[1]).ToggleState = state;
 
+        public void UpdateCameraOverrideText()
+        {
+            // The "OverrideText" is stored so if the language is changed then the text also needs to be updated.
+            string UpdateText = Game1.LanguageManager.GetString("settings_camera_cameratype", "error") + ": " + _cameraName;
+
+            // Update the label with the properly translated textu.
+            _buttonCameraType.InsideLabel.OverrideText = UpdateText;
+        }
+
         public CameraSettingsPage(int width, int height)
         {
             EnableTooltips = true;
@@ -52,7 +61,7 @@ namespace ProjectZ.InGame.Pages
 
             // Button: Modern/Classic Camera
             _contentLayout.AddElement(_buttonCameraType = new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(0, 2), "", PressButtonCameraChange));
-            _buttonCameraType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_camera_cameratype", "error") + ": " + _cameraName;
+            UpdateCameraOverrideText();
 
             // Toggle: Overworld Only
             _toggleModernOverworld = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
@@ -161,7 +170,7 @@ namespace ProjectZ.InGame.Pages
             GameSettings.ClassicCamera = classicState ?? !GameSettings.ClassicCamera;
 
             // Override the button text with this fancy hack.
-            _buttonCameraType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_camera_cameratype", "error") + ": " + _cameraName;
+            UpdateCameraOverrideText();
 
             // The camera has changed so the game scale must also be upated.
             Game1.ScaleChanged = true;
