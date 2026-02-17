@@ -143,7 +143,6 @@ namespace ProjectZ.InGame.Pages
             GameSettings.VarWidthFont = newState;
             Game1.GameManager.InGameOverlay.TextboxOverlay.ResolutionChange();
             Game1.UiPageManager.Reload(_content);
-            PageTooltip.UpdateFont();
         }
 
         public void PressButtonToggleHelpers(bool newState)

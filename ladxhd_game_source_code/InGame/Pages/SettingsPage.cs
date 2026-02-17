@@ -140,6 +140,7 @@ namespace ProjectZ.InGame.Pages
                 case 4:  { tooltip = Game1.LanguageManager.GetString("tooltip_menu_audio", "error"); break; }
                 case 5:  { tooltip = Game1.LanguageManager.GetString("tooltip_menu_controls", "error"); break; }
                 case 6:  { tooltip = Game1.LanguageManager.GetString("tooltip_menu_mods", "error"); break; }
+                case 7:  { tooltip = Game1.LanguageManager.GetString("tooltip_menu_presets", "error"); break; }
             }
             // Display the tooltip in the tooltip window.
             return tooltip;

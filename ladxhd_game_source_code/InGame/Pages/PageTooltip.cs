@@ -1,14 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.Things;
-using System.Collections.Generic;
 
 namespace ProjectZ.InGame.Interface
 {
     public static class PageTooltip
     {
         // Sprite font texture.
-        public static SpriteFont Font = Resources.GameFont;
+        private static SpriteFont Font => Resources.GameFont;
 
         // Text padding.
         static float paddingX = 10f * Game1.UiScale;
@@ -89,6 +89,22 @@ namespace ProjectZ.InGame.Interface
             }
         }
 
+        private static void FindCrashChars(SpriteFont font, string text)
+        {
+            // Split the entire string into a character array.
+            var chars = text.ToCharArray();
+
+            // Loop through the character array.
+            foreach (char c in chars)
+            {
+                // Write the current character.
+                System.Diagnostics.Debug.WriteLine(c);
+
+                // Try to measure it. If this crashes, the last character printed out is what crashed the game.
+                float lineWidth = font.MeasureString(c.ToString()).X * Game1.UiScale;
+            }
+        }
+
         private static List<string> WrapText(SpriteFont font, string text, float maxLineWidth)
         {
             // Split text into words, store into a temporary line, and test
@@ -96,6 +112,9 @@ namespace ProjectZ.InGame.Interface
             var words = text.Split(' ');
             var lines = new List<string>();
             string currentLine = "";
+
+            // Debug function to find characters in the tooltip that crash.
+            // FindCrashChars(font, text);
 
             // Loop through each word and decide if it fits in the current line.
             foreach (var word in words)
@@ -122,12 +141,6 @@ namespace ProjectZ.InGame.Interface
                 lines.Add(currentLine);
 
             return lines;
-        }
-
-        public static void UpdateFont()
-        {
-            // Reload the font if it's been changed.
-            Font = Resources.GameFont;
         }
     }
 }
