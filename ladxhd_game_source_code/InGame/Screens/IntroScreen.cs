@@ -290,8 +290,18 @@ namespace ProjectZ.InGame.Screens
 
         public void RefreshIntroResources()
         {
-            _spriteLogo0 = Resources.GetSprite("intro_logo_0");
-            _spriteLogo1 = Resources.GetSprite("intro_logo_1");
+            // Append language extension for some logo textures.
+            string texExtension = "";
+
+            // If language is Chinese we use alternate logo textures.
+            if (Game1.LanguageManager.CurrentLanguageCode == "chn")
+                texExtension = "_chn";
+
+            // Refresh the logo and DX images. This is done when resources are finished
+            // loading in and also when the language toggle is changed. 
+            _spriteLogo0 = Resources.GetSprite("intro_logo_0" + texExtension);
+            _spriteLogo1 = Resources.GetSprite("intro_logo_1" + texExtension);
+            _spriteDX = Resources.GetSprite("intro_dx" + texExtension);
         }
 
         public override void OnLoad()
@@ -944,6 +954,7 @@ namespace ProjectZ.InGame.Screens
                      Width = _spriteLogo0.SourceRectangle.Width,
                      Height = logoHeight
                 };
+
                 spriteBatch.Draw(_spriteLogo0.Texture, logoAPosition, _spriteLogo0.ScaledRectangle, Color.White);
 
                 Rectangle logoBPosition = new Rectangle 
@@ -969,11 +980,21 @@ namespace ProjectZ.InGame.Screens
                     _dxFadeInDelay += Game1.DeltaTime;
                     if (_dxFadeInDelay > 1000)
                     {
+                        // Different languages may require different offsets.
+                        int offsetX = -8;
+                        int offsetY = 9;
+
+                        // Check for Chinese language and update offsets accordingly.
+                        if (Game1.LanguageManager.CurrentLanguageCode == "chn")
+                        {
+                            offsetX = -6;
+                            offsetY = -12;
+                        }
                         _dxFadeInAlpha += MathHelper.Clamp(Game1.DeltaTime / 1200.0f, 0, 1);
                         Rectangle dxPosition = new Rectangle 
                         {
-                             X = _spriteBackground.SourceRectangle.Width / 4 - 8,
-                             Y = _spriteBackground.SourceRectangle.Height / 4 + 9,
+                             X = _spriteBackground.SourceRectangle.Width / 4 + offsetX,
+                             Y = _spriteBackground.SourceRectangle.Height / 4 + offsetY,
                              Width = _spriteDX.SourceRectangle.Width,
                              Height = _spriteDX.SourceRectangle.Height
                         };

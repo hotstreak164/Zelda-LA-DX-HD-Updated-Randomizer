@@ -23,6 +23,9 @@ namespace ProjectZ.InGame.Things
                 Name = name;
             }
         }
+        // A list of all currently supported language codes.
+        static string[] _languageList = { "chn", "deu", "esp", "fre", "ind", "ita", "por", "rus" };
+
         public static Effect RoundedCornerEffect;
         public static Effect BlurEffect;
         public static Effect RoundedCornerBlurEffect;
@@ -547,23 +550,28 @@ namespace ProjectZ.InGame.Things
                 return match.SprTexture;
 
             // Remove language tags and try again.
-            string[] langs = { "chn", "deu", "esp", "fre", "ind", "ita", "por", "rus" };
             string[] parts = Path.GetFileNameWithoutExtension(name).Split('_');
 
             // Rebuild filename skipping language parts.
-            string newName = string.Join("_", parts.Where(p => !langs.Contains(p))) + Path.GetExtension(name);
+            string newName = string.Join("_", parts.Where(p => !_languageList.Contains(p))) + Path.GetExtension(name);
             match = TextureList.FirstOrDefault(t => t.Name == newName);
             return match.SprTexture;
         }
 
         public static string FindAtlasFile(string textureName)
         {
-            string[] langs = { "chn", "deu", "esp", "fre", "ind", "ita", "por", "rus" };
+            // Try to find an atlas with the language code.
+            string basePath = textureName.Replace(".png","");
+            string fullAtlas = basePath + ".atlas";
 
+            if (File.Exists(fullAtlas))
+                return fullAtlas;
+
+            // Fallback to base atlas file by stripping language + redux.
             var parts = textureName
                 .Replace(".png", "")
                 .Split('_')
-                .Where(name => name != "redux" && !langs.Contains(name));
+                .Where(name => name != "redux" && !_languageList.Contains(name));
 
             return string.Join("_", parts) + ".atlas";
         }
