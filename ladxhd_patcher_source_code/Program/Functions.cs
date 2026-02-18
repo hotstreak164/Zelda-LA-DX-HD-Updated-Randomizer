@@ -73,26 +73,6 @@ namespace LADXHD_Patcher
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        CHINESE FONT: BECAUSE THE FONT WE HAVE IS ALREADY COMPILED INTO XNB IT CAN'T BE COMPILED WITH THE GAME. SO WE INSTALL IT WITH THE PATCHER INSTEAD.
-       
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-        private static void InstallChineseFont()
-        {
-            // I can't remember how to get a file without my resource helper so just use that.
-            Dictionary<string, object> resources = ResourceHelper.GetAllResources();
-
-            // Set the path to the Chinese font that will be created.
-            string chinaFontXNB = Path.Combine(Config.gameFontsPath, "smallFont_chn.xnb");
-            string chinaFontXNBRedux = Path.Combine(Config.gameFontsPath, "smallFont_chn_redux.xnb");
-
-            // Write the chinese language file to the directory.
-            File.WriteAllBytes(chinaFontXNB, (byte[])resources["smallFont_chn.xnb"]);
-            File.WriteAllBytes(chinaFontXNBRedux, (byte[])resources["smallFont_chn_redux.xnb"]);
-        }
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
         BAD BACKUPS: OLD PATCHER VERSIONS KEPT AROUND PATCHED FILES IN THE BACKUP FOLDER, WHICH MESSES UP THE PATCHER. BACKUP FOLDER IS FOR v1.0.0 FILES ONLY.
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -385,7 +365,6 @@ namespace LADXHD_Patcher
             PatchGameFiles();
             XDelta3.Remove();
 
-            InstallChineseFont();
             CreateModFolders();
 
             TryRemoveTempPath();
@@ -426,9 +405,6 @@ namespace LADXHD_Patcher
 
                 Console.WriteLine("Patching game files...");
                 PatchGameFiles();
-
-                Console.WriteLine("Copying Chinese font file...");
-                InstallChineseFont();
 
                 Console.WriteLine("Creating mods folders...");
                 CreateModFolders();

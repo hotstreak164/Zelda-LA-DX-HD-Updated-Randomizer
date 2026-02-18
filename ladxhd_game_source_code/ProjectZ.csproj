@@ -8,28 +8,43 @@
     <UseWindowsForms>true</UseWindowsForms>
     <MonoGamePlatform>Windows</MonoGamePlatform>
   </PropertyGroup>
+	
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath></OutputPath>
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
+    <Content Include="ChineseFonts\*.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Content\Fonts\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ChineseFonts\**" />
     <Compile Remove="Content\bin\**" />
     <Compile Remove="Content\obj\**" />
     <Compile Remove="Fix\**" />
     <EmbeddedResource Remove="Content\bin\**" />
     <EmbeddedResource Remove="Content\obj\**" />
     <EmbeddedResource Remove="Fix\**" />
+    <EmbeddedResource Remove="ChineseFonts\**" />
     <None Remove="Content\bin\**" />
     <None Remove="Content\obj\**" />
     <None Remove="Fix\**" />
   </ItemGroup>
-    <ItemGroup>
+	
+  <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
+    <None Remove="smallFont_chn.xnb" />
   </ItemGroup>
+	
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
+	
   <ItemGroup>
     <PackageReference Include="MonoGame.Extended" Version="5.3.1" />
     <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="5.3.1" />
@@ -38,26 +53,31 @@
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
     <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="Data\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-    <PropertyGroup>
+	
+  <PropertyGroup>
     <StartupObject>ProjectZ.Program</StartupObject>
     <AssemblyName>Link's Awakening DX HD</AssemblyName>
     <PublishSingleFile>true</PublishSingleFile>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>1.6.1</Version>
+    <Version>1.6.2</Version>
   </PropertyGroup>
+	
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />
   </Target>
+	
   <Target Name="RemovePreviousPublish" BeforeTargets="Build">
     <RemoveDir Directories="$(PublishDir)"></RemoveDir>
   </Target>
+	
   <Target Name="CleanPublish" AfterTargets="Publish">
     <Delete Files="$(PublishDir)/assimp.dll" />
     <Delete Files="$(PublishDir)/ffmpeg.exe" />
@@ -70,4 +90,5 @@
     <Delete Files="$(PublishDir)/nvtt.dll" />
     <Delete Files="$(PublishDir)/PVRTexLibWrapper.dll" />
   </Target>
+
 </Project>
