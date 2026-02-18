@@ -23,6 +23,7 @@
   * Fix enemy Winged Octorok pushable component (shield bump) getting disabled when it jumps into the air.
   * Fix miniboss Smasher to be easier to hit, slow down when running, and be impervious to knockback effects.
   * Fix dungeon 8 ledge above the room with the Green Zol in a chest where the player could not jump down.
+  * Fix color dungeon grave stone sometimes not being able to be pushed to open the dungeon entrance.
   * Fix egg dungeon to have the default path when the player has never actually read the library book.
 
 ## **v1.6.1**

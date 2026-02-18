@@ -11,14 +11,13 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         private readonly int[] _correctDirection = { 3, 0, 1, 2, 1 };
         private readonly string _triggerKey;
 
-        private int _currentState;
+        public int CurrentState;
 
-        // object to set a key if the gravestones get moved in the right order in the right direction
         public ObjGraveTrigger() : base("editor grave trigger") { }
 
         public ObjGraveTrigger(Map.Map map, int posX, int posY, string triggerKey) : base(map)
         {
-            Tags = Values.GameObjectTag.None;
+            Tags = Values.GameObjectTag.Utility;
 
             EntityPosition = new CPosition(posX, posY, 0);
             EntitySize = new Rectangle(0, 0, 16, 16);
@@ -40,24 +39,38 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         {
             var reset = true;
 
+            // Loop through each gravestone.
             for (var i = 0; i < 5; i++)
             {
+                // Get the current state for each gravestone push direction.
                 var strKey = Game1.GameManager.SaveManager.GetString("ow_grave_" + i + "_dir");
 
-                // key is set?
+                // Check if the direction has been set.
                 if (!string.IsNullOrEmpty(strKey) && strKey != "-1")
                 {
-                    reset = false;
-                    var correctDirection = _correctDirection[i].ToString() == strKey;
+                    // Check if the palyer has a follower with them.
+                    var hasBowWow  = Game1.GameManager.SaveManager.GetString("has_bowWow", "0") == "1";
+                    var hasMarin   = Game1.GameManager.SaveManager.GetString("has_marin", "0") == "1";
+                    var hasGhost   = Game1.GameManager.SaveManager.GetString("has_ghost", "0") == "1";
+                    var hasRooster = Game1.GameManager.SaveManager.GetString("has_rooster", "0") == "1";
+                    var hasFollower = hasBowWow || hasMarin || hasGhost || hasRooster;
 
-                    // player moved the next gravestone in the correct direction
-                    if (correctDirection)
+                    // Disable reset.
+                    reset = false;
+
+                    // Player moved the next gravestone in the correct direction.
+                    if (_correctDirection[i].ToString() == strKey)
                     {
-                        if (_currentState == i)
+                        // If the current state is equal to the gravestone pushed.
+                        if (CurrentState == i)
                         {
-                            _currentState++;
-                            if (_currentState == 5)
+                            // Increment the current state.
+                            CurrentState++;
+
+                            // If it was the final gravestone that was pushed and the player does not have a follower.
+                            if (CurrentState == 5 && !hasFollower)
                             {
+                                // Spawn the entrance to the Color dungeon.
                                 Game1.GameManager.SaveManager.SetString(_triggerKey, "1");
 
                                 // remove the object
@@ -65,19 +78,14 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                             }
                         }
                     }
+                    // Not the correct gravestone moved or in the wrong direction.
                     else
-                    {
-                        // not the correct gravestone moved or in the wrong direction
-                        _currentState = 5;
-                    }
+                        CurrentState = 5;
                 }
             }
-
-            // was reset?
+            // If reset is still true then set state back to zero.
             if (reset)
-            {
-                _currentState = 0;
-            }
+                CurrentState = 0;
         }
     }
 }

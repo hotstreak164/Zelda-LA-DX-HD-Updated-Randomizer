@@ -184,6 +184,42 @@ namespace ProjectZ.InGame.GameObjects.Things
             return true;
         }
 
+        private bool BlockColorDungeonEntry()
+        {
+            // Check if it's the grave that opens up the color dungeon.
+            if (_type == 1 && _strKey == "ow_grave_4")
+            {
+                // Check if the palyer has a follower with them.
+                var hasBowWow  = Game1.GameManager.SaveManager.GetString("has_bowWow", "0") == "1";
+                var hasMarin   = Game1.GameManager.SaveManager.GetString("has_marin", "0") == "1";
+                var hasGhost   = Game1.GameManager.SaveManager.GetString("has_ghost", "0") == "1";
+                var hasRooster = Game1.GameManager.SaveManager.GetString("has_rooster", "0") == "1";
+
+                // The player has a follower with them.
+                if (hasBowWow || hasMarin || hasGhost || hasRooster)
+                {
+                    // Create a list to find the grave trigger which tracks the stone order.
+                    List<GameObject> graveTriggerList = new List<GameObject>();
+                    Rectangle field = MapManager.ObjLink.CurrentField;
+
+                    // Search the current field that Link is in.
+                    Map.Objects.GetGameObjectsWithTag(graveTriggerList, Values.GameObjectTag.Utility, field.X, field.Y, field.Width, field.Height);
+
+                    // The first object in the list will be what we're looking for.
+                    ObjGraveTrigger graveTrigger = graveTriggerList[0] as ObjGraveTrigger;
+
+                    // Show the message about not having enough strength.
+                    if (graveTrigger.CurrentState == 4)
+                    {
+                        Game1.GameManager.StartDialogPath("grave_locked");
+                        return true;
+                    }
+                }
+            }
+            // It's not the gravestone we're looking for.
+            return false;
+        }
+
         private bool OnPush(Vector2 direction, PushableComponent.PushType type)
         {
             // Set Link to a variable to shorten the references and get the direction the stone should move.
@@ -197,6 +233,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             bool pushTypeImpact = type == PushableComponent.PushType.Impact;                   // Push type must not be "Impact" type.
             bool singlePushOnly = _activePushStone != null && _activePushStone != this;        // Only allow a single stone to move at once.
             bool pushStoneGrave = _type == 1 && Game1.GameManager.StoneGrabberLevel <= 0;      // Gravestones require the power bracelet.
+            bool noColorDungeon = BlockColorDungeonEntry();                                    // The gravestone which accesses the color dungeon.
 
             // These conditions are combined into a single condition for readability.
             bool directionExist = _allowedDirections != -1;                                    // Stone has valid pushable directions set.
@@ -204,7 +241,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             bool blockDirection = directionExist && directionFails;
 
             // If any of the conditions pass, then fail pushing the stone.
-            if (linkNotPushing || dirNotMatching || stateIsNotIdle || pushTypeImpact || singlePushOnly || pushStoneGrave || blockDirection)
+            if (linkNotPushing || dirNotMatching || stateIsNotIdle || pushTypeImpact || singlePushOnly || pushStoneGrave || noColorDungeon || blockDirection)
                 return false;
 
             // Must be the closest stone to Link. Separated out as it's the most expensive check.
