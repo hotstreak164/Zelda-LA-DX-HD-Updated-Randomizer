@@ -23,8 +23,6 @@ namespace ProjectZ.InGame.Pages
         private readonly InterfaceListLayout _toggleScreenShake;
         private readonly InterfaceListLayout _toggleExScreenShake;
 
-        private string _cameraName => GameSettings.ClassicCamera ? "Classic Camera" : "Modern Camera";
-
         private bool _showTooltip;
 
         public void SetCameraMode(bool state) => ToggleCameraModes(state);
@@ -39,8 +37,13 @@ namespace ProjectZ.InGame.Pages
 
         public void UpdateCameraOverrideText()
         {
+            // Get the translated camera name for modern/classic.
+            string cameraName = GameSettings.ClassicCamera 
+                ? Game1.LanguageManager.GetString("settings_camera_camera_classic", "error")
+                : Game1.LanguageManager.GetString("settings_camera_camera_modern", "error");
+
             // The "OverrideText" is stored so if the language is changed then the text also needs to be updated.
-            string UpdateText = Game1.LanguageManager.GetString("settings_camera_cameratype", "error") + ": " + _cameraName;
+            string UpdateText = Game1.LanguageManager.GetString("settings_camera_cameratype", "error") + ": " + cameraName;
 
             // Update the label with the properly translated textu.
             _buttonCameraType.InsideLabel.OverrideText = UpdateText;
