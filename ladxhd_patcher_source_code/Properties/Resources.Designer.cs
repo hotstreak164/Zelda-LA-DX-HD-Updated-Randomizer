@@ -93,6 +93,26 @@ namespace LADXHD_Patcher {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] smallFont_chn_redux_xnb {
+            get {
+                object obj = ResourceManager.GetObject("smallFont_chn_redux.xnb", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] smallFont_chn_xnb {
+            get {
+                object obj = ResourceManager.GetObject("smallFont_chn.xnb", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] xdelta3_exe {
             get {
                 object obj = ResourceManager.GetObject("xdelta3.exe", resourceCulture);

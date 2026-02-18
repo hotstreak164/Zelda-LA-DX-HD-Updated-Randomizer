@@ -1,5 +1,30 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.6.2**
+### The "Lunar New Year" Update
+  * Implement Chinese Language. Thanks to [Darth-Koopa](https://github.com/Darth-Koopa) (creator).
+  * Name entry now allows just about any character to be entered (assuming the spritefont supports it).
+  * Add a new "Modifier" that makes the Mirror Shield reflect enemy projectiles back at them.
+  * Remove sprite shadows from several enemies whose Z-position never goes above a value of zero.
+  * Perform optimizations on ObjectManager game loop and the sword carrying enemy weapon update loops.
+  * Prevent damage when transitioning between maps. The "invulnerability" begins and ends with the transition.
+  * Fix options "Camera Type" and "Controller Type" buttons to update text with the selected language.
+  * Fix translating "Modern Camera" and "Classic Camera". It was a "do it later" thing that only came now.
+  * Fix photo sequence to properly show a photograph after a previous photo sequence showed a photograph.
+  * Fix sword/shield not being properly equipped/unequipped when changing inventory buttons between 4/6.
+  * Fix false hits breaking through the shield (again). I think the last "fix" actually broke it worse.
+  * Fix resetting the signpost maze on overworld reload when leaving it halfway through and returning later.
+  * Fix playing the proper sound effect for fireballs whether hit with the sword or blocked with the shield.
+  * Fix enemies sometimes "dying twice" which could show two different death explosions and spawn two items.
+  * Fix enemy Anti-Kirby animation bugging out when Classic Camera is enabled and after a field change.
+  * Fix enemy Bomber from being able to leave or throw bombs outside of the field that it spawned in.
+  * Fix enemy Beamos lasers to not be blockable with the level 1 shield. This is a long standing v1.0.0 bug.
+  * Fix enemy Red Zol when using "Extra Enemy Hit Points" modifier and incoming damage took more than 1 hit.
+  * Fix enemy Winged Octorok pushable component (shield bump) getting disabled when it jumps into the air.
+  * Fix miniboss Smasher to be easier to hit, slow down when running, and be impervious to knockback effects.
+  * Fix dungeon 8 ledge above the room with the Green Zol in a chest where the player could not jump down.
+  * Fix egg dungeon to have the default path when the player has never actually read the library book.
+
 ## **v1.6.1**
 ### The "Shadows From the Past" Update
   * Modify sprite shadows to only be shown when the shadow caster is in the air like the original game.

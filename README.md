@@ -15,7 +15,7 @@ Some assets have been updated, but I have created tooling to make migration easi
 - As of v1.5.0, it has evolved into something I never dreamed of. Hundreds of issues fixed with tons of features.
 - As of v1.6.0, just about every small detail from the original game has been restored and/or replicated.
 
-## Patching v1.0.0 (or v1.1.4+) to v1.6.1.
+## Patching v1.0.0 (or v1.1.4+) to v1.6.2.
 
 To download the latest update, there is a patcher on the [Releases](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/releases) page. 
 If you wish to build the game yourself, see **Personal Build / Publishing**.
@@ -63,7 +63,7 @@ This section explains the files and folders found in the base of this respositor
 - **assets_patches**: Contains xdelta3 patches that are the difference of assets from v1.0.0 to the latest updates.
 - **ladxhd_game_source_code**: Source code for The Legend of Zelda: Link's Awakening DX HD.
 - **ladxhd_migrate_source_code**: Source code for the migration tool which can apply/create assets patches.
-- **ladxhd_patcher_source_code**: Source code for the patcher to update the game to v1.6.1.
+- **ladxhd_patcher_source_code**: Source code for the patcher to update the game to v1.6.2.
 - **LADXHD_Migrater.exe**: This is the migration tool used to apply or create patches to the assets.
 - **Unblock-All-Files.ps1**: This script can be used to unblock all files automatically for Visual Studio.
 
