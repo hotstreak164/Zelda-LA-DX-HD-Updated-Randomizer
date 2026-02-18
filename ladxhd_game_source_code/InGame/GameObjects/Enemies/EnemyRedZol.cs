@@ -28,6 +28,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private float _jumpAcceleration = 1.5f;
 
         private bool _spawnSmallZols = true;
+        private bool _multipleHits = false;
         private int _lives = EnemyLives.RedZol;
 
         public EnemyRedZol() : base("red zol") { }
@@ -237,8 +238,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             // If the damage is greater than the number of lives they have kill it outright.
             if (damage > _lives)
             {
-                ((HittableComponent)Components[HittableComponent.Index]).IsActive = false;
-                _spawnSmallZols = false;
+                // If the modifier to add additional lives is used, the Zol may take more than one hit before it dies. This can
+                // cause a weird situation where hitting with sword doesn't kill it, then using boomerang does kill it. Without
+                // detecting this, the Zol will just disappear with no death effects and not spawn Gels.
+                if (!_multipleHits)
+                    _spawnSmallZols = false;
+
                 _damageField.IsActive = false;
                 _hitComponent.IsActive = false;
                 _pushComponent.IsActive = false;
@@ -246,6 +251,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             // Spawn Gels if the damage is not over the amount of HP they have.
             else
             {
+                _multipleHits = true;
                 _damageState.SpawnItems = false;
                 _damageState.DeathAnimation = false;
             }
