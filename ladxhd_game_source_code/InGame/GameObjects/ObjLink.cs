@@ -2803,7 +2803,7 @@ namespace ProjectZ.InGame.GameObjects
                 : "_";
 
             // Pegasus boots running animation.
-            if (_bootsHolding || _bootsRunning || _forceWalking)
+            if (!IsTransitioning && (_bootsHolding || _bootsRunning || _forceWalking))
             {
                 _swordChargeCounter = sword_charge_time;
 
