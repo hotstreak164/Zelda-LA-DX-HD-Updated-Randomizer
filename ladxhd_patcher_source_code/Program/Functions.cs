@@ -184,6 +184,27 @@ namespace LADXHD_Patcher
         PATCHING CODE : PATCH FILES USING XDELTA PATCHES FROM "Resources.resx" TO UPDATE TO THE LATEST VERSION.
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        private static Dictionary<string, string> _gameFileLookup;
+
+        private static void BuildGameFileLookup()
+        {
+            _gameFileLookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (string file in Directory.EnumerateFiles(Config.baseFolder, "*", SearchOption.AllDirectories))
+            {
+                var fileItem = new FileItem(file);
+
+                if (fileItem.IsInFolder("Backup"))
+                    continue;
+
+                string name = Path.GetFileName(file);
+
+                if (!_gameFileLookup.ContainsKey(name))
+                    _gameFileLookup[name] = file;
+            }
+        }
+
         private static void Dungeon3PatchFix()
         {
             // I fucked up. After the dungeon name change the file "dungeon3_1.map" no longer exists.
@@ -228,52 +249,54 @@ namespace LADXHD_Patcher
             RemoveBadBackupFiles();
             filesPatched = 0;
 
-            // Get all files found in the base folder recursively.
-            var fileCollection = Config.baseFolder.GetFiles("*", true);
+            // Build fast lookup of game files (name -> full path)
+            BuildGameFileLookup();
 
             // Get a count of how many files there are.
-            TotalCount = fileCollection.Count;
+            TotalCount = _gameFileLookup.Count;
 
             // Loop through all files in the collection.
-            foreach (string file in fileCollection)
+            foreach (var kvp in _gameFileLookup)
             {
                 // We don't need a perfect representation of progress just a rough idea of the time left.
                 UpdateProgress();
 
+                string fileName = kvp.Key;
+                string fullPath = kvp.Value;
+
                 // Get the file as a file item which gives us some cool properties to reference.
-                FileItem fileItem = new FileItem(file);
+                FileItem fileItem = new FileItem(fullPath);
 
                 // Do not try to patch the patcher, the chinese fonts, modded files, or files directly in the backup folder.
-                if (fileItem.Name == "xdelta3.exe" || fileItem.Name.StartsWith("smallFont_chn") || fileItem.IsInFolder("Mods") || fileItem.IsInFolder("Backup")  )
+                if (fileItem.Name == "xdelta3.exe" || fileItem.Name.StartsWith("smallFont_chn") || fileItem.IsInFolder("Mods"))
                     continue;
 
                 // Get the backup path to test for existing backups and create new ones to it.
-                string backupPath  = Path.Combine(Config.backupPath, fileItem.Name);
-                string xdelta3File = Path.Combine(Config.tempFolder + "\\patches", fileItem.Name + ".xdelta");
+                string backupPath  = Path.Combine(Config.backupPath, fileName);
+                string xdelta3File = Path.Combine(Config.tempFolder, "patches", fileName + ".xdelta");
 
                 // Backup file if it has patch and a backup doesn't exist or restore from backup if one does exist.
-                if (xdelta3File.TestPath())
+                bool patchExists = xdelta3File.TestPath();
+                if (patchExists)
                 {
                     if (!backupPath.TestPath())
-                        fileItem.FullName.CopyPath(backupPath, true);
+                        fullPath.CopyPath(backupPath, true);
                     else
-                        backupPath.CopyPath(fileItem.FullName, true);
+                        backupPath.CopyPath(fullPath, true);
                 }
-
                 // If this file creates other files do so now.
-                if (fileTargets.ContainsKey(fileItem.Name))
+                if (fileTargets.TryGetValue(fileName, out _))
                     HandleMultiFilePatches(fileItem);
-
+                
                 // If this file is not patched directly then move on to the next.
-                if (!xdelta3File.TestPath())
+                if (!patchExists)
                     continue;
 
                 // Patch the file.
-                string patchedFile = Path.Combine(Config.tempFolder + "\\patchedFiles", fileItem.Name);
-                XDelta3.Execute(Operation.Apply, fileItem.FullName, xdelta3File, patchedFile, fileItem.FullName);
+                string patchedFile = Path.Combine(Config.tempFolder, "patchedFiles", fileName);
+                XDelta3.Execute(Operation.Apply, fullPath, xdelta3File, patchedFile, fullPath);
                 filesPatched++;
             }
-
             // Because of a mistake I made not keeping "dungeon_3_1.map" around, it now needs a special fix.
             Dungeon3PatchFix();
 
