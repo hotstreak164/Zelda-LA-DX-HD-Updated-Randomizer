@@ -650,7 +650,6 @@ namespace ProjectZ.InGame.Things
                     return;
                 }
             }
-
             try
             {
                 Game1.Graphics.GraphicsDevice.SetRenderTarget(_activeRenderTarget);
@@ -660,6 +659,27 @@ namespace ProjectZ.InGame.Things
                 System.Diagnostics.Debug.WriteLine("SetActiveRenderTarget failed: " + ex);
                 try { Game1.Graphics.GraphicsDevice.SetRenderTarget(null); } catch { }
             }
+        }
+
+        public void DisposeRenderTargets()
+        {
+            try
+            {
+                InGameOverlay?.DisposeRenderTargets();
+
+                _activeRenderTarget?.Dispose(); _activeRenderTarget = null;
+                _inactiveRenderTarget1?.Dispose(); _inactiveRenderTarget1 = null;
+                _inactiveRenderTarget2?.Dispose(); _inactiveRenderTarget2 = null;
+
+                _lightRenderTarget?.Dispose(); _lightRenderTarget = null;
+                _shadowRenderTarget?.Dispose(); _shadowRenderTarget = null;
+                _shadowRenderTargetBlur?.Dispose(); _shadowRenderTargetBlur = null;
+
+                TempRT0?.Dispose(); TempRT0 = null;
+                TempRT1?.Dispose(); TempRT1 = null;
+                TempRT2?.Dispose(); TempRT2 = null;
+            }
+            catch { }
         }
 
         public RenderTarget2D GetLastRenderTarget()

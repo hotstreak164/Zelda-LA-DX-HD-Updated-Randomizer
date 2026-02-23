@@ -170,6 +170,16 @@ namespace ProjectZ.InGame.Overlay
             }
         }
 
+        public void DisposeRenderTargets()
+        {
+            try
+            {
+                _renderTarget?.Dispose(); 
+                _renderTarget = null;
+            }
+            catch { }
+        }
+
         public void UpdateMenu()
         {
             for (var i = 0; i < _itemSlots.Length; i++)

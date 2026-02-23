@@ -58,6 +58,15 @@ namespace ProjectZ.InGame.Overlay
                 _renderTarget = new RenderTarget2D(Game1.Graphics.GraphicsDevice, _width, _height);
         }
 
+        public void DisposeRenderTargets()
+        {
+            try
+            {
+                _renderTarget?.Dispose(); 
+                _renderTarget = null;
+            }
+            catch { }
+        }
         public void Load()
         {
             _animationPlayer = AnimatorSaveLoad.LoadAnimator("dungeonPlayer");

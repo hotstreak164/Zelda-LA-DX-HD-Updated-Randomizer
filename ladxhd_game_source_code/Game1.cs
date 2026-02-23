@@ -172,7 +172,38 @@ namespace ProjectZ
 
         private void OnGameExiting(object? sender, EventArgs e)
         {
+            // Stop the game loop so it doesn't do anything new.
+            UpdateGame = false;
+
+            // Shut down the GBS Player when closing.
             GbsPlayer.OnExit();
+
+            // Try to prevent a crash with OpenGL disposing textures.
+            try
+            {
+                // Dispose all render targets.
+                DisposeRenderTargets();
+                GameManager?.DisposeRenderTargets();
+
+                // Destroy the sprite batch.
+                SpriteBatch?.Dispose();
+                SpriteBatch = null;
+
+                // Unload all content.
+                Content?.Unload();
+            }
+            catch {  }
+
+            // Try forcing garbage collection if on Windows.
+            #if !WINDOWS
+                try
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                }
+                catch { }
+            #endif
         }
 
         private void OnDeviceReset(object sender, EventArgs e)
@@ -808,6 +839,21 @@ namespace ProjectZ
             MainRenderTarget = newMain;
             _renderTarget1 = newRt1;
             _renderTarget2 = newRt2;
+        }
+
+        private void DisposeRenderTargets()
+        {
+            // Dispose main render target.
+            MainRenderTarget?.Dispose();
+            MainRenderTarget = null;
+
+            // Dispose render target 1.
+            _renderTarget1?.Dispose();
+            _renderTarget1 = null;
+
+            // Dispose rendter target 2.
+            _renderTarget2?.Dispose();
+            _renderTarget2 = null;
         }
     }
 }

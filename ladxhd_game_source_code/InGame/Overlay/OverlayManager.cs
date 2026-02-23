@@ -504,6 +504,33 @@ namespace ProjectZ.InGame.Overlay
             }
         }
 
+        public void UpdateRenderTarget()
+        {
+            // Update all render targets.
+            if (_menuRenderTarget2D == null || _menuRenderTarget2D.Width != _overlayWidth || _menuRenderTarget2D.Height != _overlayHeight)
+                _menuRenderTarget2D = new RenderTarget2D(Game1.Graphics.GraphicsDevice, _overlayWidth, _overlayHeight);
+
+            _inventoryOverlay.UpdateRenderTarget();
+            _mapOverlay.UpdateRenderTarget();
+            _dungeonOverlay.UpdateRenderTarget();
+
+            UpdateOverlayDimensions();
+        }
+
+        public void DisposeRenderTargets()
+        {
+            try
+            {
+                _inventoryOverlay?.DisposeRenderTargets();
+                _mapOverlay?.DisposeRenderTargets();
+                _dungeonOverlay?.DisposeRenderTargets();
+
+                _menuRenderTarget2D?.Dispose(); 
+                _menuRenderTarget2D = null;
+            }
+            catch { }
+        }
+
         private void UpdateOverlayDimensions()
         {
             // Update the scale to match the UI scale.
@@ -580,19 +607,6 @@ namespace ProjectZ.InGame.Overlay
                 Game1.WindowHeight / 2 - _overlayHeight / 2);
 
             EnsureMenuRenderTarget();
-        }
-
-        public void UpdateRenderTarget()
-        {
-            // Update all render targets.
-            if (_menuRenderTarget2D == null || _menuRenderTarget2D.Width != _overlayWidth || _menuRenderTarget2D.Height != _overlayHeight)
-                _menuRenderTarget2D = new RenderTarget2D(Game1.Graphics.GraphicsDevice, _overlayWidth, _overlayHeight);
-
-            _inventoryOverlay.UpdateRenderTarget();
-            _mapOverlay.UpdateRenderTarget();
-            _dungeonOverlay.UpdateRenderTarget();
-
-            UpdateOverlayDimensions();
         }
 
         public void OpenPhotoOverlay()
