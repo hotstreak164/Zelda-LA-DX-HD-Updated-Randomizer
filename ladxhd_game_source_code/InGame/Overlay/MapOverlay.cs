@@ -175,7 +175,10 @@ namespace ProjectZ.InGame.Overlay
         public void UpdateRenderTarget()
         {
             if (_renderTarget == null || _renderTarget.Width != _width || _renderTarget.Height != _height)
+            {
+                _renderTarget?.Dispose();
                 _renderTarget = new RenderTarget2D(Game1.Graphics.GraphicsDevice, _width, _height);
+            }
         }
 
         public void Update()
@@ -430,6 +433,14 @@ namespace ProjectZ.InGame.Overlay
 
         public void DrawRenderTarget(SpriteBatch spriteBatch)
         {
+            // Ensure RT exists every time before we use it
+            UpdateRenderTarget();
+
+            // If it's still null then fail.
+            if (_renderTarget == null)
+                return;
+
+            // Update render target.
             Game1.Graphics.GraphicsDevice.SetRenderTarget(_renderTarget);
             Game1.Graphics.GraphicsDevice.Clear(Color.Transparent);
 
@@ -437,6 +448,9 @@ namespace ProjectZ.InGame.Overlay
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null);
             DrawMap(spriteBatch);
             spriteBatch.End();
+
+            // Note: OpenGL needs this to avoid weird state bugs.
+            Game1.Graphics.GraphicsDevice.SetRenderTarget(null);
         }
 
         public void DrawMap(SpriteBatch spriteBatch)
@@ -444,8 +458,7 @@ namespace ProjectZ.InGame.Overlay
             var mapRectangle = new Point(_margin, _margin);
 
             // draw the map
-            spriteBatch.Draw(Resources.SprMiniMap,
-                new Rectangle(mapRectangle.X, mapRectangle.Y, _recMap.Width, _recMap.Height), _recMap, Color.White);
+            spriteBatch.Draw(Resources.SprMiniMap, new Rectangle(mapRectangle.X, mapRectangle.Y, _recMap.Width, _recMap.Height), _recMap, Color.White);
 
             // overlay the not discovered parts of the map
             if (!_fullMap)
@@ -473,9 +486,7 @@ namespace ProjectZ.InGame.Overlay
             var posX = position.X + (_recIcon.Width / 2 - width);
             var posY = position.Y + (_recIcon.Height / 2 - height);
 
-            spriteBatch.Draw(Resources.SprMiniMap, new Rectangle(posX, posY, width * 2, height * 2),
-                new Rectangle(_recIcon.X + _recIcon.Width * (icon - 1),
-                    _recIcon.Y, _recIcon.Width, _recIcon.Height), Color.White);
+            spriteBatch.Draw(Resources.SprMiniMap, new Rectangle(posX, posY, width * 2, height * 2), new Rectangle(_recIcon.X + _recIcon.Width * (icon - 1), _recIcon.Y, _recIcon.Width, _recIcon.Height), Color.White);
         }
     }
 }
