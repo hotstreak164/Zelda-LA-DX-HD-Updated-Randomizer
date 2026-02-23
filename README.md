@@ -2,7 +2,7 @@
 
 ### $${\color{red}THIS \space REPOSITORY \space DOES \space NOT \space INCLUDE \space COPYRIGHTED \space GAME \space ASSETS!}$$
 
-This fork requires the user to provide the assets from the original v1.0.0 release.
+This fork requires the user to provide the assets from the original v1.0.0 release.<br>
 I have created tooling to make migrating everything to the latest version much easier.
 
 - This is a continuation of my [previous fork](https://github.com/BigheadSMZ/Links-Awakening-DX-HD) and here's a link to the [commits](https://github.com/BigheadSMZ/Links-Awakening-DX-HD/commits/master/).
