@@ -44,14 +44,14 @@ namespace ProjectZ.InGame.Pages
             _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize - 12)), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
 
             // Slider: Music Volume
-            _sliderMusicVolume = new InterfaceSlider(Resources.GameFont, "settings_audio_music_volume",
+            _sliderMusicVolume = new InterfaceSlider("settings_audio_music_volume",
                 buttonWidth, 11, new Point(1, 2), 0, 100, 5, GameSettings.MusicVolume, 
                 number => { GameSettings.MusicVolume = number; })
                 { SetString = number => " " + number + "%" };
             _contentLayout.AddElement(_sliderMusicVolume);
 
             // Slider: Sound Effects Volume
-            _sliderSoundVolume = new InterfaceSlider(Resources.GameFont, "settings_audio_effect_volume",
+            _sliderSoundVolume = new InterfaceSlider("settings_audio_effect_volume",
                 buttonWidth, 11, new Point(1, 2), 0, 100, 5, GameSettings.EffectVolume, 
                 number => { Game1.GameManager.UpdateSoundEffects(); GameSettings.EffectVolume = number; })
                 { SetString = number => " " + number + "%" };

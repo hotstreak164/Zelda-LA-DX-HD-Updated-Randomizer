@@ -16,21 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="ChineseFonts\*.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Content\Fonts\%(Filename)%(Extension)</Link>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="ChineseFonts\**" />
     <Compile Remove="Content\bin\**" />
     <Compile Remove="Content\obj\**" />
     <Compile Remove="Fix\**" />
     <EmbeddedResource Remove="Content\bin\**" />
     <EmbeddedResource Remove="Content\obj\**" />
     <EmbeddedResource Remove="Fix\**" />
-    <EmbeddedResource Remove="ChineseFonts\**" />
     <None Remove="Content\bin\**" />
     <None Remove="Content\obj\**" />
     <None Remove="Fix\**" />
@@ -43,15 +34,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <KniContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Extended" Version="5.3.1" />
-    <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="5.3.1" />
-    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
+    <PackageReference Include="KNI.Extended" Version="5.3.1" />
+    <PackageReference Include="KNI.Extended.Content.Pipeline" Version="5.3.1" />
+    <PackageReference Include="nkast.Kni.Platform.WinForms.DX11" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Content.Pipeline.Builder" Version="4.2.9001" />
     <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
   </ItemGroup>
 

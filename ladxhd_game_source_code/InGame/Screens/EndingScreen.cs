@@ -34,7 +34,7 @@ namespace ProjectZ.InGame.Screens
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(Resources.GameFont, "Ending", new Vector2(100, 100), Color.Red);
+            TextHelper.DrawString(spriteBatch, "Ending", new Vector2(100, 100), Color.Red);
             spriteBatch.End();
         }
     }

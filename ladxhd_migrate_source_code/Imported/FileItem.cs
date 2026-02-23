@@ -62,5 +62,16 @@ namespace LADXHD_Migrater
             this.LastWriteTime = Info.LastWriteTime;
             this.LastWriteTimeUtc = Info.LastWriteTimeUtc;
         }
+
+        public bool IsInFolder(string folderName)
+        {
+            // If in a folder by a specific name return true.
+            for (var dir = Directory; dir != null; dir = dir.Parent)
+                if (dir.Name.Equals(folderName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+            // If not return false.
+            return false;
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace ProjectZ.InGame.Pages
             _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize) - 12), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
 
             // Slider: Map Teleport
-            _sliderMapTeleporter = new InterfaceSlider(Resources.GameFont, "settings_redux_dungeonteleport",
+            _sliderMapTeleporter = new InterfaceSlider("settings_redux_dungeonteleport",
                 buttonWidth, sliderHeight, new Point(1, 2), 0, 3, 1, GameSettings.MapTeleport, 
                 number => { GameSettings.MapTeleport = number; })
                 { SetString = number => MapTeleportSliderAdjustment(number) };

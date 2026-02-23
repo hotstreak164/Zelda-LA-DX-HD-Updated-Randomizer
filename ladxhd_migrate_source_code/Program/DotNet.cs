@@ -7,7 +7,7 @@ namespace LADXHD_Migrater
     {
         public static bool BuildGame()
         {
-            if (!Config.game_source.TestPath()) return false;
+            if (!Config.Game_Source.TestPath()) return false;
 
             try
             {
@@ -15,7 +15,7 @@ namespace LADXHD_Migrater
                 {
                     dotnet.StartInfo = new ProcessStartInfo
                     {
-                        WorkingDirectory = Config.game_source,
+                        WorkingDirectory = Config.Game_Source,
                         FileName = "dotnet",
                         Arguments = "publish -c Release -p:\"PublishProfile=FolderProfile\"",
                         UseShellExecute = false,
@@ -41,7 +41,7 @@ namespace LADXHD_Migrater
             {
                 Forms.okayDialog.Display("Exception Caught", 250, 40, 27, 9, 15, "Exception: " + ex.Message);
             }
-            string GameExePath = Config.publish_Path + "\\Link's Awakening DX HD.exe";
+            string GameExePath = Config.Publish_Path + "\\Link's Awakening DX HD.exe";
             return GameExePath.TestPath();
         }
     }

@@ -15,7 +15,7 @@ namespace LADXHD_Migrater
 
         public static void Initialize()
         {
-            XDelta3.Exe = Config.baseFolder + "\\ladxhd_game_source_code\\xdelta3.exe";
+            XDelta3.Exe = Config.BaseFolder + "\\ladxhd_game_source_code\\xdelta3.exe";
         }
 
         private static string GetCreateArguments(string OldFile, string NewFile, string PatchFile)
@@ -57,7 +57,7 @@ namespace LADXHD_Migrater
             Process xDelta = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo 
             {
-                WorkingDirectory = Config.baseFolder,
+                WorkingDirectory = Config.BaseFolder,
                 FileName = XDelta3.Exe,
                 Arguments = XDelta3.Args,
                 UseShellExecute = false,

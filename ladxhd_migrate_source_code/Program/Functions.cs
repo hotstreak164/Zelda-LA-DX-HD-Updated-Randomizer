@@ -7,6 +7,8 @@ namespace LADXHD_Migrater
 {
     internal class Functions
     {
+        private static Dictionary<string, object> resources = ResourceHelper.GetAllResources();
+
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         FILE MAPPING CODE : NOT ALL FILES AND PATCHES ARE 1:1 FROM ORIGINAL GAME VERSION. NEW FILES NEED A "BASE" TO BE CREATED FROM USING A PATCH
@@ -18,7 +20,7 @@ namespace LADXHD_Migrater
 
         private static string[] langFiles  = new[] { "chn.lng", "deu.lng", "esp.lng", "fre.lng", "ind.lng", "ita.lng", "por.lng", "rus.lng" };
         private static string[] langDialog = new[] { "dialog_chn.lng", "dialog_deu.lng", "dialog_esp.lng", "dialog_fre.lng", "dialog_ind.lng", "dialog_ita.lng", "dialog_por.lng", "dialog_rus.lng" };
-        private static string[] smallFonts = new[] { "smallFont_redux.png", "smallFont_vwf.png", "smallFont_vwf_redux.png" };
+        private static string[] smallFonts = new[] { "smallFont_redux.png", "smallFont_vwf.png", "smallFont_vwf_redux.png", "smallFont_chn_0.png", "smallFont_chn_redux_0.png" };
         private static string[] backGround = new[] { "menuBackgroundB.png", "menuBackgroundC.png", "sgb_border.png" };
         private static string[] linkImages = new[] { "link1.png" };
         private static string[] npcImages  = new[] { "npcs_redux.png" };
@@ -77,10 +79,15 @@ namespace LADXHD_Migrater
             return reverse;
         }
 
-        public static bool InJunkFolder(FileItem fileItem)
+        private static void CopyChineseFNTFiles()
         {
-            return (fileItem.DirectoryName.IndexOf("content\\bin\\", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    fileItem.DirectoryName.IndexOf("content\\obj\\", StringComparison.OrdinalIgnoreCase) >= 0);
+            // Set up the path to the two ".fnt" files for the Chinese fonts.
+            string smallFont_chn_fileA = Path.Combine(Config.Update_Content, "Fonts", "smallFont_chn.fnt");
+            string smallFont_chn_fileB = Path.Combine(Config.Update_Content, "Fonts", "smallFont_chn_redux.fnt");
+
+            // Write the files to the "Content\Fonts" folder.
+            File.WriteAllBytes(smallFont_chn_fileA, (byte[])resources["smallFont_chn.fnt"]);
+            File.WriteAllBytes(smallFont_chn_fileB, (byte[])resources["smallFont_chn_redux.fnt"]);
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -89,27 +96,17 @@ namespace LADXHD_Migrater
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        public static bool VerifyMigrate()
-        {
-            if (!Config.orig_Content.TestPath() || !Config.orig_Data.TestPath())
-            {
-                Forms.okayDialog.Display("Error: Assets Missing", 250, 40, 26, 16, 15,
-                    "Either the original \"Content\" folder, \"Data\" folder, or both are missing from the \"assets_original\" folder.");
-                return false;
-            }
-            bool verify = Forms.yesNoDialog.Display("Confirm Migration", 250, 40, 31, 16, true, 
-                "Are you sure you wish to migrate assets? This will apply current patches and overwrite your assets!");
-            return verify;
-        }
-
         private static void HandleMultiFilePatches(FileItem fileItem, string origPath, string updatePath)
         {
+            // Check if the original file has derivatives.
             if (!fileTargets.TryGetValue(fileItem.Name, out var target))
                 return;
 
+            // If original file has derivative modified files based off of it.
             foreach (string newFile in target)
             {
-                string xdelta3File = Path.Combine(Config.patches, newFile + ".xdelta");
+                // Create all derivative files based on the original file.
+                string xdelta3File = Path.Combine(Config.Patches, newFile + ".xdelta");
                 string patchedFile = Path.Combine(updatePath + fileItem.DirectoryName.Replace(origPath, ""), newFile);
                 XDelta3.Execute(Operation.Apply, fileItem.FullName, xdelta3File, patchedFile);
             }
@@ -117,39 +114,42 @@ namespace LADXHD_Migrater
 
         public static void MigrateCopyLoop(string origPath, string updatePath)
         {
+            // Remove the target path before copying files to it.
             updatePath.RemovePath();
 
+            // Loop through the original files.
             foreach (string file in origPath.GetFiles("*", true))
             {
+                // Get the current "original" file as a file item.
                 FileItem fileItem = new FileItem(file);
 
-                if (InJunkFolder(fileItem)) continue;
+                // Make sure it's not in "bin" or "obj" folders.
+                if (fileItem.IsInFolder("bin") || fileItem.IsInFolder("obj"))
+                    continue;
 
-                string xdelta3File = Path.Combine(Config.patches, fileItem.Name + ".xdelta");
+                // Set up path to output xdelta file and create the output folder while also getting path to updated file.
+                string xdelta3File = Path.Combine(Config.Patches, fileItem.Name + ".xdelta");
                 string patchedFile = Path.Combine((updatePath + fileItem.DirectoryName.Replace(origPath, "")).CreatePath(), fileItem.Name);
 
+                // If a patch exists for the current file, patch it. If it doesn't then copy it.
                 if (xdelta3File.TestPath())
                     XDelta3.Execute(Operation.Apply, fileItem.FullName, xdelta3File, patchedFile);
                 else
                     File.Copy(fileItem.FullName, patchedFile, true);
 
+                // Handle modified files that are derivatives of original files.
                 HandleMultiFilePatches(fileItem, origPath, updatePath);
             }
+            // Finally, copy the chinese font files to the destination.
+            CopyChineseFNTFiles();
         }
 
         public static void MigrateFiles()
         {
-            if (!VerifyMigrate()) return;
-            Forms.mainDialog.ToggleDialog(false);
-
             XDelta3.Create();
-            MigrateCopyLoop(Config.orig_Content, Config.update_Content);
-            MigrateCopyLoop(Config.orig_Data, Config.update_Data);
+            MigrateCopyLoop(Config.Orig_Content, Config.Update_Content);
+            MigrateCopyLoop(Config.Orig_Data, Config.Update_Data);
             XDelta3.Remove();
-
-            Forms.okayDialog.Display("Finished Migration", 280, 40, 45, 26, 15, 
-                "Updated Content/Data files to latest versions.");
-            Forms.mainDialog.ToggleDialog(true);
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -158,49 +158,40 @@ namespace LADXHD_Migrater
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        public static bool VerifyCreatePatch()
+        private static void CreatePatchLoop(string origPath, string updatePath)
         {
-            if (!Config.orig_Content.TestPath() || !Config.orig_Data.TestPath())
-            {
-                Forms.okayDialog.Display("Error: Assets Missing", 250, 40, 26, 16, 15,
-                    "Either the original \"Content\" folder, \"Data\" folder, or both are missing from the \"assets_original\" folder.");
-                return false;
-            }
-            if (!Config.update_Content.TestPath() || !Config.update_Data.TestPath())
-            {
-                Forms.okayDialog.Display("Assets Missing", 250, 40, 34, 16, 15,
-                    "Either the \"Content\" folder, \"Data\" folder, or both are missing from \"ladxhd_game_source_code\".");
-                return false;
-            }
-            bool verify = Forms.yesNoDialog.Display("Confirm Create Patches", 250, 40, 31, 16, true, 
-                "Are you sure you wish to create patches? This will overwrite all current patches with recent changes!");
-            return verify;
-        }
+            // Create the "assets_patches" folder if it doesn't exist.
+            Config.Patches.CreatePath(true);
 
-        public static void CreatePatchLoop(string origPath, string updatePath)
-        {
-            Config.patches.CreatePath(true);
-
+            // Loop through the new Content and Data folders.
             foreach (string file in updatePath.GetFiles("*", true))
             {
+                // Get the current "new" file as a file item.
                 FileItem fileItem = new FileItem(file);
                 string oldFile = "";
 
-                if (InJunkFolder(fileItem)) continue;
+                // Make sure it's not in "bin" or "obj" folders.
+                if (fileItem.IsInFolder("bin") || fileItem.IsInFolder("obj")) continue;
 
+                // Get the path to the original file using the relative folder.
                 oldFile = Path.Combine(origPath + fileItem.DirectoryName.Replace(updatePath, ""), fileItem.Name);
-
+                
+                // If the file doesn't exist it might be a derivative ("eng.lng" -> "deu.lng" for example).
                 if (!oldFile.TestPath() && reverseFileTargets.TryGetValue(fileItem.Name, out string shortName))
                     oldFile = Path.Combine(origPath + fileItem.DirectoryName.Replace(updatePath, ""), shortName);
 
-                if (oldFile == "") continue;
+                // If the original file doesn't exist or it's not a derivative skip it.
+                if (oldFile == "" || !oldFile.TestPath()) continue;
 
+                // Now that we have both files, calculate hashes from them.
                 string oldHash = oldFile.CalculateHash("MD5");
                 string newHash = fileItem.FullName.CalculateHash("MD5");
 
+                // If the hashes differ, the file has been updated.
                 if (oldHash != newHash)
                 {
-                    string patchName = Path.Combine(Config.patches, fileItem.Name + ".xdelta");
+                    // Create a patch from the old file vs. the new file.
+                    string patchName = Path.Combine(Config.Patches, fileItem.Name + ".xdelta");
                     XDelta3.Execute(Operation.Create, oldFile, fileItem.FullName, patchName);
                 }
             }
@@ -208,17 +199,10 @@ namespace LADXHD_Migrater
 
         public static void CreatePatches()
         {
-            if (!VerifyCreatePatch()) return;
-            Forms.mainDialog.ToggleDialog(false);
-
             XDelta3.Create();
-            CreatePatchLoop(Config.orig_Content, Config.update_Content);
-            CreatePatchLoop(Config.orig_Data, Config.update_Data);
+            CreatePatchLoop(Config.Orig_Content, Config.Update_Content);
+            CreatePatchLoop(Config.Orig_Data, Config.Update_Data);
             XDelta3.Remove();
-
-            Forms.okayDialog.Display("Patches Created", 250, 40, 27, 9, 15,
-                "Finished creating xdelta patches from modified files. If any files were intentionally modifed, these can be shared as a new PR for the GitHub repository.");
-            Forms.mainDialog.ToggleDialog(true);
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -227,32 +211,18 @@ namespace LADXHD_Migrater
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        public static bool VerifyCleanFiles()
-        {
-            bool verify = Forms.yesNoDialog.Display("Clean Build Files", 250, 40, 29, 9, true, 
-                "Are you sure you wish to clean build files? This will remove all instances of \'obj\', \'bin\', \'Publish\', and \'zelda_ladxhd_build\' folders if they currently exist.");
-            return verify;
-        }
-
         public static void CleanBuildFiles()
         {
-            if (!VerifyCleanFiles()) return;
-            Forms.mainDialog.ToggleDialog(false);
-
-            (Config.game_source + "\\bin").RemovePath();
-            (Config.game_source + "\\obj").RemovePath();
-            (Config.game_source + "\\Content\\bin").RemovePath();
-            (Config.game_source + "\\Content\\obj").RemovePath();
-            (Config.game_source + "\\Publish").RemovePath();
-            (Config.migrate_source + "\\bin").RemovePath();
-            (Config.migrate_source + "\\obj").RemovePath();
-            (Config.patcher_source + "\\bin").RemovePath();
-            (Config.patcher_source + "\\obj").RemovePath();
-            (Config.baseFolder + "\\zelda_ladxhd_build").RemovePath();
-
-            Forms.okayDialog.Display("Finished", 260, 40, 26, 26, 15,
-                "Finished cleaning build files (obj/bin/Publish folders).");
-            Forms.mainDialog.ToggleDialog(true);
+            (Config.Game_Source + "\\bin").RemovePath();
+            (Config.Game_Source + "\\obj").RemovePath();
+            (Config.Game_Source + "\\Content\\bin").RemovePath();
+            (Config.Game_Source + "\\Content\\obj").RemovePath();
+            (Config.Game_Source + "\\Publish").RemovePath();
+            (Config.Migrate_Source + "\\bin").RemovePath();
+            (Config.Migrate_Source + "\\obj").RemovePath();
+            (Config.Patcher_Source + "\\bin").RemovePath();
+            (Config.Patcher_Source + "\\obj").RemovePath();
+            (Config.BaseFolder + "\\zelda_ladxhd_build").RemovePath();
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -263,17 +233,13 @@ namespace LADXHD_Migrater
 
         public static void CreateBuild()
         {
-            Forms.mainDialog.ToggleDialog(false);
-
+            // Try to build the game.
             if (DotNet.BuildGame())
             {
-                string MoveDestination = Config.baseFolder + "\\zelda_ladxhd_build";
-                Config.publish_Path.MovePath(MoveDestination, true);
-
-                Forms.okayDialog.Display("Finished", 250, 40, 28, 16, 15,
-                    "Finished build process. If the build was successful, it can be found in the \"zelda_ladxhd_build\" folder.");
+                // If it succeeded, move the folder to the main folder.
+                string MoveDestination = Config.BaseFolder + "\\zelda_ladxhd_build";
+                Config.Publish_Path.MovePath(MoveDestination, true);
             }
-            Forms.mainDialog.ToggleDialog(true);
         }
     }
 }

@@ -413,7 +413,7 @@ namespace ProjectZ.InGame.Overlay
                     var mapString = mapStart + ": " + Game1.LanguageManager.GetString(_updateInventory ? "overlay_map" : "overlay_inventory", "error");
                     var mapDrawPos = new Vector2(8 * Game1.UiScale, Game1.WindowHeight - 16 * Game1.UiScale);
 
-                    spriteBatch.DrawString(Resources.GameFont, mapString, mapDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
+                    TextHelper.DrawString(spriteBatch, mapString, mapDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
 
                     // When navigating the map, get the currently selected map position.
                     var nodeSelected = _mapOverlay.SelectionPosition;
@@ -438,11 +438,11 @@ namespace ProjectZ.InGame.Overlay
 
                         // Set up the string to display.
                         var teleString = teleStart + ": " + Game1.LanguageManager.GetString("overlay_teleport", "error");
-                        var teleTextSize = Resources.GameFont.MeasureString(teleString);
+                        var teleTextSize = TextHelper.MeasureString(teleString);
                         var teleDrawPos = new Vector2(Game1.WindowWidth - (teleTextSize.X + 6) * Game1.UiScale, Game1.WindowHeight - 16 * Game1.UiScale);
 
                         // Draw the teleport button and label.
-                        spriteBatch.DrawString(Resources.GameFont, teleString, teleDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
+                        TextHelper.DrawString(spriteBatch, teleString, teleDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
                     }
                 }
             }

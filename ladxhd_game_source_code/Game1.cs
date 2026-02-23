@@ -128,6 +128,9 @@ namespace ProjectZ
 
         public Game1(bool editorMode, bool loadSave, int loadSlot)
         {
+            // Detect when the game is exiting.
+            Exiting += OnGameExiting;
+
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "Game1.lahdmod");
 
@@ -156,9 +159,10 @@ namespace ProjectZ
 
             // Create the graphics device and set the back buffer width/height.
             Graphics = new GraphicsDeviceManager(this);
-            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            Graphics.GraphicsProfile = GraphicsProfile.FL10_1;
             Graphics.PreferredBackBufferWidth = Values.MinWidth * 3;
             Graphics.PreferredBackBufferHeight = Values.MinHeight * 3;
+            Graphics.ApplyChanges();
 
             // Allow the user to resize the window.
             Window.AllowUserResizing = true;
@@ -179,11 +183,9 @@ namespace ProjectZ
             base.Initialize();
         }
 
-        protected override void OnExiting(object sender, EventArgs args)
+        private void OnGameExiting(object? sender, EventArgs e)
         {
-            // Close out the GBS Player before exiting.
             GbsPlayer.OnExit();
-            base.OnExiting(sender, args);
         }
 
         private void OnDeviceReset(object sender, EventArgs e)
@@ -577,7 +579,7 @@ namespace ProjectZ
             if (!ShowDebugText)
                 return;
 
-            _debugTextSize = Resources.GameFont.MeasureString(DebugText);
+            _debugTextSize = TextHelper.MeasureString(DebugText);
 
             SpriteBatch.Draw(_renderTarget2, new Rectangle(0, 0,
                 (int)(_debugTextSize.X * 2) + 20, (int)(_debugTextSize.Y * 2) + 20), Color.White);
@@ -588,11 +590,9 @@ namespace ProjectZ
             if (!ShowDebugText)
                 return;
 
-            SpriteBatch.Draw(Resources.SprWhite, new Rectangle(0, 0,
-                    (int)(_debugTextSize.X * 2) + 20, (int)(_debugTextSize.Y * 2) + 20), Color.Black * 0.75f);
+            SpriteBatch.Draw(Resources.SprWhite, new Rectangle(0, 0, (int)(_debugTextSize.X * 2) + 20, (int)(_debugTextSize.Y * 2) + 20), Color.Black * 0.75f);
 
-            SpriteBatch.DrawString(Resources.GameFont, DebugText, new Vector2(10), Color.White,
-                0, Vector2.Zero, new Vector2(2f), SpriteEffects.None, 0);
+            TextHelper.DrawString(SpriteBatch, DebugText, new Vector2(10), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
         }
 
         public void UpdateFpsSettings()

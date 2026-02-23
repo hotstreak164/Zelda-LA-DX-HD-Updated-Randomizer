@@ -73,6 +73,26 @@ namespace LADXHD_Migrater.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] smallFont_chn_fnt {
+            get {
+                object obj = ResourceManager.GetObject("smallFont_chn.fnt", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] smallFont_chn_redux_fnt {
+            get {
+                object obj = ResourceManager.GetObject("smallFont_chn_redux.fnt", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] xdelta3_exe {
             get {
                 object obj = ResourceManager.GetObject("xdelta3.exe", resourceCulture);

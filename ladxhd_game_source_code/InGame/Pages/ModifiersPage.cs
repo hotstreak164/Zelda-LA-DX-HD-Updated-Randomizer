@@ -48,28 +48,28 @@ namespace ProjectZ.InGame.Pages
             _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize) - 12), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
 
             // Slider: Extra Enemy HP
-            _sliderEnemyHitPoints = new InterfaceSlider(Resources.GameFont, "settings_mods_enemy_hp",
+            _sliderEnemyHitPoints = new InterfaceSlider("settings_mods_enemy_hp",
                 buttonWidth, sliderHeight, new Point(1, 1), 0, 30, 1, GameSettings.EnemyBonusHP,
                 number => { GameSettings.EnemyBonusHP = number; })
                 { SetString = number => EnemyHPSliderAdjustment(number) };
             _contentLayout.AddElement(_sliderEnemyHitPoints);
 
             // Slider: Damage Taken Multiplier
-            _sliderDamageTaken = new InterfaceSlider(Resources.GameFont, "settings_mods_damage",
+            _sliderDamageTaken = new InterfaceSlider( "settings_mods_damage",
                 buttonWidth, sliderHeight, new Point(1, 1), 0, 40, 1, GameSettings.DamageFactor,
                 number => { GameSettings.DamageFactor = number; })
                 { SetString = number => DamageTakenSliderAdjustment(number) };
             _contentLayout.AddElement(_sliderDamageTaken);
 
             // Slider: Damage Cooldown (Invincibility Frames)
-            _sliderDamageCooldown = new InterfaceSlider(Resources.GameFont, "settings_mods_damagecd",
+            _sliderDamageCooldown = new InterfaceSlider("settings_mods_damagecd",
                 buttonWidth, sliderHeight, new Point(1, 1), 0, 100, 1, GameSettings.DmgCooldown,
                 number => { GameSettings.DmgCooldown = number; })
                 { SetString = number => DamageCooldownSliderAdjustment(number) };
             _contentLayout.AddElement(_sliderDamageCooldown);
 
             // Slider: Movement Speed
-            _sliderMovementSpeed = new InterfaceSlider(Resources.GameFont, "settings_mods_movespeed",
+            _sliderMovementSpeed = new InterfaceSlider("settings_mods_movespeed",
                 buttonWidth, sliderHeight, new Point(1, 1), 0, 10, 1, (int)(GameSettings.MoveSpeedAdded * 10),
                 number => { GameSettings.MoveSpeedAdded = number / 10f; })
                 { SetString = number => AddedMoveSpeedSliderAdjustment(number) };

@@ -56,7 +56,7 @@ namespace ProjectZ.InGame.Pages
             _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize) - 12), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
 
             // Slider: Deadzone
-            _sliderDeadZone = new InterfaceSlider(Resources.GameFont, "settings_controls_deadzone", 
+            _sliderDeadZone = new InterfaceSlider("settings_controls_deadzone", 
                 buttonWidth, 11, new Point(1, 2), 0, 100, 1, (int)(GameSettings.DeadZone * 100),
                 number => { GameSettings.DeadZone = (float)(number * 0.01); })
                 { SetString = number => ": " + number + "%" };

@@ -108,8 +108,10 @@ namespace ProjectZ.InGame.Pages
 
             // Create a slider to select the game type.
             _gameTypeLayout = new InterfaceListLayout { Size = new Point(260, 22), HorizontalMode = true, Selectable = true };
-            _gameTypeSlider = new InterfaceSlider(Resources.GameFont, "new_game_menu_game_type", 260, 11, new Point(1, 2), 0, 3, 1, Game1.GameManager.GameType, 
-                number => { Game1.GameManager.GameType = number; }) { SetString = number => GameTypeScaleSliderAdjustment(number) };
+            _gameTypeSlider = new InterfaceSlider("new_game_menu_game_type", 
+                260, 11, new Point(1, 2), 0, 3, 1, Game1.GameManager.GameType, 
+                number => { Game1.GameManager.GameType = number; }) 
+                { SetString = number => GameTypeScaleSliderAdjustment(number) };
             _gameTypeLayout.AddElement(_gameTypeSlider);
             _newGameLayout.AddElement(_gameTypeLayout);
 

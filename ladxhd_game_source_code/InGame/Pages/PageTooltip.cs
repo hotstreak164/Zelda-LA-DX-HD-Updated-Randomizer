@@ -49,8 +49,8 @@ namespace ProjectZ.InGame.Interface
             float boxWidth = menuWidth * widthScale;
 
             // Word-wrap text and apply padding.
-            var wrappedLines = WrapText(Font, text, boxWidth - paddingX * 2);
-            float lineHeight = Font.LineSpacing * Game1.UiScale;
+            var wrappedLines = WrapText(text, boxWidth - paddingX * 2);
+            float lineHeight = TextHelper.LineSpacing * Game1.UiScale;
 
             // Different scales make padding look different.
             float extraPadding = Game1.UiScale == 1 ? paddingY : paddingY * 2;
@@ -91,14 +91,14 @@ namespace ProjectZ.InGame.Interface
 
             foreach (var line in wrappedLines)
             {
-                var lineSize = Font.MeasureString(line) * Game1.UiScale;
+                var lineSize = TextHelper.MeasureString(line) * Game1.UiScale;
                 float lineX = boxRect.X + paddingX + (boxRect.Width - paddingX * 2 - lineSize.X) / 2f; // center horizontally with padding
-                spriteBatch.DrawString(Font, line, new Vector2(lineX, startY), Color.White, 0f, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0f);
+                TextHelper.DrawString(spriteBatch, line, new Vector2(lineX, startY), Color.White, 0f, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0f);
                 startY += lineHeight;
             }
         }
 
-        private static void FindCrashChars(SpriteFont font, string text)
+        private static void FindCrashChars(string text)
         {
             // Split the entire string into a character array.
             var chars = text.ToCharArray();
@@ -110,11 +110,11 @@ namespace ProjectZ.InGame.Interface
                 System.Diagnostics.Debug.WriteLine(c);
 
                 // Try to measure it. If this crashes, the last character printed out is what crashed the game.
-                float lineWidth = font.MeasureString(c.ToString()).X * Game1.UiScale;
+                float lineWidth = TextHelper.MeasureString(c.ToString()).X * Game1.UiScale;
             }
         }
 
-        private static List<string> WrapText(SpriteFont font, string text, float maxLineWidth)
+        private static List<string> WrapText(string text, float maxLineWidth)
         {
             // Debug function to find characters in the tooltip that crash.
             // FindCrashChars(font, text);
@@ -131,7 +131,7 @@ namespace ProjectZ.InGame.Interface
                 {
                     // Test what the line would look like if added and measure it.
                     string testLine = currentLine + c;
-                    float lineWidth = font.MeasureString(testLine).X * Game1.UiScale;
+                    float lineWidth = TextHelper.MeasureString(testLine).X * Game1.UiScale;
 
                     // If the line with the added character is too wide for the textbox
                     // add the line to the list and start a new line.
@@ -160,7 +160,7 @@ namespace ProjectZ.InGame.Interface
                 {
                     // Test what the line would look like if added and measure it.
                     string testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
-                    float lineWidth = font.MeasureString(testLine).X * Game1.UiScale;
+                    float lineWidth = TextHelper.MeasureString(testLine).X * Game1.UiScale;
 
                     // If the line with the added word is too wide for the textbox
                     // add the line to the list and start a new line.

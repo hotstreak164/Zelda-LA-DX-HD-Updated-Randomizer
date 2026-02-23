@@ -47,14 +47,14 @@ namespace ProjectZ.InGame.Pages
             _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize) - 12), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
 
             // Slider: Game Scale
-            _sliderGameScale = new InterfaceSlider(Resources.GameFont, "settings_graphics_game_scale",
+            _sliderGameScale = new InterfaceSlider("settings_graphics_game_scale",
                 buttonWidth, sliderHeight, new Point(1, 2), -3, Game1.MaxGameScale + 1, 1, GameSettings.GameScale, 
                 number => { GameSettings.GameScale = number; Game1.ScaleChanged = true; })
                 { SetString = number => GameScaleSliderAdjustmentString(number) };
             _contentLayout.AddElement(_sliderGameScale);
 
             // Slider: UI Scale
-            _sliderUIScale = new InterfaceSlider(Resources.GameFont, "settings_graphics_ui_scale",
+            _sliderUIScale = new InterfaceSlider("settings_graphics_ui_scale",
                 buttonWidth, sliderHeight, new Point(1, 2), 1, 11, 1, GameSettings.UiScale-1,
                 number => { GameSettings.UiScale = number; Game1.ScaleChanged = true; })
                 { SetString = number => UIScaleSliderAdjustmentString(number) };

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.BitmapFonts;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.Interface
@@ -8,9 +9,9 @@ namespace ProjectZ.InGame.Interface
     {
         // A cached version of the font if fed to the parameter (used for header text).
         private SpriteFont _font;
-        
-        // Try to use the cached font if available. If not use the current GameFont.
         private SpriteFont Font => _font ?? Resources.GameFont;
+
+        private bool UseChinaFont => _font == null && Game1.LanguageManager.CurrentLanguageCode == "chn";
 
         public Gravities TextAlignment
         {
@@ -63,9 +64,13 @@ namespace ProjectZ.InGame.Interface
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            var supported = Font.Characters;
-            var result = new System.Text.StringBuilder(input.Length);
+            // BitmapFont doesn't have a Characters collection, but it won't crash on unknown chars
+            // so just return the string as-is when using ChinaFont
+            if (UseChinaFont)
+                return input;
 
+            var supported = _font?.Characters ?? Resources.GameFont.Characters;
+            var result = new System.Text.StringBuilder(input.Length);
             foreach (var c in input)
             {
                 if (supported.Contains(c))
@@ -82,7 +87,9 @@ namespace ProjectZ.InGame.Interface
 
             try
             {
-                _textSize = Font.MeasureString(Text);
+                _textSize = UseChinaFont
+                    ? Resources.ChinaFont.MeasureString(Text)
+                    : (_font ?? Resources.GameFont).MeasureString(Text);
             }
             catch
             {
@@ -126,20 +133,17 @@ namespace ProjectZ.InGame.Interface
         {
             base.Draw(spriteBatch, drawPosition, scale, transparency);
 
-            // This is expensive and runs every frame. It should be removed and replaced with "language changed" event.
             if (OverrideText != "" || (Translate && _textKey != null && Game1.LanguageManager.GetString(_textKey, "error") != Text))
                 UpdateLanguageText();
 
-            // If there is no text then don't try to draw any.
             if (Text == null)
                 return;
 
-            // Draw the text on the label.
-            spriteBatch.DrawString(Font, Text,
-                new Vector2(
-                    (int)(drawPosition.X + _drawOffset.X * scale),
-                    (int)(drawPosition.Y + (_drawOffset.Y + 1) * scale)),
-                TextColor * transparency, 0, Vector2.Zero, new Vector2(scale), SpriteEffects.None, 0);
+            if (UseChinaFont)
+                spriteBatch.DrawString(Resources.ChinaFont, Text, new Vector2((int)(drawPosition.X + _drawOffset.X * scale), (int)(drawPosition.Y + (_drawOffset.Y + 1) * scale)), TextColor * transparency, 0, Vector2.Zero, new Vector2(scale, scale), SpriteEffects.None, 0);
+            else
+                spriteBatch.DrawString(_font ?? Resources.GameFont, Text, new Vector2((int)(drawPosition.X + _drawOffset.X * scale), (int)(drawPosition.Y + (_drawOffset.Y + 1) * scale)), TextColor * transparency, 0, Vector2.Zero, new Vector2(scale), SpriteEffects.None, 0);
+            
         }
     }
 }

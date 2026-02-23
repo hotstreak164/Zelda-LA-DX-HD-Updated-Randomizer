@@ -17,6 +17,8 @@ namespace LADXHD_Patcher
         private static bool   patchFromBackup;
         private static string Executable;
 
+        private static Dictionary<string, object> resources = ResourceHelper.GetAllResources();
+
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         FILE MAPPING CODE : NOT ALL FILES AND PATCHES ARE 1:1 FROM ORIGINAL GAME VERSION. NEW FILES NEED A "BASE" TO BE CREATED FROM USING A PATCH
@@ -28,7 +30,7 @@ namespace LADXHD_Patcher
 
         private static string[] langFiles  = new[] { "chn.lng", "deu.lng", "esp.lng", "fre.lng", "ind.lng", "ita.lng", "por.lng", "rus.lng" };
         private static string[] langDialog = new[] { "dialog_chn.lng", "dialog_deu.lng", "dialog_esp.lng", "dialog_fre.lng", "dialog_ind.lng", "dialog_ita.lng", "dialog_por.lng", "dialog_rus.lng" };
-        private static string[] smallFonts = new[] { "smallFont_redux.xnb", "smallFont_vwf.xnb", "smallFont_vwf_redux.xnb" };
+        private static string[] smallFonts = new[] { "smallFont_redux.xnb", "smallFont_vwf.xnb", "smallFont_vwf_redux.xnb", "smallFont_chn_0.png", "smallFont_chn_redux_0.png" };
         private static string[] backGround = new[] { "menuBackgroundB.xnb", "menuBackgroundC.xnb", "sgb_border.xnb" };
         private static string[] linkImages = new[] { "link1.png" };
         private static string[] npcImages  = new[] { "npcs_redux.png" };
@@ -70,26 +72,6 @@ namespace LADXHD_Patcher
             { "BowWow.ani",         bowwowanim },
             { "mapPlayer.ani",      dungeonani }
         };
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        CHINESE FONT: BECAUSE THE FONT WE HAVE IS ALREADY COMPILED INTO XNB IT CAN'T BE COMPILED WITH THE GAME. SO WE INSTALL IT WITH THE PATCHER INSTEAD.
-       
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-        private static void InstallChineseFont()
-        {
-            // I can't remember how to get a file without my resource helper so just use that.
-            Dictionary<string, object> resources = ResourceHelper.GetAllResources();
-
-            // Set the path to the Chinese font that will be created.
-            string chinaFontXNB = Path.Combine(Config.gameFontsPath, "smallFont_chn.xnb");
-            string chinaFontXNBRedux = Path.Combine(Config.gameFontsPath, "smallFont_chn_redux.xnb");
-
-            // Write the chinese language file to the directory.
-            File.WriteAllBytes(chinaFontXNB, (byte[])resources["smallFont_chn.xnb"]);
-            File.WriteAllBytes(chinaFontXNBRedux, (byte[])resources["smallFont_chn_redux.xnb"]);
-        }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -306,6 +288,9 @@ namespace LADXHD_Patcher
             // Now is a good time to remove any files that the game no longer needs or may cause problems.
             RemoveObsolete();
 
+            // Create the "Mod" folders.
+            CreateModFolders();
+
             // Show the final message to the user.
             ReportFinished();
         }
@@ -408,9 +393,6 @@ namespace LADXHD_Patcher
             PatchGameFiles();
             XDelta3.Remove();
 
-            InstallChineseFont();
-            CreateModFolders();
-
             TryRemoveTempPath();
             Forms.mainDialog.ToggleDialog(true);
         }
@@ -449,12 +431,6 @@ namespace LADXHD_Patcher
 
                 Console.WriteLine("Patching game files...");
                 PatchGameFiles();
-
-                Console.WriteLine("Copying Chinese font file...");
-                InstallChineseFont();
-
-                Console.WriteLine("Creating mods folders...");
-                CreateModFolders();
 
                 Console.WriteLine("Cleaning up...");
                 XDelta3.Remove();

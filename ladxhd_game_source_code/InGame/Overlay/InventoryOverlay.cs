@@ -393,9 +393,7 @@ namespace ProjectZ.InGame.Overlay
                 ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.Equipment[i],
                     offsetBottom + _itemSlotsPosition, _itemSlots[i], 1, Color.White);
 
-                spriteBatch.DrawString(Resources.GameFont, _itemSlotString[i],
-                    new Vector2(offsetBottom.X + _itemSlotsPosition.X + _itemSlots[i].Right - 4,
-                                offsetBottom.Y + _itemSlotsPosition.Y + _itemSlots[i].Bottom - 5), Color.Black);
+                TextHelper.DrawString(spriteBatch, _itemSlotString[i], new Vector2(offsetBottom.X + _itemSlotsPosition.X + _itemSlots[i].Right - 4, offsetBottom.Y + _itemSlotsPosition.Y + _itemSlots[i].Bottom - 5), Color.Black);
             }
 
             for (var i = 0; i < 5; i++)

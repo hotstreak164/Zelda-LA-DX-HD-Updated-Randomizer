@@ -84,14 +84,14 @@ namespace ProjectZ.InGame.Pages
                 _contentLayout.AddElement(_toggleModernOverworld);
 
             // Slider: Camera Border
-            _sliderCameraBorder = new InterfaceSlider(Resources.GameFont, "settings_camera_camborder",
+            _sliderCameraBorder = new InterfaceSlider("settings_camera_camborder",
                 buttonWidth, sliderHeight, new Point(1, 2), 0, 2, 1, GameSettings.ClassicBorders, 
                 number => { GameSettings.ClassicBorders = number; Game1.ScaleChanged = true; }) 
                 { SetString = number => ClassicBorderAdjustment(number) };
             _contentLayout.AddElement(_sliderCameraBorder);
 
             // Slider: Blackout Amount
-            _sliderBorderOpacity = new InterfaceSlider(Resources.GameFont, "settings_camera_blackpercent",
+            _sliderBorderOpacity = new InterfaceSlider("settings_camera_blackpercent",
                 buttonWidth, sliderHeight, new Point(1, 2), 0, 100, 5, (int)(GameSettings.ClassicAlpha * 100),
                 number => { GameSettings.ClassicAlpha = (float)(number * 0.01); })
                 { SetString = number => SetClassicBorderOpacity(number) };

@@ -14,8 +14,6 @@ namespace ProjectZ.InGame.Interface
         public delegate string StringFunction(int number);
         public StringFunction SetString;
 
-        private SpriteFont Font => Resources.GameFont;
-
         public Color TextColor = Color.White;
 
         public string Text { get; set; }
@@ -60,7 +58,7 @@ namespace ProjectZ.InGame.Interface
             ColorSlider = Values.MenuButtonColorSlider;
         }
 
-        public InterfaceSlider(SpriteFont font, string key, int width, int baseHeight, Point margin, int start, int end, int stepSize, int current, BFunction numberChanged) : this()
+        public InterfaceSlider(string key, int width, int baseHeight, Point margin, int start, int end, int stepSize, int current, BFunction numberChanged) : this()
         {
             Size = new Point(width, baseHeight + _sliderSize.Y * 4);
             Margin = margin;
@@ -165,7 +163,7 @@ namespace ProjectZ.InGame.Interface
             if (SetString != null)
                 TextPostfix = SetString(Start + CurrentStep);
 
-            _textSize = Font.MeasureString(Text + TextPostfix);
+            _textSize = TextHelper.MeasureString(Text + TextPostfix);
 
             if (Size != Point.Zero)
                 _drawOffset = new Vector2(Size.X / 2 - _textSize.X / 2, _textSize.Y);
@@ -246,9 +244,7 @@ namespace ProjectZ.InGame.Interface
                 return;
 
             // draw the text
-            spriteBatch.DrawString(Font, Text + TextPostfix,
-                new Vector2((int)(drawPosition.X + _drawOffset.X * scale), (int)(drawPosition.Y + scale)),
-                TextColor * transparency, 0, Vector2.Zero, new Vector2(scale), SpriteEffects.None, 0);
+            TextHelper.DrawString(spriteBatch, Text + TextPostfix, new Vector2((int)(drawPosition.X + _drawOffset.X * scale), (int)(drawPosition.Y + scale)), TextColor * transparency, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
         }
     }
 }
