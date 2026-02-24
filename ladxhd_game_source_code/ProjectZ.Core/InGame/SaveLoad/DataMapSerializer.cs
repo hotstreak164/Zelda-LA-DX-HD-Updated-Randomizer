@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace ProjectZ.InGame.SaveLoad
 {
-    class DataMapSerializer
+    public class DataMapSerializer
     {
         public static void SaveDialog(string[,] data)
         {

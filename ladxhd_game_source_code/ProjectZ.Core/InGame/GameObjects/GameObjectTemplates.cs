@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using ProjectZ.Base;
-using ProjectZ.Editor;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Bosses;
 using ProjectZ.InGame.GameObjects.Dungeon;
@@ -29,7 +28,7 @@ namespace ProjectZ.InGame.GameObjects
         }
     }
 
-    class GameObjectTemplates
+    public class GameObjectTemplates
     {
         public static Dictionary<string, GameObjectTemplate> ObjectTemplates = new Dictionary<string, GameObjectTemplate>();
         public static Dictionary<string, ObjActivator.ObjectActivator<GameObject>> ObjectSpawner = new Dictionary<string, ObjActivator.ObjectActivator<GameObject>>();
@@ -750,23 +749,28 @@ namespace ProjectZ.InGame.GameObjects
                 }
             }
 
-            if (Game1.EditorMode)
-            {
-                // create the gameObjects used in the editor
-                var editorMap = Map.Map.CreateEmptyMap();
-                foreach (var template in GameObjectTemplates.ObjectTemplates)
+            #if DESKTOP_EDITOR
+                if (Game1.EditorMode)
                 {
-                    if (template.Value == null)
-                        continue;
+                    // create the gameObjects used in the editor
+                    var editorMap = Map.Map.CreateEmptyMap();
+                    foreach (var template in GameObjectTemplates.ObjectTemplates)
+                    {
+                        if (template.Value == null)
+                            continue;
 
-                    // check if a base constructor exists and use this instead
-                    if (template.Value.ObjectType.GetConstructor(Type.EmptyTypes) != null)
-                        ObjectEditorScreen.EditorObjectTemplates.Add(template.Key, (GameObject)Activator.CreateInstance(template.Value.ObjectType));
-                    else
-                        ObjectEditorScreen.EditorObjectTemplates.Add(template.Key, ObjectManager.GetGameObject(editorMap,
-                            template.Key, AddPositionToParameterArray(template.Value.Parameter, editorMap, 0, 0)));
+                        if (template.Value.ObjectType.GetConstructor(Type.EmptyTypes) != null)
+                            ProjectZ.Editor.ObjectEditorScreen.EditorObjectTemplates.Add(
+                                template.Key,
+                                (GameObject)Activator.CreateInstance(template.Value.ObjectType));
+                        else
+                            ProjectZ.Editor.ObjectEditorScreen.EditorObjectTemplates.Add(
+                                template.Key,
+                                ObjectManager.GetGameObject(editorMap, template.Key,
+                                    AddPositionToParameterArray(template.Value.Parameter, editorMap, 0, 0)));
+                    }
                 }
-            }
+            #endif
         }
 
         private static object[] AddPositionToParameterArray(object[] objParameter, Map.Map map, int posX, int posY)

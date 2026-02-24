@@ -39,7 +39,7 @@ namespace ProjectZ.Base
     }
     #endregion
 
-    internal class InputHandler : GameComponent
+    public class InputHandler : GameComponent
     {
         private static List<InputCharacter> _alphabet;
 

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectZ.InGame.SaveLoad
 {
-    class SpriteAtlasSerialization
+    public class SpriteAtlasSerialization
     {
         public class SpriteAtlas
         {

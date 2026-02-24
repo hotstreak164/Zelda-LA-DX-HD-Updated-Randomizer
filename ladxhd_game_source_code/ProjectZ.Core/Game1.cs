@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ProjectZ.Base;
 using ProjectZ.Base.UI;
-using ProjectZ.Editor;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.GameObjects;
 using ProjectZ.InGame.Map;
@@ -31,7 +30,7 @@ namespace ProjectZ
         public static GbsPlayer GbsPlayer = new GbsPlayer();
         public static Random RandomNumber = new Random();
         public static CameraField ClassicCamera = new CameraField();
-        public static EditorManager EditorManager;
+        public static object? EditorManager;
   
         public static int WindowWidth;
         public static int WindowHeight;
@@ -171,7 +170,9 @@ namespace ProjectZ
             Instance = this;
 
             // Initialize the editor.
-            EditorManager = new EditorManager(this);
+            #if DESKTOP_EDITOR
+                EditorManager = ProjectZ.Editor.EditorBootstrap.Create(this);
+            #endif
             base.Initialize();
         }
 
@@ -263,9 +264,11 @@ namespace ProjectZ
             LanguageManager.Load();
             UiPageManager.Load(Content);
 
-            // Set up the editor if enabled.
-            if (EditorMode)
-                EditorManager.SetUpEditorUi();
+            #if DESKTOP_EDITOR
+                // Set up the editor if enabled.
+                if (EditorMode)
+                    EditorManager.SetUpEditorUi();
+            #endif
 
             // Flag that the thread has finished loading in content.
             _finishedLoading = true;
@@ -349,12 +352,15 @@ namespace ProjectZ
             // When the content thread is finished loading.
             if (_finishedLoading)
             {
-                // Update the editor UI.
-                if (EditorMode)
-                {
-                    UiManager.Update();
-                    EditorManager.EditorUpdate(gameTime);
-                }
+                #if DESKTOP_EDITOR
+                    // Update the editor UI.
+                    if (EditorMode)
+                    {
+                        UiManager.Update();
+                        EditorManager.EditorUpdate(gameTime);
+                    }
+                #endif
+
                 // Update the UI.
                 UiManager.CurrentScreen = "";
                 UiPageManager.Update(gameTime);

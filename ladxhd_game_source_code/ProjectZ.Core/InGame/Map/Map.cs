@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using ProjectZ.Base;
-using ProjectZ.Editor;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.GameObjects.Dungeon;
@@ -237,7 +236,9 @@ namespace ProjectZ.InGame.Map
             OffsetDigMap(newWidth, newHeight, posX, posY);
 
             // offset the objects
-            ObjectEditorScreen.OffsetObjects(this, posX * Values.TileSize, posY * Values.TileSize);
+            #if DESKTOP_EDITOR
+                ObjectEditorScreen.OffsetObjects(this, posX * Values.TileSize, posY * Values.TileSize);
+            #endif
         }
 
         private void OffsetDigMap(int newWidth, int newHeight, int posX, int posY)

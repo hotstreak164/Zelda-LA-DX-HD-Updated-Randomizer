@@ -12,7 +12,7 @@ using ProjectZ.InGame.Screens;
 
 namespace ProjectZ.InGame.Things
 {
-    internal class Resources
+    public class Resources
     {
         public class Texture
         {

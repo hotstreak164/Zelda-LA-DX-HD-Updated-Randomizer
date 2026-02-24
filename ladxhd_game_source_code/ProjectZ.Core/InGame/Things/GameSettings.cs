@@ -1,6 +1,6 @@
 ﻿namespace ProjectZ.InGame.Things
 {
-    class GameSettings
+    public class GameSettings
     {
         // Game Settings
         public static int     MenuBorder      =  0;

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-internal static class SdlWindowIcon
+internal static class WindowIcon
 {
     private const string SDL2_LIB = "SDL2";
 
@@ -18,7 +18,7 @@ internal static class SdlWindowIcon
     [DllImport(SDL2_LIB, CallingConvention = CallingConvention.Cdecl)]
     private static extern void SDL_FreeSurface(IntPtr surface);
 
-    public static bool TrySetIconFromBmpStream(IntPtr sdlWindowHandle, Stream bmpStream)
+    public static bool SetFromStream(IntPtr sdlWindowHandle, Stream bmpStream)
     {
         if (sdlWindowHandle == IntPtr.Zero || bmpStream == null)
             return false;

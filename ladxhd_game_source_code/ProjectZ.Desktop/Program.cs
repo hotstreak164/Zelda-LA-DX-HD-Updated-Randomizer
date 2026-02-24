@@ -30,14 +30,13 @@ namespace ProjectZ
                         i++;
                     }
                 }
-                else if (arg.Equals("exclusive", StringComparison.OrdinalIgnoreCase))
-                {
-                    GameSettings.ExFullscreen = true;
-                }
             }
 
             try
             {
+                using (var game = new ProjectZ.Game1(editorMode, loadSave, saveSlot))
+                    game.Run();
+
                 using (var game = new Game1(editorMode, loadSave, saveSlot))
                     game.Run();
             }

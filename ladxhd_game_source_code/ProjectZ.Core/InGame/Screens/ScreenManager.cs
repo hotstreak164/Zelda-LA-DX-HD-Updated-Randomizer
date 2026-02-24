@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectZ.Editor;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.Screens
@@ -40,15 +39,17 @@ namespace ProjectZ.InGame.Screens
             _newScreens.Add(new GameScreen(Values.ScreenNameGame));
             _newScreens.Add(new EndingScreen(Values.ScreenEnding));
 
-            // editor screens
-            if (Game1.EditorMode)
-            {
-                _newScreens.Add(new MapEditorScreen(Values.ScreenNameEditor));
-                _newScreens.Add(new TilesetEdit(Values.ScreenNameEditorTileset));
-                _newScreens.Add(new TileExtractor(Values.ScreenNameEditorTilesetExtractor));
-                _newScreens.Add(new AnimationScreen(Values.ScreenNameEditorAnimation));
-                _newScreens.Add(new SpriteAtlasScreen(Values.ScreenNameSpriteAtlasEditor));
-            }
+            #if DESKTOP_EDITOR
+                // editor screens
+                if (Game1.EditorMode)
+                {
+                    _newScreens.Add(new MapEditorScreen(Values.ScreenNameEditor));
+                    _newScreens.Add(new TilesetEdit(Values.ScreenNameEditorTileset));
+                    _newScreens.Add(new TileExtractor(Values.ScreenNameEditorTilesetExtractor));
+                    _newScreens.Add(new AnimationScreen(Values.ScreenNameEditorAnimation));
+                    _newScreens.Add(new SpriteAtlasScreen(Values.ScreenNameSpriteAtlasEditor));
+                }
+            #endif
 
             foreach (var screen in _newScreens)
                 screen.Load(content);

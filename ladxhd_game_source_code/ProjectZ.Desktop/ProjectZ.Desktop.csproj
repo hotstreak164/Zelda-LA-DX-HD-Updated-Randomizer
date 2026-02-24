@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFrameworks>net8.0-windows;net8.0</TargetFrameworks>
+		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<TieredCompilation>false</TieredCompilation>
+
+		<AssemblyName>ProjectZ.Desktop</AssemblyName>
+		<RootNamespace>ProjectZ</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+		<DefineConstants>$(DefineConstants);WINDOWS;DESKTOP_EDITOR</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<DefineConstants>$(DefineConstants);DESKTOP_EDITOR</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ProjectZ.Core\ProjectZ.Core.csproj" />
+	</ItemGroup>
+
+	<!-- Keep your cleanup rules if you need them -->
+	<ItemGroup>
+		<Compile Remove="Content\bin\**" />
+		<Compile Remove="Content\obj\**" />
+		<Compile Remove="Fix\**" />
+		<EmbeddedResource Remove="Content\bin\**" />
+		<EmbeddedResource Remove="Content\obj\**" />
+		<EmbeddedResource Remove="Fix\**" />
+		<None Remove="Content\bin\**" />
+		<None Remove="Content\obj\**" />
+		<None Remove="Fix\**" />
+		<None Remove=".gitignore" />
+		<None Remove=".gitmodules" />
+	</ItemGroup>
+
+	<!-- This tells MSBuild which .mgcb to build -->
+	<ItemGroup>
+		<KniContentReference Include="..\ProjectZ.Core\Content\Content.mgcb" />
+	</ItemGroup>
+
+	<!-- PLATFORM PACKAGES -->
+	<!-- DirectX Build -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+		<PackageReference Include="nkast.Kni.Platform.WinForms.DX11" Version="4.2.9001" />
+	</ItemGroup>
+
+	<!-- OpenGL Build -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="nkast.Kni.Platform.SDL2.GL" Version="4.2.9001.1" />
+	</ItemGroup>
+
+	<!-- COMMON PACKAGES -->
+	<ItemGroup>
+		<PackageReference Include="nkast.Xna.Framework" Version="4.2.9001" />
+		<PackageReference Include="KNI.Extended" Version="5.3.1" />
+		<PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+
+		<!-- 🔥 REQUIRED so KniContentReference actually builds XNBs -->
+		<PackageReference Include="KNI.Extended.Content.Pipeline" Version="5.3.1" />
+		<PackageReference Include="nkast.Xna.Framework.Content.Pipeline.Builder" Version="4.2.9001" />
+	</ItemGroup>
+
+	<!-- Copy Core\Data\** into Desktop output as bin\...\Data\... (PRESERVE the Data folder) -->
+	<ItemGroup>
+		<None Include="..\ProjectZ.Core\Data\**\*"
+			  CopyToOutputDirectory="PreserveNewest"
+			  TargetPath="Data\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Content\" />
+		<Folder Include="Data\" />
+	</ItemGroup>
+
+</Project>
