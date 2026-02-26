@@ -111,10 +111,17 @@ namespace ProjectZ
         // Used to know when the icon was set.
         private bool _windowIconSet;
 
-        public static Matrix GetMatrix => Matrix.CreateScale(new Vector3(
-            (float)Graphics.PreferredBackBufferWidth / WindowWidth,
-            (float)Graphics.PreferredBackBufferHeight / WindowHeight, 0));
-
+        public static Matrix GetMatrix
+        {
+            get
+            {
+        #if ANDROID
+                return Matrix.Identity;
+        #else
+                return Matrix.CreateScale((float)Graphics.PreferredBackBufferWidth / WindowWidth, (float)Graphics.PreferredBackBufferHeight / WindowHeight, 1f);
+        #endif
+            }
+        }
         // lahdmod values
         private int  max_game_scale = 20;
         private bool editor_mode = false;
@@ -420,6 +427,7 @@ namespace ProjectZ
         {
             if (!_finishedLoading)
             {
+                GraphicsDevice.Clear(Color.Black);
                 ScreenManager.Draw(SpriteBatch);
                 return;
             }

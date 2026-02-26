@@ -60,8 +60,10 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static void SaveGame(GameManager gameManager, bool showIcon)
         {
+            var saveFilePath = Path.Combine(Values.PathSaveFolder, SaveFileNameGame + gameManager.SaveSlot);
+
             // save the game variables
-            gameManager.SaveManager.Save(Path.Combine(Values.PathSaveFolder, SaveFileNameGame + gameManager.SaveSlot), Values.SaveRetries);
+            gameManager.SaveManager.Save(saveFilePath, Values.SaveRetries);
 
             // player variables
             // is this state already created before starting a sequence?

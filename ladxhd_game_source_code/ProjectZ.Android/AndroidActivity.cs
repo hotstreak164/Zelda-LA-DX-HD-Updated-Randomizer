@@ -7,8 +7,9 @@ using Android.Views;
 namespace ProjectZ.Android
 {
     [Activity(
-        Label = "ProjectZ",
-        MainLauncher = true,
+        Label = "@string/app_name",
+        MainLauncher = false ,
+        Theme = "@style/Theme.Game",
         LaunchMode = LaunchMode.SingleInstance,
         ScreenOrientation = ScreenOrientation.FullSensor,
         ConfigurationChanges =

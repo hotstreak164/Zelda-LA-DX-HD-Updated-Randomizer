@@ -32,7 +32,7 @@ namespace ProjectZ.Android
 
         protected override void UnloadContent()
         {
-            // optional
+            
         }
 
         protected override void Update(GameTime gameTime)

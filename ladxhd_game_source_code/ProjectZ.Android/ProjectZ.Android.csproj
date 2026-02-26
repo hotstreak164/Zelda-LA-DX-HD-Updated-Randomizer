@@ -41,11 +41,11 @@
 		<None Include="AndroidManifest.xml" />
 		<None Include="Assets\AboutAssets.txt" />
 		<None Include="Resources\AboutResources.txt" />
-		<AndroidResource Include="Resources\Drawable\Icon.png" />
-		<AndroidResource Include="Resources\Drawable\Splash.png" />
-		<AndroidResource Include="Resources\Values\Strings.xml" />
-		<AndroidResource Include="Resources\Values\Styles.xml" />
-		<Folder Include="Resources\Layout\" />
+		<AndroidResource Include="Resources\drawable\icon.png" />
+		<AndroidResource Include="Resources\drawable\splash.png" />
+		<AndroidResource Include="Resources\values\strings.xml" />
+		<AndroidResource Include="Resources\values\styles.xml" />
+		<AndroidResource Include="Resources\layout\splash_layout.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
