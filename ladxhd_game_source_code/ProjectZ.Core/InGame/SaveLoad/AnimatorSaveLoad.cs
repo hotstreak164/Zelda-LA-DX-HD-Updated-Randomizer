@@ -8,57 +8,65 @@ namespace ProjectZ.InGame.SaveLoad
 {
     public class AnimatorSaveLoad
     {
+        private static string curVersion = "1";
+
         public static void SaveAnimator(string path, Animator animator)
         {
-            var pathTemp = path + ".temp";
-            var writer = new StreamWriter(pathTemp);
+        #if ANDROID
+            // Writing into APK assets isn't a thing; saving is editor/desktop only.
+            throw new NotSupportedException("Saving animations is not supported on Android.");
+        #else
+            if (animator == null) throw new ArgumentNullException(nameof(animator));
 
-            var saveString = animator.SpritePath;
-            // animation version
-            writer.WriteLine("1");
-            writer.WriteLine(saveString);
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Invalid path.", nameof(path));
 
-            for (var i = 0; i < animator.Animations.Count; i++)
+            var tempPath = path + ".temp";
+
+            // Make sure the temp file is disposed even if something goes wrong.
+            using (var writer = new StreamWriter(tempPath))
             {
-                saveString = animator.Animations[i].Id + ";";
-                saveString += animator.Animations[i].NextAnimation + ";";
-                saveString += animator.Animations[i].LoopCount + ";";
+                writer.WriteLine(curVersion);
+                writer.WriteLine(animator.SpritePath ?? "");
 
-                saveString += animator.Animations[i].Offset.X + ";";
-                saveString += animator.Animations[i].Offset.Y + ";";
-
-                saveString += animator.Animations[i].Frames.Length;
-
-                // write frames
-                for (var j = 0; j < animator.Animations[i].Frames.Length; j++)
+                for (int i = 0; i < animator.Animations.Count; i++)
                 {
-                    saveString += ";" +
-                                    animator.Animations[i].Frames[j].FrameTime + ";" +
+                    var anim = animator.Animations[i];
 
-                                    animator.Animations[i].Frames[j].SourceRectangle.X + ";" +
-                                    animator.Animations[i].Frames[j].SourceRectangle.Y + ";" +
-                                    animator.Animations[i].Frames[j].SourceRectangle.Width + ";" +
-                                    animator.Animations[i].Frames[j].SourceRectangle.Height + ";" +
+                    var line =
+                        anim.Id + ";" +
+                        anim.NextAnimation + ";" +
+                        anim.LoopCount + ";" +
+                        anim.Offset.X + ";" +
+                        anim.Offset.Y + ";" +
+                        anim.Frames.Length;
 
-                                    animator.Animations[i].Frames[j].Offset.X + ";" +
-                                    animator.Animations[i].Frames[j].Offset.Y + ";" +
+                    for (int j = 0; j < anim.Frames.Length; j++)
+                    {
+                        var f = anim.Frames[j];
+                        line += ";" +
+                                f.FrameTime + ";" +
+                                f.SourceRectangle.X + ";" +
+                                f.SourceRectangle.Y + ";" +
+                                f.SourceRectangle.Width + ";" +
+                                f.SourceRectangle.Height + ";" +
+                                f.Offset.X + ";" +
+                                f.Offset.Y + ";" +
+                                f.CollisionRectangle.X + ";" +
+                                f.CollisionRectangle.Y + ";" +
+                                f.CollisionRectangle.Width + ";" +
+                                f.CollisionRectangle.Height + ";" +
+                                f.MirroredV + ";" +
+                                f.MirroredH;
+                    }
 
-                                    animator.Animations[i].Frames[j].CollisionRectangle.X + ";" +
-                                    animator.Animations[i].Frames[j].CollisionRectangle.Y + ";" +
-                                    animator.Animations[i].Frames[j].CollisionRectangle.Width + ";" +
-                                    animator.Animations[i].Frames[j].CollisionRectangle.Height + ";" +
-
-                                    animator.Animations[i].Frames[j].MirroredV + ";" +
-                                    animator.Animations[i].Frames[j].MirroredH;
+                    writer.WriteLine(line);
                 }
-
-                writer.WriteLine(saveString);
             }
+            if (File.Exists(path))
+                File.Delete(path);
 
-            writer.Close();
-
-            File.Delete(path);
-            File.Move(pathTemp, path);
+            File.Move(tempPath, path);
+        #endif
         }
 
         public static Animator LoadAnimator(string animatorId, bool redux = false)
@@ -66,77 +74,95 @@ namespace ProjectZ.InGame.SaveLoad
             return LoadAnimatorFile(Path.Combine(Values.PathAnimationFolder, animatorId + ".ani"), redux);
         }
 
+        private static string AddReduxToFilename(string spritePath)
+        {
+            // Safe for names with multiple dots: "foo.bar.png" -> "foo.bar_redux.png"
+            var dot = spritePath.LastIndexOf('.');
+            return dot > 0
+                ? spritePath.Substring(0, dot) + "_redux" + spritePath.Substring(dot)
+                : spritePath + "_redux";
+        }
+
         public static Animator LoadAnimatorFile(string filePath, bool redux = false)
         {
-            if (!File.Exists(filePath))
+            if (!GameFS.Exists(GameFS.ToAssetPath(filePath)))
                 return null;
 
-            var reader = new StreamReader(filePath);
+            using var stream = GameFS.OpenRead(GameFS.ToAssetPath(filePath));
+            using var reader = new StreamReader(stream);
+
             var animator = new Animator();
-            var version = reader.ReadLine();
-            var spritePath = reader.ReadLine();
+            var version = reader.ReadLine();       // unused
+            var spritePath = reader.ReadLine();    // required
+
+            if (string.IsNullOrWhiteSpace(spritePath))
+                return null;
 
             // If uncensored is enabled, pull from the "_redux" version of the sprite sheet.
             if (redux)
-            {
-                string[] splitPath = spritePath.Split(new[] { '.' });
-                spritePath = splitPath[0] + "_redux." + splitPath[1];
-            }
+                spritePath = AddReduxToFilename(spritePath);
+
             animator.SpritePath = spritePath;
             animator.SprTexture = Resources.GetTexture(animator.SpritePath);
 
-            // load the animations
+            // If the texture couldn't be found/loaded, fail fast.
+            if (animator.SprTexture == null)
+                return null;
+
             while (!reader.EndOfStream)
             {
-                var strLine = reader.ReadLine();
-
-                if (strLine == null)
+                var line = reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(line))
                     continue;
 
-                var strSplit = strLine.Split(';');
-
-                if (strSplit.Length < 16)
+                var s = line.Split(';');
+                if (s.Length < 16)
                     continue;
 
-                var pos = 0;
-                var animationId = strSplit[pos].ToLower();
+                int pos = 0;
 
-                var animation = new Animation(animationId);
+                var animationId = (s[pos] ?? "").ToLowerInvariant();
+                if (string.IsNullOrEmpty(animationId))
+                    continue;
 
-                animation.NextAnimation = strSplit[pos += 1].ToLower();
-                animation.LoopCount = Convert.ToInt32(strSplit[pos += 1]);
-                animation.Offset.X = Convert.ToInt32(strSplit[pos += 1]);
-                animation.Offset.Y = Convert.ToInt32(strSplit[pos += 1]);
+                var animation = new Animation(animationId)
+                {
+                    NextAnimation = (s[++pos] ?? "").ToLowerInvariant(),
+                    LoopCount     = Convert.ToInt32(s[++pos])
+                };
 
-                var frames = Convert.ToInt32(strSplit[pos += 1]);
+                animation.Offset.X = Convert.ToInt32(s[++pos]);
+                animation.Offset.Y = Convert.ToInt32(s[++pos]);
+
+                int frames = Convert.ToInt32(s[++pos]);
+                if (frames < 0) frames = 0;
+
                 animation.Frames = new Frame[frames];
-
                 animator.AddAnimation(animation);
 
-                for (var i = 0; i < frames; i++)
+                for (int i = 0; i < frames; i++)
                 {
-                    animator.SetFrameAt(animationId, i, new Frame()
+                    var frame = new Frame
                     {
-                        FrameTime = Convert.ToInt32(strSplit[pos += 1]),
+                        FrameTime = Convert.ToInt32(s[++pos]),
 
                         SourceRectangle = new Rectangle(
-                            Convert.ToInt32(strSplit[pos += 1]), Convert.ToInt32(strSplit[pos += 1]),
-                            Convert.ToInt32(strSplit[pos += 1]), Convert.ToInt32(strSplit[pos += 1])),
+                            Convert.ToInt32(s[++pos]),Convert.ToInt32(s[++pos]),
+                            Convert.ToInt32(s[++pos]),Convert.ToInt32(s[++pos])),
 
-                        Offset = new Point(Convert.ToInt32(strSplit[pos += 1]), Convert.ToInt32(strSplit[pos += 1])),
+                        Offset = new Point(
+                            Convert.ToInt32(s[++pos]), Convert.ToInt32(s[++pos])),
 
                         CollisionRectangle = new Rectangle(
-                            Convert.ToInt32(strSplit[pos += 1]), Convert.ToInt32(strSplit[pos += 1]),
-                            Convert.ToInt32(strSplit[pos += 1]), Convert.ToInt32(strSplit[pos += 1])),
+                            Convert.ToInt32(s[++pos]), Convert.ToInt32(s[++pos]),
+                            Convert.ToInt32(s[++pos]), Convert.ToInt32(s[++pos])),
 
-                        MirroredV = Convert.ToBoolean(strSplit[pos += 1]),
-                        MirroredH = Convert.ToBoolean(strSplit[pos += 1])
-                    });
+                        MirroredV = Convert.ToBoolean(s[++pos]),
+                        MirroredH = Convert.ToBoolean(s[++pos]),
+                    };
+                    animator.SetFrameAt(animationId, i, frame);
                 }
             }
-
-            reader.Close();
-
             return animator;
         }
     }

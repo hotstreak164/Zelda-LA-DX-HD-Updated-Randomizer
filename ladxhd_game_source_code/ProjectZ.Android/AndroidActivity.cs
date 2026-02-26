@@ -1,5 +1,6 @@
 using Android.App;
 using Android.Content.PM;
+using Android.Content.Res;
 using Android.OS;
 using Android.Views;
 
@@ -9,6 +10,7 @@ namespace ProjectZ.Android
         Label = "ProjectZ",
         MainLauncher = true,
         LaunchMode = LaunchMode.SingleInstance,
+        ScreenOrientation = ScreenOrientation.FullSensor,
         ConfigurationChanges =
             ConfigChanges.Orientation |
             ConfigChanges.ScreenSize |
@@ -20,7 +22,14 @@ namespace ProjectZ.Android
         {
             base.OnCreate(savedInstanceState);
 
-            var game = new AndroidGame();
+            // construct your real game here:
+            var game = new Game1(
+                editorMode: false,
+                loadSave: false,
+                loadSlot: 0
+            );
+            game.Services.AddService(typeof(AssetManager), Assets);
+
             var view = (View)game.Services.GetService(typeof(View))!;
             SetContentView(view);
 

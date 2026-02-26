@@ -31,7 +31,7 @@ namespace ProjectZ
         public static Random RandomNumber = new Random();
         public static CameraField ClassicCamera = new CameraField();
         public static IEditorManager? EditorManager;
-  
+
         public static int WindowWidth;
         public static int WindowHeight;
         public static int WindowWidthEnd;
@@ -137,18 +137,20 @@ namespace ProjectZ
             // Enable editor via lahdmod file or through the command line option.
             EditorMode = editorMode || editor_mode;
 
-            #if DEBUG
-                EditorMode = true;
-            #endif
-
             // Create the graphics device and set the back buffer width/height.
             Graphics = new GraphicsDeviceManager(this);
 
-            #if WINDOWS
-                Graphics.GraphicsProfile = GraphicsProfile.FL10_1;
-            #else
-                Graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            #endif
+        #if DEBUG
+            EditorMode = true;
+        #endif
+
+        #if WINDOWS
+            System.Diagnostics.Debug.WriteLine("DirectX");
+            Graphics.GraphicsProfile = GraphicsProfile.FL10_1;
+        #else
+            System.Diagnostics.Debug.WriteLine("OpenGL");
+            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+        #endif
 
             Graphics.PreferredBackBufferWidth = Values.MinWidth * 3;
             Graphics.PreferredBackBufferHeight = Values.MinHeight * 3;
@@ -220,12 +222,12 @@ namespace ProjectZ
             ScreenManager.LoadIntro(Content);
 
             // Start loading the resources that are needed after the intro.
-            #if WINDOWS
-                ThreadPool.QueueUserWorkItem(LoadContentThreaded);
-            #else
-                // OpenGL: must load GPU resources on the main thread
-                LoadContentThreaded(null);
-            #endif
+        #if WINDOWS
+            ThreadPool.QueueUserWorkItem(LoadContentThreaded);
+        #else
+            // OpenGL: must load GPU resources on the main thread
+            LoadContentThreaded(null);
+        #endif
 
             // Initialize the GBS Player and load in the Link's Awakening GBS file.
             GbsPlayer.LoadFile(Path.Combine(Values.PathContentFolder, "Music", "awakening.gbs"));
@@ -243,9 +245,9 @@ namespace ProjectZ
                 GameSettings.IsFullscreen = false;
                 ToggleFullscreen();
             }
-            #if !WINDOWS
-                TrySetWindowIconBmp();
-            #endif
+        #if !WINDOWS
+            TrySetWindowIconBmp();
+        #endif
         }
 
         private void LoadContentThreaded(Object obj)
@@ -297,10 +299,10 @@ namespace ProjectZ
 
         protected override void Update(GameTime gameTime)
         {
-            // If OpenGL renderer we need to jump through some hoops for the icon.
-            #if !WINDOWS
-                TrySetWindowIconBmp();
-            #endif
+        // If OpenGL renderer we need to jump through some hoops for the icon.
+        #if !WINDOWS
+            TrySetWindowIconBmp();
+        #endif
 
             // If exclusive fullscreen mode is enabled.
             if (_firstFrameDrawn && !_fullscreenWasSet)
@@ -486,10 +488,10 @@ namespace ProjectZ
                 DrawDebugText();
                 DebugText = "";
 
-                #if DEBUG
-                    if (GameManager.SaveManager.HistoryEnabled)
-                        SpriteBatch.Draw(Resources.SprWhite, new Rectangle(0, WindowHeight - 6, WindowWidth, 6), Color.Red);
-                #endif
+            #if DEBUG
+                if (GameManager.SaveManager.HistoryEnabled)
+                    SpriteBatch.Draw(Resources.SprWhite, new Rectangle(0, WindowHeight - 6, WindowWidth, 6), Color.Red);
+            #endif
 
                 SpriteBatch.End();
             }
@@ -611,7 +613,7 @@ namespace ProjectZ
             if (!ShowDebugText)
                 return;
 
-            _debugTextSize = TextHelper.MeasureString(DebugText);
+            _debugTextSize = GameFS.MeasureString(DebugText);
 
             SpriteBatch.Draw(_renderTarget2, new Rectangle(0, 0,
                 (int)(_debugTextSize.X * 2) + 20, (int)(_debugTextSize.Y * 2) + 20), Color.White);
@@ -624,7 +626,7 @@ namespace ProjectZ
 
             SpriteBatch.Draw(Resources.SprWhite, new Rectangle(0, 0, (int)(_debugTextSize.X * 2) + 20, (int)(_debugTextSize.Y * 2) + 20), Color.Black * 0.75f);
 
-            TextHelper.DrawString(SpriteBatch, DebugText, new Vector2(10), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
+            GameFS.DrawString(SpriteBatch, DebugText, new Vector2(10), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
         }
 
         private void OnDeviceReset(object sender, EventArgs e)

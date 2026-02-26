@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using Microsoft.Xna.Framework;
+using ProjectZ.InGame.Things;
 
 namespace GBSPlayer
 {
@@ -45,14 +47,14 @@ namespace GBSPlayer
 
         public void LoadFile(string path)
         {
-            Cartridge.ROM = File.ReadAllBytes(path);
+            path = GameFS.ToAssetPath(path);
+
+            Cartridge.ROM = GameFS.ReadAllBytes(path);
 
             Cartridge.Init();
             Cpu.Init();
 
             GbsLoaded = true;
-
-            Console.WriteLine("finished loading file: {0}", path);
         }
 
         public void ChangeTrack(int offset)

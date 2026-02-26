@@ -153,7 +153,7 @@ namespace ProjectZ.InGame.Overlay
                 _choiceWidth = 0;
                 for (var i = 0; i < _choices.Length; i++)
                 {
-                    var width = ((int)TextHelper.MeasureString("" + _choices[i] + "").X + 8) * _uiScale;
+                    var width = ((int)GameFS.MeasureString("" + _choices[i] + "").X + 8) * _uiScale;
                     if (_choiceWidth < width)
                         _choiceWidth = width;
                 }
@@ -214,11 +214,11 @@ namespace ProjectZ.InGame.Overlay
                 var scrollPercentage = _scrollCounter / ScrollTime;
                 scrollOffset = scrollPercentage * Resources.GameFontHeight * _uiScale;
 
-                TextHelper.DrawString(spriteBatch, _scrollText, new Vector2(DialogBoxTextBox.X, DialogBoxTextBox.Y + _textboxOffsetY - Resources.GameFontHeight * _uiScale + scrollOffset + _textOffsetY * _uiScale), Values.TextboxFontColor * _currentOpacity * Math.Clamp(scrollPercentage * 2f - 1f, 0, 1), 0, Vector2.Zero, _uiScale, SpriteEffects.None, 0);
+                GameFS.DrawString(spriteBatch, _scrollText, new Vector2(DialogBoxTextBox.X, DialogBoxTextBox.Y + _textboxOffsetY - Resources.GameFontHeight * _uiScale + scrollOffset + _textOffsetY * _uiScale), Values.TextboxFontColor * _currentOpacity * Math.Clamp(scrollPercentage * 2f - 1f, 0, 1), 0, Vector2.Zero, _uiScale, SpriteEffects.None, 0);
             }
 
             // draw the dialog box
-            TextHelper.DrawString(spriteBatch, _strDialog, new Vector2(DialogBoxTextBox.X, DialogBoxTextBox.Y + _textboxOffsetY + scrollOffset + _textOffsetY * _uiScale), Values.TextboxFontColor * _currentOpacity, 0, Vector2.Zero, _uiScale, SpriteEffects.None, 0);
+            GameFS.DrawString(spriteBatch, _strDialog, new Vector2(DialogBoxTextBox.X, DialogBoxTextBox.Y + _textboxOffsetY + scrollOffset + _textOffsetY * _uiScale), Values.TextboxFontColor * _currentOpacity, 0, Vector2.Zero, _uiScale, SpriteEffects.None, 0);
 
             if (!_running && !_end)
             {
@@ -230,12 +230,12 @@ namespace ProjectZ.InGame.Overlay
             {
                 for (var i = 0; i < _choices.Length; i++)
                 {
-                    var textSize = TextHelper.MeasureString(_choices[i]);
+                    var textSize = GameFS.MeasureString(_choices[i]);
                     var color = Color.Lerp(Values.TextboxFontColor, Values.TextboxBackgroundColor, _textboxChoice[i].SelectionPercentage);
                     var posX = _textboxBackgroundChoice[i].Rectangle.X + _textboxBackgroundChoice[i].Rectangle.Width / 2 - (textSize.X * _uiScale) / 2;
                     var posY = _textboxBackgroundChoice[i].Rectangle.Y + _textboxBackgroundChoice[i].Rectangle.Height / 2 - (textSize.Y * _uiScale) / 2 + _uiScale;
 
-                    TextHelper.DrawString(spriteBatch, _choices[i], new Vector2((int)posX, (int)posY), color * _currentOpacity * _textboxChoice[i].Percentage, 0, Vector2.Zero, _uiScale, SpriteEffects.None, 0);
+                    GameFS.DrawString(spriteBatch, _choices[i], new Vector2((int)posX, (int)posY), color * _currentOpacity * _textboxChoice[i].Percentage, 0, Vector2.Zero, _uiScale, SpriteEffects.None, 0);
                 }
             }
         }
@@ -452,7 +452,7 @@ namespace ProjectZ.InGame.Overlay
         public void SetUpDialogBox()
         {
             // only works if every letter has the same size
-            _letterSize = new Point((int)TextHelper.MeasureString("A").X, (int)TextHelper.MeasureString("A").Y);
+            _letterSize = new Point((int)GameFS.MeasureString("A").X, (int)GameFS.MeasureString("A").Y);
 
             _dialogBoxWidth = _letterSize.X * MaxCharacters + _paddingLeft + _paddingRight;
             _dialogBoxHeight = _letterSize.Y * MaxLines + _paddingV * 2;

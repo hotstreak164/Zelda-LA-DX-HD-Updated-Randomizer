@@ -17,8 +17,7 @@ namespace ProjectZ.Android
             Content.RootDirectory = "Content";
 
             _graphics.IsFullScreen = true;
-            _graphics.SupportedOrientations =
-                DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+            _graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
         }
 
         protected override void Initialize()
@@ -53,7 +52,7 @@ namespace ProjectZ.Android
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Red);
             base.Draw(gameTime);
         }
     }

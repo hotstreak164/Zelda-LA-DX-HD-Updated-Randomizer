@@ -1,105 +1,176 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.SaveLoad
 {
-    public class SpriteAtlasSerialization
+    public static class SpriteAtlasSerialization
     {
-        public class SpriteAtlas
+        public sealed class SpriteAtlas
         {
             public int Scale = 1;
-            public List<AtlasEntry> Data = new();
+            public List<AtlasEntry> Data { get; } = new();
         }
 
-        public class AtlasEntry
+        public sealed class AtlasEntry
         {
-            public string EntryId;
+            public string EntryId = "";
             public Rectangle SourceRectangle;
             public Vector2 Origin;
 
-            public override string ToString()
-            {
-                return EntryId;
-            }
+            public override string ToString() => EntryId;
         }
 
+        // ----------------------------------------------------------------------------------------------------
+        //  SAVE (desktop/editor only)
+        // ----------------------------------------------------------------------------------------------------
         public static void SaveSpriteAtlas(string filePath, SpriteAtlas spriteAtlas)
         {
+#if ANDROID
+            // APK assets are read-only; saving is editor/desktop only.
+            throw new NotSupportedException("SaveSpriteAtlas is not supported on Android.");
+#else
+            if (spriteAtlas == null) throw new ArgumentNullException(nameof(spriteAtlas));
+            if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentException("Invalid path.", nameof(filePath));
+
             using var writer = new StreamWriter(filePath);
 
-            // version
-            writer.WriteLine("1");
-            writer.WriteLine(spriteAtlas.Scale);
+            writer.WriteLine("1");                // version
+            writer.WriteLine(spriteAtlas.Scale);  // scale
 
-            // this scales the source rectangle because that is the easy thing to do to support scaling in the editor
-            // this makes it possible to upscale the image by x and just change the scale value in the .atlas file
-            for (var i = 0; i < spriteAtlas.Data.Count; i++)
+            int scale = spriteAtlas.Scale <= 0 ? 1 : spriteAtlas.Scale;
+
+            // Store unscaled rect/origin (editor convenience).
+            for (int i = 0; i < spriteAtlas.Data.Count; i++)
             {
-                var rectangle = spriteAtlas.Data[i].SourceRectangle;
-                var origin = spriteAtlas.Data[i].Origin;
-                writer.WriteLine($"{spriteAtlas.Data[i].EntryId}:" +
-                                 $"{rectangle.X / spriteAtlas.Scale}," +
-                                 $"{rectangle.Y / spriteAtlas.Scale}," +
-                                 $"{rectangle.Width / spriteAtlas.Scale}," +
-                                 $"{rectangle.Height / spriteAtlas.Scale}," +
-                                 $"{origin.X / spriteAtlas.Scale}," +
-                                 $"{origin.Y / spriteAtlas.Scale}");
+                var e = spriteAtlas.Data[i];
+                var r = e.SourceRectangle;
+                var o = e.Origin;
+
+                writer.WriteLine(
+                    $"{e.EntryId}:" +
+                    $"{r.X / scale}," +
+                    $"{r.Y / scale}," +
+                    $"{r.Width / scale}," +
+                    $"{r.Height / scale}," +
+                    $"{o.X / scale}," +
+                    $"{o.Y / scale}"
+                );
             }
+#endif
         }
 
-        public static bool LoadSpriteAtlas(string filePath, SpriteAtlas spriteAtlas)
+        // ----------------------------------------------------------------------------------------------------
+        //  LOAD
+        // ----------------------------------------------------------------------------------------------------
+        public static bool LoadSpriteAtlas(string filePath, SpriteAtlas spriteAtlas, bool clearExisting = true)
         {
-            if (!File.Exists(filePath))
+            if (spriteAtlas == null) throw new ArgumentNullException(nameof(spriteAtlas));
+
+            filePath = GameFS.ToAssetPath(filePath);
+            if (!GameFS.Exists(filePath))
                 return false;
 
-            using var reader = new StreamReader(filePath);
+            if (clearExisting)
+                spriteAtlas.Data.Clear();
 
-            // version is currently not used
-            reader.ReadLine();
+            using var stream = GameFS.OpenRead(filePath);
+            using var reader = new StreamReader(stream);
 
-            // will crash if the data does not contain integer numbers
-            spriteAtlas.Scale = int.Parse(reader.ReadLine());
+            var version = reader.ReadLine(); // unused
+
+            var scaleLine = reader.ReadLine();
+            if (!int.TryParse(scaleLine, NumberStyles.Integer, CultureInfo.InvariantCulture, out var scale) || scale <= 0)
+                scale = 1;
+
+            spriteAtlas.Scale = scale;
 
             while (!reader.EndOfStream)
             {
-                var strLine = reader.ReadLine();
-                var split = strLine.Split(':');
-                if (split.Length == 2)
+                var line = reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                int colon = line.IndexOf(':');
+                if (colon <= 0 || colon >= line.Length - 1)
+                    continue;
+
+                var id = line.Substring(0, colon);
+                var data = line.Substring(colon + 1);
+
+                var parts = data.Split(',');
+                if (parts.Length < 4)
+                    continue;
+
+                if (!TryInt(parts, 0, out int x) ||
+                    !TryInt(parts, 1, out int y) ||
+                    !TryInt(parts, 2, out int w) ||
+                    !TryInt(parts, 3, out int h))
+                    continue;
+
+                float ox = 0, oy = 0;
+                if (parts.Length >= 6)
                 {
-                    var rectangleData = split[1].Split(",");
-                    var newEntry = new AtlasEntry
-                    {
-                        EntryId = split[0],
-                        SourceRectangle = rectangleData.Length >= 4
-                            ? new Rectangle(
-                                int.Parse(rectangleData[0]), int.Parse(rectangleData[1]),
-                                int.Parse(rectangleData[2]), int.Parse(rectangleData[3]))
-                            : default,
-                        Origin = rectangleData.Length >= 6
-                            ? new Vector2(int.Parse(rectangleData[4]), int.Parse(rectangleData[5]))
-                            : default
-                    };
-                    spriteAtlas.Data.Add(newEntry);
+                    TryFloat(parts, 4, out ox);
+                    TryFloat(parts, 5, out oy);
                 }
+
+                spriteAtlas.Data.Add(new AtlasEntry
+                {
+                    EntryId = id,
+                    SourceRectangle = new Rectangle(x, y, w, h),
+                    Origin = new Vector2(ox, oy)
+                });
             }
 
             return true;
         }
 
+        // ----------------------------------------------------------------------------------------------------
+        //  DICTIONARY POPULATION
+        // ----------------------------------------------------------------------------------------------------
         public static void LoadSourceDictionary(Texture2D texture, string fileName, Dictionary<string, DictAtlasEntry> dictionary)
         {
-            var spriteAtlas = new SpriteAtlas();
+            if (texture == null) throw new ArgumentNullException(nameof(texture));
+            if (dictionary == null) throw new ArgumentNullException(nameof(dictionary));
 
+            var spriteAtlas = new SpriteAtlas();
             if (!LoadSpriteAtlas(fileName, spriteAtlas))
                 return;
 
-            for (var i = 0; i < spriteAtlas.Data.Count; i++)
+            for (int i = 0; i < spriteAtlas.Data.Count; i++)
             {
-                var newEntry = new DictAtlasEntry(texture, spriteAtlas.Data[i].SourceRectangle, spriteAtlas.Data[i].Origin, spriteAtlas.Scale);
-                dictionary.TryAdd(spriteAtlas.Data[i].EntryId, newEntry);
+                var e = spriteAtlas.Data[i];
+                var dictEntry = new DictAtlasEntry(texture, e.SourceRectangle, e.Origin, spriteAtlas.Scale);
+                dictionary.TryAdd(e.EntryId, dictEntry);
             }
+        }
+
+        // ----------------------------------------------------------------------------------------------------
+        //  PARSE HELPERS
+        // ----------------------------------------------------------------------------------------------------
+        private static bool TryInt(string[] parts, int index, out int value)
+        {
+            value = 0;
+            if (index >= parts.Length) return false;
+            return int.TryParse(parts[index], NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
+        }
+
+        private static bool TryFloat(string[] parts, int index, out float value)
+        {
+            value = 0;
+            if (index >= parts.Length) return false;
+
+            // Accept int-like strings too.
+            if (float.TryParse(parts[index], NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                return true;
+
+            // Fallback: sometimes files have stray whitespace
+            return float.TryParse(parts[index].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out value);
         }
     }
 }

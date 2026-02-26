@@ -163,7 +163,7 @@ namespace ProjectZ.InGame.Interface
             if (SetString != null)
                 TextPostfix = SetString(Start + CurrentStep);
 
-            _textSize = TextHelper.MeasureString(Text + TextPostfix);
+            _textSize = GameFS.MeasureString(Text + TextPostfix);
 
             if (Size != Point.Zero)
                 _drawOffset = new Vector2(Size.X / 2 - _textSize.X / 2, _textSize.Y);
@@ -244,7 +244,7 @@ namespace ProjectZ.InGame.Interface
                 return;
 
             // draw the text
-            TextHelper.DrawString(spriteBatch, Text + TextPostfix, new Vector2((int)(drawPosition.X + _drawOffset.X * scale), (int)(drawPosition.Y + scale)), TextColor * transparency, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+            GameFS.DrawString(spriteBatch, Text + TextPostfix, new Vector2((int)(drawPosition.X + _drawOffset.X * scale), (int)(drawPosition.Y + scale)), TextColor * transparency, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
         }
     }
 }

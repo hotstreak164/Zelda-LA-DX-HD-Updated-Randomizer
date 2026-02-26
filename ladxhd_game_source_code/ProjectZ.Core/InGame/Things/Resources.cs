@@ -9,6 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.BitmapFonts;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Screens;
+#if ANDROID
+using Android.App;
+using Android.Content.Res;
+#endif
 
 namespace ProjectZ.InGame.Things
 {
@@ -257,10 +261,23 @@ namespace ProjectZ.InGame.Things
                 var introDirs = Directory.EnumerateDirectories(Values.PathGraphicsMods, "Intro", SearchOption.AllDirectories);
 
                 foreach (var introDir in introDirs)
+                {
+                    var possibleIntro = introDir;
+
+                #if ANDROID
+                    possibleIntro = GameFS.NormalizePath(possibleIntro);
+                #endif
+
                     LoadTexturesFromFolder(introDir, false);
+                }
             }
-            // Then load base intro graphics (acts as fallback)
-            LoadTexturesFromFolder(Path.Combine(Values.PathContentFolder, "Intro"));
+            var introPath = Path.Combine(Values.PathContentFolder, "Intro");
+                
+        #if ANDROID
+            introPath = GameFS.NormalizePath(introPath);
+        #endif
+
+            LoadTexturesFromFolder(introPath, false);
 
             AddSoundEffect(content, "D378-15-0F");
             AddSoundEffect(content, "D378-12-0C");
@@ -273,12 +290,16 @@ namespace ProjectZ.InGame.Things
             RoundedCornerBlurEffect = content.Load<Effect>("Shader/RoundedCornerEffectBlur");
         }
 
-        private static void TryLoadTextures(Texture2D source, string inputPath)
+        private static void TryLoadTextures(ref Texture2D? target, string inputPath)
         {
-            if (File.Exists(inputPath)) 
-            { 
-                LoadTexture(out source, inputPath); 
-            }
+        #if ANDROID
+            inputPath = GameFS.NormalizePath(inputPath);
+            if (GameFS.Exists(inputPath))
+                LoadTexture(out target!, inputPath);
+        #else
+            if (File.Exists(inputPath))
+                LoadTexture(out target!, inputPath);
+        #endif
         }
 
         public static void LoadTextures(GraphicsDevice graphics, ContentManager content)
@@ -293,36 +314,37 @@ namespace ProjectZ.InGame.Things
             LoadTexture(out SprGameSequencesFinal, Path.Combine(Values.PathContentFolder, "Sequences", "end sequence.png"));
 
             LoadTexture(out SprPhotosEng, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos.png"));
-            TryLoadTextures(SprPhotosChn, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_chn.png"));
-            TryLoadTextures(SprPhotosDeu, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_deu.png"));
-            TryLoadTextures(SprPhotosEsp, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_esp.png"));
-            TryLoadTextures(SprPhotosFre, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_fre.png"));
-            TryLoadTextures(SprPhotosInd, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_ind.png"));
-            TryLoadTextures(SprPhotosIta, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_ita.png"));
-            TryLoadTextures(SprPhotosPor, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_por.png"));
-            TryLoadTextures(SprPhotosRus, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_rus.png"));
+            TryLoadTextures(ref SprPhotosChn, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_chn.png"));
+            TryLoadTextures(ref SprPhotosDeu, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_deu.png"));
+            TryLoadTextures(ref SprPhotosEsp, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_esp.png"));
+            TryLoadTextures(ref SprPhotosFre, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_fre.png"));
+            TryLoadTextures(ref SprPhotosInd, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_ind.png"));
+            TryLoadTextures(ref SprPhotosIta, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_ita.png"));
+            TryLoadTextures(ref SprPhotosPor, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_por.png"));
+            TryLoadTextures(ref SprPhotosRus, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_rus.png"));
 
             LoadTexture(out SprPhotosEngRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux.png"));
-            TryLoadTextures(SprPhotosChnRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_chn.png"));
-            TryLoadTextures(SprPhotosDeuRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_deu.png"));
-            TryLoadTextures(SprPhotosEspRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_esp.png"));
-            TryLoadTextures(SprPhotosFreRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_fre.png"));
-            TryLoadTextures(SprPhotosIndRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_ind.png"));
-            TryLoadTextures(SprPhotosItaRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_ita.png"));
-            TryLoadTextures(SprPhotosPorRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_por.png"));
-            TryLoadTextures(SprPhotosRusRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_rus.png"));
+            TryLoadTextures(ref SprPhotosChnRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_chn.png"));
+            TryLoadTextures(ref SprPhotosDeuRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_deu.png"));
+            TryLoadTextures(ref SprPhotosEspRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_esp.png"));
+            TryLoadTextures(ref SprPhotosFreRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_fre.png"));
+            TryLoadTextures(ref SprPhotosIndRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_ind.png"));
+            TryLoadTextures(ref SprPhotosItaRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_ita.png"));
+            TryLoadTextures(ref SprPhotosPorRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_por.png"));
+            TryLoadTextures(ref SprPhotosRusRedux, Path.Combine(Values.PathContentFolder, "Photo Mode", "photos_redux_rus.png"));
 
             LoadTexture(out _, Path.Combine(Values.PathContentFolder, "Editor", "editorIcons4x.png"));
 
+            Texture2D? _nullTex = null;
             LoadTexture(out _, Path.Combine(Values.PathContentFolder, "ui.png"));
-            TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_chn.png"));
-            TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_deu.png"));
-            TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_esp.png"));
-            TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_fre.png"));
-            TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_ind.png"));
-            TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_ita.png"));
-            TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_por.png"));
-            TryLoadTextures(null, Path.Combine(Values.PathContentFolder, "ui_rus.png"));
+            TryLoadTextures(ref _nullTex, Path.Combine(Values.PathContentFolder, "ui_chn.png"));
+            TryLoadTextures(ref _nullTex, Path.Combine(Values.PathContentFolder, "ui_deu.png"));
+            TryLoadTextures(ref _nullTex, Path.Combine(Values.PathContentFolder, "ui_esp.png"));
+            TryLoadTextures(ref _nullTex, Path.Combine(Values.PathContentFolder, "ui_fre.png"));
+            TryLoadTextures(ref _nullTex, Path.Combine(Values.PathContentFolder, "ui_ind.png"));
+            TryLoadTextures(ref _nullTex, Path.Combine(Values.PathContentFolder, "ui_ita.png"));
+            TryLoadTextures(ref _nullTex, Path.Combine(Values.PathContentFolder, "ui_por.png"));
+            TryLoadTextures(ref _nullTex, Path.Combine(Values.PathContentFolder, "ui_rus.png"));
 
             // Load sequences and light graphics.
             LoadTexturesFromFolder(Path.Combine(Values.PathContentFolder, "Sequences"));
@@ -495,17 +517,6 @@ namespace ProjectZ.InGame.Things
             ShockShader1.FloatParameter.Add("mark2", 0.625f);
         }
 
-        public static void LoadSounds(ContentManager content)
-        {
-            // load all the sound effects
-            var soundEffectFiles = Directory.GetFiles(content.RootDirectory + "/SoundEffects").ToList();
-            foreach (var path in soundEffectFiles)
-            {
-                var fileName = Path.GetFileNameWithoutExtension(path);
-                AddSoundEffect(content, fileName);
-            }
-        }
-
         public static void AddSoundEffect(ContentManager content, string fileName)
         {
             var soundEffect = content.Load<SoundEffect>("SoundEffects/" + fileName);
@@ -514,31 +525,28 @@ namespace ProjectZ.InGame.Things
             SoundEffects.TryAdd(fileName, soundEffect);
         }
 
+        public static void LoadSounds(ContentManager content)
+        {
+            // RootDirectory is usually "Content"
+            var dir = $"{GameFS.NormalizePath(content.RootDirectory)}/SoundEffects";
+
+            foreach (var file in GameFS.EnumerateFiles(dir, recursive: false, acceptFile: name => 
+            name.EndsWith(".xnb", StringComparison.OrdinalIgnoreCase)))
+            {
+                var name = Path.GetFileNameWithoutExtension(file);
+                AddSoundEffect(content, name);
+            }
+        }
+
         public static void LoadTexturesFromFolder(string path, bool recurse = false)
         {
-            if (!Directory.Exists(path))
-                return;
-
-            // Load PNGs in this directory.
-            foreach (var filePath in Directory.GetFiles(path, "*.png"))
+            foreach (var full in GameFS.EnumerateFiles(path, recurse, name => 
+            name.EndsWith(".png", StringComparison.OrdinalIgnoreCase), 
+            skipDirectory: dir => string.Equals(dir, "Intro", StringComparison.OrdinalIgnoreCase)))
             {
-                var normalizedPath = filePath.Replace("\\", "/");
-
-                var newTexture = new Texture(Path.GetFileName(normalizedPath));
-                LoadTexture(out newTexture.SprTexture, normalizedPath);
+                var newTexture = new Texture(Path.GetFileName(full));
+                LoadTexture(out newTexture.SprTexture, full);
                 TextureList.Add(newTexture);
-            }
-
-            if (!recurse)
-                return;
-
-            // Recurse into subdirectories except "Intro".
-            foreach (var dir in Directory.GetDirectories(path))
-            {
-                if (string.Equals(Path.GetFileName(dir), "Intro", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                LoadTexturesFromFolder(dir, true);
             }
         }
 
@@ -555,7 +563,7 @@ namespace ProjectZ.InGame.Things
             // Rebuild filename skipping language parts.
             string newName = string.Join("_", parts.Where(p => !_languageList.Contains(p))) + Path.GetExtension(name);
             match = TextureList.FirstOrDefault(t => t.Name == newName);
-            return match.SprTexture;
+            return match?.SprTexture;
         }
 
         public static string FindAtlasFile(string textureName)
@@ -564,8 +572,14 @@ namespace ProjectZ.InGame.Things
             string basePath = textureName.Replace(".png","");
             string fullAtlas = basePath + ".atlas";
 
+            // Fix the path if on Android.
+        #if ANDROID
+            if (GameFS.Exists(fullAtlas))
+                return fullAtlas;
+        #else
             if (File.Exists(fullAtlas))
                 return fullAtlas;
+        #endif
 
             // Fallback to base atlas file by stripping language + redux.
             var parts = textureName
@@ -583,13 +597,26 @@ namespace ProjectZ.InGame.Things
             SpriteAtlasSerialization.LoadSourceDictionary(texture, atlasPath, SpriteAtlas);
         }
 
-        public static void LoadTexture(out Texture2D texture, string strFilePath)
+        public static void LoadTexture(out Texture2D texture, string assetPath)
         {
-            using Stream stream = File.Open(strFilePath, FileMode.Open);
+        #if ANDROID
+            // Replace back slashes with forward slashes.
+            assetPath = GameFS.NormalizePath(assetPath);
+
+            // Load PNG from APK assets via TitleContainer
+            using Stream stream = TitleContainer.OpenStream(assetPath);
             texture = Texture2D.FromStream(Game1.Graphics.GraphicsDevice, stream);
 
-            string atlasFileName = FindAtlasFile(strFilePath);
-            var (lang, variant) = ParseAtlasTags(strFilePath);
+            // Atlas path must ALSO be an asset path (no "assets/" prefix)
+            string atlasFileName = FindAtlasFile(assetPath);
+        #else
+            using Stream stream = File.Open(assetPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            texture = Texture2D.FromStream(Game1.Graphics.GraphicsDevice, stream);
+
+            string atlasFileName = FindAtlasFile(assetPath);
+        #endif
+
+            var (lang, variant) = ParseAtlasTags(assetPath);
 
             if (!Atlases.TryGetValue((lang, variant), out var atlasDesignation))
                 throw new InvalidOperationException($"No atlas found for {lang}/{variant}");

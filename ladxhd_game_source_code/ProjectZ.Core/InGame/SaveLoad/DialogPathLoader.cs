@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.Overlay;
+using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.SaveLoad
 {
@@ -11,14 +12,13 @@ namespace ProjectZ.InGame.SaveLoad
     {
         public static void LoadScripts(string filePath, Dictionary<string, List<DialogPath>> dialogPaths)
         {
-            var reader = new StreamReader(filePath);
+            filePath = GameFS.ToAssetPath(filePath);
+            using var reader = new StreamReader(GameFS.OpenRead(filePath));
 
-            // go from line to line
             while (!reader.EndOfStream)
             {
                 var strLine = reader.ReadLine().Replace(" ", "");
 
-                // ignore comment
                 if (strLine.Length == 0 || strLine.StartsWith("//"))
                     continue;
 
@@ -37,7 +37,6 @@ namespace ProjectZ.InGame.SaveLoad
                 for (var i = 1; i < split.Length; i++)
                     AddAction(newPath, split[i], splitKey[0]);
 
-                // create dictionary entry or create one
                 if (dialogPaths.ContainsKey(splitKey[0]))
                     dialogPaths[splitKey[0]].Add(newPath);
                 else

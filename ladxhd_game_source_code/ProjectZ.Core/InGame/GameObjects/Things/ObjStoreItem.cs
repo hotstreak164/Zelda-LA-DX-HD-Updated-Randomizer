@@ -117,7 +117,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             if (_itemCount > 1)
             {
-                TextHelper.DrawString(spriteBatch, "x", new Vector2((int)(_itemPosition.X + _sourceRectangle.Width), (int)(EntityPosition.Y + 24 - ItemDrawHelper.LetterHeight)), Color.Black);
+                GameFS.DrawString(spriteBatch, "x", new Vector2((int)(_itemPosition.X + _sourceRectangle.Width), (int)(EntityPosition.Y + 24 - ItemDrawHelper.LetterHeight)), Color.Black);
 
                 var countLength = _itemCount.ToString().Length;
                 ItemDrawHelper.DrawNumber(spriteBatch,

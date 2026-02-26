@@ -50,7 +50,7 @@ namespace ProjectZ.InGame.Interface
 
             // Word-wrap text and apply padding.
             var wrappedLines = WrapText(text, boxWidth - paddingX * 2);
-            float lineHeight = TextHelper.LineSpacing * Game1.UiScale;
+            float lineHeight = GameFS.LineSpacing * Game1.UiScale;
 
             // Different scales make padding look different.
             float extraPadding = Game1.UiScale == 1 ? paddingY : paddingY * 2;
@@ -91,9 +91,9 @@ namespace ProjectZ.InGame.Interface
 
             foreach (var line in wrappedLines)
             {
-                var lineSize = TextHelper.MeasureString(line) * Game1.UiScale;
+                var lineSize = GameFS.MeasureString(line) * Game1.UiScale;
                 float lineX = boxRect.X + paddingX + (boxRect.Width - paddingX * 2 - lineSize.X) / 2f; // center horizontally with padding
-                TextHelper.DrawString(spriteBatch, line, new Vector2(lineX, startY), Color.White, 0f, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0f);
+                GameFS.DrawString(spriteBatch, line, new Vector2(lineX, startY), Color.White, 0f, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0f);
                 startY += lineHeight;
             }
         }
@@ -110,7 +110,7 @@ namespace ProjectZ.InGame.Interface
                 System.Diagnostics.Debug.WriteLine(c);
 
                 // Try to measure it. If this crashes, the last character printed out is what crashed the game.
-                float lineWidth = TextHelper.MeasureString(c.ToString()).X * Game1.UiScale;
+                float lineWidth = GameFS.MeasureString(c.ToString()).X * Game1.UiScale;
             }
         }
 
@@ -131,7 +131,7 @@ namespace ProjectZ.InGame.Interface
                 {
                     // Test what the line would look like if added and measure it.
                     string testLine = currentLine + c;
-                    float lineWidth = TextHelper.MeasureString(testLine).X * Game1.UiScale;
+                    float lineWidth = GameFS.MeasureString(testLine).X * Game1.UiScale;
 
                     // If the line with the added character is too wide for the textbox
                     // add the line to the list and start a new line.
@@ -160,7 +160,7 @@ namespace ProjectZ.InGame.Interface
                 {
                     // Test what the line would look like if added and measure it.
                     string testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
-                    float lineWidth = TextHelper.MeasureString(testLine).X * Game1.UiScale;
+                    float lineWidth = GameFS.MeasureString(testLine).X * Game1.UiScale;
 
                     // If the line with the added word is too wide for the textbox
                     // add the line to the list and start a new line.
