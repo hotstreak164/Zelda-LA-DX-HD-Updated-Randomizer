@@ -284,14 +284,9 @@ namespace ProjectZ.InGame.Things
 
         private static void TryLoadTextures(ref Texture2D? target, string inputPath)
         {
-        #if ANDROID
             inputPath = GameFS.NormalizePath(inputPath);
             if (GameFS.Exists(inputPath))
                 LoadTexture(out target!, inputPath);
-        #else
-            if (File.Exists(inputPath))
-                LoadTexture(out target!, inputPath);
-        #endif
         }
 
         public static void LoadTextures(GraphicsDevice graphics, ContentManager content)

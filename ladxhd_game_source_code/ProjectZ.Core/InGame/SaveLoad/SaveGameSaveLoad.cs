@@ -28,15 +28,26 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static bool CopySaveFile(string fromFile, string toFile)
         {
-            if (!File.Exists(fromFile) || toFile == fromFile)
+            if (!File.Exists(fromFile))
                 return false;
 
-            // delete other file
-            if (File.Exists(toFile))
-                File.Delete(toFile);
+            var fromFull = Path.GetFullPath(fromFile);
+            var toFull = Path.GetFullPath(toFile);
+            if (string.Equals(fromFull, toFull, StringComparison.OrdinalIgnoreCase))
+                return false;
 
-            // create file copy
-            File.Copy(fromFile, toFile);
+            var dir = Path.GetDirectoryName(toFull);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
+
+            var temp = toFull + ".tmp";
+
+            File.Copy(fromFull, temp, overwrite: true);
+
+            if (File.Exists(toFull))
+                File.Delete(toFull);
+
+            File.Move(temp, toFull);
 
             return true;
         }
@@ -49,31 +60,32 @@ namespace ProjectZ.InGame.SaveLoad
 
         private static bool DeleteSaveFile(string filePath)
         {
-            if (!File.Exists(filePath))
+            try
+            {
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+                return true;
+            }
+            catch
+            {
                 return false;
-
-            // delete the file
-            File.Delete(filePath);
-
-            return true;
+            }
         }
 
         public static void SaveGame(GameManager gameManager, bool showIcon)
         {
+            Directory.CreateDirectory(Values.PathSaveFolder);
+
             var saveFilePath = Path.Combine(Values.PathSaveFolder, SaveFileNameGame + gameManager.SaveSlot);
 
-            // save the game variables
             gameManager.SaveManager.Save(saveFilePath, Values.SaveRetries);
 
-            // player variables
-            // is this state already created before starting a sequence?
             if (playerSaveState == null)
                 FillSaveState(ref playerSaveState, gameManager);
 
-            playerSaveState.Save(Path.Combine(Values.PathSaveFolder, SaveFileName + gameManager.SaveSlot), Values.SaveRetries);
+            playerSaveState?.Save(Path.Combine(Values.PathSaveFolder, SaveFileName + gameManager.SaveSlot), Values.SaveRetries);
             playerSaveState = null;
 
-            // Show the save icon.
             if (showIcon)
                 Game1.GameManager.InGameOverlay.InGameHud.ShowSaveIcon();
         }
@@ -308,14 +320,14 @@ namespace ProjectZ.InGame.SaveLoad
         public static GameItemCollected GetGameItem(string strItem)
         {
             var strSplit = strItem.Split(':');
+            if (strSplit.Length < 2)
+                return new GameItemCollected(strSplit.Length > 0 ? strSplit[0] : "");
 
-            // set the item name and count
-            var item = new GameItemCollected(strSplit[0])
-            {
-                Count = Convert.ToInt16(strSplit[1])
-            };
+            var item = new GameItemCollected(strSplit[0]);
 
-            // check if the item is location bound
+            if (short.TryParse(strSplit[1], out var count))
+                item.Count = count;
+
             if (strSplit.Length > 2)
                 item.LocationBounding = strSplit[2];
 

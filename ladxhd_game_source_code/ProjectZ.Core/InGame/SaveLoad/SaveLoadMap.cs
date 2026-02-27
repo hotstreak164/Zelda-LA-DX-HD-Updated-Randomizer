@@ -248,7 +248,8 @@ namespace ProjectZ.InGame.SaveLoad
 
             // load the dig map
             var digPath = fileName + ".data";
-            if (File.Exists(digPath))
+
+            if (GameFS.Exists(digPath))
                 map.DigMap = DataMapSerializer.LoadData(digPath);
             else
                 map.DigMap = new string[map.MapWidth, map.MapHeight];
@@ -408,12 +409,12 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static GameManager.MiniMap LoadMiniMap(string fileName)
         {
-            var ap = GameFS.ToAssetPath(fileName);
+            var assets = GameFS.ToAssetPath(fileName);
 
-            if (GameFS.Exists(ap))
+            if (!GameFS.Exists(assets))
                 return null;
 
-            using var stream = GameFS.OpenRead(ap);
+            using var stream = GameFS.OpenRead(assets);
             using var reader = new StreamReader(stream);
 
             var miniMap = new GameManager.MiniMap();

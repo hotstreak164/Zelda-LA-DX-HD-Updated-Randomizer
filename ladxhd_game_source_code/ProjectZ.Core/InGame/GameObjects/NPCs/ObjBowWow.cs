@@ -367,6 +367,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private Vector2 GetTreasurePosition()
         {
+            if (Map?.DigMap == null || Map?.HoleMap?.ArrayTileMap == null)
+                return Vector2.Zero;
+
             var digPositionX = (int)EntityPosition.X / 16;
             var digPositionY = (int)EntityPosition.Y / 16;
 
@@ -375,25 +378,25 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 if (y < 0 || Map.DigMap.GetLength(1) <= y)
                     continue;
 
-                for (int x = digPositionX - 3; x < digPositionX + 3; x++)
+                for (var x = digPositionX - 3; x < digPositionX + 3; x++)
                 {
                     if (x < 0 || Map.DigMap.GetLength(0) <= x)
                         continue;
 
-                    // do not look at the current position
                     if (x == digPositionX && y == digPositionY)
                         continue;
 
-                    if (Map.HoleMap.ArrayTileMap[x, y, 0] < 0 && Map.DigMap[x, y].Contains(':'))
+                    var digCell = Map.DigMap[x, y];
+                    if (Map.HoleMap.ArrayTileMap[x, y, 0] < 0 &&
+                        !string.IsNullOrEmpty(digCell) &&
+                        digCell.Contains(':'))
                     {
-                        // check if the item has already been dug out
-                        var split = Map.DigMap[x, y].Split(':');
-                        if (Game1.GameManager.SaveManager.GetString(split[1], "0") != "1")
+                        var split = digCell.Split(':');
+                        if (split.Length >= 2 && Game1.GameManager.SaveManager.GetString(split[1], "0") != "1")
                             return new Vector2(x * 16 + 8, y * 16 + 8);
                     }
                 }
             }
-
             return Vector2.Zero;
         }
 

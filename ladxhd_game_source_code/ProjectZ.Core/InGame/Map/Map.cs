@@ -243,13 +243,27 @@ namespace ProjectZ.InGame.Map
         {
             var newDigMap = new string[newWidth, newHeight];
 
-            for (var y = 0; y < DigMap.GetLength(1); y++)
-                for (var x = 0; x < DigMap.GetLength(0); x++)
+            // Fill everything with empty strings so no cell is ever null.
+            for (int y = 0; y < newHeight; y++)
+                for (int x = 0; x < newWidth; x++)
+                    newDigMap[x, y] = "";
+
+            // Copy old contents into the new map with offset, normalizing null -> "".
+            if (DigMap != null)
+            {
+                int oldW = DigMap.GetLength(0);
+                int oldH = DigMap.GetLength(1);
+
+                for (int y = 0; y < oldH; y++)
+                for (int x = 0; x < oldW; x++)
                 {
-                    if (0 <= posX + x && posX + x < newWidth &&
-                        0 <= posY + y && posY + y < newHeight)
-                        newDigMap[posX + x, posY + y] = DigMap[x, y];
+                    int nx = posX + x;
+                    int ny = posY + y;
+
+                    if (0 <= nx && nx < newWidth && 0 <= ny && ny < newHeight)
+                        newDigMap[nx, ny] = DigMap[x, y] ?? "";
                 }
+            }
 
             DigMap = newDigMap;
         }

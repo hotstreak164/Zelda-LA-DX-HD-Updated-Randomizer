@@ -67,6 +67,12 @@ namespace ProjectZ.Base
         public static GamePadState GamePadState => _gamePadState;
         public static GamePadState LastGamePadState => _lastGamePadState;
 
+        private const float TriggerPressThreshold = 0.5f;
+        private const float TriggerReleaseThreshold = 0.25f;
+
+        private static bool _ltDownLast;
+        private static bool _rtDownLast;
+
         #region Constructor Region
 
         public InputHandler(Game game)
@@ -153,7 +159,7 @@ namespace ProjectZ.Base
             DetectGamePad();
 
             _lastGamePadState = _gamePadState;
-            _gamePadState = GamePad.GetState(0);
+            _gamePadState = GamePad.GetState(_gamePadIndex);
 
             // Prevents input when Window is in the background (do we really want this?).
             if (!Game1.WasActive)
@@ -173,8 +179,6 @@ namespace ProjectZ.Base
                 }
             }
             _gamePadIndex = 0;
-
-            System.Diagnostics.Debug.WriteLine($"Pad {_gamePadIndex} connected: {GamePad.GetState(_gamePadIndex).IsConnected}");
         }
 
         /// <summary>
@@ -236,28 +240,62 @@ namespace ProjectZ.Base
             return pressedKeys;
         }
 
-        public static bool LastGamePadDown(Buttons button)
+        public static bool PlatformSelectPressed()
         {
-            return _lastGamePadState.IsButtonDown(button);
+        #if ANDROID
+            return ProjectZ.Base.PlatformInput.ConsumeSelectPressed();
+        #else
+            return false;
+        #endif
+        }
+
+        private static bool TriggerDown(bool left)
+        {
+            var v = left ? _gamePadState.Triggers.Left : _gamePadState.Triggers.Right;
+            return v > TriggerPressThreshold;
+        }
+
+        private static bool TriggerDownLast(bool left)
+        {
+            var v = left ? _lastGamePadState.Triggers.Left : _lastGamePadState.Triggers.Right;
+            return v > TriggerPressThreshold;
         }
 
         public static bool GamePadDown(Buttons button)
         {
+            if (button == Buttons.LeftTrigger)  return _gamePadState.IsButtonDown(button) || TriggerDown(left: true);
+            if (button == Buttons.RightTrigger) return _gamePadState.IsButtonDown(button) || TriggerDown(left: false);
             return _gamePadState.IsButtonDown(button);
+        }
+
+        public static bool LastGamePadDown(Buttons button)
+        {
+            if (button == Buttons.LeftTrigger)  return _lastGamePadState.IsButtonDown(button) || TriggerDownLast(left: true);
+            if (button == Buttons.RightTrigger) return _lastGamePadState.IsButtonDown(button) || TriggerDownLast(left: false);
+            return _lastGamePadState.IsButtonDown(button);
         }
 
         public static bool GamePadPressed(Buttons button)
         {
-            return _gamePadState.IsButtonDown(button) &&
-                _lastGamePadState.IsButtonUp(button);
+            if (button == Buttons.LeftTrigger)
+                return (TriggerDown(true) && !TriggerDownLast(true)) || (_gamePadState.IsButtonDown(button) && _lastGamePadState.IsButtonUp(button));
+
+            if (button == Buttons.RightTrigger)
+                return (TriggerDown(false) && !TriggerDownLast(false)) || (_gamePadState.IsButtonDown(button) && _lastGamePadState.IsButtonUp(button));
+
+            return _gamePadState.IsButtonDown(button) && _lastGamePadState.IsButtonUp(button);
         }
 
         public static bool GamePadReleased(Buttons button)
         {
-            return _gamePadState.IsButtonUp(button) &&
-                _lastGamePadState.IsButtonDown(button);
-        }
+            if (button == Buttons.LeftTrigger)
+                return (!TriggerDown(true) && TriggerDownLast(true)) || (_gamePadState.IsButtonUp(button) && _lastGamePadState.IsButtonDown(button));
 
+            if (button == Buttons.RightTrigger)
+                return (!TriggerDown(false) && TriggerDownLast(false)) || (_gamePadState.IsButtonUp(button) && _lastGamePadState.IsButtonDown(button));
+
+            return _gamePadState.IsButtonUp(button) && _lastGamePadState.IsButtonDown(button);
+        }
 
         public static bool GamePadLeftStick(Vector2 dir)
         {

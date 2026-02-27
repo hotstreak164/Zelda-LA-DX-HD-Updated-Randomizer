@@ -8,10 +8,6 @@ using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
 using ProjectZ.InGame.GameObjects;
 
-#if WINDOWS
-using System.Windows.Forms;
-#endif
-
 namespace ProjectZ.InGame.GameSystems
 {
     internal class MapTransitionSystem : GameSystem
@@ -50,8 +46,10 @@ namespace ProjectZ.InGame.GameSystems
         private float _changeMapCount;
 
         // will be reset after each transition
+        private Exception _loadingException;
+        private volatile bool _finishedLoading;
+
         private bool _centerCamera;
-        private bool _finishedLoading;
         private bool _fullColorMode;
         private bool _knockoutTransition;
         private bool _transitionEnded;
@@ -137,6 +135,9 @@ namespace ProjectZ.InGame.GameSystems
                 // new map is loaded?
                 if (_finishedLoading && _changeMapCount >= ChangeMapTime + BlackScreenDelay + AdditionalBlackScreenDelay)
                 {
+                    if (_loadingException != null)
+                        throw new Exception("Map loading thread failed.", _loadingException);
+
                     FinishLoading();
                     CurrentState = TransitionState.TransitionBlank_1;
                 }
@@ -419,25 +420,26 @@ namespace ProjectZ.InGame.GameSystems
         {
             try
             {
-                // HACK: I don't know if this is relevant anymore, it was used to reduce the "crackling"
-                // during map transitions. I never experienced it, but 75ms is nearly irrlevant so it can't hurt.
                 Thread.Sleep(75);
 
-                // load the map file
-                SaveLoadMap.LoadMap(mapFileName, _gameMapManager.NextMap);
+                var nextMap = _gameMapManager?.NextMap;
+                if (nextMap == null)
+                    throw new NullReferenceException("NextMap was null inside ThreadLoading.");
 
-                // create the objects
-                _gameMapManager.NextMap.Objects.LoadObjects();
+                // MUST be safe: if SaveLoadMap.LoadMapFile uses GameFS + StreamReader and does not load textures, OK.
+                // If it loads textures/content, it needs to be split.
+                SaveLoadMap.LoadMap(mapFileName, nextMap);
 
+                // Do NOT call LoadObjects here if it can touch graphics/content.
+                nextMap.Objects ??= new ObjectManager(nextMap);
+
+                _loadingException = null;
                 _finishedLoading = true;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-#if WINDOWS
-                // show the error message instead of just crashing the game
-                MessageBox.Show(exception.StackTrace, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-#endif
-                throw;
+                _loadingException = ex;
+                _finishedLoading = true;
             }
         }
 
@@ -463,6 +465,10 @@ namespace ProjectZ.InGame.GameSystems
 
             // finish loading map
             _gameMapManager.FinishLoadingMap(_gameMapManager.CurrentMap);
+
+            // Ensure objects are created/loaded on main thread
+            _gameMapManager.CurrentMap.Objects ??= new ObjectManager(_gameMapManager.CurrentMap);
+            _gameMapManager.CurrentMap.Objects.LoadObjects();
 
             MapManager.ObjLink.UpdateMapTransitionIn(0);
 

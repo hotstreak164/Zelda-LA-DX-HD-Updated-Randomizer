@@ -306,8 +306,8 @@ namespace ProjectZ
 
         protected override void Update(GameTime gameTime)
         {
-        // If OpenGL renderer we need to jump through some hoops for the icon.
         #if !WINDOWS
+            // If OpenGL renderer we need to jump through some hoops for the icon.
             TrySetWindowIconBmp();
         #endif
 

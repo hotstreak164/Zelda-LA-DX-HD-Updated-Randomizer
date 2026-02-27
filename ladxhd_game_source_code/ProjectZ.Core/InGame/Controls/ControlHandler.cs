@@ -294,6 +294,11 @@ namespace ProjectZ.InGame.Controls
 
         public static bool ButtonPressed(CButtons button, bool controllerOnly = false)
         {
+        #if ANDROID
+            // Android controllers often send Select as a KeyEvent (ButtonSelect) instead of a GamePad button.
+            if (button == CButtons.Select && InputHandler.PlatformSelectPressed())
+                return true;
+        #endif
             var direction = GetAnalogDirection();
 
             if (_initDirection && direction != Vector2.Zero)

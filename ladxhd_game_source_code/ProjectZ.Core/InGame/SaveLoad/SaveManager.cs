@@ -34,18 +34,28 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static string GetSaveFilePath()
         {
-            string portable = Path.Combine(Values.WorkingDirectory,"portable.txt");
+        #if ANDROID
+            return Path.Combine(Values.UserDataRoot, "SaveFiles");
+        #else
+            string portable = Path.Combine(Values.WorkingDirectory, "portable.txt");
             if (File.Exists(portable))
-                return "SaveFiles\\";
-            return Path.Combine(Values.AppDataFolder,"Zelda_LA","SaveFiles");
+                return Path.Combine(Values.WorkingDirectory, "SaveFiles");
+
+            return Path.Combine(Values.AppDataFolder, "SaveFiles");
+        #endif
         }
 
         public static string GetSettingsFile()
         {
-            string portable = Path.Combine(Values.WorkingDirectory,"portable.txt");
+        #if ANDROID
+            return Path.Combine(Values.UserDataRoot, "settings");
+        #else
+            string portable = Path.Combine(Values.WorkingDirectory, "portable.txt");
             if (File.Exists(portable))
-                return "settings";
-            return Path.Combine(Values.AppDataFolder,"Zelda_LA","settings");
+                return Path.Combine(Values.WorkingDirectory, "settings");
+
+            return Path.Combine(Values.AppDataFolder, "settings");
+        #endif
         }
 
         struct HistoryFrame
@@ -84,26 +94,21 @@ namespace ProjectZ.InGame.SaveLoad
                 }
                 catch (Exception) { }
             }
-
-#if WINDOWS
+        #if WINDOWS
             MessageBox.Show("Error while saving", "Saving Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-#endif
+        #endif
         }
 
         private void Save(string filePath)
         {
-            Directory.CreateDirectory(Values.PathSaveFolder);
+            var dir = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
 
-            FileStream fileStream;
-            if (!File.Exists(filePath))
-                fileStream = File.Create(filePath);
-            else
-            {
-                fileStream = File.OpenWrite(filePath);
-                fileStream.SetLength(0);
-            }
+            var tempPath = filePath + ".tmp";
 
-            using (var writer = new StreamWriter(fileStream))
+            using (var fs = File.Open(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (var writer = new StreamWriter(fs))
             {
                 foreach (var element in _boolDictionary)
                     writer.WriteLine("b " + element.Key + " " + element.Value);
@@ -114,15 +119,24 @@ namespace ProjectZ.InGame.SaveLoad
                 foreach (var element in _stringDictionary)
                     writer.WriteLine("s " + element.Key + " " + element.Value);
             }
-            fileStream.Close();
-            fileStream.Dispose();
+
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+
+            File.Move(tempPath, filePath);
         }
 
         public void Reset()
         {
             _boolDictionary.Clear();
             _intDictionary.Clear();
+            _floatDictionary.Clear();
             _stringDictionary.Clear();
+
+            _shellCount = 0;
+            _hasSwordLevel2 = false;
+            _hasMirrorShield = false;
+            _hasInstruments = null;
         }
 
         public static bool FileExists(string filePath)
@@ -143,54 +157,79 @@ namespace ProjectZ.InGame.SaveLoad
             {
                 try
                 {
-                    using (var reader = new StreamReader(filePath))
+                    using var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    using var reader = new StreamReader(fs);
+
+                    while (!reader.EndOfStream)
                     {
-                        while (!reader.EndOfStream)
+                        var line = reader.ReadLine();
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+
+                        // Split into at most 3 parts: type, key, value (value may contain spaces)
+                        var parts = line.Split(new[] { ' ' }, 3, StringSplitOptions.None);
+                        if (parts.Length < 3)
+                            continue;
+
+                        var type = parts[0];
+                        var key = parts[1];
+                        var valueString = parts[2];
+
+                        if (string.IsNullOrEmpty(type) || string.IsNullOrEmpty(key))
+                            continue;
+
+                        if (type == "b")
                         {
-                            var line = reader.ReadLine();
-                            var strSplit = line?.Split(' ');
+                            if (bool.TryParse(valueString, out var b))
+                                _boolDictionary[key] = b;
+                        }
+                        else if (type == "i")
+                        {
+                            if (int.TryParse(valueString, out var n))
+                                _intDictionary[key] = n;
+                        }
+                        else if (type == "f")
+                        {
+                            if (float.TryParse(valueString, NumberStyles.Float, CultureInfo.InvariantCulture, out var f))
+                                _floatDictionary[key] = f;
+                        }
+                        else if (type == "s")
+                        {
+                            // Keep your quick-scan behavior (based on the first token in the value).
+                            // This matches your old logic using strSplit[2].
+                            var token = valueString.Split(new[] { ' ' }, 2)[0];
 
-                            if (strSplit?.Length >= 3)
+                            if (token == "sword2:1")
+                                _hasSwordLevel2 = true;
+
+                            if (token == "mirrorShield:1")
+                                _hasMirrorShield = true;
+
+                            if (token.StartsWith("shell:", StringComparison.Ordinal))
                             {
-                                var valueString = line.Substring(strSplit[0].Length + strSplit[1].Length + 2);
-
-                                if (strSplit[0] == "b")
-                                    _boolDictionary.Add(strSplit[1], Convert.ToBoolean(valueString));
-                                
-                                else if (strSplit[0] == "i")
-                                    _intDictionary.Add(strSplit[1], Convert.ToInt32(valueString));
-                                
-                                else if (strSplit[0] == "f")
-                                    _floatDictionary.Add(strSplit[1], float.Parse(valueString, CultureInfo.InvariantCulture));
-                                
-                                else if (strSplit[0] == "s")
-                                {
-                                    if (strSplit[2] == "sword2:1")
-                                        _hasSwordLevel2 = true;
-
-                                    if (strSplit[2] == "mirrorShield:1")
-                                        _hasMirrorShield = true;
-
-                                    if (strSplit[2].StartsWith("shell:"))
-                                    {
-                                        string count = strSplit[2].Split(':')[1];
-                                        _shellCount = Convert.ToInt32(count);
-                                    }                                       
-
-                                    for (int j = 0; j < 8; j++) 
-                                    {
-                                        if (strSplit[2] == "instrument" + j + ":1")
-                                            _hasInstruments[j] = true;
-                                    }
-                                    _stringDictionary.Add(strSplit[1], valueString);
-                                }
+                                var shellSplit = token.Split(':');
+                                if (shellSplit.Length == 2 && int.TryParse(shellSplit[1], out var shellCount))
+                                    _shellCount = shellCount;
                             }
+
+                            for (int j = 0; j < 8; j++)
+                            {
+                                if (token == "instrument" + j + ":1")
+                                    _hasInstruments[j] = true;
+                            }
+
+                            _stringDictionary[key] = valueString;
                         }
                     }
+
                     return true;
                 }
-                catch (Exception) { }
+                catch
+                {
+                    // retry
+                }
             }
+
             return false;
         }
 

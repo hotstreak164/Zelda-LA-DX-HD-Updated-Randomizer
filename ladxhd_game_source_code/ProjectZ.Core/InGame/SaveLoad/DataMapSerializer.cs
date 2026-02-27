@@ -1,4 +1,7 @@
 ﻿using System.IO;
+using ProjectZ.InGame.Things;
+using System;
+
 #if WINDOWS
 using System.Windows.Forms;
 #endif
@@ -38,9 +41,12 @@ namespace ProjectZ.InGame.SaveLoad
         
         public static void SaveData(string path, string[,] data)
         {
-            var writer = new StreamWriter(path);
+            var dir = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
 
-            // write down the size
+            using var writer = new StreamWriter(path);
+
             writer.WriteLine(data.GetLength(0));
             writer.WriteLine(data.GetLength(1));
 
@@ -48,34 +54,40 @@ namespace ProjectZ.InGame.SaveLoad
             {
                 var line = "";
                 for (var x = 0; x < data.GetLength(0); x++)
-                    line += data[x, y] + ";";
+                    line += (data[x, y] ?? "") + ";";
 
                 writer.WriteLine(line);
             }
-
-            writer.Close();
         }
 
         public static string[,] LoadData(string path)
         {
-            var reader = new StreamReader(path);
+            using var stream = GameFS.OpenReadAny(path);
+            using var reader = new StreamReader(stream);
 
-            var lengthX = int.Parse(reader.ReadLine());
-            var lengthY = int.Parse(reader.ReadLine());
+            if (!int.TryParse(reader.ReadLine(), out var lengthX) ||
+                !int.TryParse(reader.ReadLine(), out var lengthY) ||
+                lengthX < 0 || lengthY < 0)
+                throw new InvalidDataException($"Invalid .data header: '{path}'");
 
             var output = new string[lengthX, lengthY];
 
-            for (var y = 0; y < lengthY; y++)
+            for (int y = 0; y < lengthY; y++)
+                for (int x = 0; x < lengthX; x++)
+                    output[x, y] = "";
+
+            for (int y = 0; y < lengthY; y++)
             {
                 var line = reader.ReadLine();
+                if (line == null)
+                    break;
+
                 var split = line.Split(';');
 
-                for (var x = 0; x < lengthX; x++)
-                    output[x, y] = split[x];
+                int max = Math.Min(lengthX, split.Length);
+                for (int x = 0; x < max; x++)
+                    output[x, y] = split[x] ?? "";
             }
-
-            reader.Close();
-
             return output;
         }
     }

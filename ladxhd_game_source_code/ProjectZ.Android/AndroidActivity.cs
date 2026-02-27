@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
 using Android.Views;
+using ProjectZ.Base;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.Android
@@ -34,6 +35,7 @@ namespace ProjectZ.Android
             System.IO.Directory.CreateDirectory(Values.PathMods);
             System.IO.Directory.CreateDirectory(Values.PathLAHDMods);
             System.IO.Directory.CreateDirectory(Values.PathGraphicsMods);
+            System.IO.Directory.CreateDirectory(Values.PathSaveFolder);
 
             // construct your real game here:
             var game = new Game1(
@@ -46,7 +48,35 @@ namespace ProjectZ.Android
             var view = (View)game.Services.GetService(typeof(View))!;
             SetContentView(view);
 
+            view.Focusable = true;
+            view.FocusableInTouchMode = true;
+            view.RequestFocus();
+
             game.Run();
+        }
+
+        public override bool DispatchKeyEvent(KeyEvent e)
+        {
+            // Only treat "down" as a press (avoid repeats).
+            if (e.Action == KeyEventActions.Down && e.RepeatCount == 0)
+            {
+                // Catch a wider net than just Back/Select.
+                if (e.KeyCode == Keycode.Back ||
+                    e.KeyCode == Keycode.ButtonSelect ||
+                    e.KeyCode == Keycode.ButtonMode ||
+                    e.KeyCode == Keycode.Menu ||
+                    e.KeyCode == Keycode.Escape) // many controllers map select/back to ESC
+                {
+                    PlatformInput.SelectPressed = true;
+                    return true;
+                }
+            }
+            return base.DispatchKeyEvent(e);
+        }
+
+        public override void OnBackPressed()
+        {
+            PlatformInput.SelectPressed = true;
         }
     }
 }

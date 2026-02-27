@@ -55,7 +55,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             CanReset = true;
             OnReset = Reset;
 
-            _animator = AnimatorSaveLoad.LoadAnimator("Enemies/spiny beetle");
+            _animator = AnimatorSaveLoad.LoadAnimator("Enemies/spiny Beetle");
             _animator.Play("idle");
 
             _sprite = new CSprite(EntityPosition);

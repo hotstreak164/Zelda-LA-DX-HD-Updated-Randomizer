@@ -41,7 +41,6 @@ namespace ProjectZ.InGame.Things
 
         public static string WorkingDirectory = AppContext.BaseDirectory;
         public static string AppDataFolder = Environment.ExpandEnvironmentVariables("%LocalAppData%");
-        public static string PathSaveFolder = SaveManager.GetSaveFilePath();
 
         public static string PathContentFolder = "Data";
         public static string PathLanguageFolder => Path.Combine(PathContentFolder, "Languages");
@@ -60,6 +59,8 @@ namespace ProjectZ.InGame.Things
         public static string PathMods => Path.Combine(UserDataRoot, "Mods");
         public static string PathLAHDMods => Path.Combine(PathMods, "LAHDMods");
         public static string PathGraphicsMods => Path.Combine(PathMods, "Graphics");
+
+        public static string PathSaveFolder => SaveManager.GetSaveFilePath();
 
         public const string EditorUiObjectEditor = "objectEditor";
         public const string EditorUiObjectSelection = "objectSelection";
