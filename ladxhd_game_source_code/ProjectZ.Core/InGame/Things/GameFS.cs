@@ -73,7 +73,12 @@ namespace ProjectZ.InGame.Things
 
         /// <summary>Normalize separators and remove leading/trailing slashes.</summary>
         public static string NormalizePath(string path)
-            => (path ?? "").Replace("\\", "/").Trim('/');
+        {
+        #if ANDROID
+            return (path ?? "").Replace("\\", "/").Trim('/');
+        #endif
+            return path;
+        }
 
         /// <summary>
         /// Converts absolute desktop paths into asset-relative paths like "Data/..." or "Content/...".
@@ -130,6 +135,23 @@ namespace ProjectZ.InGame.Things
         #else
             return File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         #endif
+        }
+
+        public static Stream OpenReadAny(string path)
+        {
+        #if ANDROID
+            // Normalize and try to map to an asset path if possible
+            var ap = ToAssetPath(path);
+
+            // If it looks like a packaged asset, load from TitleContainer (APK assets on Android)
+            if (ap.StartsWith("Data/", StringComparison.OrdinalIgnoreCase) ||
+                ap.StartsWith("Content/", StringComparison.OrdinalIgnoreCase))
+            {
+                return OpenRead(ap); // your existing OpenRead already uses TitleContainer on Android / File on desktop
+            }
+        #endif
+            // Otherwise treat as a real filesystem path (mods/user data)
+            return File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------

@@ -24,18 +24,25 @@ namespace ProjectZ.InGame.Map
         public float RoundX => (int)Math.Round(Location.X + RoundedShakeX * Scale, MidpointRounding.AwayFromZero);
         public float RoundY => (int)Math.Round(Location.Y + RoundedShakeY * Scale, MidpointRounding.AwayFromZero);
 
+        private static bool IsFinite(float v) => !(float.IsNaN(v) || float.IsInfinity(v));
+
         public Matrix TransformMatrix
         {
             get
             {
+                if (_viewportWidth <= 0 || _viewportHeight <= 0 || Scale <= 0f)
+                    return Matrix.Identity;
+
                 float tx = (float)Math.Round(-RoundX);
                 float ty = (float)Math.Round(-RoundY);
 
-                return Matrix.CreateScale(Scale) *
-                       Matrix.CreateTranslation(new Vector3(tx, ty, 0)) *
-                       Matrix.CreateTranslation(new Vector3((int)(_viewportWidth * 0.5f), (int)(_viewportHeight * 0.5f), 0)) * Game1.GameManager.GetMatrix;
+                return
+                    Matrix.CreateScale(Scale) *
+                    Matrix.CreateTranslation(tx, ty, 0f) *
+                    Matrix.CreateTranslation(_viewportWidth * 0.5f, _viewportHeight * 0.5f, 0f);
             }
         }
+
         public static bool  SnapCamera;
         public static float SnapCameraTimer;
 

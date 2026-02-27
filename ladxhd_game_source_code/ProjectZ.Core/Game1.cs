@@ -451,11 +451,12 @@ namespace ProjectZ
             BlurImage();
             {
                 Graphics.GraphicsDevice.SetRenderTarget(null);
+                GraphicsDevice.Clear(Color.Black);
 
-                SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
+                var viewport = GraphicsDevice.Viewport;
 
-                SpriteBatch.Draw(MainRenderTarget, new Rectangle(0, 0, MainRenderTarget.Width, MainRenderTarget.Height), Color.White);
-
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+                SpriteBatch.Draw(MainRenderTarget, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
                 SpriteBatch.End();
             }
 
@@ -646,13 +647,31 @@ namespace ProjectZ
 
         private void OnResize()
         {
-            // if minimized window bounds may be zero; ignore those
-            int w = Window.ClientBounds.Width;
-            int h = Window.ClientBounds.Height;
+            int w = 0, h = 0;
+
+        #if ANDROID
+            // On Android, this can fire before GraphicsDevice exists (or during reset).
+            if (GraphicsDevice != null)
+            {
+                var pp = GraphicsDevice.PresentationParameters;
+                w = pp.BackBufferWidth;
+                h = pp.BackBufferHeight;
+            }
+            else
+            {
+                // Fallback: at least keep sizes sane until GD exists
+                w = Window?.ClientBounds.Width ?? 0;
+                h = Window?.ClientBounds.Height ?? 0;
+            }
+        #else
+            w = Window.ClientBounds.Width;
+            h = Window.ClientBounds.Height;
+        #endif
+
             if (w <= 0 || h <= 0)
                 return;
 
-            // Only enforce minimums in windowed mode
+        #if !ANDROID
             if (!GameSettings.IsFullscreen)
             {
                 int minW = Values.MinWidth;
@@ -660,20 +679,18 @@ namespace ProjectZ
 
                 if (w < minW || h < minH)
                 {
-                    // Snap back to minimum (client area / backbuffer)
                     Graphics.PreferredBackBufferWidth  = Math.Max(w, minW);
                     Graphics.PreferredBackBufferHeight = Math.Max(h, minH);
                     Graphics.ApplyChanges();
 
-                    // After ApplyChanges(), ClientBounds may change; read again
                     w = Window.ClientBounds.Width;
                     h = Window.ClientBounds.Height;
                 }
             }
+        #endif
+
             WindowWidth = w;
             WindowHeight = h;
-
-            // Trigger scale and layout recompute.
             ScaleChanged = true;
         }
 
@@ -860,7 +877,7 @@ namespace ProjectZ
             {
                 // Dispose all render targets.
                 DisposeRenderTargets();
-                GameManager?.DisposeRenderTargets();
+                GameManager?.DisposeRenderTargets(true);
 
                 // Destroy the sprite batch.
                 SpriteBatch?.Dispose();

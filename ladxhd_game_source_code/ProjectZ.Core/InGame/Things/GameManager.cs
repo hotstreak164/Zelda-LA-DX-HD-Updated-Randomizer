@@ -393,7 +393,7 @@ namespace ProjectZ.InGame.Things
 
             /// RT:CRASH BYPASS
             if (_inactiveRenderTarget1 != null)
-                spriteBatch.Draw(_inactiveRenderTarget1, new Rectangle(0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight), Color.White);
+                spriteBatch.Draw(_inactiveRenderTarget1, new Rectangle(0, 0, Game1.MainRenderTarget.Width, Game1.MainRenderTarget.Height), Color.White);
 
             // debug stuff
             MapManager.Camera.Draw(spriteBatch);
@@ -661,11 +661,13 @@ namespace ProjectZ.InGame.Things
             }
         }
 
-        public void DisposeRenderTargets()
+        public void DisposeRenderTargets(bool disposeOverlay)
         {
             try
             {
-                InGameOverlay?.DisposeRenderTargets();
+                // Also dispose overlay render targets.
+                if (disposeOverlay)
+                    InGameOverlay?.DisposeRenderTargets();
 
                 _activeRenderTarget?.Dispose(); _activeRenderTarget = null;
                 _inactiveRenderTarget1?.Dispose(); _inactiveRenderTarget1 = null;
@@ -710,13 +712,21 @@ namespace ProjectZ.InGame.Things
         {
             InGameOverlay.ResolutionChanged();
 
-            Game1.RenderWidth = (int)(Game1.WindowWidth * _scaleMultiplier);
+            Game1.RenderWidth = (int)(Game1.WindowWidth  * _scaleMultiplier);
             Game1.RenderHeight = (int)(Game1.WindowHeight * _scaleMultiplier);
 
-            MapManager.Camera.SetBounds(Game1.RenderWidth, Game1.RenderHeight);
-            MapManager.Camera.ForceUpdate(MapManager.GetCameraTarget());
-
             UpdateRenderTargets();
+
+            // Use the active render target size to determine bounds, and fall back to
+            // viewport size if it's currently null. Fixes scaling issues on Android.
+            if (_activeRenderTarget != null)
+                MapManager.Camera.SetBounds(_activeRenderTarget.Width, _activeRenderTarget.Height);
+            else
+            {
+                var viewport = Game1.Graphics.GraphicsDevice.Viewport;
+                MapManager.Camera.SetBounds(viewport.Width, viewport.Height);
+            }
+            MapManager.Camera.ForceUpdate(MapManager.GetCameraTarget());
         }
 
         public void OnResizeEnd()
@@ -760,8 +770,7 @@ namespace ProjectZ.InGame.Things
 
             try
             {
-                // Note: use DiscardContents unless you truly need PreserveContents; preserve is more fragile on some platforms.
-                var usage = RenderTargetUsage.PreserveContents; // keep existing, or change to DiscardContents if safe
+                var usage = RenderTargetUsage.PreserveContents;
                 newActive = new RenderTarget2D(Game1.Graphics.GraphicsDevice, CurrentRenderWidth, CurrentRenderHeight,
                     false, SurfaceFormat.Color, DepthFormat.None, 0, usage);
                 newInactive1 = new RenderTarget2D(Game1.Graphics.GraphicsDevice, CurrentRenderWidth, CurrentRenderHeight,
@@ -784,7 +793,6 @@ namespace ProjectZ.InGame.Things
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("UpdateRenderTargets: failed creating render targets: " + ex);
-                // Clean up any partially-created RTs
                 newActive?.Dispose();
                 newInactive1?.Dispose();
                 newInactive2?.Dispose();
@@ -797,14 +805,7 @@ namespace ProjectZ.InGame.Things
             }
 
             // All new RTs created successfully: swap them in and dispose old ones
-            _activeRenderTarget?.Dispose();
-            _inactiveRenderTarget1?.Dispose();
-            _inactiveRenderTarget2?.Dispose();
-            _shadowRenderTarget?.Dispose();
-            _shadowRenderTargetBlur?.Dispose();
-            TempRT0?.Dispose();
-            TempRT1?.Dispose();
-            TempRT2?.Dispose();
+            DisposeRenderTargets(false);
 
             _activeRenderTarget = newActive;
             _inactiveRenderTarget1 = newInactive1;

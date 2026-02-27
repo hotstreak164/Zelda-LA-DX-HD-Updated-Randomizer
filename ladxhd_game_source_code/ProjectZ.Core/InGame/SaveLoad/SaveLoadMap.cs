@@ -214,12 +214,15 @@ namespace ProjectZ.InGame.SaveLoad
         public static void LoadMap(string mapName, Map.Map map)
         {
             map.MapName = mapName;
-            LoadMapFile(Path.Combine(Values.PathMapsFolder, mapName), map);
+            var mapFile = GameFS.NormalizePath(Path.Combine(Values.PathMapsFolder, mapName));
+            LoadMapFile(mapFile, map);
         }
 
         public static void LoadMapFile(string fileName, Map.Map map)
         {
-            var reader = new StreamReader(fileName);
+            var ap = GameFS.ToAssetPath(fileName);
+            using var stream = GameFS.OpenRead(ap);
+            using var reader = new StreamReader(stream);
 
             // reset map variables
             map.Reset();
@@ -232,28 +235,21 @@ namespace ProjectZ.InGame.SaveLoad
                 map.MapOffsetX = int.Parse(reader.ReadLine());
                 map.MapOffsetY = int.Parse(reader.ReadLine());
             }
-
             // load the tilemap
             LoadTileMap(reader, map.TileMap);
-
             CreateEmptyHoleMap(map.HoleMap, map.MapWidth, map.MapHeight);
 
             map.HoleMap.SetTileset(Resources.GetTexture("hole.png"));
-
-            // create empty state map
             map.StateMap = new MapStates.FieldStates[map.MapWidth, map.MapHeight];
-
             map.UpdateMap = new int[map.MapWidth, map.MapHeight];
 
             // load the objects
             LoadObjects(reader, map);
 
-            // close the file
-            reader.Close();
-
             // load the dig map
-            if (File.Exists(fileName + ".data"))
-                map.DigMap = DataMapSerializer.LoadData(fileName + ".data");
+            var digPath = fileName + ".data";
+            if (File.Exists(digPath))
+                map.DigMap = DataMapSerializer.LoadData(digPath);
             else
                 map.DigMap = new string[map.MapWidth, map.MapHeight];
         }
@@ -412,12 +408,15 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static GameManager.MiniMap LoadMiniMap(string fileName)
         {
-            if (!File.Exists(fileName))
+            var ap = GameFS.ToAssetPath(fileName);
+
+            if (GameFS.Exists(ap))
                 return null;
 
-            var miniMap = new GameManager.MiniMap();
+            using var stream = GameFS.OpenRead(ap);
+            using var reader = new StreamReader(stream);
 
-            var reader = new StreamReader(fileName);
+            var miniMap = new GameManager.MiniMap();
 
             miniMap.OffsetX = Convert.ToInt32(reader.ReadLine());
             miniMap.OffsetY = Convert.ToInt32(reader.ReadLine());

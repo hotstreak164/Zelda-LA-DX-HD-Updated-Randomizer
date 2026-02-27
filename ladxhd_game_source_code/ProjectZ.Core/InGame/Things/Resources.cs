@@ -262,20 +262,12 @@ namespace ProjectZ.InGame.Things
 
                 foreach (var introDir in introDirs)
                 {
-                    var possibleIntro = introDir;
-
-                #if ANDROID
-                    possibleIntro = GameFS.NormalizePath(possibleIntro);
-                #endif
+                    var possibleIntro = GameFS.NormalizePath(introDir);
 
                     LoadTexturesFromFolder(introDir, false);
                 }
             }
-            var introPath = Path.Combine(Values.PathContentFolder, "Intro");
-                
-        #if ANDROID
-            introPath = GameFS.NormalizePath(introPath);
-        #endif
+            var introPath = GameFS.NormalizePath(Path.Combine(Values.PathContentFolder, "Intro"));
 
             LoadTexturesFromFolder(introPath, false);
 
@@ -599,23 +591,12 @@ namespace ProjectZ.InGame.Things
 
         public static void LoadTexture(out Texture2D texture, string assetPath)
         {
-        #if ANDROID
-            // Replace back slashes with forward slashes.
-            assetPath = GameFS.NormalizePath(assetPath);
+            assetPath = GameFS.ToAssetPath(assetPath);
 
-            // Load PNG from APK assets via TitleContainer
-            using Stream stream = TitleContainer.OpenStream(assetPath);
-            texture = Texture2D.FromStream(Game1.Graphics.GraphicsDevice, stream);
-
-            // Atlas path must ALSO be an asset path (no "assets/" prefix)
-            string atlasFileName = FindAtlasFile(assetPath);
-        #else
-            using Stream stream = File.Open(assetPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using Stream stream = GameFS.OpenReadAny(assetPath);
             texture = Texture2D.FromStream(Game1.Graphics.GraphicsDevice, stream);
 
             string atlasFileName = FindAtlasFile(assetPath);
-        #endif
-
             var (lang, variant) = ParseAtlasTags(assetPath);
 
             if (!Atlases.TryGetValue((lang, variant), out var atlasDesignation))

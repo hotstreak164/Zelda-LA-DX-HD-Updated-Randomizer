@@ -32,13 +32,23 @@ namespace ProjectZ.InGame.Map
             // Try to load a lahdmod file after the camera has been initialized.
             Camera.LoadLAHDModFile();
 
-            LightBlendState.ColorBlendFunction = BlendFunction.Add;
-            LightBlendState.ColorDestinationBlend = Blend.InverseSourceAlpha;
-            LightBlendState.ColorSourceBlend = Blend.One;
+            LightBlendState = new BlendState
+            {
+                ColorBlendFunction = BlendFunction.Add,
+                ColorSourceBlend = Blend.One,
+                ColorDestinationBlend = Blend.InverseSourceAlpha,
 
-            LightBlendState.AlphaBlendFunction = BlendFunction.Max;
-            LightBlendState.AlphaDestinationBlend = Blend.One;
-            LightBlendState.AlphaSourceBlend = Blend.One;
+            // BlendFunction.Max crashes on Android during "spriteBatch.Begin()".
+            #if ANDROID
+                AlphaBlendFunction = BlendFunction.Add,
+                AlphaSourceBlend = Blend.One,
+                AlphaDestinationBlend = Blend.One,
+            #else
+                AlphaBlendFunction = BlendFunction.Max,
+                AlphaSourceBlend = Blend.One,
+                AlphaDestinationBlend = Blend.One,
+            #endif
+            };
         }
 
         public void Load()
@@ -261,7 +271,14 @@ namespace ProjectZ.InGame.Map
         {
             Color lighting = GameSettings.GlobalLights ? CurrentMap.LightColor : new Color(255, 255, 255);
             Game1.Graphics.GraphicsDevice.Clear(lighting);
-            spriteBatch.Begin(SpriteSortMode.Deferred, LightBlendState, SamplerState.AnisotropicClamp, null, null, null, Camera.TransformMatrix);
+
+            #if ANDROID
+                var sampler = SamplerState.LinearClamp;
+            #else
+                var sampler = SamplerState.AnisotropicClamp;
+            #endif
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, LightBlendState, sampler, null, null, null, Camera.TransformMatrix);
             CurrentMap.Objects.DrawLight(spriteBatch);
             spriteBatch.End();
         }
