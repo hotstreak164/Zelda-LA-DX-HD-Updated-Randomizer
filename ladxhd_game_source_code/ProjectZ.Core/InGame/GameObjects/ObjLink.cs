@@ -6106,7 +6106,7 @@ namespace ProjectZ.InGame.GameObjects
             if (_spriteShadow != null)
                 _spriteShadow.EntityPosition.Set(NextMapPositionStart.Value);
         }
-
+        
         public void Respawn()
         {
             Animation.Play((CarryShield ? "stands_" : "stand_") + Direction);

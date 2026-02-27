@@ -2,11 +2,15 @@ using System;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.InGame.GameObjects;
 using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
-using ProjectZ.InGame.GameObjects;
+
+#if WINDOWS
+using System.Windows.Forms;
+#endif
 
 namespace ProjectZ.InGame.GameSystems
 {
@@ -420,25 +424,28 @@ namespace ProjectZ.InGame.GameSystems
         {
             try
             {
+                // Small delay to smooth audio/transition timing.
                 Thread.Sleep(75);
 
+                // Capture once to avoid races.
                 var nextMap = _gameMapManager?.NextMap;
                 if (nextMap == null)
                     throw new NullReferenceException("NextMap was null inside ThreadLoading.");
 
-                // MUST be safe: if SaveLoadMap.LoadMapFile uses GameFS + StreamReader and does not load textures, OK.
-                // If it loads textures/content, it needs to be split.
+                // Load/parse the map file.
                 SaveLoadMap.LoadMap(mapFileName, nextMap);
 
-                // Do NOT call LoadObjects here if it can touch graphics/content.
+                // Ensure Objects exists so FinishLoading can safely call LoadObjects().
                 nextMap.Objects ??= new ObjectManager(nextMap);
 
                 _loadingException = null;
-                _finishedLoading = true;
             }
             catch (Exception ex)
             {
                 _loadingException = ex;
+            }
+            finally
+            {
                 _finishedLoading = true;
             }
         }
@@ -447,10 +454,23 @@ namespace ProjectZ.InGame.GameSystems
         {
             AdditionalBlackScreenDelay = 0;
 
-            // switch to the new map
+            // If the loading thread failed, surface it here (main thread).
+            if (_loadingException != null)
+            {
+            #if WINDOWS
+                MessageBox.Show(_loadingException.ToString(), _loadingException.Message,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            #endif
+                throw new Exception("Map loading thread failed.", _loadingException);
+            }
+            // Switch to the new map
             var oldMap = _gameMapManager.CurrentMap;
             _gameMapManager.CurrentMap = _gameMapManager.NextMap;
             _gameMapManager.NextMap = oldMap;
+
+            // Make sure Objects exists (thread ensured this, but keep it bulletproof).
+            _gameMapManager.CurrentMap.Objects ??= new ObjectManager(_gameMapManager.CurrentMap);
+            _gameMapManager.CurrentMap.Objects.LoadObjects();
 
             var currentTrack = Game1.GbsPlayer.CurrentTrack;
             var nextTrack = -1;
@@ -460,24 +480,19 @@ namespace ProjectZ.InGame.GameSystems
 
             if (currentTrack != nextTrack)
                 Game1.GbsPlayer.Pause();
-            
+
             Game1.GameManager.ResetMusic();
 
-            // finish loading map
             _gameMapManager.FinishLoadingMap(_gameMapManager.CurrentMap);
-
-            // Ensure objects are created/loaded on main thread
-            _gameMapManager.CurrentMap.Objects ??= new ObjectManager(_gameMapManager.CurrentMap);
-            _gameMapManager.CurrentMap.Objects.LoadObjects();
 
             MapManager.ObjLink.UpdateMapTransitionIn(0);
 
-            // set the new music
+            // Set the new music
             for (var i = 0; i < _gameMapManager.CurrentMap.MapMusic.Length; i++)
                 if (_gameMapManager.CurrentMap.MapMusic[i] >= 0)
                     Game1.GameManager.SetMusic(_gameMapManager.CurrentMap.MapMusic[i], i, false);
 
-            // center the camera
+            // Center the camera
             var goalPosition = Game1.GameManager.MapManager.GetCameraTarget();
 
             if (_centerCamera)
