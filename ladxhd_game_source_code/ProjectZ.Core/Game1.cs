@@ -57,6 +57,8 @@ namespace ProjectZ
         private bool _firstFrameDrawn;
         private bool _fullscreenWasSet;
 
+        private static bool _forceFullScreen = false;
+
         private static int _lastWindowWidth;
         private static int _lastWindowHeight;
 
@@ -549,8 +551,12 @@ namespace ProjectZ
 
         public static void ToggleFullscreen()
         {
+            #if ANDROID
+                _forceFullScreen = true;
+            #endif
+
             // Enter fullscreen
-            if (!GameSettings.IsFullscreen)
+            if (_forceFullScreen || !GameSettings.IsFullscreen)
             {
                 FullScreen = GameSettings.IsFullscreen = true;
 

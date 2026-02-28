@@ -24,6 +24,13 @@ namespace ProjectZ.Android
     {
         protected override void OnCreate(Bundle? savedInstanceState)
         {
+            Window.AddFlags(WindowManagerFlags.Fullscreen);
+            Window.AddFlags(WindowManagerFlags.LayoutNoLimits);
+            Window.ClearFlags(WindowManagerFlags.ForceNotFullscreen);
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
+                Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+
             base.OnCreate(savedInstanceState);
 
             var root = Application.Context.GetExternalFilesDir(null)!.AbsolutePath;
@@ -48,11 +55,46 @@ namespace ProjectZ.Android
             var view = (View)game.Services.GetService(typeof(View))!;
             SetContentView(view);
 
+            ApplyFullscreenFlags();
+
             view.Focusable = true;
             view.FocusableInTouchMode = true;
             view.RequestFocus();
-
             game.Run();
+        }
+
+        private void ApplyFullscreenFlags()
+        {
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
+            {
+                Window.SetDecorFitsSystemWindows(false);
+                var controller = Window.InsetsController;
+                if (controller != null)
+                {
+                    controller.Hide(global::Android.Views.WindowInsets.Type.StatusBars() |
+                                   global::Android.Views.WindowInsets.Type.NavigationBars());
+                    controller.SystemBarsBehavior =
+                        (int)global::Android.Views.WindowInsetsControllerBehavior.ShowTransientBarsBySwipe;
+                }
+            }
+            else
+            {
+                Window.DecorView.SystemUiVisibility =
+                    (StatusBarVisibility)(
+                        SystemUiFlags.LayoutStable |
+                        SystemUiFlags.LayoutHideNavigation |
+                        SystemUiFlags.LayoutFullscreen |
+                        SystemUiFlags.HideNavigation |
+                        SystemUiFlags.Fullscreen |
+                        SystemUiFlags.ImmersiveSticky);
+            }
+        }
+
+        public override void OnWindowFocusChanged(bool hasFocus)
+        {
+            base.OnWindowFocusChanged(hasFocus);
+            if (hasFocus)
+                ApplyFullscreenFlags();
         }
 
         public override bool DispatchKeyEvent(KeyEvent e)
