@@ -16,16 +16,21 @@ namespace ProjectZ.InGame.Pages
         private readonly InterfaceSlider     _sliderMusicVolume;
         private readonly InterfaceSlider     _sliderSoundVolume;
         private readonly InterfaceListLayout _toggleAudioClassic;
+    #if !ANDROID
         private readonly InterfaceListLayout _toggleMuteInactive;
+    #endif
         private readonly InterfaceListLayout _toggleHealthAlarm;
         private readonly InterfaceListLayout _togglePowerupMusic;
 
+        List<string> _tooltips = new List<string>();
         private bool _showTooltip;
 
         public void SetMusicVolume(int value) => ((InterfaceSlider)_sliderMusicVolume).CurrentStep = value;
         public void SetSoundVolume(int value) => ((InterfaceSlider)_sliderSoundVolume).CurrentStep = value;
         public void SetClassicAudio(bool state) => ((InterfaceToggle)_toggleAudioClassic.Elements[1]).ToggleState = state;
+    #if !ANDROID
         public void SetMuteInactive(bool state) => ((InterfaceToggle)_toggleMuteInactive.Elements[1]).ToggleState = state;
+    #endif
         public void SetHealthAlarm(bool state) => ((InterfaceToggle)_toggleHealthAlarm.Elements[1]).ToggleState = state;
         public void SetPowerupMusic(bool state) => ((InterfaceToggle)_togglePowerupMusic.Elements[1]).ToggleState = state;
 
@@ -49,6 +54,7 @@ namespace ProjectZ.InGame.Pages
                 number => { GameSettings.MusicVolume = number; })
                 { SetString = number => " " + number + "%" };
             _contentLayout.AddElement(_sliderMusicVolume);
+            _tooltips.Add("tooltip_audio_music_volume");
 
             // Slider: Sound Effects Volume
             _sliderSoundVolume = new InterfaceSlider("settings_audio_effect_volume",
@@ -56,30 +62,37 @@ namespace ProjectZ.InGame.Pages
                 number => { Game1.GameManager.UpdateSoundEffects(); GameSettings.EffectVolume = number; })
                 { SetString = number => " " + number + "%" };
             _contentLayout.AddElement(_sliderSoundVolume);
+            _tooltips.Add("tooltip_audio_effect_volume");
 
             // Toggle: Classic Music Tile Cues
             _toggleAudioClassic = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_classic_music", GameSettings.ClassicMusic, 
                 newState => { GameSettings.ClassicMusic = newState; });
             _contentLayout.AddElement(_toggleAudioClassic);
+            _tooltips.Add("tooltip_audio_classic_music");
 
+        #if !ANDROID
             // Toggle: Mute Inactive Window
             _toggleMuteInactive = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_mute_inactive", GameSettings.MuteInactive, 
                 newState => { GameSettings.MuteInactive = newState; });
             _contentLayout.AddElement(_toggleMuteInactive);
+            _tooltips.Add("tooltip_audio_mute_inactive");
+        #endif
 
             // Toggle: Low Hearts Alarm
             _toggleHealthAlarm = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_heartbeep", GameSettings.HeartBeep, 
                 newState => { GameSettings.HeartBeep = newState; });
             _contentLayout.AddElement(_toggleHealthAlarm);
+            _tooltips.Add("tooltip_audio_heartbeep");
 
             // Toggle: Mute Powerup Music
             _togglePowerupMusic = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_mute_powerups", GameSettings.MutePowerups, 
                 newState => { GameSettings.MutePowerups = newState; });
             _contentLayout.AddElement(_togglePowerupMusic);
+            _tooltips.Add("tooltip_audio_mute_powerups");
 
             // Bottom Bar / Back Button:
             _bottomBar = new InterfaceListLayout() { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true, HorizontalMode = true };
@@ -143,15 +156,11 @@ namespace ProjectZ.InGame.Pages
             int index = _contentLayout.SelectionIndex;
             string tooltip = "Select an option to view its tooltip.";
 
-            // Use the selected index to determine which tooltip to show.
-            switch (index) 
+            // Get the tooltip that matches the index.
+            for (int i = 0; i < _tooltips.Count; i++)
             {
-                case 0:  { tooltip = Game1.LanguageManager.GetString("tooltip_audio_music_volume", "error"); break; }
-                case 1:  { tooltip = Game1.LanguageManager.GetString("tooltip_audio_effect_volume", "error"); break; }
-                case 2:  { tooltip = Game1.LanguageManager.GetString("tooltip_audio_classic_music", "error"); break; }
-                case 3:  { tooltip = Game1.LanguageManager.GetString("tooltip_audio_mute_inactive", "error"); break; }
-                case 4:  { tooltip = Game1.LanguageManager.GetString("tooltip_audio_heartbeep", "error"); break; }
-                case 5:  { tooltip = Game1.LanguageManager.GetString("tooltip_audio_mute_powerups", "error"); break; }
+                if (i == index)
+                    tooltip = Game1.LanguageManager.GetString(_tooltips[i], "error");
             }
             // Display the tooltip in the tooltip window.
             return tooltip;

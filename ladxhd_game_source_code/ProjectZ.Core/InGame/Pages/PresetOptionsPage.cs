@@ -315,7 +315,9 @@ namespace ProjectZ.InGame.Pages
                 AudioSettingsPage.SetMusicVolume(GameSettings.MusicVolume);
                 AudioSettingsPage.SetSoundVolume(GameSettings.EffectVolume);
                 AudioSettingsPage.SetClassicAudio(GameSettings.ClassicMusic);
+            #if !ANDROID
                 AudioSettingsPage.SetMuteInactive(GameSettings.MuteInactive);
+            #endif
                 AudioSettingsPage.SetHealthAlarm(GameSettings.HeartBeep);
                 AudioSettingsPage.SetPowerupMusic(GameSettings.MutePowerups);
             }

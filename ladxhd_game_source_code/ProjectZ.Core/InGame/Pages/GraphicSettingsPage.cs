@@ -12,16 +12,18 @@ namespace ProjectZ.InGame.Pages
         private readonly InterfaceListLayout _graphicSettingsLayout;
         private readonly InterfaceListLayout _contentLayout;
         private readonly InterfaceListLayout _bottomBar;
-
         private readonly InterfaceSlider     _sliderGameScale;
         private readonly InterfaceSlider     _sliderUIScale;
+    #if !ANDROID
         private readonly InterfaceListLayout _toggleFullscreen;
         private readonly InterfaceListLayout _toggleExFullscreen;
+    #endif
         private readonly InterfaceListLayout _toggleGlobalLighting;
         private readonly InterfaceListLayout _toggleObjectLighting;
         private readonly InterfaceListLayout _toggleDynamicShadows;
         private readonly InterfaceListLayout _toggleVerticalSync;
 
+        List<string> _tooltips = new List<string>();
         private bool _showTooltip;
 
         public void SetGameScaleValue(int value) { ((InterfaceSlider)_sliderGameScale).CurrentStep = value; }
@@ -52,6 +54,7 @@ namespace ProjectZ.InGame.Pages
                 number => { GameSettings.GameScale = number; Game1.ScaleChanged = true; })
                 { SetString = number => GameScaleSliderAdjustmentString(number) };
             _contentLayout.AddElement(_sliderGameScale);
+            _tooltips.Add("tooltip_graphics_game_scale");
 
             // Slider: UI Scale
             _sliderUIScale = new InterfaceSlider("settings_graphics_ui_scale",
@@ -59,42 +62,51 @@ namespace ProjectZ.InGame.Pages
                 number => { GameSettings.UiScale = number; Game1.ScaleChanged = true; })
                 { SetString = number => UIScaleSliderAdjustmentString(number) };
             _contentLayout.AddElement(_sliderUIScale);
+            _tooltips.Add("tooltip_graphics_ui_scale");
 
+        #if !ANDROID
             // Toggle: Fullscreen
             _toggleFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_graphics_fullscreen", GameSettings.IsFullscreen,
                 newState => { Game1.ToggleFullscreen(); Game1.ScaleChanged = true; });
             _contentLayout.AddElement(_toggleFullscreen);
+            _tooltips.Add("tooltip_graphics_fullscreen");
 
             // Toggle: Exclusive Fullscreen
             _toggleExFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_graphics_exfullscreen", GameSettings.ExFullscreen,
                 newState => { GameSettings.ExFullscreen = newState; });
             _contentLayout.AddElement(_toggleExFullscreen);
+            _tooltips.Add("tooltip_graphics_exfullscreen");
+        #endif
 
             // Toggle: Disable Global Lighting
             _toggleGlobalLighting = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                "settings_graphics_globallights", GameSettings.GlobalLights,
                newState => GameSettings.GlobalLights = newState);
-             _contentLayout.AddElement(_toggleGlobalLighting);
+            _contentLayout.AddElement(_toggleGlobalLighting);
+            _tooltips.Add("tooltip_graphics_nogloballights");
 
             // Toggle: Disable Object Lighting
             _toggleObjectLighting = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                "settings_graphics_objectlights", GameSettings.ObjectLights,
                newState => GameSettings.ObjectLights = newState);
-             _contentLayout.AddElement(_toggleObjectLighting);
+            _contentLayout.AddElement(_toggleObjectLighting);
+            _tooltips.Add("tooltip_graphics_noobjectlights");
 
             // Toggle: Dynamic Shadows
             _toggleDynamicShadows = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                "settings_graphics_shadow", GameSettings.EnableShadows,
                newState => GameSettings.EnableShadows = newState);
-             _contentLayout.AddElement(_toggleDynamicShadows);
+            _contentLayout.AddElement(_toggleDynamicShadows);
+            _tooltips.Add("tooltip_graphics_shadow");
 
             // Toggle: Vertical Sync
             _toggleVerticalSync = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_graphics_fps_lock", GameSettings.VerticalSync,
                 newState => { GameSettings.VerticalSync = newState; Game1.FpsSettingChanged = true; });
             _contentLayout.AddElement(_toggleVerticalSync);
+            _tooltips.Add("tooltip_graphics_fps_lock");
 
             // Bottom Bar / Back Button:
             _bottomBar = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true, HorizontalMode = true };
@@ -170,9 +182,11 @@ namespace ProjectZ.InGame.Pages
 
         private void UpdateFullscreenState()
         {
+        #if !ANDROID
             var toggle = (InterfaceToggle)_toggleFullscreen.Elements[1];
             if (toggle.ToggleState != GameSettings.IsFullscreen)
                 toggle.SetToggle(GameSettings.IsFullscreen);
+        #endif
         }
 
         private void UpdateGameScaleSlider()
@@ -204,17 +218,11 @@ namespace ProjectZ.InGame.Pages
             int index = _contentLayout.SelectionIndex;
             string tooltip = "Select an option to view its tooltip.";
 
-            // Use the selected index to determine which tooltip to show.
-            switch (index) 
+            // Get the tooltip that matches the index.
+            for (int i = 0; i < _tooltips.Count; i++)
             {
-                case 0: { tooltip = Game1.LanguageManager.GetString("tooltip_graphics_game_scale", "error"); break; }
-                case 1: { tooltip = Game1.LanguageManager.GetString("tooltip_graphics_ui_scale", "error"); break; }
-                case 2: { tooltip = Game1.LanguageManager.GetString("tooltip_graphics_fullscreen", "error"); break; }
-                case 3: { tooltip = Game1.LanguageManager.GetString("tooltip_graphics_exfullscreen", "error"); break; }
-                case 4: { tooltip = Game1.LanguageManager.GetString("tooltip_graphics_nogloballights", "error"); break; }
-                case 5: { tooltip = Game1.LanguageManager.GetString("tooltip_graphics_noobjectlights", "error"); break; }
-                case 6: { tooltip = Game1.LanguageManager.GetString("tooltip_graphics_shadow", "error"); break; }
-                case 7: { tooltip = Game1.LanguageManager.GetString("tooltip_graphics_fps_lock", "error"); break; }
+                if (i == index)
+                    tooltip = Game1.LanguageManager.GetString(_tooltips[i], "error");
             }
             // Display the tooltip in the tooltip window.
             return tooltip;
