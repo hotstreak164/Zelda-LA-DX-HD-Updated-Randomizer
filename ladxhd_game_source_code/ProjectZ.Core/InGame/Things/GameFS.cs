@@ -66,6 +66,16 @@ namespace ProjectZ.InGame.Things
             return ReadAllText(path).Replace("\r\n", "\n").Split('\n');
         }
 
+        private static string ToDiskPath(string path)
+        {
+            path = ToAssetPath(path);
+            path = path.Replace('\\', '/').TrimStart('/');
+
+            // Convert to OS separators and root at the executable directory.
+            var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            return Path.GetFullPath(Path.Combine(new[] { BaseDir }.Concat(parts).ToArray()));
+        }
+
         //-------------------------------------------------------------------------------------------------------------------------------------------------
         //
         //  PATH HELPERS
@@ -160,15 +170,6 @@ namespace ProjectZ.InGame.Things
         //  DIRECTORY LISTING (returns names only, like AssetManager.List)
         //
         //-------------------------------------------------------------------------------------------------------------------------------------------------
-        private static string ToDiskPath(string path)
-        {
-            path = ToAssetPath(path);
-            path = path.Replace('\\', '/').TrimStart('/');
-
-            // Convert to OS separators and root at the executable directory.
-            var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            return Path.GetFullPath(Path.Combine(new[] { BaseDir }.Concat(parts).ToArray()));
-        }
 
         public static string[] List(string dir)
         {

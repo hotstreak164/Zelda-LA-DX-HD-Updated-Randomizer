@@ -20,10 +20,10 @@ namespace ProjectZ
 {
     public class Game1 : Game
     {
-        #if LINUX
-            private const string SDL_LIB = "libSDL2-2.0.so.0";
-        #else
+        #if WINDOWS
             private const string SDL_LIB = "SDL2.dll";
+        #else
+            private const string SDL_LIB = "libSDL2-2.0.so.0";
         #endif
 
         // Used to load an icon into the window for OpenGL.
@@ -131,11 +131,7 @@ namespace ProjectZ
         {
             get
             {
-        #if ANDROID
-                return Matrix.Identity;
-        #else
                 return Matrix.CreateScale((float)Graphics.PreferredBackBufferWidth / WindowWidth, (float)Graphics.PreferredBackBufferHeight / WindowHeight, 1f);
-        #endif
             }
         }
         // lahdmod values
@@ -193,7 +189,8 @@ namespace ProjectZ
         protected override void Initialize()
         {
         #if DESKTOPGL
-            var surface = SDL_LoadBMP_RW(SDL_RWFromFile("Data\\Icon\\Icon.bmp", "rb"), 1);
+            var path = Path.Combine("Data", "Icon", "Icon.bmp");
+            var surface = SDL_LoadBMP_RW(SDL_RWFromFile(path, "rb"), 1);
             SDL_SetWindowIcon(Window.Handle, surface);
             SDL_FreeSurface(surface);
         #endif
@@ -248,12 +245,7 @@ namespace ProjectZ
             ScreenManager.LoadIntro(Content);
 
             // Start loading the resources that are needed after the intro.
-        #if WINDOWS
             ThreadPool.QueueUserWorkItem(LoadContentThreaded);
-        #else
-            // OpenGL: must load GPU resources on the main thread
-            LoadContentThreaded(null);
-        #endif
 
             // Initialize the GBS Player and load in the Link's Awakening GBS file.
             GbsPlayer.LoadFile(Path.Combine(Values.PathContentFolder, "Music", "awakening.gbs"));
@@ -419,12 +411,6 @@ namespace ProjectZ
 
         protected override void Draw(GameTime gameTime)
         {
-            if (!_finishedLoading)
-            {
-                GraphicsDevice.Clear(Color.Black);
-                ScreenManager.Draw(SpriteBatch);
-                return;
-            }
             _firstFrameDrawn = true;
 
             _fpsCounter.CountDraw();
@@ -442,12 +428,7 @@ namespace ProjectZ
 
             ScreenManager.Draw(SpriteBatch);
 
-        // NOTE: This blurring effect is completely broken on Android. I have tried a MILLION different things to try to get it working but 
-        // not a single one of them worked! I am not an expert, and I suspect this is a bug in MonoGame itself as this issue did NOT happen
-        // with KNI. What happens is the top half is drawn on the bottom, which wraps around so the bottom half is drawn on the top.
-        #if !ANDROID
             BlurImage();
-        #endif
             {
                 Graphics.GraphicsDevice.SetRenderTarget(null);
                 GraphicsDevice.Clear(Color.Black);
@@ -465,13 +446,25 @@ namespace ProjectZ
                     Resources.BlurEffect.Parameters["sprBlur"].SetValue(_renderTarget2);
                     Resources.RoundedCornerBlurEffect.Parameters["sprBlur"].SetValue(_renderTarget2);
                 }
+                var vp = GraphicsDevice.Viewport;
+
+                // These are the dimensions SV_Position is normalized against in the current pass
+                Resources.BlurEffect.Parameters["width"].SetValue(vp.Width);
+                Resources.BlurEffect.Parameters["height"].SetValue(vp.Height);
+
+                Resources.RoundedCornerBlurEffect.Parameters["screenWidth"].SetValue(vp.Width);
+                Resources.RoundedCornerBlurEffect.Parameters["screenHeight"].SetValue(vp.Height);
+
+                // Also prevent texture-unit-1 wrap at runtime (belt-and-suspenders)
+                GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+
                 SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.AnisotropicClamp, null, null, Resources.RoundedCornerBlurEffect, GetMatrix);
 
                 // blurred ui parts
                 UiManager.DrawBlur(SpriteBatch);
 
                 // blured stuff
-                GameManager.InGameOverlay.InGameHud.DrawBlur(SpriteBatch);
+                GameManager?.InGameOverlay?.InGameHud?.DrawBlur(SpriteBatch);
 
                 // background for the debug text
                 DebugTextBackground();
@@ -512,6 +505,9 @@ namespace ProjectZ
                 return;
 
             var blurValue = 0.2f;
+
+            if (Resources.BlurEffectH == null || Resources.BlurEffectV == null)
+                return;
 
             Resources.BlurEffectH.Parameters["pixelX"].SetValue(1.0f / _renderTarget1.Width);
             Resources.BlurEffectV.Parameters["pixelY"].SetValue(1.0f / _renderTarget1.Height);
@@ -699,10 +695,6 @@ namespace ProjectZ
 
         public void ForceRecalculateScaling()
         {
-            // Don’t run until loading is finished to avoid crashes.
-            if (!_finishedLoading)
-                return;
-
             // Pull the current actual client size.
             int w = Window.ClientBounds.Width;
             int h = Window.ClientBounds.Height;
@@ -814,13 +806,19 @@ namespace ProjectZ
             width = Math.Max(1, width);
             height = Math.Max(1, height);
 
-            if (_finishedLoading)
-            {
-                Resources.BlurEffect.Parameters["width"].SetValue(width);
-                Resources.BlurEffect.Parameters["height"].SetValue(height);
-                Resources.RoundedCornerBlurEffect.Parameters["textureWidth"].SetValue(width);
-                Resources.RoundedCornerBlurEffect.Parameters["textureHeight"].SetValue(height);
-            }
+     //       if (_finishedLoading)
+     //       {
+                if (Resources.BlurEffect != null)
+                {
+                    Resources.BlurEffect.Parameters["width"]?.SetValue(width);
+                    Resources.BlurEffect.Parameters["height"]?.SetValue(height);
+                }
+                if (Resources.RoundedCornerBlurEffect != null)
+                {
+                    Resources.RoundedCornerBlurEffect.Parameters["textureWidth"]?.SetValue(width);
+                    Resources.RoundedCornerBlurEffect.Parameters["textureHeight"]?.SetValue(height);
+                }
+      //      }
             var blurScale = MathHelper.Clamp(MapManager.Camera.Scale / 2, 1, 10);
             var blurRtWidth = Math.Max(1, (int)(width / blurScale));
             var blurRtHeight = Math.Max(1, (int)(height / blurScale));

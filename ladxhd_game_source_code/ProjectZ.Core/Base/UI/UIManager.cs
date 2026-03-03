@@ -26,7 +26,7 @@ namespace ProjectZ.Base.UI
 
         private void UpdateElements(List<UiElement> list)
         {
-            foreach (var element in list)
+            foreach (var element in list.ToList())
                 if (element.Screens.Contains(_currentScreen))
                     element.Update();
         }
@@ -41,29 +41,27 @@ namespace ProjectZ.Base.UI
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var element in AllElements)
+            foreach (var element in AllElements.ToList())
                 if (element.Screens.Contains(_currentScreen) && element.IsVisible)
                     element.Draw(spriteBatch);
         }
 
         public void DrawBlur(SpriteBatch spriteBatch)
         {
-            // Always draw no-hide elements.
-            foreach (var element in _elementListNoHide)
+            foreach (var element in _elementListNoHide.ToList())
                 if (element.Screens.Contains(_currentScreen) && element.IsVisible)
                     element.DrawBlur(spriteBatch);
 
             if (HideOverlay) return;
 
-            // Draw normal elements if the overlay is not hidden.
-            foreach (var element in _elementList)
+            foreach (var element in _elementList.ToList())
                 if (element.Screens.Contains(_currentScreen) && element.IsVisible)
                     element.DrawBlur(spriteBatch);
         }
 
         public void OnResize()
         {
-            foreach (var uiElement in AllElements)
+            foreach (var uiElement in AllElements.ToList())
                 uiElement.SizeUpdate?.Invoke(uiElement);
         }
 
@@ -86,7 +84,7 @@ namespace ProjectZ.Base.UI
 
         public void RemoveElement(string elementId, string screenId)
         {
-            foreach (var element in AllElements)
+            foreach (var element in AllElements.ToList())
                 if (element.ElementId.Contains(elementId) && element.Screens.Contains(screenId))
                     element.Remove = true;
         }

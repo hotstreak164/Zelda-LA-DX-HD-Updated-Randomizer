@@ -2,7 +2,7 @@
 using ProjectZ.InGame.Things;
 using System;
 
-#if WINDOWS
+#if DIRECTX
 using System.Windows.Forms;
 #endif
 
@@ -12,7 +12,7 @@ namespace ProjectZ.InGame.SaveLoad
     {
         public static void SaveDialog(string[,] data)
         {
-#if WINDOWS
+#if DIRECTX
             var openFileDialog = new SaveFileDialog
             {
                 RestoreDirectory = true,
@@ -26,7 +26,7 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static void LoadDialog(ref string[,] data)
         {
-#if WINDOWS
+#if DIRECTX
             var openFileDialog = new OpenFileDialog
             {
                 Filter = "Data (*.data)|*.data",

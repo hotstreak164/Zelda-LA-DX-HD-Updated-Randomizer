@@ -6,31 +6,33 @@ namespace LADXHD_Patcher
     internal class Config
     {
         // The hash for "newHash" will need to be calculated for each new version.
-        public const string version = "1.6.3";
+        public const string Version = "1.6.3";
 
-        public static string appPath;
-        public static string baseFolder;
-        public static string tempFolder;
-        public static string zeldaEXE;
-        public static string backupPath;
+        public static string AppPath;
+        public static string BaseFolder;
+        public static string TempFolder;
+        public static string ZeldaEXE;
+        public static string BackupPath;
 
-        public static string gameFontsPath;
-        public static string previousModPath;
-        public static string lahdmodModPath;
-        public static string graphicsModPath;
+        public static string ContentPath;
+        public static string DataPath;
+        public static string PreviousModPath;
+        public static string LAHDModPath;
+        public static string GraphicsModPath;
 
         public static void Initialize()
         {
-            appPath = Assembly.GetExecutingAssembly().Location;
-            baseFolder = Path.GetDirectoryName(appPath);
-            tempFolder = Path.Combine(baseFolder, "~temp");
-            zeldaEXE = Path.Combine(baseFolder, "Link's Awakening DX HD.exe");
-            backupPath = (Path.Combine(baseFolder, "Data", "Backup")).CreatePath();
+            AppPath = Assembly.GetExecutingAssembly().Location;
+            BaseFolder = Path.GetDirectoryName(AppPath);
+            TempFolder = Path.Combine(BaseFolder, "~temp");
+            ZeldaEXE = Path.Combine(BaseFolder, "Link's Awakening DX HD.exe");
+            BackupPath = (Path.Combine(BaseFolder, "Data", "Backup")).CreatePath();
 
-            gameFontsPath = Path.Combine(baseFolder, "Content", "Fonts");
-            previousModPath = Path.Combine(baseFolder, "Data", "Mods");
-            lahdmodModPath = Path.Combine(baseFolder, "Mods", "LAHDMods");
-            graphicsModPath = Path.Combine(baseFolder, "Mods", "Graphics");
+            ContentPath = Path.Combine(BaseFolder, "Content");
+            DataPath = Path.Combine(BaseFolder, "Data");
+            PreviousModPath = Path.Combine(DataPath, "Mods");
+            LAHDModPath = Path.Combine(BaseFolder, "Mods", "LAHDMods");
+            GraphicsModPath = Path.Combine(BaseFolder, "Mods", "Graphics");
         }
     }
 }

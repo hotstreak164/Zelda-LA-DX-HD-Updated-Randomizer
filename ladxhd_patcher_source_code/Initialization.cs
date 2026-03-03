@@ -47,7 +47,7 @@ namespace LADXHD_Patcher
             if (showHelp)
             {
                 Console.WriteLine();
-                Console.WriteLine("LADXHD Patcher v" + Config.version);
+                Console.WriteLine("LADXHD Patcher v" + Config.Version);
                 Console.WriteLine();
                 Console.WriteLine("Usage: LADXHD.Patcher.exe [options]");
                 Console.WriteLine();

@@ -15,7 +15,7 @@ namespace LADXHD_Patcher
 
         public static void Initialize()
         {
-            XDelta3.Exe = Path.Combine(Config.tempFolder, "xdelta3.exe");
+            XDelta3.Exe = Path.Combine(Config.TempFolder, "xdelta3.exe");
         }
 
         public static string GetCreateArguments(string OldFile, string NewFile, string PatchFile)
@@ -57,7 +57,7 @@ namespace LADXHD_Patcher
             Process xDelta = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo 
             {
-                WorkingDirectory = Config.baseFolder,
+                WorkingDirectory = Config.BaseFolder,
                 FileName = XDelta3.Exe,
                 Arguments = XDelta3.Args,
                 UseShellExecute = false,

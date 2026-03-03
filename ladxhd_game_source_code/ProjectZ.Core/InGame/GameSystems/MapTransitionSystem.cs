@@ -8,7 +8,7 @@ using ProjectZ.InGame.Map;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
 
-#if WINDOWS
+#if DIRECTX
 using System.Windows.Forms;
 #endif
 
@@ -457,7 +457,7 @@ namespace ProjectZ.InGame.GameSystems
             // If the loading thread failed, surface it here (main thread).
             if (_loadingException != null)
             {
-            #if WINDOWS
+            #if DIRECTX
                 MessageBox.Show(_loadingException.ToString(), _loadingException.Message,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             #endif

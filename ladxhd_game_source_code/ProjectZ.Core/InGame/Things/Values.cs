@@ -21,16 +21,8 @@ namespace ProjectZ.InGame.Things
         public static Color MenuButtonColorSelectedDisabled = new Color(150, 150, 150);
         public static Color MenuButtonColorSliderDisabled = new Color(100, 100, 100);
 
-        // Since the background blur effect is broken on Android, draw the inventory opaque so it
-        // doesn't look so jank. With the background popping through it makes things hard to make out.
-
-    #if !ANDROID
         public static Color InventoryBackgroundColorTop = new Color(255, 255, 230) * 0.85f;
         public static Color InventoryBackgroundColor = new Color(255, 255, 230) * 0.75f;
-    #else
-        public static Color InventoryBackgroundColorTop = new Color(255, 255, 215);
-        public static Color InventoryBackgroundColor = new Color(255, 255, 215);
-    #endif
 
         public static Color GameMenuBackgroundColor = new Color(255, 255, 255, 255);
 

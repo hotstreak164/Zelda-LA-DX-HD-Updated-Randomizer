@@ -4,8 +4,8 @@ using System.IO;
 using ProjectZ.InGame.GameObjects;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Things;
-#if WINDOWS
-using System.Windows.Forms;
+#if DIRECTX
+    using System.Windows.Forms;
 #endif
 
 namespace ProjectZ.InGame.SaveLoad
@@ -14,7 +14,7 @@ namespace ProjectZ.InGame.SaveLoad
     {
         public static void LoadMap(Map.Map map)
         {
-#if WINDOWS
+#if DIRECTX
             var openFileDialog = new OpenFileDialog
             {
                 Filter = "Map files (*.map)|*.map",
@@ -45,7 +45,7 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static void SaveMapDialog(Map.Map map)
         {
-#if WINDOWS
+#if DIRECTX
             var openFileDialog = new SaveFileDialog
             {
                 FileName = Path.GetFileName(map.MapFileName),
@@ -67,7 +67,7 @@ namespace ProjectZ.InGame.SaveLoad
         // this function is used to update the file format of existing maps
         public static void UpdateMaps()
         {
-#if WINDOWS
+#if DIRECTX
             var openFileDialog = new OpenFileDialog()
             {
                 Filter = "Map files (*.map)|*.map",
@@ -90,7 +90,7 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static void ImportTilemap()
         {
-#if WINDOWS
+#if DIRECTX
             var openFileDialog = new OpenFileDialog
             {
                 Filter = "Text files (*.txt)|*.txt"

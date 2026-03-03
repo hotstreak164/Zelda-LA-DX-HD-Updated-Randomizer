@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ProjectZ.InGame.Things;
 using System.Globalization;
-#if WINDOWS
+#if DIRECTX
 using System.Windows.Forms;
 #endif
 
@@ -94,7 +94,7 @@ namespace ProjectZ.InGame.SaveLoad
                 }
                 catch (Exception) { }
             }
-        #if WINDOWS
+        #if DIRECTX
             MessageBox.Show("Error while saving", "Saving Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
         #endif
         }
