@@ -227,6 +227,7 @@ namespace LADXHD_Migrater
         public static void CreatePatches()
         {
             XDelta3.Create();
+            Config.Patches.ClearPath();
             CreatePatchLoop(Config.Orig_Content, Config.Update_Content);
             CreatePatchLoop(Config.Orig_Data, Config.Update_Data);
             XDelta3.Remove();
