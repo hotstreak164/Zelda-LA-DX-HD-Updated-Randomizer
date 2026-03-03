@@ -29,44 +29,48 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_MainForm));
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.button_Migrate = new System.Windows.Forms.Button();
+            this.button_Patches = new System.Windows.Forms.Button();
+            this.button_Exit = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.button_Build = new System.Windows.Forms.Button();
+            this.button_Clean = new System.Windows.Forms.Button();
+            this.label_Platform = new System.Windows.Forms.Label();
+            this.comboBox_Platform = new System.Windows.Forms.ComboBox();
+            this.combBox_API = new System.Windows.Forms.ComboBox();
+            this.label_API = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // button_Migrate
             // 
-            this.button1.Location = new System.Drawing.Point(9, 256);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 40);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Migrate Assets From v1.0.0";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button_Migrate_Click);
+            this.button_Migrate.Location = new System.Drawing.Point(9, 282);
+            this.button_Migrate.Name = "button_Migrate";
+            this.button_Migrate.Size = new System.Drawing.Size(100, 40);
+            this.button_Migrate.TabIndex = 0;
+            this.button_Migrate.Text = "Migrate Assets From v1.0.0";
+            this.button_Migrate.UseVisualStyleBackColor = true;
+            this.button_Migrate.Click += new System.EventHandler(this.button_Migrate_Click);
             // 
-            // button2
+            // button_Patches
             // 
-            this.button2.Location = new System.Drawing.Point(117, 256);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 40);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Create Patches of Updated Assets";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button_Patches_click);
+            this.button_Patches.Location = new System.Drawing.Point(117, 282);
+            this.button_Patches.Name = "button_Patches";
+            this.button_Patches.Size = new System.Drawing.Size(100, 40);
+            this.button_Patches.TabIndex = 1;
+            this.button_Patches.Text = "Create Patches of Updated Assets";
+            this.button_Patches.UseVisualStyleBackColor = true;
+            this.button_Patches.Click += new System.EventHandler(this.button_Patches_click);
             // 
-            // button3
+            // button_Exit
             // 
-            this.button3.Location = new System.Drawing.Point(225, 256);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(100, 40);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "Exit";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button_Exit_Click);
+            this.button_Exit.Location = new System.Drawing.Point(225, 282);
+            this.button_Exit.Name = "button_Exit";
+            this.button_Exit.Size = new System.Drawing.Size(100, 40);
+            this.button_Exit.TabIndex = 2;
+            this.button_Exit.Text = "Exit";
+            this.button_Exit.UseVisualStyleBackColor = true;
+            this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
             // 
             // pictureBox1
             // 
@@ -77,37 +81,84 @@
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
-            // button5
+            // button_Build
             // 
-            this.button5.Location = new System.Drawing.Point(171, 303);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(153, 40);
-            this.button5.TabIndex = 4;
-            this.button5.Text = "Create a New Build";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button_Build_Click);
+            this.button_Build.Location = new System.Drawing.Point(171, 329);
+            this.button_Build.Name = "button_Build";
+            this.button_Build.Size = new System.Drawing.Size(153, 40);
+            this.button_Build.TabIndex = 4;
+            this.button_Build.Text = "Create a New Build";
+            this.button_Build.UseVisualStyleBackColor = true;
+            this.button_Build.Click += new System.EventHandler(this.button_Build_Click);
             // 
-            // button4
+            // button_Clean
             // 
-            this.button4.Location = new System.Drawing.Point(9, 303);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(153, 40);
-            this.button4.TabIndex = 5;
-            this.button4.Text = "Clean Build Files";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button_Clean_Click);
+            this.button_Clean.Location = new System.Drawing.Point(9, 329);
+            this.button_Clean.Name = "button_Clean";
+            this.button_Clean.Size = new System.Drawing.Size(153, 40);
+            this.button_Clean.TabIndex = 5;
+            this.button_Clean.Text = "Clean Build Files";
+            this.button_Clean.UseVisualStyleBackColor = true;
+            this.button_Clean.Click += new System.EventHandler(this.button_Clean_Click);
+            // 
+            // label_Platform
+            // 
+            this.label_Platform.AutoSize = true;
+            this.label_Platform.Location = new System.Drawing.Point(13, 258);
+            this.label_Platform.Name = "label_Platform";
+            this.label_Platform.Size = new System.Drawing.Size(48, 13);
+            this.label_Platform.TabIndex = 6;
+            this.label_Platform.Text = "Platform:";
+            // 
+            // comboBox_Platform
+            // 
+            this.comboBox_Platform.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_Platform.FormattingEnabled = true;
+            this.comboBox_Platform.Items.AddRange(new object[] {
+            "Windows"});
+            this.comboBox_Platform.Location = new System.Drawing.Point(63, 255);
+            this.comboBox_Platform.Name = "comboBox_Platform";
+            this.comboBox_Platform.Size = new System.Drawing.Size(97, 21);
+            this.comboBox_Platform.TabIndex = 7;
+            this.comboBox_Platform.SelectedIndexChanged += new System.EventHandler(this.comboBox_Platform_SelectedIndexChanged);
+            // 
+            // combBox_API
+            // 
+            this.combBox_API.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combBox_API.FormattingEnabled = true;
+            this.combBox_API.Items.AddRange(new object[] {
+            "DirectX",
+            "OpenGL"});
+            this.combBox_API.Location = new System.Drawing.Point(217, 255);
+            this.combBox_API.Name = "combBox_API";
+            this.combBox_API.Size = new System.Drawing.Size(97, 21);
+            this.combBox_API.TabIndex = 9;
+            this.combBox_API.SelectedIndexChanged += new System.EventHandler(this.combBox_API_SelectedIndexChanged);
+            // 
+            // label_API
+            // 
+            this.label_API.AutoSize = true;
+            this.label_API.Location = new System.Drawing.Point(172, 258);
+            this.label_API.Name = "label_API";
+            this.label_API.Size = new System.Drawing.Size(41, 13);
+            this.label_API.TabIndex = 8;
+            this.label_API.Text = "Target:";
             // 
             // Form_MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(335, 352);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button5);
+            this.ClientSize = new System.Drawing.Size(335, 378);
+            this.Controls.Add(this.combBox_API);
+            this.Controls.Add(this.label_API);
+            this.Controls.Add(this.comboBox_Platform);
+            this.Controls.Add(this.label_Platform);
+            this.Controls.Add(this.button_Clean);
+            this.Controls.Add(this.button_Build);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button_Exit);
+            this.Controls.Add(this.button_Patches);
+            this.Controls.Add(this.button_Migrate);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -115,19 +166,25 @@
             this.Name = "Form_MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Link\'s Awakening DX HD Migration Tool";
+            this.Load += new System.EventHandler(this.Form_MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button_Migrate;
+        private System.Windows.Forms.Button button_Patches;
+        private System.Windows.Forms.Button button_Exit;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button_Build;
+        private System.Windows.Forms.Button button_Clean;
+        private System.Windows.Forms.Label label_Platform;
+        private System.Windows.Forms.ComboBox comboBox_Platform;
+        private System.Windows.Forms.ComboBox combBox_API;
+        private System.Windows.Forms.Label label_API;
     }
 }
 

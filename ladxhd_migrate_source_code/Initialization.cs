@@ -20,7 +20,7 @@ namespace LADXHD_Migrater
             XDelta3.Initialize();
 
             // Only run if "xdelta3.exe" is found.
-            Forms.mainDialog.ShowDialog();
+            Forms.MainDialog.ShowDialog();
         }
     }
 }

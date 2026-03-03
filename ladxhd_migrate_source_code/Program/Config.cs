@@ -17,21 +17,28 @@ namespace LADXHD_Migrater
         public static string Update_Content;
         public static string Update_Data;
         public static string Publish_Path;
+        public static string Build_Path;
+
+        public enum Platform { Windows }
+        public static Platform SelectedPlatform;
+
+        public enum GraphicsAPI { DirectX, OpenGL }
+        public static GraphicsAPI SelectedGraphics;
 
         public static void Initialize()
         {
             AppPath         = Assembly.GetExecutingAssembly().Location;
             BaseFolder      = Path.GetDirectoryName(AppPath);
-            Patches         = BaseFolder + "\\assets_patches";
-            Orig_Content    = BaseFolder + "\\assets_original\\Content";
-            Orig_Data       = BaseFolder + "\\assets_original\\Data";
-            Game_Source     = BaseFolder + "\\ladxhd_game_source_code";
-            Migrate_Source  = BaseFolder + "\\ladxhd_migrate_source_code";
-            Patcher_Source  = BaseFolder + "\\ladxhd_patcher_source_code";
-            ModMaker_Source = BaseFolder + "\\ladxhd_modmaker_source_code";
-            Update_Content  = Game_Source + "\\ProjectZ.Core\\Content";
-            Update_Data     = Game_Source + "\\ProjectZ.Core\\Data";
-            Publish_Path    = Game_Source + "\\ProjectZ.Core\\Publish";
+            Patches         = Path.Combine(BaseFolder, "assets_patches");
+            Orig_Content    = Path.Combine(BaseFolder, "assets_original", "Content");
+            Orig_Data       = Path.Combine(BaseFolder, "assets_original", "Data");
+            Game_Source     = Path.Combine(BaseFolder, "ladxhd_game_source_code");
+            Migrate_Source  = Path.Combine(BaseFolder, "ladxhd_migrate_source_code");
+            Patcher_Source  = Path.Combine(BaseFolder, "ladxhd_patcher_source_code");
+            ModMaker_Source = Path.Combine(BaseFolder, "ladxhd_modmaker_source_code");
+            Update_Content  = Path.Combine(Game_Source, "ProjectZ.Core", "Content");
+            Update_Data     = Path.Combine(Game_Source, "ProjectZ.Core", "Data");
+            Publish_Path    = Path.Combine(Game_Source, "~Publish");
         }
     }
 }

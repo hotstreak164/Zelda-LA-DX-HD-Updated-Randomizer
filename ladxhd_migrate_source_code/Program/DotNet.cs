@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
+using static LADXHD_Migrater.Config;
 
 namespace LADXHD_Migrater
 {
@@ -7,7 +9,22 @@ namespace LADXHD_Migrater
     {
         public static bool BuildGame()
         {
+            // If the game path is invalid just cancel.
             if (!Config.Game_Source.TestPath()) return false;
+
+            string arguments = "";
+
+            // Build the game for the correct platform and graphics API.
+            if (Config.SelectedGraphics == GraphicsAPI.DirectX)
+            {
+                Config.Build_Path = Path.Combine(Config.Publish_Path, "Windows-DX");
+                arguments = "publish ProjectZ.Desktop\\ProjectZ.Desktop.csproj -c Release -f net8.0-windows -r win-x64 -p:PublishProfile=FolderProfile_DX";
+            }
+            else if (Config.SelectedGraphics == GraphicsAPI.OpenGL)
+            {
+                Config.Build_Path = Path.Combine(Config.Publish_Path, "Windows-GL");
+                arguments = "publish ProjectZ.Desktop\\ProjectZ.Desktop.csproj -c Release -f net8.0 -r win-x64 -p:PublishProfile=FolderProfile_GL";
+            }
 
             try
             {
@@ -17,7 +34,7 @@ namespace LADXHD_Migrater
                     {
                         WorkingDirectory = Config.Game_Source,
                         FileName = "dotnet",
-                        Arguments = "publish -c Release -p:\"PublishProfile=FolderProfile\"",
+                        Arguments = arguments,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -33,16 +50,20 @@ namespace LADXHD_Migrater
 
                     if (!string.IsNullOrWhiteSpace(error))
                     {
-                        Forms.okayDialog.Display("Build Error", 250, 40, 27, 9, 15, error);
+                        Forms.OkayDialog.Display("Build Error", 250, 40, 27, 9, 15, error);
                     }
                 }
             }
+
+            // If something didn't work out.
             catch (Exception ex)
             {
-                Forms.okayDialog.Display("Exception Caught", 250, 40, 27, 9, 15, "Exception: " + ex.Message);
+                Forms.OkayDialog.Display("Exception Caught", 250, 40, 27, 9, 15, "Exception: " + ex.Message);
             }
-            string GameExePath = Config.Publish_Path + "\\Link's Awakening DX HD.exe";
-            return GameExePath.TestPath();
+
+            // Return whether or not it actually succeeded.
+            var gameEXEPath = Path.Combine(Config.Build_Path, "Link's Awakening DX HD.exe");
+            return gameEXEPath.TestPath();
         }
     }
 }

@@ -3,7 +3,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.IO;
+using static LADXHD_Migrater.Config;
 using static LADXHD_Migrater.XDelta3;
+
 
 namespace LADXHD_Migrater
 {
@@ -276,9 +278,17 @@ namespace LADXHD_Migrater
             // Try to build the game.
             if (DotNet.BuildGame())
             {
+                // Stores where to move the result.
+                string MoveDestination = "";
+
                 // If it succeeded, move the folder to the main folder.
-                string MoveDestination = Config.BaseFolder + "\\zelda_ladxhd_build";
-                Config.Publish_Path.MovePath(MoveDestination, true);
+                if (Config.SelectedGraphics == GraphicsAPI.DirectX)
+                    MoveDestination = Config.BaseFolder + "\\zelda_ladxhd_build_directx";
+                else if (Config.SelectedGraphics == GraphicsAPI.OpenGL)
+                    MoveDestination = Config.BaseFolder + "\\zelda_ladxhd_build_opengl";
+
+                // Move the publish folder to the root directory.
+                Config.Build_Path.MovePath(MoveDestination, true);
             }
         }
     }
