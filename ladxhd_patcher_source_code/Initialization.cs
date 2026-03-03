@@ -47,7 +47,7 @@ namespace LADXHD_Patcher
             if (showHelp)
             {
                 Console.WriteLine();
-                Console.WriteLine("LADXHD Patcher v" + Config.version);
+                Console.WriteLine("LADXHD Patcher v" + Config.Version);
                 Console.WriteLine();
                 Console.WriteLine("Usage: LADXHD.Patcher.exe [options]");
                 Console.WriteLine();
@@ -79,7 +79,7 @@ namespace LADXHD_Patcher
             {
                 // Initialize forms and show the main dialog
                 Forms.Initialize();
-                Forms.mainDialog.ShowDialog();
+                Forms.MainDialog.ShowDialog();
                 return 0;
             }
         }

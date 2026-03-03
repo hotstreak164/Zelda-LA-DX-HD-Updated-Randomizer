@@ -11,9 +11,9 @@ namespace LADXHD_Patcher
         public static void ExtractPatches()
         {
             // Set the patches and zipfile paths.
-            string patchesPath = (Config.tempFolder + "\\patches").CreatePath();
-            string patchedPath = (Config.tempFolder + "\\patchedFiles").CreatePath();
-            string zipFilePath = Path.Combine(Config.tempFolder, "patches.zip");
+            string patchesPath = (Config.TempFolder + "\\patches").CreatePath();
+            string patchedPath = (Config.TempFolder + "\\patchedFiles").CreatePath();
+            string zipFilePath = Path.Combine(Config.TempFolder, "patches.zip");
 
             // Write the zipfile, extract it, then delete it.
             File.WriteAllBytes(zipFilePath, (byte[])resources["patches.zip"]);

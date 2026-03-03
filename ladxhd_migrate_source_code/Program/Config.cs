@@ -13,6 +13,7 @@ namespace LADXHD_Migrater
         public static string Game_Source;
         public static string Migrate_Source;
         public static string Patcher_Source;
+        public static string ModMaker_Source;
         public static string Update_Content;
         public static string Update_Data;
         public static string Publish_Path;
@@ -27,9 +28,10 @@ namespace LADXHD_Migrater
             Game_Source     = BaseFolder + "\\ladxhd_game_source_code";
             Migrate_Source  = BaseFolder + "\\ladxhd_migrate_source_code";
             Patcher_Source  = BaseFolder + "\\ladxhd_patcher_source_code";
-            Update_Content  = Game_Source + "\\Content";
-            Update_Data     = Game_Source + "\\Data";
-            Publish_Path    = Game_Source + "\\Publish";
+            ModMaker_Source = BaseFolder + "\\ladxhd_modmaker_source_code";
+            Update_Content  = Game_Source + "\\ProjectZ.Core\\Content";
+            Update_Data     = Game_Source + "\\ProjectZ.Core\\Data";
+            Publish_Path    = Game_Source + "\\ProjectZ.Core\\Publish";
         }
     }
 }

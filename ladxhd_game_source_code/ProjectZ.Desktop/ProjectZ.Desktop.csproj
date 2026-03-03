@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Link's Awakening DX HD</AssemblyName>
+    <Version>1.6.3</Version>
+    <TargetFrameworks>net8.0-windows;net8.0</TargetFrameworks>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <StartupObject>ProjectZ.Program</StartupObject>
+    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ProjectZ</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>true</TieredCompilation>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <UseWindowsForms>false</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Content\bin\**" />
+    <Compile Remove="Content\obj\**" />
+    <Compile Remove="Fix\**" />
+    <EmbeddedResource Remove="Content\bin\**" />
+    <EmbeddedResource Remove="Content\obj\**" />
+    <EmbeddedResource Remove="Fix\**" />
+    <None Remove="Content\bin\**" />
+    <None Remove="Content\obj\**" />
+    <None Remove="Fix\**" />
+    <None Remove=".gitignore" />
+    <None Remove=".gitmodules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectZ.Core\ProjectZ.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MonoGameContentReference Include="..\ProjectZ.Core\Content\Content.mgcb">
+      <OutputDir>$(MSBuildProjectDirectory)\$(OutputPath)Content\</OutputDir>
+      <IntermediateDir>$(MSBuildProjectDirectory)\obj\$(Configuration)\$(TargetFramework)\mgcb\</IntermediateDir>
+    </MonoGameContentReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\ProjectZ.Core\Data\**\*" CopyToOutputDirectory="PreserveNewest" TargetPath="Data\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Extended" Version="5.4.0" />
+    <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="5.4.0" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.4.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.IO;
 using static LADXHD_Migrater.XDelta3;
@@ -79,7 +81,13 @@ namespace LADXHD_Migrater
             return reverse;
         }
 
-        private static void CopyChineseFNTFiles()
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        MIGRATION CODE : COPY NEW FILES THAT CAN NOT BE CREATED FROM PATCHES. THIS INCLUDES FONTS AND A BITMAP ICON FOR OPENGL PORTS.
+       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        private static void CopyNewFiles()
         {
             // Set up the path to the two ".fnt" files for the Chinese fonts.
             string smallFont_chn_fileA = Path.Combine(Config.Update_Content, "Fonts", "smallFont_chn.fnt");
@@ -88,6 +96,25 @@ namespace LADXHD_Migrater
             // Write the files to the "Content\Fonts" folder.
             File.WriteAllBytes(smallFont_chn_fileA, (byte[])resources["smallFont_chn.fnt"]);
             File.WriteAllBytes(smallFont_chn_fileB, (byte[])resources["smallFont_chn_redux.fnt"]);
+
+            // Set up the path to the replacement fonts used for multi-platform support.
+            string editorFontA = Path.Combine(Config.Update_Content, "Fonts", "Courier-Prime.ttf");
+            string editorFontB = Path.Combine(Config.Update_Content, "Fonts", "NotoSans-Regular.ttf");
+
+            // Write the files to the "Content\Fonts" folder.
+            File.WriteAllBytes(editorFontA, (byte[])resources["Courier-Prime.ttf"]);
+            File.WriteAllBytes(editorFontB, (byte[])resources["NotoSans-Regular.ttf"]);
+
+            // Set up the path to the bitmap Icon.
+            string iconPath = Path.Combine(Config.Update_Data, "Icon").CreatePath();
+            string iconFile = Path.Combine(iconPath, "Icon.bmp");
+
+            // Write the bitmap icon to the "Data\Icon" folder.
+            using (var ms = new MemoryStream())
+            {
+                ((Bitmap)resources["Icon.bmp"]).Save(ms, ImageFormat.Bmp);
+                File.WriteAllBytes(iconFile, ms.ToArray());
+            }
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -140,8 +167,8 @@ namespace LADXHD_Migrater
                 // Handle modified files that are derivatives of original files.
                 HandleMultiFilePatches(fileItem, origPath, updatePath);
             }
-            // Finally, copy the chinese font files to the destination.
-            CopyChineseFNTFiles();
+            // Finally, copy the files to the destination.
+            CopyNewFiles();
         }
 
         public static void MigrateFiles()
@@ -200,6 +227,7 @@ namespace LADXHD_Migrater
         public static void CreatePatches()
         {
             XDelta3.Create();
+            Config.Patches.ClearPath();
             CreatePatchLoop(Config.Orig_Content, Config.Update_Content);
             CreatePatchLoop(Config.Orig_Data, Config.Update_Data);
             XDelta3.Remove();
@@ -213,15 +241,27 @@ namespace LADXHD_Migrater
 
         public static void CleanBuildFiles()
         {
-            (Config.Game_Source + "\\bin").RemovePath();
-            (Config.Game_Source + "\\obj").RemovePath();
-            (Config.Game_Source + "\\Content\\bin").RemovePath();
-            (Config.Game_Source + "\\Content\\obj").RemovePath();
-            (Config.Game_Source + "\\Publish").RemovePath();
+            (Config.Game_Source + "\\ProjectZ.Android\\bin").RemovePath();
+            (Config.Game_Source + "\\ProjectZ.Android\\obj").RemovePath();
+
+            (Config.Game_Source + "\\ProjectZ.Core\\bin").RemovePath();
+            (Config.Game_Source + "\\ProjectZ.Core\\obj").RemovePath();
+            (Config.Game_Source + "\\ProjectZ.Core\\Content\\bin").RemovePath();
+            (Config.Game_Source + "\\ProjectZ.Core\\Content\\obj").RemovePath();
+            (Config.Game_Source + "\\ProjectZ.Core\\Publish").RemovePath();
+
+            (Config.Game_Source + "\\ProjectZ.Desktop\\bin").RemovePath();
+            (Config.Game_Source + "\\ProjectZ.Desktop\\obj").RemovePath();
+
             (Config.Migrate_Source + "\\bin").RemovePath();
             (Config.Migrate_Source + "\\obj").RemovePath();
+
             (Config.Patcher_Source + "\\bin").RemovePath();
             (Config.Patcher_Source + "\\obj").RemovePath();
+
+            (Config.ModMaker_Source + "\\bin").RemovePath();
+            (Config.ModMaker_Source + "\\obj").RemovePath();
+
             (Config.BaseFolder + "\\zelda_ladxhd_build").RemovePath();
         }
 

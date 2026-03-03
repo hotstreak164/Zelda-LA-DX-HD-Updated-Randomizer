@@ -1,0 +1,231 @@
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.InGame.Controls;
+using ProjectZ.InGame.Interface;
+using ProjectZ.InGame.Things;
+
+namespace ProjectZ.InGame.Pages
+{
+    class GraphicSettingsPage : InterfacePage
+    {
+        private readonly InterfaceListLayout _graphicSettingsLayout;
+        private readonly InterfaceListLayout _contentLayout;
+        private readonly InterfaceListLayout _bottomBar;
+        private readonly InterfaceSlider     _sliderGameScale;
+        private readonly InterfaceSlider     _sliderUIScale;
+    #if !ANDROID
+        private readonly InterfaceListLayout _toggleFullscreen;
+        private readonly InterfaceListLayout _toggleExFullscreen;
+    #endif
+        private readonly InterfaceListLayout _toggleGlobalLighting;
+        private readonly InterfaceListLayout _toggleObjectLighting;
+        private readonly InterfaceListLayout _toggleDynamicShadows;
+        private readonly InterfaceListLayout _toggleVerticalSync;
+
+        List<string> _tooltips = new List<string>();
+        private bool _showTooltip;
+
+        public void SetGameScaleValue(int value) { ((InterfaceSlider)_sliderGameScale).CurrentStep = value; }
+        public void SetUserInterfaceScale(int value) { ((InterfaceSlider)_sliderUIScale).CurrentStep = value; }
+        public void SetGlobalLighting(bool state) => ((InterfaceToggle)_toggleGlobalLighting.Elements[1]).ToggleState = state;
+        public void SetObjectLighting(bool state) => ((InterfaceToggle)_toggleObjectLighting.Elements[1]).ToggleState = state;
+        public void SetDynamicShadows(bool state) => ((InterfaceToggle)_toggleDynamicShadows.Elements[1]).ToggleState = state;
+        public void SetVerticalSync(bool state) { ((InterfaceToggle)_toggleVerticalSync.Elements[1]).ToggleState = state; Game1.FpsSettingChanged = true; }
+
+        public GraphicSettingsPage(int width, int height)
+        {
+            EnableTooltips = true;
+
+            // Graphics Settings Layout
+            _graphicSettingsLayout = new InterfaceListLayout { Size = new Point(width, height - 12), Selectable = true };
+
+            var buttonWidth = 320;
+            var sliderHeight = 10;
+            var buttonHeight = 14;
+
+            _graphicSettingsLayout.AddElement(new InterfaceLabel(Resources.GameHeaderFont, "settings_graphics_header",
+                new Point(buttonWidth, (int)(height * Values.MenuHeaderSize)), new Point(0, 0)));
+            _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize) - 12), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
+
+            // Slider: Game Scale
+            _sliderGameScale = new InterfaceSlider("settings_graphics_game_scale",
+                buttonWidth, sliderHeight, new Point(1, 2), -3, Game1.MaxGameScale + 1, 1, GameSettings.GameScale, 
+                number => { GameSettings.GameScale = number; Game1.ScaleChanged = true; })
+                { SetString = number => GameScaleSliderAdjustmentString(number) };
+            _contentLayout.AddElement(_sliderGameScale);
+            _tooltips.Add("tooltip_graphics_game_scale");
+
+            // Slider: UI Scale
+            _sliderUIScale = new InterfaceSlider("settings_graphics_ui_scale",
+                buttonWidth, sliderHeight, new Point(1, 2), 1, 11, 1, GameSettings.UiScale-1,
+                number => { GameSettings.UiScale = number; Game1.ScaleChanged = true; })
+                { SetString = number => UIScaleSliderAdjustmentString(number) };
+            _contentLayout.AddElement(_sliderUIScale);
+            _tooltips.Add("tooltip_graphics_ui_scale");
+
+        #if !ANDROID
+            // Toggle: Fullscreen
+            _toggleFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+                "settings_graphics_fullscreen", GameSettings.IsFullscreen,
+                newState => { Game1.ToggleFullscreen(); Game1.ScaleChanged = true; });
+            _contentLayout.AddElement(_toggleFullscreen);
+            _tooltips.Add("tooltip_graphics_fullscreen");
+
+            // Toggle: Exclusive Fullscreen
+            _toggleExFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+                "settings_graphics_exfullscreen", GameSettings.ExFullscreen,
+                newState => { GameSettings.ExFullscreen = newState; });
+            _contentLayout.AddElement(_toggleExFullscreen);
+            _tooltips.Add("tooltip_graphics_exfullscreen");
+        #endif
+
+            // Toggle: Disable Global Lighting
+            _toggleGlobalLighting = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+               "settings_graphics_globallights", GameSettings.GlobalLights,
+               newState => GameSettings.GlobalLights = newState);
+            _contentLayout.AddElement(_toggleGlobalLighting);
+            _tooltips.Add("tooltip_graphics_nogloballights");
+
+            // Toggle: Disable Object Lighting
+            _toggleObjectLighting = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+               "settings_graphics_objectlights", GameSettings.ObjectLights,
+               newState => GameSettings.ObjectLights = newState);
+            _contentLayout.AddElement(_toggleObjectLighting);
+            _tooltips.Add("tooltip_graphics_noobjectlights");
+
+            // Toggle: Dynamic Shadows
+            _toggleDynamicShadows = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+               "settings_graphics_shadow", GameSettings.EnableShadows,
+               newState => GameSettings.EnableShadows = newState);
+            _contentLayout.AddElement(_toggleDynamicShadows);
+            _tooltips.Add("tooltip_graphics_shadow");
+
+            // Toggle: Vertical Sync
+            _toggleVerticalSync = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+                "settings_graphics_fps_lock", GameSettings.VerticalSync,
+                newState => { GameSettings.VerticalSync = newState; Game1.FpsSettingChanged = true; });
+            _contentLayout.AddElement(_toggleVerticalSync);
+            _tooltips.Add("tooltip_graphics_fps_lock");
+
+            // Bottom Bar / Back Button:
+            _bottomBar = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true, HorizontalMode = true };
+            _bottomBar.AddElement(new InterfaceButton(new Point(100, 18), new Point(2, 4), "settings_menu_back", element => { Game1.UiPageManager.PopPage(); }));
+            _graphicSettingsLayout.AddElement(_contentLayout);
+            _graphicSettingsLayout.AddElement(_bottomBar);
+            PageLayout = _graphicSettingsLayout;
+        }
+
+        public override void Update(CButtons pressedButtons, GameTime gameTime)
+        {
+            base.Update(pressedButtons, gameTime);
+
+            UpdateFullscreenState();
+            UpdateGameScaleSlider();
+
+            // The back button was pressed.
+            if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
+                Game1.UiPageManager.PopPage();
+
+            // The tooltip button was pressed.
+            if (ControlHandler.ButtonPressed(CButtons.Y))
+            {
+                _showTooltip = !_showTooltip;
+                if (_showTooltip)
+                    Game1.GameManager.PlaySoundEffect("D360-21-15");
+            }
+            // Hide the tooltip when pressing anything.
+            else if (ControlHandler.AnyButtonPressed())
+                _showTooltip = false;
+        }
+
+        private string GameScaleSliderAdjustmentString(int number)
+        {
+            // Get the maximum scale and add 1 for auto-scale.
+            int maxScale = Game1.MaxGameScale + 1;
+
+            // Translate values below 1x and when autoscale is set.
+            return number == maxScale
+                ? " " + Game1.LanguageManager.GetString("settings_graphics_autodetect", "error")
+                : number switch
+                {
+                     0 => " 50%",
+                    -1 => " 33%",
+                    -2 => " 25%",
+                    -3 => " 20%",
+                    _  => " " + number + "x"
+                };
+        }
+
+        private string UIScaleSliderAdjustmentString(int number)
+        {
+            if (number == 11)
+                return " " + Game1.LanguageManager.GetString("settings_graphics_autodetect", "error");
+            return " " + number + "x";
+        }
+
+        public override void OnLoad(Dictionary<string, object> intent)
+        {
+            // the left button is always the first one selected
+            _bottomBar.Deselect(false);
+            _bottomBar.Select(InterfaceElement.Directions.Left, false);
+            _bottomBar.Deselect(false);
+
+            PageLayout.Deselect(false);
+            PageLayout.Select(InterfaceElement.Directions.Top, false);
+        }
+
+        public override void OnResize(int newWidth, int newHeight)
+        {
+
+        }
+
+        private void UpdateFullscreenState()
+        {
+        #if !ANDROID
+            var toggle = (InterfaceToggle)_toggleFullscreen.Elements[1];
+            if (toggle.ToggleState != GameSettings.IsFullscreen)
+                toggle.SetToggle(GameSettings.IsFullscreen);
+        #endif
+        }
+
+        private void UpdateGameScaleSlider()
+        {
+            // The step starts at 0 and ends at max. Add the amount it goes negative.
+            _sliderGameScale.CurrentStep = GameSettings.GameScale + 3;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
+        {
+            // Always draw the menu even when not showing tooltips.
+            base.Draw(spriteBatch, position, height, alpha);
+
+            // If the user pressed the top most face button, show the tooltip window.
+            if (_showTooltip)
+            {
+                string tooltipText = GetOptionToolip();
+                PageTooltip.Draw(spriteBatch, tooltipText);
+            }
+        }
+
+        private string GetOptionToolip()
+        {
+            // Detect back button press by checking the index of the main InterfaceListLayout.
+            if (_graphicSettingsLayout.SelectionIndex == 2)
+                return Game1.LanguageManager.GetString("tooltip_default", "error");
+
+            // Detect the chosen button by checking the content InterfaceListLayout.
+            int index = _contentLayout.SelectionIndex;
+            string tooltip = "Select an option to view its tooltip.";
+
+            // Get the tooltip that matches the index.
+            for (int i = 0; i < _tooltips.Count; i++)
+            {
+                if (i == index)
+                    tooltip = Game1.LanguageManager.GetString(_tooltips[i], "error");
+            }
+            // Display the tooltip in the tooltip window.
+            return tooltip;
+        }
+    }
+}

@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+      - opengl
+    tags:
+      - "*"
   delete:
 
 jobs:
@@ -16,8 +19,43 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push to GitLab
+      - name: Configure Git
         run: |
-          git remote add gitlab https://${{ secrets.GITLAB_USERNAME }}:${{ secrets.GITLAB_TOKEN }}@gitlab.com/bighead.0-group/Zelda-LA-DX-HD-Updated.git
-          git push gitlab --all
-          git push gitlab --tags
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add GitLab remote
+        run: |
+          git remote add gitlab "https://${{ secrets.GITLAB_USERNAME }}:${{ secrets.GITLAB_TOKEN }}@gitlab.com/bighead.0-group/Zelda-LA-DX-HD-Updated.git"
+          git remote -v
+
+      # ----------------------------
+      # PUSH: mirror just the branch that triggered the workflow
+      # ----------------------------
+      - name: Push branch to GitLab (branch-specific)
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
+        run: |
+          echo "Pushing branch: ${GITHUB_REF_NAME}"
+          git push gitlab "HEAD:refs/heads/${GITHUB_REF_NAME}"
+
+      # PUSH: mirror tag that triggered the workflow
+      - name: Push tag to GitLab (tag-specific)
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "Pushing tag: ${GITHUB_REF_NAME}"
+          git push gitlab "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
+
+      # ----------------------------
+      # DELETE: delete the branch/tag on GitLab when it’s deleted on GitHub
+      # ----------------------------
+      - name: Delete branch on GitLab
+        if: github.event_name == 'delete' && github.event.ref_type == 'branch'
+        run: |
+          echo "Deleting branch on GitLab: ${{ github.event.ref }}"
+          git push gitlab ":refs/heads/${{ github.event.ref }}"
+
+      - name: Delete tag on GitLab
+        if: github.event_name == 'delete' && github.event.ref_type == 'tag'
+        run: |
+          echo "Deleting tag on GitLab: ${{ github.event.ref }}"
+          git push gitlab ":refs/tags/${{ github.event.ref }}"
