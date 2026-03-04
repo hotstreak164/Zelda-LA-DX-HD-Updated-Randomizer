@@ -5,6 +5,7 @@ using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Things;
+using ProjectZ.InGame.Controls;
 
 namespace ProjectZ.InGame.GameObjects.Things
 {
@@ -46,7 +47,26 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private bool OnPush(Vector2 direction, PushableComponent.PushType type)
         {
-            if (type == PushableComponent.PushType.Impact)
+            // Get the direction the player is pushing towards.
+            var cliffDir = AnimationHelper.GetDirection(direction);
+
+            // If the jump direction doesn't match the push direction.
+            if (cliffDir != _direction || type == PushableComponent.PushType.Impact)
+                return false;
+
+            // Get the amount the player is pushing the analog stick.
+            var vecDirection = ControlHandler.GetMoveVector2();
+
+            // Check to see if it breaches the threshold set.
+            bool doJump = cliffDir switch
+            {
+                0 => vecDirection.X < -0.85f,
+                1 => vecDirection.Y < -0.85f,
+                2 => vecDirection.X > 0.85f,
+                3 => vecDirection.Y > 0.85f
+            };
+            // If the player is not holding the analog stick full tilt then don't jump.
+            if (!doJump)
                 return false;
 
             // we do the inertia counter stuff in the object because we ignore it while the player is running at the ObjJump
@@ -69,24 +89,20 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // calculate the goal position based on the offset, object position and the player position
             var playerBody = MapManager.ObjLink._body;
-            var pushDir = AnimationHelper.GetDirection(direction);
             var goalPosition = MapManager.ObjLink.Position;
 
-            if (pushDir != _direction)
-                return false;
-
-            if (pushDir == 0)
+            if (cliffDir == 0)
                 goalPosition.X = EntityPosition.Position.X + EntitySize.Width + _offset.X - playerBody.Width / 2;
-            else if (pushDir == 2)
+            else if (cliffDir == 2)
                 goalPosition.X = EntityPosition.Position.X + _offset.X + playerBody.Width / 2;
-            else if (pushDir == 1)
+            else if (cliffDir == 1)
                 goalPosition.Y = EntityPosition.Position.Y + EntitySize.Height + _offset.Y;
-            else if (pushDir == 3)
+            else if (cliffDir == 3)
                 goalPosition.Y = EntityPosition.Position.Y + _offset.Y + playerBody.Height;
 
-            if (pushDir % 2 != 0)
+            if (cliffDir % 2 != 0)
                 goalPosition.X += _offset.X;
-            if (pushDir % 2 == 0)
+            if (cliffDir % 2 == 0)
                 goalPosition.Y += _offset.Y;
 
             var goalPositionZ = 0f;
