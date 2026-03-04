@@ -47,7 +47,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             // this is the same size as the player so that it can not get thrown into the wall
             _body = new BodyComponent(EntityPosition, -4, -10, 8, 10, 14)
             {
-                CollisionTypes = Values.CollisionTypes.Normal | Values.CollisionTypes.Field,
+                CollisionTypes = Values.CollisionTypes.Normal | Values.CollisionTypes.Field | Values.CollisionTypes.NonWater,
                 CollisionTypesIgnore = Values.CollisionTypes.ThrowIgnore,
                 MoveCollision = Collision,
                 DragAir = 1.0f,
