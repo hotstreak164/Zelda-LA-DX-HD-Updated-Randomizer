@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
+using static LADXHD_Patcher.Config;
 using static LADXHD_Patcher.XDelta3;
 
 namespace LADXHD_Patcher
@@ -32,7 +33,7 @@ namespace LADXHD_Patcher
 
         private static string[] langFiles  = new[] { "chn.lng", "deu.lng", "esp.lng", "fre.lng", "ind.lng", "ita.lng", "por.lng", "rus.lng" };
         private static string[] langDialog = new[] { "dialog_chn.lng", "dialog_deu.lng", "dialog_esp.lng", "dialog_fre.lng", "dialog_ind.lng", "dialog_ita.lng", "dialog_por.lng", "dialog_rus.lng" };
-        private static string[] smallFonts = new[] { "smallFont_redux.xnb", "smallFont_vwf.xnb", "smallFont_vwf_redux.xnb", "smallFont_chn_0.png", "smallFont_chn_redux_0.png" };
+        private static string[] smallFonts = new[] { "smallFont_redux.xnb", "smallFont_vwf.xnb", "smallFont_vwf_redux.xnb", "smallFont_chn.xnb", "smallFont_chn_0.xnb", "smallFont_chn_redux.xnb", "smallFont_chn_redux_0.xnb" };
         private static string[] backGround = new[] { "menuBackgroundB.xnb", "menuBackgroundC.xnb", "sgb_border.xnb" };
         private static string[] linkImages = new[] { "link1.png" };
         private static string[] npcImages  = new[] { "npcs_redux.png" };
@@ -77,104 +78,6 @@ namespace LADXHD_Patcher
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        PATCHER CODE : COPY NEW FILES THAT CAN NOT BE CREATED FROM PATCHES. THIS INCLUDES FONTS AND A BITMAP ICON FOR OPENGL PORTS.
-       
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-        private static void CopyNewFiles()
-        {
-            // Set up the path to the two ".fnt" files for the Chinese fonts.
-            string smallFont_chn_fileA = Path.Combine(Config.ContentPath, "Fonts", "smallFont_chn.fnt");
-            string smallFont_chn_fileB = Path.Combine(Config.ContentPath, "Fonts", "smallFont_chn_redux.fnt");
-
-            // Write the files to the "Content\Fonts" folder.
-            File.WriteAllBytes(smallFont_chn_fileA, (byte[])resources["smallFont_chn.fnt"]);
-            File.WriteAllBytes(smallFont_chn_fileB, (byte[])resources["smallFont_chn_redux.fnt"]);
-
-            // Set up the path to the replacement fonts used for multi-platform support.
-            string editorFontA = Path.Combine(Config.ContentPath, "Fonts", "Courier-Prime.ttf");
-            string editorFontB = Path.Combine(Config.ContentPath, "Fonts", "NotoSans-Regular.ttf");
-
-            // Write the files to the "Content\Fonts" folder.
-            File.WriteAllBytes(editorFontA, (byte[])resources["Courier-Prime.ttf"]);
-            File.WriteAllBytes(editorFontB, (byte[])resources["NotoSans-Regular.ttf"]);
-
-            // Set up the path to the Icon.
-            string iconPath = Path.Combine(Config.DataPath, "Icon").CreatePath();
-            string iconFile = Path.Combine(iconPath, "Icon.ico");
-
-            // Write the files to the "Content\Fonts" folder.
-            File.WriteAllBytes(iconFile, (byte[])resources["Icon.ico"]);
-
-            // Set up the path to the bitmap Icon.
-            string iconBmpPath = Path.Combine(Config.DataPath, "Icon").CreatePath();
-            string iconBmpFile = Path.Combine(iconBmpPath, "Icon.bmp");
-
-            // Write the bitmap icon to the "Data\Icon" folder.
-            using (var ms = new MemoryStream())
-            {
-                ((Bitmap)resources["Icon.bmp"]).Save(ms, ImageFormat.Bmp);
-                File.WriteAllBytes(iconBmpFile, ms.ToArray());
-            }
-        }
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        BAD BACKUPS: OLD PATCHER VERSIONS KEPT AROUND PATCHED FILES IN THE BACKUP FOLDER, WHICH MESSES UP THE PATCHER. BACKUP FOLDER IS FOR v1.0.0 FILES ONLY.
-       
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-        private static void RemoveBadBackupFiles()
-        {
-            // Because old versions of the patchers saved "new" files, we need to remove them or they will cause problems.
-            string[][] list = { langFiles, langDialog, smallFonts, backGround, linkImages, npcImages, itemImages, introImage, introAtlas, 
-                                miniMapImg, objectsImg, photograph, uiImages, musicTile, dungeon3M, dungeon3D, bowwowanim, dungeonani };
-
-            string[] remove = list.SelectMany(x => x).ToArray();
-
-            // Loop through the files in the backup folder.
-            foreach (string file in Config.BackupPath.GetFiles("*", true))
-            {
-                // Get the file as a file item which gives us some cool properties to reference.
-                FileItem fileItem = new FileItem(file);
-
-                // If the current array file exists then remove it.
-                if (remove.Contains(fileItem.Name))
-                    fileItem.FullName.RemovePath();
-            }
-        }
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        OBSOLETE FILES: SOME FILES IN THE GAME FOLDER HAVE BEEN MADE OBSOLETE AND MAY EVEN CAUSE PROBLEMS IF THEY REMAIN.
-       
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-        private static string[] obsoleteFiles = new[] 
-        {  
-            "cave bird.map.data", "dungeon_end.map.data", "dungeon3_1.map", "dungeon3_1.map.data", "dungeon3_2.map", "dungeon3_2.map.data", "dungeon3_3.map", 
-            "dungeon3_3.map.data", "dungeon3_4.map", "dungeon3_4.map.data", "dungeon 7_2d.map.data", "three_1.txt", "three_2.txt", "three_3.txt" 
-        };
-
-        private static void RemoveObsolete()
-        {
-            foreach (string file in Config.BaseFolder.GetFiles("*", true))
-            {
-                // Get the file as a file item which gives us some cool properties to reference.
-                FileItem fileItem = new FileItem(file);
-
-                // Skip backup files for safety.
-                if (fileItem.IsInFolder("Backup"))
-                    continue;
-
-                // If the obsolete file exists then delete it.
-                if (obsoleteFiles.Contains(fileItem.Name))
-                    fileItem.FullName.RemovePath();
-            }
-        }
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
         PROGRESS CODE : TRACK AND UPDATE THE PROGRESS BAR BY KEEPING TRACK OF THE FILE COUNTS.
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -208,6 +111,133 @@ namespace LADXHD_Patcher
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        POST PATCHING CODE : STUFF THAT IS DONE AFTER PATCHING HAS FINISHED.
+       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        private static void Dungeon3PatchFix()
+        {
+            // I fucked up. After the dungeon name change the file "dungeon3_1.map" no longer exists.
+            string d3map = Path.Combine(Config.BackupPath, "dungeon3_1.map");
+
+            // Look for the backup dungeon 3 file as it should still exist.
+            if (d3map.TestPath())
+            {
+                // Patch the file directly into the maps folder.
+                string xdelta3File = Path.Combine(Config.TempFolder + "\\patches\\dungeon3.map.xdelta");
+                string patchedFile = Path.Combine(Config.BaseFolder + "\\Data\\Maps\\dungeon3.map");
+                XDelta3.Execute(Operation.Apply, d3map, xdelta3File, patchedFile);
+            }
+        }
+
+        private static void CopyNewFiles()
+        {
+            // Set up the path to the Icon.
+            string iconPath = Path.Combine(Config.DataPath, "Icon").CreatePath();
+            string iconFile = Path.Combine(iconPath, "Icon.ico");
+
+            // Write the files to the "Content\Fonts" folder.
+            File.WriteAllBytes(iconFile, (byte[])resources["Icon.ico"]);
+
+            // Set up the path to the bitmap Icon.
+            string iconBmpPath = Path.Combine(Config.DataPath, "Icon").CreatePath();
+            string iconBmpFile = Path.Combine(iconBmpPath, "Icon.bmp");
+
+            // Write the bitmap icon to the "Data\Icon" folder.
+            using (var ms = new MemoryStream())
+            {
+                ((Bitmap)resources["Icon.bmp"]).Save(ms, ImageFormat.Bmp);
+                File.WriteAllBytes(iconBmpFile, ms.ToArray());
+            }
+            // If it's the OpenGL build then it needs SDL2.dll.
+            if (Config.SelectedGraphics == GraphicsAPI.OpenGL)
+            {
+                string SdlPath = Path.Combine(Config.BaseFolder, "SDL2.dll");
+                File.WriteAllBytes(SdlPath, (byte[])resources["SDL2.dll"]);
+            }
+        }
+
+        private static void RemoveBadBackupFiles()
+        {
+            // Because old versions of the patchers saved "new" files, we need to remove them or they will cause problems.
+            string[][] list = { langFiles, langDialog, smallFonts, backGround, linkImages, npcImages, itemImages, introImage, introAtlas, 
+                                miniMapImg, objectsImg, photograph, uiImages, musicTile, dungeon3M, dungeon3D, bowwowanim, dungeonani };
+
+            string[] remove = list.SelectMany(x => x).ToArray();
+
+            // Loop through the files in the backup folder.
+            foreach (string file in Config.BackupPath.GetFiles("*", true))
+            {
+                // Get the file as a file item which gives us some cool properties to reference.
+                FileItem fileItem = new FileItem(file);
+
+                // If the current array file exists then remove it.
+                if (remove.Contains(fileItem.Name))
+                    fileItem.FullName.RemovePath();
+            }
+        }
+
+        private static void RemoveObsolete()
+        {
+            string[] obsoleteFiles = new[] {  
+                "cave bird.map.data", "dungeon_end.map.data", "dungeon3_1.map", "dungeon3_1.map.data", "dungeon3_2.map", "dungeon3_2.map.data", "dungeon3_3.map", 
+                "dungeon3_3.map.data", "dungeon3_4.map", "dungeon3_4.map.data", "dungeon 7_2d.map.data", "three_1.txt", "three_2.txt", "three_3.txt" 
+            };
+
+            foreach (string file in Config.BaseFolder.GetFiles("*", true))
+            {
+                // Get the file as a file item which gives us some cool properties to reference.
+                FileItem fileItem = new FileItem(file);
+
+                // Skip backup files for safety.
+                if (fileItem.IsInFolder("Backup"))
+                    continue;
+
+                // If the obsolete file exists then delete it.
+                if (obsoleteFiles.Contains(fileItem.Name))
+                    fileItem.FullName.RemovePath();
+            }
+        }
+
+        private static void CreateModFolders()
+        {
+            // Create the new mods folders.
+            Config.LAHDModPath.CreatePath(true);
+            Config.GraphicsModPath.CreatePath(true);
+
+            // Find the old "Mods" path for lahdmods and exit if it doesn't exist.
+            if (!Directory.Exists(Config.PreviousModPath))
+                return;
+
+            // Move any lahdmods in the old "Mods" folder to the new location.
+            foreach (string file in Directory.GetFiles(Config.PreviousModPath, "*", SearchOption.AllDirectories))
+            {
+                FileItem fileItem = new FileItem(file);
+                string newModLoc = Path.Combine(Config.LAHDModPath, fileItem.Name);
+                fileItem.FullName.MovePath(newModLoc, true);
+            }
+        }
+
+        private static void PostPatchingFunctions()
+        {
+            // Because of a mistake I made not keeping "dungeon_3_1.map" around, it now needs a special fix.
+            Dungeon3PatchFix();
+
+            // We need the new FNT files for Chinese font, the new editor fonts, and a bitmap icon for OpenGL.
+            CopyNewFiles();
+
+            // They will probably be there again so remove them one more time.
+            RemoveBadBackupFiles();
+
+            // Now is a good time to remove any files that the game no longer needs or may cause problems.
+            RemoveObsolete();
+
+            // Create the "Mod" folders.
+            CreateModFolders();
+        }
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
         PATCHING CODE : PATCH FILES USING XDELTA PATCHES FROM "Resources.resx" TO UPDATE TO THE LATEST VERSION.
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -229,21 +259,6 @@ namespace LADXHD_Patcher
 
                 if (!_gameFileLookup.ContainsKey(name))
                     _gameFileLookup[name] = file;
-            }
-        }
-
-        private static void Dungeon3PatchFix()
-        {
-            // I fucked up. After the dungeon name change the file "dungeon3_1.map" no longer exists.
-            string d3map = Path.Combine(Config.BackupPath, "dungeon3_1.map");
-
-            // Look for the backup dungeon 3 file as it should still exist.
-            if (d3map.TestPath())
-            {
-                // Patch the file directly into the maps folder.
-                string xdelta3File = Path.Combine(Config.TempFolder + "\\patches\\dungeon3.map.xdelta");
-                string patchedFile = Path.Combine(Config.BaseFolder + "\\Data\\Maps\\dungeon3.map");
-                XDelta3.Execute(Operation.Apply, d3map, xdelta3File, patchedFile);
             }
         }
 
@@ -324,23 +339,8 @@ namespace LADXHD_Patcher
                 XDelta3.Execute(Operation.Apply, fullPath, xdelta3File, patchedFile, fullPath);
                 _filesPatched++;
             }
-            // Because of a mistake I made not keeping "dungeon_3_1.map" around, it now needs a special fix.
-            Dungeon3PatchFix();
-
-            // We need the new FNT files for Chinese font, the new editor fonts, and a bitmap icon for OpenGL.
-            CopyNewFiles();
-
-            // They will probably be there again so remove them one more time.
-            RemoveBadBackupFiles();
-
-            // Now is a good time to remove any files that the game no longer needs or may cause problems.
-            RemoveObsolete();
-
-            // Create the "Mod" folders.
-            CreateModFolders();
-
-            // Show the final message to the user.
-            ReportFinished();
+            // There's stuff to do after patching. This function just gathers it all into one method.
+            PostPatchingFunctions();
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -390,25 +390,6 @@ namespace LADXHD_Patcher
             }
         }
 
-        private static void CreateModFolders()
-        {
-            // Create the new mods folders.
-            Config.LAHDModPath.CreatePath(true);
-            Config.GraphicsModPath.CreatePath(true);
-
-            // Find the old "Mods" path for lahdmods and exit if it doesn't exist.
-            if (!Directory.Exists(Config.PreviousModPath))
-                return;
-
-            // Move any lahdmods in the old "Mods" folder to the new location.
-            foreach (string file in Directory.GetFiles(Config.PreviousModPath, "*", SearchOption.AllDirectories))
-            {
-                FileItem fileItem = new FileItem(file);
-                string newModLoc = Path.Combine(Config.LAHDModPath, fileItem.Name);
-                fileItem.FullName.MovePath(newModLoc, true);
-            }
-        }
-
         private static void TryRemoveTempPath()
         {
             // Try to remove the temp path.
@@ -441,6 +422,7 @@ namespace LADXHD_Patcher
             PatchGameFiles();
             XDelta3.Remove();
 
+            ReportFinished();
             TryRemoveTempPath();
             Forms.MainDialog.ToggleDialog(true);
         }

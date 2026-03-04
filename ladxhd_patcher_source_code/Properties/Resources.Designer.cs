@@ -61,16 +61,6 @@ namespace LADXHD_Patcher {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Courier_Prime_ttf {
-            get {
-                object obj = ResourceManager.GetObject("Courier-Prime.ttf", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Icon_bmp {
@@ -103,9 +93,9 @@ namespace LADXHD_Patcher {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] NotoSans_Regular_ttf {
+        internal static byte[] patches_dx_zip {
             get {
-                object obj = ResourceManager.GetObject("NotoSans-Regular.ttf", resourceCulture);
+                object obj = ResourceManager.GetObject("patches_dx.zip", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -113,9 +103,9 @@ namespace LADXHD_Patcher {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] patches_zip {
+        internal static byte[] patches_gl_zip {
             get {
-                object obj = ResourceManager.GetObject("patches.zip", resourceCulture);
+                object obj = ResourceManager.GetObject("patches_gl.zip", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -123,19 +113,9 @@ namespace LADXHD_Patcher {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] smallFont_chn_fnt {
+        internal static byte[] SDL2_dll {
             get {
-                object obj = ResourceManager.GetObject("smallFont_chn.fnt", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] smallFont_chn_redux_fnt {
-            get {
-                object obj = ResourceManager.GetObject("smallFont_chn_redux.fnt", resourceCulture);
+                object obj = ResourceManager.GetObject("SDL2.dll", resourceCulture);
                 return ((byte[])(obj));
             }
         }

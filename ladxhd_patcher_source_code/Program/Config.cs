@@ -6,7 +6,7 @@ namespace LADXHD_Patcher
     internal class Config
     {
         // The hash for "newHash" will need to be calculated for each new version.
-        public const string Version = "1.6.3";
+        public const string Version = "1.6.4";
 
         public static string AppPath;
         public static string BaseFolder;
@@ -19,6 +19,12 @@ namespace LADXHD_Patcher
         public static string PreviousModPath;
         public static string LAHDModPath;
         public static string GraphicsModPath;
+
+        public enum Platform { Windows }
+        public static Platform SelectedPlatform;
+
+        public enum GraphicsAPI { DirectX, OpenGL }
+        public static GraphicsAPI SelectedGraphics;
 
         public static void Initialize()
         {

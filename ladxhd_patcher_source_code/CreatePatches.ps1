@@ -32,6 +32,7 @@
   - Version 1.0.0 should be set to "OldGamePath".
   - The new build should be set to "NewGamePath".
   - Set the "GameVersion" which will output to that folder in "Resources".
+  - Set the "GraphicsAPI" to either "DX" or "GL" depending on version generated.
   - Right click this script, select "Run with PowerShell".
   - Generated patches can be found in the "Resources" folder.
   - Obviously, the xdelta patches can be found in this folder.
@@ -53,10 +54,11 @@
 # CONFIGURATION
 #========================================================================================================================================
 
+$GameVersion = "1.6.4"
+$GraphicsAPI = "GL"
 $OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
 $NewGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated"
 $ZipFilePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD-Updated\ladxhd_patcher_source_code"
-$GameVersion = "1.6.3"
 
 #========================================================================================================================================
 # SETUP XDELTA & OUTPUTS
@@ -64,7 +66,7 @@ $GameVersion = "1.6.3"
 
 $BaseFolder  = Split-Path $script:MyInvocation.MyCommand.Path
 $XDelta3     = Join-Path $BaseFolder "xdelta3.exe"
-$PatchFolder = Join-Path $BaseFolder ("\Resources\v" + $GameVersion + " Patches")
+$PatchFolder = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (" + $GraphicsAPI + ") Patches")
 
 #========================================================================================================================================
 # MISCELLANEOUS
@@ -109,7 +111,7 @@ if (!(Test-Path $PatchFolder)) {
 
 $langFiles  = @("chn.lng", "deu.lng", "esp.lng", "fre.lng", "ind.lng", "ita.lng", "por.lng", "rus.lng")
 $langDialog = @("dialog_chn.lng", "dialog_deu.lng", "dialog_esp.lng", "dialog_fre.lng", "dialog_ind.lng", "dialog_ita.lng", "dialog_por.lng", "dialog_rus.lng")
-$smallFonts = @("smallFont_redux.xnb", "smallFont_vwf.xnb", "smallFont_vwf_redux.xnb", "smallFont_chn_0.png", "smallFont_chn_redux_0.png")
+$smallFonts = @("smallFont_redux.xnb", "smallFont_vwf.xnb", "smallFont_vwf_redux.xnb", "smallFont_chn.xnb", "smallFont_chn_0.xnb", "smallFont_chn_redux.xnb", "smallFont_chn_redux_0.xnb")
 $backGround = @("menuBackgroundB.xnb", "menuBackgroundC.xnb", "sgb_border.xnb")
 $linkImages = @("link1.png")
 $npcImages  = @("npcs_redux.png")
@@ -183,7 +185,7 @@ function GetOldFilePath([object]$File, [string]$RelativePath)
 function CreateZipFile()
 {
   $ZipPath = $PatchFolder + "\*"
-  $ZipFile = $ZipFilePath + "\patches.zip"
+  $ZipFile = $ZipFilePath + "\patches_" + $GraphicsAPI.ToLower() + ".zip"
 
   Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
   Compress-Archive -Path $ZipPath -DestinationPath $ZipFile | Out-Null
