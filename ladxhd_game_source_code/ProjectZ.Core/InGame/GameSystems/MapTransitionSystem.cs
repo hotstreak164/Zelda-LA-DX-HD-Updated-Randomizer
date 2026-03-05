@@ -463,37 +463,53 @@ namespace ProjectZ.InGame.GameSystems
             #endif
                 throw new Exception("Map loading thread failed.", _loadingException);
             }
-            // Switch to the new map
-            var oldMap = _gameMapManager.CurrentMap;
-            _gameMapManager.CurrentMap = _gameMapManager.NextMap;
-            _gameMapManager.NextMap = oldMap;
+            var gm = Game1.GameManager;
+            var mm = gm.MapManager;
 
-            // Make sure Objects exists (thread ensured this, but keep it bulletproof).
-            _gameMapManager.CurrentMap.Objects ??= new ObjectManager(_gameMapManager.CurrentMap);
-            _gameMapManager.CurrentMap.Objects.LoadObjects();
+            // Swap in the newly loaded map (mm.NextMap becomes the old map after this).
+            var oldMap = mm.CurrentMap;
+            mm.CurrentMap = mm.NextMap;
+            mm.NextMap = oldMap;
 
+            // Many init-time objects set flags on MapManager.NextMap during LoadObjects(),
+            // expecting NextMap to refer to the map being initialized.
+            // After swapping, that map is now CurrentMap, so temporarily point NextMap
+            // at CurrentMap so those objects configure the correct map.
+            var restoreNext = mm.NextMap;
+            mm.NextMap = mm.CurrentMap;
+            try
+            {
+                mm.CurrentMap.Objects ??= new ObjectManager(mm.CurrentMap);
+                mm.CurrentMap.Objects.LoadObjects();
+            }
+            finally
+            {
+                mm.NextMap = restoreNext;
+            }
+            // Music handling
             var currentTrack = Game1.GbsPlayer.CurrentTrack;
             var nextTrack = -1;
-            for (var i = 0; i < _gameMapManager.CurrentMap.MapMusic.Length; i++)
-                if (_gameMapManager.CurrentMap.MapMusic[i] >= 0)
-                    nextTrack = _gameMapManager.CurrentMap.MapMusic[i];
+            for (var i = 0; i < mm.CurrentMap.MapMusic.Length; i++)
+                if (mm.CurrentMap.MapMusic[i] >= 0)
+                    nextTrack = mm.CurrentMap.MapMusic[i];
 
             if (currentTrack != nextTrack)
                 Game1.GbsPlayer.Pause();
 
-            Game1.GameManager.ResetMusic();
+            gm.ResetMusic();
 
-            _gameMapManager.FinishLoadingMap(_gameMapManager.CurrentMap);
+            // Finish loading map
+            mm.FinishLoadingMap(mm.CurrentMap);
 
             MapManager.ObjLink.UpdateMapTransitionIn(0);
 
             // Set the new music
-            for (var i = 0; i < _gameMapManager.CurrentMap.MapMusic.Length; i++)
-                if (_gameMapManager.CurrentMap.MapMusic[i] >= 0)
-                    Game1.GameManager.SetMusic(_gameMapManager.CurrentMap.MapMusic[i], i, false);
+            for (var i = 0; i < mm.CurrentMap.MapMusic.Length; i++)
+                if (mm.CurrentMap.MapMusic[i] >= 0)
+                    gm.SetMusic(mm.CurrentMap.MapMusic[i], i, false);
 
             // Center the camera
-            var goalPosition = Game1.GameManager.MapManager.GetCameraTarget();
+            var goalPosition = mm.GetCameraTarget();
 
             if (_centerCamera)
                 MapManager.Camera.ForceUpdate(goalPosition);
