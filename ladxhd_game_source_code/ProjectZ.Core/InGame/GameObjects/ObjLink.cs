@@ -670,7 +670,7 @@ namespace ProjectZ.InGame.GameObjects
         //  UPDATE CODE
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private void Update()
+        public void Update()
         {
             // Update the current field and make a field barrier if Classic Camera is enabled.
             UpdateCurrentField();
@@ -3580,8 +3580,7 @@ namespace ProjectZ.InGame.GameObjects
             if (IsAttackingState() || CurrentState == State.SwordShow0 || _bootsRunning && CarrySword)
                 UpdateAttacking();
 
-            if (CurrentState == State.PickingUp)
-                UpdatePickup();
+            UpdatePickup();
 
             if (!Animation.IsPlaying && (CurrentState == State.Powdering || CurrentState == State.Bombing || CurrentState == State.MagicRod || CurrentState == State.Throwing))
                 ReturnToIdle();
@@ -3891,82 +3890,91 @@ namespace ProjectZ.InGame.GameObjects
 
         private void UpdatePickup()
         {
-            if (ShowItem != null)
+            // If the item is null then do nothing here.
+            if (ShowItem == null)
+                return;
+            
+            // Disable the inventory while showing the item.
+            Game1.GameManager.InGameOverlay.DisableInventoryToggle = true;
+
+            // Decrement the show counter.
+            _itemShowCounter -= Game1.DeltaTime;
+
+            // When the counter has finished ticking.
+            if (_itemShowCounter > 0)
+                return;
+
+            // If the item is to be held over Link's head.
+            if (_showItem)
             {
-                Game1.GameManager.InGameOverlay.DisableInventoryToggle = true;
+                // We only want this section to run once.
+                _showItem = false;
 
-                _itemShowCounter -= Game1.DeltaTime;
-
-                if (_itemShowCounter <= 0)
+                // Show the pickup dialog if the itme has one.
+                if (ShowItem.PickUpDialog != null)
                 {
-                    // show pick up text
-                    if (_showItem && CurrentState == State.PickingUp)
-                    {
-                        _showItem = false;
-
-                        // show pickup dialog
-                        if (ShowItem.PickUpDialog != null)
-                        {
-                            if (string.IsNullOrEmpty(_pickupDialogOverride))
-                                Game1.GameManager.StartDialogPath(ShowItem.PickUpDialog);
-                            else
-                            {
-                                Game1.GameManager.StartDialogPath(_pickupDialogOverride);
-                                _pickupDialogOverride = null;
-                            }
-
-                            if (!string.IsNullOrEmpty(_additionalPickupDialog))
-                            {
-                                Game1.GameManager.StartDialogPath(_additionalPickupDialog);
-                                _additionalPickupDialog = null;
-                            }
-                        }
-                        _itemShowCounter = 250;
-
-                        if (ShowItem.Name == "sword1")
-                            _itemShowCounter = 5650;
-                        else if (ShowItem.Name.StartsWith("instrument"))
-                            _itemShowCounter = 1000;
-                    }
+                    // Check for override text before the normal text.
+                    if (string.IsNullOrEmpty(_pickupDialogOverride))
+                        Game1.GameManager.StartDialogPath(ShowItem.PickUpDialog);
                     else
                     {
-                        Game1.GameManager.SaveManager.SetString("player_shows_item", "0");
-
-                        // add the item to the inventory
-                        if (_collectedShowItem != null)
-                        {
-                            Game1.GameManager.CollectItem(_collectedShowItem, 0);
-                            _collectedShowItem = null;
-                        }
-                        // spawn the follower if one was picked up
-                        UpdateFollower(false);
-
-                        // sword spin
-                        if (ShowItem.Name == "sword1")
-                        {
-                            Game1.GameManager.PlaySoundEffect("D378-03-03");
-                            Animation.Play("swing_3");
-                            AnimatorWeapons.Play("swing_3");
-                            CurrentState = State.SwordShow0;
-                            _swordChargeCounter = 1;
-                            ShowItem = null;
-                        }
-                        else if (ShowItem.Name.StartsWith("instrument"))
-                        {
-                            // make sure that the music is not playing
-                            Game1.GameManager.StopPieceOfPower();
-                            Game1.GameManager.StopGuardianAcorn();
-
-                            _instrumentCounter = 0;
-                            CurrentState = State.ShowInstrumentPart0;
-                        }
-                        else
-                        {
-                            ShowItem = null;
-                            if (CurrentState == State.PickingUp)
-                                ReturnToIdle();
-                        }
+                        Game1.GameManager.StartDialogPath(_pickupDialogOverride);
+                        _pickupDialogOverride = null;
                     }
+                    // Check for a second message to show after the first.
+                    if (!string.IsNullOrEmpty(_additionalPickupDialog))
+                    {
+                        Game1.GameManager.StartDialogPath(_additionalPickupDialog);
+                        _additionalPickupDialog = null;
+                    }
+                }
+                // Additional time after the dialog.
+                if (ShowItem.Name == "sword1")
+                    _itemShowCounter = 5650;
+                else if (ShowItem.Name.StartsWith("instrument"))
+                    _itemShowCounter = 1000;
+                else
+                    _itemShowCounter = 250;
+            }
+            else
+            {
+                // I don't think this string actually does anything.
+                Game1.GameManager.SaveManager.SetString("player_shows_item", "0");
+
+                // Add the item to the player's inventory.
+                if (_collectedShowItem != null)
+                {
+                    Game1.GameManager.CollectItem(_collectedShowItem, 0);
+                    _collectedShowItem = null;
+                }
+                // If item was a follower then spawn them into the world.
+                UpdateFollower(false);
+
+                // Spin the sword after picking it up off the beach.
+                if (ShowItem.Name == "sword1")
+                {
+                    Game1.GameManager.PlaySoundEffect("D378-03-03");
+                    Animation.Play("swing_3");
+                    AnimatorWeapons.Play("swing_3");
+                    CurrentState = State.SwordShow0;
+                    _swordChargeCounter = 1;
+                    ShowItem = null;
+                }
+                // If it's an instrument stop powerup music and set vars for instrument sequence.
+                else if (ShowItem.Name.StartsWith("instrument"))
+                {
+                    Game1.GameManager.StopPieceOfPower();
+                    Game1.GameManager.StopGuardianAcorn();
+
+                    _instrumentCounter = 0;
+                    CurrentState = State.ShowInstrumentPart0;
+                }
+                // After everything is done clear the item and return to idle state.
+                else
+                {
+                    ShowItem = null;
+                    if (CurrentState == State.PickingUp)
+                        ReturnToIdle();
                 }
             }
         }

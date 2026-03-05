@@ -189,26 +189,23 @@ namespace ProjectZ.InGame.Map
                 AddSpawnedObjects();
                 return;
             }
-            // Freezes the world for a single frame when opening chests or picking up items. Without it, the item will
-            // stick to Link's head and not disappear. I have no idea why this works but it's required.
-
+            // Freezes the world around Link but continues to run his update loop. This is used to finish up some things
+            // on Link before the rest of the world continues: like opening the Tail Key chest in the forest before the owl.
             if (Link.FreezeWorldAroundPlayer)
             {
                 Link.FreezeWorldAroundPlayer = false;
-                var updateComponent = (UpdateComponent)MapManager.ObjLink.Components[UpdateComponent.Index];
-                updateComponent?.UpdateFunction();
+                Link.Update();
                 return;
             }
+
             // When the game world is frozen, certain types should still be active. It is set to null at first and updated
             // depending on whether or not the "freezeGame" flag is set. When "null" everything in the world is updated.
-
             Type[] freezePersistTypes = null;
 
             // Freeze most things except specific types when an event takes place. This variable should not be set directly,
             // but rather set via: Game1.GameManager.SaveManager.SetString("freezeGame", "1"); The listener on ObjLink will
             // detect this and set the "FreezeWorldForEvents" boolean accordingly. To unfreeze, just set it back to "0". It
             // can also be set with ObjLink function "FreezeAnimations(bool)", a shortcut to set "freezeGame" to 0 or 1.
-
             if (Link.FreezeWorldForEvents)
             {
                 // Copy the group of objects to always animate into the array. Currently only "ObjGhost" and "ObjOwl".
