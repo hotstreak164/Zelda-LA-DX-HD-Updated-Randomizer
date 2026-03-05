@@ -168,6 +168,8 @@ namespace ProjectZ.InGame.Pages
             _bottomBar.Select(InterfaceElement.Directions.Left, false);
             _bottomBar.Deselect(false);
 
+
+
             PageLayout.Deselect(false);
             PageLayout.Select(InterfaceElement.Directions.Top, false);
         }

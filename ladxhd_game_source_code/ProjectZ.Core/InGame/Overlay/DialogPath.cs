@@ -428,11 +428,10 @@ namespace ProjectZ.InGame.Overlay
         {
             _playbackSpeed = playbackSpeed;
         }
+
         public override bool Execute()
         {
-#if WINDOWS
-            Game1.GbsPlayer.Cpu.SetPlaybackSpeed(_playbackSpeed);
-#endif
+            Game1.GbsPlayer.SetPlaybackSpeed(_playbackSpeed);
             return true;
         }
     }

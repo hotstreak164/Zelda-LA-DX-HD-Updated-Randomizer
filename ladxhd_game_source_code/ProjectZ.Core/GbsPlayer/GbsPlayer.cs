@@ -20,6 +20,7 @@ namespace GBSPlayer
 
         private float _volume = 1;
         private float _volumeMultiplier = 1.0f;
+        private float _playbackSpeed = 1f;
 
         private readonly object _updateLock = new object();
         private volatile bool _exitThread;
@@ -104,19 +105,14 @@ namespace GBSPlayer
             Cartridge.Init();
             Cpu.SkipBootROM();
             Cpu.Init();
-            Cpu.SetPlaybackSpeed(1);
+            Cpu.SetPlaybackSpeed(_playbackSpeed);
 
-            // tack number
             Cpu.reg_A = trackNumber;
-
             Cpu.reg_PC = Cartridge.InitAddress;
             Cpu.reg_SP = Cartridge.StackPointer;
 
-            // push the idleAddress on the stack
             Memory[--Cpu.reg_SP] = (byte)(Cpu.IdleAddress >> 0x8);
             Memory[--Cpu.reg_SP] = (byte)(Cpu.IdleAddress & 0xFF);
-
-            Console.WriteLine("finished gbs init");
         }
 
         public void Pump()
@@ -146,6 +142,18 @@ namespace GBSPlayer
             // stop music playback
             SoundGenerator.Stop();
             Cpu.IsRunning = false;
+            CurrentTrack = 255;
+        }
+
+        public void SetPlaybackSpeed(float multiplier)
+        {
+            if (multiplier <= 0f) multiplier = 1f;
+
+            lock (_updateLock)
+            {
+                _playbackSpeed = multiplier;
+                Cpu.SetPlaybackSpeed(_playbackSpeed);
+            }
         }
 
         public float GetVolume()

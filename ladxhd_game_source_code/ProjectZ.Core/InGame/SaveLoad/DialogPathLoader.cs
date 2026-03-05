@@ -156,8 +156,7 @@ namespace ProjectZ.InGame.SaveLoad
             }
             else if (stringSplit[0] == "music_speed")
             {
-                path.Action.Add(new DialogActionMusicSpeed(
-                    float.Parse(stringSplit[1], CultureInfo.InvariantCulture)));
+                path.Action.Add(new DialogActionMusicSpeed(float.Parse(stringSplit[1], CultureInfo.InvariantCulture)));
             }
             else if (stringSplit[0] == "sound")
             {
