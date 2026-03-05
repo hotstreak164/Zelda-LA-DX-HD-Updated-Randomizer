@@ -294,6 +294,7 @@ namespace ProjectZ.InGame.Pages
                 CameraSettingsPage.SetClassicDungeon(GameSettings.ClassicDungeon);
                 CameraSettingsPage.SetClassicCamBorder(GameSettings.ClassicBorders);
                 CameraSettingsPage.SetClassicBorderAlpha((int)(GameSettings.ClassicAlpha * 100));
+                CameraSettingsPage.SetClassicScaleLock(GameSettings.ClassicScaling);
                 CameraSettingsPage.SetCameraLock(GameSettings.CameraLock);
                 CameraSettingsPage.SetCameraSmoothCam(GameSettings.SmoothCamera);
                 CameraSettingsPage.SetCameraScreenShake(GameSettings.ScreenShake);

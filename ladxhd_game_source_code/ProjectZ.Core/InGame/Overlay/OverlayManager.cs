@@ -267,7 +267,7 @@ namespace ProjectZ.InGame.Overlay
             int maxScale = Game1.MaxGameScale + 1;
 
             // Do not adjust the scale when classic camera is active.
-            if (Camera.ClassicMode)
+            if (Camera.ClassicMode && GameSettings.ClassicScaling)
                 return;
 
             // If both LT and RT are pressed together, set the scaling to auto-scaling.

@@ -3910,7 +3910,7 @@ namespace ProjectZ.InGame.GameObjects
                 // We only want this section to run once.
                 _showItem = false;
 
-                // Show the pickup dialog if the itme has one.
+                // Show the pickup dialog if the item has one.
                 if (ShowItem.PickUpDialog != null)
                 {
                     // Check for override text before the normal text.

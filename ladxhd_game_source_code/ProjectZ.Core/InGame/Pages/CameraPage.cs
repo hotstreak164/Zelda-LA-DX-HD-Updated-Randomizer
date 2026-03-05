@@ -18,6 +18,7 @@ namespace ProjectZ.InGame.Pages
         private readonly InterfaceListLayout _toggleClassicDungeon;
         private readonly InterfaceSlider     _sliderCameraBorder;
         private readonly InterfaceSlider     _sliderBorderOpacity;
+        private readonly InterfaceListLayout _toggleClassicScaling;
         private readonly InterfaceListLayout _toggleCameraLock;
         private readonly InterfaceListLayout _toggleCameraSmooth;
         private readonly InterfaceListLayout _toggleScreenShake;
@@ -30,6 +31,7 @@ namespace ProjectZ.InGame.Pages
         public void SetClassicDungeon(bool state) => ((InterfaceToggle)_toggleClassicDungeon.Elements[1]).ToggleState = state;
         public void SetClassicCamBorder(int value) { ((InterfaceSlider)_sliderCameraBorder).CurrentStep = value; }
         public void SetClassicBorderAlpha(int value) { ((InterfaceSlider)_sliderBorderOpacity).CurrentStep = value; }
+        public void SetClassicScaleLock(bool state) => ((InterfaceToggle)_toggleClassicScaling.Elements[1]).ToggleState = state;
         public void SetCameraLock(bool state) => ((InterfaceToggle)_toggleCameraLock.Elements[1]).ToggleState = state; 
         public void SetCameraSmoothCam(bool state) => ((InterfaceToggle)_toggleCameraSmooth.Elements[1]).ToggleState = state;
         public void SetCameraScreenShake(bool state) => ((InterfaceToggle)_toggleScreenShake.Elements[1]).ToggleState = state;
@@ -54,7 +56,7 @@ namespace ProjectZ.InGame.Pages
             EnableTooltips = true;
 
             var buttonWidth = 320;
-            var buttonHeight = 14;
+            var buttonHeight = 12;
             var sliderHeight = 10;
 
             // Camera Settings Layout
@@ -67,12 +69,12 @@ namespace ProjectZ.InGame.Pages
             _contentLayout.AddElement(_buttonCameraType = new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(0, 2), "", PressButtonCameraChange));
             UpdateCameraOverrideText();
 
-            // Toggle: Overworld Only
+            // Toggle: Modern: Overworld Only
             _toggleModernOverworld = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_modernoverworld", GameSettings.ModernOverworld, 
                 newState => { GameSettings.ModernOverworld = newState; Game1.ScaleChanged = true; });
 
-            // Toggle: Dungeons Only
+            // Toggle: Classic: Dungeons Only
             _toggleClassicDungeon = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_classicdungeon", GameSettings.ClassicDungeon, 
                 newState => { GameSettings.ClassicDungeon = newState; Game1.ScaleChanged = true; });
@@ -83,19 +85,25 @@ namespace ProjectZ.InGame.Pages
             else
                 _contentLayout.AddElement(_toggleModernOverworld);
 
-            // Slider: Camera Border
+            // Slider: Classic Camera Border
             _sliderCameraBorder = new InterfaceSlider("settings_camera_camborder",
                 buttonWidth, sliderHeight, new Point(1, 2), 0, 2, 1, GameSettings.ClassicBorders, 
                 number => { GameSettings.ClassicBorders = number; Game1.ScaleChanged = true; }) 
                 { SetString = number => ClassicBorderAdjustment(number) };
             _contentLayout.AddElement(_sliderCameraBorder);
 
-            // Slider: Blackout Amount
+            // Slider: Classic Blackout Amount
             _sliderBorderOpacity = new InterfaceSlider("settings_camera_blackpercent",
                 buttonWidth, sliderHeight, new Point(1, 2), 0, 100, 5, (int)(GameSettings.ClassicAlpha * 100),
                 number => { GameSettings.ClassicAlpha = (float)(number * 0.01); })
                 { SetString = number => SetClassicBorderOpacity(number) };
             _contentLayout.AddElement(_sliderBorderOpacity);
+
+            // Toggle: Classic Scale Lock
+            _toggleClassicScaling = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+                "settings_camera_classicscaling", GameSettings.ClassicScaling, 
+                newState => { GameSettings.ClassicScaling = newState; Game1.ScaleChanged = true; });
+            _contentLayout.AddElement(_toggleClassicScaling);
 
             // Toggle: Camera Lock
             _toggleCameraLock = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
@@ -242,10 +250,11 @@ namespace ProjectZ.InGame.Pages
                 case 1:  { tooltip = Game1.LanguageManager.GetString(GameSettings.ClassicCamera ? "tooltip_camera_classicdungeon" : "tooltip_camera_modernoverworld", "error"); break; }
                 case 2:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_camborder", "error"); break; }
                 case 3:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_blackpercent", "error"); break; }
-                case 4:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_cameralock", "error"); break; }
-                case 5:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_smoothcamera", "error"); break; }
-                case 6:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_screenshake", "error"); break; }
-                case 7:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_exscreenshake", "error"); break; }
+                case 4:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_classicscaling", "error"); break; }
+                case 5:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_cameralock", "error"); break; }
+                case 6:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_smoothcamera", "error"); break; }
+                case 7:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_screenshake", "error"); break; }
+                case 8:  { tooltip = Game1.LanguageManager.GetString("tooltip_camera_exscreenshake", "error"); break; }
             }
             // Display the tooltip in the tooltip window.
             return tooltip;

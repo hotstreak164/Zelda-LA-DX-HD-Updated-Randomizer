@@ -758,7 +758,7 @@ namespace ProjectZ
 
         private void UpdateScale()
         {
-            if (Camera.ClassicMode)
+            if (Camera.ClassicMode && GameSettings.ClassicScaling)
             {
                 // Force integer scale or the field rect will be thrown off. The scaling value is calculated using the original dimensions of the
                 // Game Boy version of Link's Awakening, minus the 16 pixels HUD ( 160x144 >> 160x128 ) so higher scaling values can be achieved.

@@ -39,6 +39,7 @@ namespace ProjectZ.InGame.SaveLoad
             GameSettings.ClassicDungeon = saveManager.GetBool("ClassicDungeon", GameSettings.ClassicDungeon);
             GameSettings.ClassicBorders = saveManager.GetInt("ClassicBorders", GameSettings.ClassicBorders);
             GameSettings.ClassicAlpha = saveManager.GetFloat("ClassicAlpha", GameSettings.ClassicAlpha);
+            GameSettings.ClassicScaling = saveManager.GetBool("ClassicScaling", GameSettings.ClassicScaling);
             GameSettings.CameraLock = saveManager.GetBool("CameraLock", GameSettings.CameraLock);
             GameSettings.SmoothCamera = saveManager.GetBool("SmoothCamera", GameSettings.SmoothCamera);
             GameSettings.ScreenShake = saveManager.GetBool("ScreenShake", GameSettings.ScreenShake);
@@ -126,6 +127,7 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetBool("ClassicDungeon", GameSettings.ClassicDungeon);
             saveManager.SetInt("ClassicBorders", GameSettings.ClassicBorders);
             saveManager.SetFloat("ClassicAlpha", GameSettings.ClassicAlpha);
+            saveManager.SetBool("ClassicScaling", GameSettings.ClassicScaling);
             saveManager.SetBool("CameraLock", GameSettings.CameraLock);
             saveManager.SetBool("SmoothCamera", GameSettings.SmoothCamera);
             saveManager.SetBool("ScreenShake", GameSettings.ScreenShake);
