@@ -179,6 +179,10 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (hitType == HitType.Bomb || hitType == HitType.Bow || hitType == HitType.MagicRod)
                 damage *= 2;
 
+            // If hit with piece of power, movement gets corrupted. Sending boss to idle beforehand fixes it.
+            if (pieceOfPower)
+                _aiComponent.ChangeState("idle");
+
             // different drag than needed for the jumps
             _body.DragAir = 0.75f;
 
