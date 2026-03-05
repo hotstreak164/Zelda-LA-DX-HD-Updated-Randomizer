@@ -116,18 +116,11 @@ namespace GBSPlayer
                 _instance.Pause();
             }
 
-            // Resume (MonoGame only resumes if paused)
+            // Resume
             if (Interlocked.Exchange(ref _cmdResume, 0) == 1)
             {
                 if (_instance.State == SoundState.Paused)
                     _instance.Resume();
-            }
-
-            // Play
-            if (Interlocked.Exchange(ref _cmdPlay, 0) == 1)
-            {
-                if (_instance.State != SoundState.Playing)
-                    _instance.Play();
             }
 
             // Volume
@@ -136,7 +129,10 @@ namespace GBSPlayer
                 _instance.Volume = _volume;
             }
 
-            // Submit PCM buffers (bounded to avoid runaway)
+            // Capture "want play" request, but DO NOT Play yet.
+            bool wantPlay = Interlocked.Exchange(ref _cmdPlay, 0) == 1;
+
+            // Submit PCM buffers first
             int submitted = 0;
             while (submitted < maxBuffersPerFrame &&
                    _instance.PendingBufferCount < maxPending &&
@@ -145,7 +141,24 @@ namespace GBSPlayer
                 _instance.SubmitBuffer(chunk.Buffer, chunk.Offset, chunk.Count);
                 submitted++;
             }
-            // Cache these AFTER all operations, so other threads only read cached values
+
+            // Auto-start logic:
+            // - If caller requested Play, remember it until we have data
+            // - If we have pending buffers and we are not playing, start.
+            // This covers "Play called too early" AND "underrun then recovered".
+            if (wantPlay)
+            {
+                // If there is no data yet, we just don't start this frame.
+                // Next Pump will start once buffers exist (because CPU thread will enqueue).
+            }
+
+            if (_instance.State != SoundState.Playing && _instance.PendingBufferCount > 0)
+            {
+                // If you ONLY want to start when wantPlay was requested, gate this with a flag.
+                // In practice, auto-start is usually desired for streaming audio.
+                _instance.Play();
+            }
+
             _cachedPending = _instance.PendingBufferCount;
             _cachedState   = _instance.State;
         }
