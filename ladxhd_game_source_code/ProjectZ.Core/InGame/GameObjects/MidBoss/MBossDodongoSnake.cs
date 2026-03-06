@@ -25,7 +25,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private readonly AiDamageState _damageState;
         private readonly CSprite _sprite;
         private readonly AiTriggerRandomTime _directionTrigger;
-        private readonly CBox _eatBox;
+        private CBox _eatBox;
 
         private readonly DictAtlasEntry _spriteHead;
         private readonly DictAtlasEntry _spriteBody0;
@@ -241,8 +241,22 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             }
         }
 
+        private void UpdateEatBox()
+        {
+            _eatBox = _direction switch
+            {
+                0 => _eatBox = new CBox(EntityPosition, -4, -12, 3, 10, 8),
+                1 => _eatBox = new CBox(EntityPosition, -3, -12, 6, 3, 8),
+                2 => _eatBox = new CBox(EntityPosition,  1, -12, 3, 10, 8),
+                3 => _eatBox = new CBox(EntityPosition, -3, -7, 6, 3, 8)
+            };
+        }
+
         private void UpdateMoving()
         {
+            // Update the box that swallows bombs.
+            UpdateEatBox();
+
             // Find how many bosses still remain.
             _bossCount = GetDodongoSnakeCount();
 
@@ -458,7 +472,6 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 {
 
                 }
-
                 bodyDrawPosition = _bodyExplosionPosition + new Vector2(-bodyRectangle.Width / 2, -8 - bodyRectangle.Height / 2);
             }
 
@@ -474,7 +487,6 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             // draw the body
             if (!drawBodyFirst)
                 spriteBatch.Draw(_spriteHead.Texture, bodyDrawPosition, bodyRectangle, Color.White);
-
         }
 
         private void OnDeath(bool pieceOfPower)
