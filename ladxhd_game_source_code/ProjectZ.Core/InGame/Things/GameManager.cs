@@ -889,9 +889,7 @@ namespace ProjectZ.InGame.Things
         public void StopGuardianAcorn()
         {
             GuardianAcornIsActive = false;
-
-            if (!GameSettings.MutePowerups)
-                SetMusic(-1, 1, false);
+            SetMusic(-1, 1, false);
         }
 
         public void InitPieceOfPower()
@@ -925,9 +923,7 @@ namespace ProjectZ.InGame.Things
         public void StopPieceOfPower()
         {
             PieceOfPowerIsActive = false;
-
-            if (!GameSettings.MutePowerups)
-                SetMusic(-1, 1, false);
+            SetMusic(-1, 1, false);
         }
 
         public void ResetMusic()
@@ -1004,13 +1000,13 @@ namespace ProjectZ.InGame.Things
 
             // When entering a village (3: Mabe Village, 10: Animal Village) with (72: Piece of Power Music)
             // backup the piece of power music and force the new song onto the piece of power slot.
-            if ((trackID == 3 || trackID == 10) && _musicArray[1] == 72 && priority == 0)
+            if ((trackID == 3 || trackID == 10) && _musicArray[1] == 72 && priority == 0 && !MapManager.ObjLink.IsTransitioning)
             {
                 _musicArray[0] = 72;
                 _musicArray[1] = trackID;
             }
             // When leaving the village, restore piece of power music and write new track to it's proper slot.
-            else if ((trackID != 3 && trackID != 10) && _musicArray[0] == 72 && priority == 0)
+            else if ((trackID != 3 && trackID != 10) && _musicArray[0] == 72 && priority == 0 && !MapManager.ObjLink.IsTransitioning)
             {
                 _musicArray[0] = trackID;
                 _musicArray[1] = 72;
