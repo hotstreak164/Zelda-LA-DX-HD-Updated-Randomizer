@@ -207,7 +207,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             {
                 var rotation = MathF.PI / 2 * i + direction * MathF.PI / 4;
                 var offset = new Vector2(-MathF.Cos(rotation), MathF.Sin(rotation));
-                var objBuzz = new MBossGiantBuzzBlobBuzz(Map, new Vector2(spawnOrigin.X + offset.X * 20, spawnOrigin.Y + offset.Y * 20), offset, "buzz_" + direction, MathF.PI / 2 * i);
+                var objBuzz = new MBossGiantBuzzBlobBuzz(Map, new Vector2(spawnOrigin.X + offset.X * 20, spawnOrigin.Y + offset.Y * 20), offset, "buzz_" + direction, MathF.PI / 2 * i, _body.FieldRectangle);
                 Map.Objects.SpawnObject(objBuzz);
             }
         }

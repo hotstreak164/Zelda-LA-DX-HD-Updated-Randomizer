@@ -62,7 +62,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (_liveTime <= 125)
                 _sprite.Color = Color.White * ((float)_liveTime / 125f);
 
-            if (!_bossField.Contains(_body.BodyBox.Box.Rectangle()) || _liveTime < 0)
+            if (!_bossField.Contains(_body.BodyBox.Box.Rectangle()) || _liveTime <= 0)
                 Map.Objects.DeleteObjects.Add(this);
         }
 
