@@ -112,18 +112,18 @@ namespace ProjectZ.InGame.Overlay
         {
             // Add all game sequences to the stack.
             _gameSequences["map"] = new MapOverlaySequence();
-            _gameSequences["marinBeach"] = new MapOverlaySequence();
-            _gameSequences["marinCliff"] = new MapOverlaySequence();
-            _gameSequences["towerCollapse"] = new MapOverlaySequence();
-            _gameSequences["shrine"] = new MapOverlaySequence();
-            _gameSequences["picture"] = new MapOverlaySequence();
-            _gameSequences["photo"] = new MapOverlaySequence();
-            _gameSequences["bowWow"] = new MapOverlaySequence();
-            _gameSequences["castle"] = new MapOverlaySequence();
-            _gameSequences["gravestone"] = new MapOverlaySequence();
-            _gameSequences["weatherBird"] = new MapOverlaySequence();
-            _gameSequences["final"] = new MapOverlaySequence();
-            _gameSequences["painting"] = new MapOverlaySequence();
+            _gameSequences["marinBeach"] = new MarinBeachSequence();
+            _gameSequences["marinCliff"] = new MarinCliffSequence();
+            _gameSequences["towerCollapse"] = new TowerCollapseSequence();
+            _gameSequences["shrine"] = new ShrineSequence();
+            _gameSequences["picture"] = new PictureSequence();
+            _gameSequences["photo"] = new PhotoSequence();
+            _gameSequences["bowWow"] = new BowWowSequence();
+            _gameSequences["castle"] = new CastleSequence();
+            _gameSequences["gravestone"] = new GravestoneSequence();
+            _gameSequences["weatherBird"] = new WeatherBirdSequence();
+            _gameSequences["final"] = new FinalSequence();
+            _gameSequences["painting"] = new PaintingSequence();
 
             // Set the size of the UI elements.
             _mapSize = new Point(144 + 2 * _marginMap, 144 + 2 * _marginMap);
