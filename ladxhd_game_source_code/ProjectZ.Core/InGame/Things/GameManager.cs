@@ -13,9 +13,6 @@ using ProjectZ.InGame.Overlay;
 using ProjectZ.InGame.Pages;
 using ProjectZ.InGame.SaveLoad;
 
-// using ProjectZ.Base;
-// using Microsoft.Xna.Framework.Input;
-
 namespace ProjectZ.InGame.Things
 {
     public class GameManager
@@ -245,9 +242,6 @@ namespace ProjectZ.InGame.Things
 
         public void UpdateGame()
         {
-//            if (InputHandler.KeyPressed(Keys.F8))
-//                InitPieceOfPower();
-
             // Update the overlay. Includes the HUD and inventory.
             InGameOverlay.Update();
 
@@ -889,7 +883,7 @@ namespace ProjectZ.InGame.Things
         public void StopGuardianAcorn()
         {
             GuardianAcornIsActive = false;
-            SetMusic(-1, 1, false);
+            SetMusic(-1, 1, true);
         }
 
         public void InitPieceOfPower()
@@ -923,7 +917,7 @@ namespace ProjectZ.InGame.Things
         public void StopPieceOfPower()
         {
             PieceOfPowerIsActive = false;
-            SetMusic(-1, 1, false);
+            SetMusic(-1, 1, true);
         }
 
         public void ResetMusic()
