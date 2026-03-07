@@ -6529,6 +6529,9 @@ namespace ProjectZ.InGame.GameObjects
             if (!Map.Is2dMap || Direction == 1)
                 Game1.GameManager.MapManager.UpdateCameraY = NextMapPositionStart == NextMapPositionEnd;
 
+            // Keep Link walking during the transition in.
+            _isWalking = TransitionOutWalking;
+
             // Set the hole and water reset position to be at the transition entrance.
             _holeResetPosition = EntityPosition.ToVector3();
             _drownResetPosition = EntityPosition.Position;
