@@ -152,6 +152,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 // not fish hooked
                 else if (HookedFish == null)
                 {
+                    var moveVec = ControlHandler.GetMoveVector2();
+                    var moveDir = AnimationHelper.GetDirection(moveVec);
+
                     // pull the hook up
                     if (HookPosition.Y >= 40 && ControlHandler.ButtonPressed(CButtons.Right))
                     {
@@ -165,7 +168,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                         _hookVelocity *= (float)Math.Pow(0.99, Game1.TimeMultiplier);
                         _hookVelocity.Y += 0.035f * Game1.TimeMultiplier;
 
-                        if (ControlHandler.ButtonDown(CButtons.Right) && _hookVelocity.X < 0)
+                        if (moveDir == 2 && _hookVelocity.X < 0)
                             _hookVelocity.X += 0.05f * Game1.TimeMultiplier;
                     }
                     else

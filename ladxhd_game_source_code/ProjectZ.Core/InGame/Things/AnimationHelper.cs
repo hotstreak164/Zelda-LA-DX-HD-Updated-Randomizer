@@ -30,6 +30,9 @@ namespace ProjectZ.InGame.Things
 
         public static int GetDirection(Vector2 direction, float rotationOffset = MathF.PI * 1.25f)
         {
+            if (direction == Vector2.Zero)
+                return 0;
+
             var degree = MathHelper.ToDegrees((float)(Math.Atan2(direction.Y, direction.X) + rotationOffset));
 
             while (degree >= 360)
