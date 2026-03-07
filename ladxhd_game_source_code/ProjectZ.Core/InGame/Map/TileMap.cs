@@ -77,9 +77,6 @@ namespace ProjectZ.InGame.Map
             if (ArrayTileMap == null)
                 return;
 
-            //SprTilesetBlur.Dispose();
-            //Resources.LoadTexture(out SprTilesetBlur, "D:\\Dev\\ProjectZ\\ProjectZ\\bin\\Data\\Maps\\Tilesets\\blur tileset.png");
-
             DrawTileLayer(spriteBatch, SprTilesetBlur, ArrayTileMap.GetLength(2) - 1, 1);
         }
     }

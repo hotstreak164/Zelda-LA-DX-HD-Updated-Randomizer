@@ -22,22 +22,12 @@ namespace ProjectZ.InGame.Things
 
         public static void StartShadowDrawing()
         {
-            //projectionMatrix = Matrix.CreateOrthographicOffCenter(0,
-            //    Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight, 0, 0, -1);
-            //outMatrix = MapManager.Camera.TransformMatrix * projectionMatrix;
-
-            //Resources.NextShadowEffect.Parameters["WorldViewProjection"].SetValue(outMatrix);
-
-            //Game1.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, Resources.NextShadowEffect, MapManager.Camera.TransformMatrix);
-
             LastShadowTexture = null;
             CurrentShadowIndex = 0;
         }
 
         public static void EndShadowDrawing()
         {
-            //Game1.SpriteBatch.End();
-
             if (CurrentShadowIndex > 0)
                 DrawIndexedDataNew();
         }
@@ -46,7 +36,6 @@ namespace ProjectZ.InGame.Things
         public static void DrawShadow(Texture2D sprImage, Vector2 drawPosition, Rectangle sourceRectangle,
             float drawWidth, float drawHeight, bool mirror, float height, float rotation, Color color)
         {
-            //Game1.SpriteBatch.Draw(sprImage, drawPosition, sourceRectangle, color);
 
             if (LastShadowTexture != null && (LastShadowTexture != sprImage ||
                 CurrentShadowIndex >= MaxShadowIndices || ShadowHeight != height || ShadowOffset != rotation))

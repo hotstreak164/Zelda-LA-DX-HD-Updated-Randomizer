@@ -98,7 +98,6 @@ namespace GBSPlayer
                     // A page is selected into Bank 1 by writing the page number as a byte value somewhere in the address range $2000 -$3fff.
 
                     SelectedRomBank = value;
-                    // Console.WriteLine("select ROM bank 0x{0:X}:" + value, index);
                 }
                 // RAM Bank Number - or - Upper Bits of ROM Bank Number
                 else if (index < 0x6000)

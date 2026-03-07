@@ -223,8 +223,7 @@ namespace ProjectZ.InGame.Pages
             if (PageStack.Count <= 0)
                 return;
 
-            if (PageStack.Count > 0)
-                InsideElement[PageStack[0]].OnPop(intent);
+            InsideElement[PageStack[0]].OnPop(intent);
 
             if (!_isTransitioning)
             {

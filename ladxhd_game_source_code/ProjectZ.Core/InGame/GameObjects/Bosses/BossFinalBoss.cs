@@ -630,8 +630,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         #region State: Agahnim's Shadow
 
-        // @TODO:
-        // type 2 spawn rate
+        // @TODO: type 2 spawn rate
 
         private void GiantZolEnd()
         {

@@ -174,9 +174,6 @@ namespace ProjectZ.InGame.GameObjects.Things
                 var offsetRadiant = _offsetTime / 1000 * MathF.PI * 2;
                 var goUp = !_isStandingOnTop;
 
-                //if (Game1.GameManager.DialogIsRunning() && _objFisherman.Animator.CurrentAnimation.Id == "down")
-                //    goUp = _objFisherman.Animator.CurrentAnimation.Id == "down";
-
                 if (goUp)
                     offsetRadiant = offsetRadiant + MathF.PI;
 

@@ -17,7 +17,6 @@ namespace GBSPlayer
         private int _bufferCount;
 
         private const int OutputRate = 44100;
-        //private const int OutputRate = 48000;
 
         private byte[] _soundBuffer = new byte[(OutputRate / 100) * 2]; // 100 buffers per second
         private int _bufferIndex;

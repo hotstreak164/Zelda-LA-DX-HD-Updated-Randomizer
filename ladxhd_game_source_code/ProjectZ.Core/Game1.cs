@@ -124,10 +124,10 @@ namespace ProjectZ
         public static bool InProgress;
         
         // Stores classic cam setting for ending.
-        static public bool StoredCameraSet = false;
-        static public bool StoredClassicCamera = false;
-        static public bool StoredModernOverworld = false;
-        static public bool StoredClassicDungeon = false;
+        public static bool StoredCameraSet = false;
+        public static bool StoredClassicCamera = false;
+        public static bool StoredModernOverworld = false;
+        public static bool StoredClassicDungeon = false;
 
         public static bool FinishedLoading => _finishedLoading;
 
@@ -900,7 +900,7 @@ namespace ProjectZ
             _renderTarget1?.Dispose();
             _renderTarget1 = null;
 
-            // Dispose rendter target 2.
+            // Dispose render target 2.
             _renderTarget2?.Dispose();
             _renderTarget2 = null;
         }

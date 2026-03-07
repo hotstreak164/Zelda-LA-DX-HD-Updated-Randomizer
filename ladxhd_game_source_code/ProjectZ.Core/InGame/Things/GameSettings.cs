@@ -119,6 +119,7 @@
             ClassicDungeon  =  false;
             ClassicBorders  =  0;
             ClassicAlpha    =  1.00f;
+            ClassicScaling  =  true;
             CameraLock      =  true;
             SmoothCamera    =  true;
             ScreenShake     =  true;
@@ -156,6 +157,7 @@
             MoveSpeedAdded  =  0;
             NoHeartDrops    =  false;
             NoDamageLaunch  =  false;
+            MirrorReflects  =  false;
 
             // Sword Collection
             SwGrabNormal    =  true;
