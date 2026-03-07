@@ -6099,7 +6099,7 @@ namespace ProjectZ.InGame.GameObjects
             {
                 bool isOverworld = Map.IsOverworld || _previousMap.IsOverworld;
                 bool mapIsCave = Map.IsCave || _previousMap.IsCave;
-                bool mapIsDungeon = Map.DungeonMode && Map.DungeonEgg && Map.DungeonCastle;
+                bool mapIsDungeon = Map.DungeonMode || Map.DungeonCastle || Map.DungeonEgg;
 
                 if (isOverworld || !mapIsCave && !mapIsDungeon)
                 {
