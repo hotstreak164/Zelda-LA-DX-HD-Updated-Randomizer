@@ -444,6 +444,52 @@ namespace ProjectZ.InGame.GameSystems
                 _finishedLoading = true;
             }
         }
+        private void SetUpMusic(MapManager mm, int stage)
+        {
+            // Game manager and the current map.
+            var gm = Game1.GameManager;
+            var map = mm.CurrentMap;
+
+            // Before "Game1.GameManager.MapManager.FinishLoadingMap" && "MapManager.ObjLink.UpdateMapTransitionIn".
+            if (stage == 1)
+            {
+                // Music handling
+                var currentTrack = Game1.GbsPlayer.CurrentTrack;
+                var nextTrack = -1;
+                for (var i = 0; i < map.MapMusic.Length; i++)
+                    if (map.MapMusic[i] >= 0)
+                        nextTrack = map.MapMusic[i];
+
+                // Check if we're supposed to be playing the intro music.
+                bool introMusic = gm.SaveManager.GetString("introMusic", "0") == "1";
+
+                // Don't restart the music when in dungeons, in caves, if a powerup is active, or intro music is playing.
+                bool restart1 = !introMusic && (map.IsOverworld || !map.DungeonMode && !map.DungeonCastle && !map.IsCave);
+                bool restart2 = !gm.PieceOfPowerIsActive && !gm.GuardianAcornIsActive;
+
+                // Clear the music from all slots.
+                if (restart1)
+                    gm.SetMusic(-1, 0);
+                if (restart2)
+                    gm.SetMusic(-1, 1);
+                gm.SetMusic(-1, 2);
+
+                // Stop whatever music was playing.
+                if (restart1)
+                {
+                    Game1.GbsPlayer.Stop();
+                    Game1.GbsPlayer.Pump();
+                }
+            }
+            // After "Game1.GameManager.MapManager.FinishLoadingMap" && "MapManager.ObjLink.UpdateMapTransitionIn".
+            if (stage == 2)
+            {
+                // Set the music to play. Music will start in "EndTransition".
+                for (var i = 0; i < map.MapMusic.Length; i++)
+                    if (map.MapMusic[i] >= 0)
+                        Game1.GameManager.SetMusic(map.MapMusic[i], i, false);
+            }
+        }
 
         public void FinishLoading()
         {
@@ -458,8 +504,8 @@ namespace ProjectZ.InGame.GameSystems
             #endif
                 throw new Exception("Map loading thread failed.", _loadingException);
             }
-            var gm = Game1.GameManager;
-            var mm = gm.MapManager;
+            // Shorter reference for the map manager.
+            var mm = Game1.GameManager.MapManager;
 
             // Swap in the newly loaded map (mm.NextMap becomes the old map after this).
             var oldMap = mm.CurrentMap;
@@ -481,25 +527,10 @@ namespace ProjectZ.InGame.GameSystems
             {
                 mm.NextMap = restoreNext;
             }
-            // Music handling
-            var currentTrack = Game1.GbsPlayer.CurrentTrack;
-            var nextTrack = -1;
-            for (var i = 0; i < mm.CurrentMap.MapMusic.Length; i++)
-                if (mm.CurrentMap.MapMusic[i] >= 0)
-                    nextTrack = mm.CurrentMap.MapMusic[i];
+            // Getting the music to work correct with the map loading changes has been a nightmare. The
+            // easiest place to handle if it restarts is here so give it a method to set it all up.
+            SetUpMusic(mm, 1);
 
-            // Clear the music from all slots.
-            if (!mm.CurrentMap.DungeonMode)
-                Game1.GameManager.SetMusic(-1, 0);
-            Game1.GameManager.SetMusic(-1, 1);
-            Game1.GameManager.SetMusic(-1, 2);
-
-            // Stop whatever music was playing.
-            if (!mm.CurrentMap.DungeonMode)
-            {
-                Game1.GbsPlayer.Stop();
-                Game1.GbsPlayer.Pump();
-            }
             // Finish loading map
             mm.FinishLoadingMap(mm.CurrentMap);
 
@@ -513,10 +544,8 @@ namespace ProjectZ.InGame.GameSystems
             // Update the transition into the new map.
             MapManager.ObjLink.UpdateMapTransitionIn(0);
 
-            // Set the music to play. Music will start in "EndTransition".
-            for (var i = 0; i < mm.CurrentMap.MapMusic.Length; i++)
-                if (mm.CurrentMap.MapMusic[i] >= 0)
-                    gm.SetMusic(mm.CurrentMap.MapMusic[i], i, false);
+            // Finish setting up the music. It needed to be split across two stages.
+            SetUpMusic(mm, 2);
 
             // Center the camera after the map is done loading.
             var goalPosition = mm.GetCameraTarget();

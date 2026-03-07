@@ -899,6 +899,13 @@ namespace ProjectZ.InGame.Things
             else
                 PlaySoundEffect("D360-23-17");
         }
+
+        public void StopPieceOfPower()
+        {
+            PieceOfPowerIsActive = false;
+            SetMusic(-1, 1, true);
+        }
+
         public void StartPieceOfPowerMusic(int Variation)
         {
             // 0: Delayed with sound effect
@@ -913,72 +920,6 @@ namespace ProjectZ.InGame.Things
                 Game1.GbsPlayer.CurrentTrack = 72;
                 _musicArray[1] = 72;
             }
-        }
-        public void StopPieceOfPower()
-        {
-            PieceOfPowerIsActive = false;
-            SetMusic(-1, 1, true);
-        }
-
-        public void ResetMusic()
-        {
-            for (var i = 0; i < MusicChannels; i++)
-            {
-                _musicArray[i] = -1;
-                _musicCounter[i] = 0;
-            }
-        }
-
-        public void UpdateMusic()
-        {
-            for (var i = 0; i < MusicChannels; i++)
-            {
-                if (_musicCounter[i] == 0)
-                    continue;
-
-                _musicCounter[i] -= Game1.DeltaTime;
-
-                // finished playing the music?
-                if (_musicCounter[i] <= 0)
-                {
-                    _musicArray[i] = -1;
-                    _musicCounter[i] = 0;
-                    PlayMusic();
-                }
-            }
-        }
-
-        public void StopMusic(bool reset = false)
-        {
-            if (reset)
-                ResetMusic();
-
-            Game1.GbsPlayer.Stop();
-        }
-
-        public void StopMusic(int time, int priority)
-        {
-            _musicCounter[priority] = time;
-        }
-
-        public void PlayMusic(bool startPlaying = true)
-        {
-            for (var i = MusicChannels - 1; i >= 0; i--)
-            {
-                if (_musicArray[i] >= 0)
-                {
-                    var songNumber = (byte)_musicArray[i];
-                    if (Game1.GbsPlayer.CurrentTrack != songNumber)
-                        Game1.GbsPlayer.StartTrack(songNumber);
-
-                    if (startPlaying)
-                        Game1.GbsPlayer.Play();
-
-                    return;
-                }
-            }
-            // no music is playing?
-            Game1.GbsPlayer.Stop();
         }
 
         public bool CheckSetMusicConditions(int trackID, int priority)
@@ -1019,6 +960,67 @@ namespace ProjectZ.InGame.Things
             // See if we should play music and if there is any nuances to take care of before playing the music.
             if (CheckSetMusicConditions(trackID, priority))
                 PlayMusic(startPlaying);
+        }
+
+        public void PlayMusic(bool startPlaying = true)
+        {
+            for (var i = MusicChannels - 1; i >= 0; i--)
+            {
+                if (_musicArray[i] >= 0)
+                {
+                    var songNumber = (byte)_musicArray[i];
+                    if (Game1.GbsPlayer.CurrentTrack != songNumber)
+                        Game1.GbsPlayer.StartTrack(songNumber);
+
+                    if (startPlaying)
+                        Game1.GbsPlayer.Play();
+
+                    return;
+                }
+            }
+            // no music is playing?
+            Game1.GbsPlayer.Stop();
+        }
+
+        public void StopMusic(bool reset = false)
+        {
+            if (reset)
+                ResetMusic();
+
+            Game1.GbsPlayer.Stop();
+        }
+
+        public void StopMusic(int time, int priority)
+        {
+            _musicCounter[priority] = time;
+        }
+
+        public void ResetMusic()
+        {
+            for (var i = 0; i < MusicChannels; i++)
+            {
+                _musicArray[i] = -1;
+                _musicCounter[i] = 0;
+            }
+        }
+
+        public void UpdateMusic()
+        {
+            for (var i = 0; i < MusicChannels; i++)
+            {
+                if (_musicCounter[i] == 0)
+                    continue;
+
+                _musicCounter[i] -= Game1.DeltaTime;
+
+                // finished playing the music?
+                if (_musicCounter[i] <= 0)
+                {
+                    _musicArray[i] = -1;
+                    _musicCounter[i] = 0;
+                    PlayMusic();
+                }
+            }
         }
 
         public int GetCurrentMusic()
@@ -1261,16 +1263,16 @@ namespace ProjectZ.InGame.Things
                 level++;
             }
             MapManager.NextMap.DungeonMode = true;
-            MapManager.NextMap.DungeonMapless = false;
+            MapManager.NextMap.DungeonEgg = false;
             MapManager.NextMap.DungeonCastle = false;
             MapManager.NextMap.LocationName = dungeonName;
             MapManager.NextMap.LocationFullName = dungeonName + "_" + dungeonLevel;
         }
 
-        public void SetDungeonMapless(string dungeonName)
+        public void SetDungeonEgg(string dungeonName)
         {
             MapManager.NextMap.DungeonMode = false;
-            MapManager.NextMap.DungeonMapless = true;
+            MapManager.NextMap.DungeonEgg = true;
             MapManager.NextMap.DungeonCastle = false;
             MapManager.NextMap.LocationName = dungeonName;
             MapManager.NextMap.LocationFullName = dungeonName;
@@ -1279,7 +1281,7 @@ namespace ProjectZ.InGame.Things
         public void SetCastle(string dungeonName)
         {
             MapManager.NextMap.DungeonMode = false;
-            MapManager.NextMap.DungeonMapless = false;
+            MapManager.NextMap.DungeonEgg = false;
             MapManager.NextMap.DungeonCastle = true;
             MapManager.NextMap.LocationName = dungeonName;
             MapManager.NextMap.LocationFullName = dungeonName;

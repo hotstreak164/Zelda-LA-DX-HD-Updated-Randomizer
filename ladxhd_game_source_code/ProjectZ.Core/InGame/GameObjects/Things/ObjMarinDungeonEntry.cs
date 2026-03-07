@@ -10,6 +10,8 @@ namespace ProjectZ.InGame.GameObjects.Things
     class ObjMarinDungeonEntry : GameObject
     {
         private Rectangle _rectangle;
+        private int _offsetX;
+        private int _offsetY;
 
         public ObjMarinDungeonEntry(Map.Map map, int posX, int posY, int offsetX, int offsetY) : base(map)
         {
@@ -18,6 +20,9 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             EntityPosition = new CPosition(posX, posY, 0);
             EntitySize = new Rectangle(0, 0, 16, 16);
+
+            _offsetX = offsetX;
+            _offsetY = offsetY;
 
             _rectangle = new Rectangle(posX, posY, 16, 16);
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
@@ -41,7 +46,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
                     // Set the dungeon sequence if she is on the map.
                     if (marin != null)
-                        marin.LeaveDungeonSequence(EntityPosition.Position);
+                        marin.LeaveDungeonSequence(EntityPosition.Position, _offsetX, _offsetY);
                 }
             }
         }

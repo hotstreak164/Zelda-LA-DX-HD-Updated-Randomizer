@@ -5500,7 +5500,7 @@ namespace ProjectZ.InGame.GameObjects
             if (_ocarinaSong == 1)
             {
                 // The value for MapTeleport must be 2 or 3 to use the map to warp with Manbo's song.
-                if (GameSettings.MapTeleport >= 2 && !Map.DungeonMode && !Map.DungeonMapless)
+                if (GameSettings.MapTeleport >= 2 && !Map.DungeonMode && !Map.DungeonEgg)
                 {
                     // Open a new instance of the map overlay and set the flag 'ManboTeleport' that signifies it was an ocarina warp.
                     ManboTeleport = true;
@@ -5523,7 +5523,7 @@ namespace ProjectZ.InGame.GameObjects
                 var transitionSystem = (MapTransitionSystem)Game1.GameManager.GameSystems[typeof(MapTransitionSystem)];
                 transitionSystem.ResetTransition();
 
-                if (Map.DungeonMode || Map.DungeonMapless)
+                if (Map.DungeonMode || Map.DungeonEgg)
                 {
                     // HACK: If the player used the warp above level 8 and entered the dungeon, the save position is set to the warp
                     // rather than the dungeon 8 entrance. So if the last position is the warp, overwrite it with dungeon 8 entrance.
@@ -6095,13 +6095,11 @@ namespace ProjectZ.InGame.GameObjects
             // Stop Guardian Acorn and Piece of Power during certain transitions.
             if (Map != null && _previousMap != null)
             {
-                bool isOverworld = Map.MapName == "overworld.map" || _previousMap.MapName == "overworld.map";
-                bool mapIsCave = !string.IsNullOrEmpty(Map.MapName) && Map.MapName.StartsWith("cave");
-                bool prevIsCave = !string.IsNullOrEmpty(_previousMap.MapName) && _previousMap.MapName.StartsWith("cave");
-                bool mapsNotCave = !mapIsCave && !prevIsCave;
-                bool notDungeon = !Map.DungeonMode && !Map.DungeonMapless && !Map.DungeonCastle;
+                bool isOverworld = Map.IsOverworld || _previousMap.IsOverworld;
+                bool mapIsCave = Map.IsCave || _previousMap.IsCave;
+                bool mapIsDungeon = Map.DungeonMode && Map.DungeonEgg && Map.DungeonCastle;
 
-                if (isOverworld || (mapsNotCave && notDungeon))
+                if (isOverworld || !mapIsCave && !mapIsDungeon)
                 {
                     Game1.GameManager.StopGuardianAcorn();
                     Game1.GameManager.StopPieceOfPower();

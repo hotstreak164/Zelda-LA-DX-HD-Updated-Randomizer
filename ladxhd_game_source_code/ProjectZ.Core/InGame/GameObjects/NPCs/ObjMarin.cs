@@ -205,13 +205,13 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 Activate();
         }
 
-        public void LeaveDungeonSequence(Vector2 position)
+        public void LeaveDungeonSequence(Vector2 position, int offsetX = 0, int offsetY = 0)
         {
             _returnInit = true;
             _returnFinished = false;
             _returnCounter = 0;
 
-            _returnStart = new Vector2(position.X + 40, position.Y + 24);
+            _returnStart = new Vector2(position.X + 40 + offsetX, position.Y + 24 + offsetY);
             _returnEnd = new Vector2(position.X + 8, position.Y + 28);
 
             _dungeonLeaveSequence = true;
@@ -510,6 +510,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void UpdateReturn()
         {
+            var fieldState = SystemBody.GetFieldState(_body);
+            var inDeepWater = fieldState.HasFlag(MapStates.FieldStates.DeepWater);
+            
             // freeze the player (need to make sure to play the transition animation)
             var transitionSystem = (MapTransitionSystem)Game1.GameManager.GameSystems[typeof(MapTransitionSystem)];
             if (!transitionSystem.IsTransitioningIn())
@@ -526,7 +529,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_returnFinished)
             {
                 _walkDirection = 1;
-                _animator.Play("stand_1");
+                if (inDeepWater)
+                    _animator.Play("swim_1");
+                else
+                    _animator.Play("stand_1");
+
 
                 if (_returnCounter > 2500)
                 {
@@ -550,7 +557,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             // start walking
             if (_returnCounter > 1500)
             {
-                _animator.Play("walk_0");
+                if (inDeepWater)
+                    _animator.Play("swim_0");
+                else
+                    _animator.Play("walk_0");
+
                 var newPosition = AnimationHelper.MoveToTarget(EntityPosition.Position, _returnEnd, 0.75f * Game1.TimeMultiplier);
                 EntityPosition.Set(newPosition);
 

@@ -64,7 +64,7 @@ namespace ProjectZ.InGame.Map
             (GameSettings.ClassicCamera && 
             (!GameSettings.ClassicDungeon || 
             MapManager.ObjLink?.Map?.DungeonMode == true || 
-            MapManager.ObjLink?.Map?.DungeonMapless == true || 
+            MapManager.ObjLink?.Map?.DungeonEgg == true || 
             MapManager.ObjLink?.Map?.DungeonCastle == true));
 
         // Classic Camera transition speed loaded via "lahdmod".
@@ -107,7 +107,7 @@ namespace ProjectZ.InGame.Map
         {
             Vector2 fieldCoords = MapManager.ObjLink.CenterPosition.Position;
 
-            if (Game1.ClassicCamera.CameraFieldCoords != Vector2.Zero && MapManager.ObjLink.Map.MapName != "overworld.map")
+            if (Game1.ClassicCamera.CameraFieldCoords != Vector2.Zero && !MapManager.ObjLink.Map.IsOverworld)
                 fieldCoords = Game1.ClassicCamera.CameraFieldCoords;
 
             fieldRect = MapManager.ObjLink.Map.GetField(fieldCoords);

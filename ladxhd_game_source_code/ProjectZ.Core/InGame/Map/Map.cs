@@ -48,11 +48,12 @@ namespace ProjectZ.InGame.Map
 
         public bool Is2dMap;
         public bool DungeonMode;
-        public bool DungeonMapless;
+        public bool DungeonEgg;
         public bool DungeonCastle;
         public bool UseLight;
         public bool UseShadows;
         public bool IsOverworld;
+        public bool IsCave;
         public bool NoFollowers;
         public bool IsFinalMap;
 
@@ -85,7 +86,7 @@ namespace ProjectZ.InGame.Map
             Is2dMap = false;
             IsOverworld = false;
             DungeonMode = false;
-            DungeonMapless = false;
+            DungeonEgg = false;
             DungeonCastle = false;
             NoFollowers = false;
             IsFinalMap = false;

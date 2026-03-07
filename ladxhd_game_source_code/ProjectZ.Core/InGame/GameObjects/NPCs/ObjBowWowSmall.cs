@@ -75,7 +75,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             string endingstate = Game1.GameManager.SaveManager.GetString("final_show", "0");
 
-            if (map.MapName != "overworld.map" && endingstate != "1")
+            if (!map.IsOverworld && endingstate != "1")
                 new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
         }
 

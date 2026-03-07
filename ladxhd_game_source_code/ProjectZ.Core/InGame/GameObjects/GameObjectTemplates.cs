@@ -245,6 +245,7 @@ namespace ProjectZ.InGame.GameObjects
             ObjectTemplates.Add("break_fence_end", null);
 
             ObjectTemplates.Add("overworldObject", new GameObjectTemplate(typeof(ObjOverworld), new object[] { }));
+            ObjectTemplates.Add("caveObject", new GameObjectTemplate(typeof(ObjCave), new object[] { }));
 
             ObjectTemplates.Add("door", new GameObjectTemplate(typeof(ObjDoor), new object[] { 16, 16, null, null, null, 0, 0, true }));
             ObjectTemplates.Add("door2d", new GameObjectTemplate(typeof(ObjDoor2d), new object[] { 16, 16, null, null, null }));
@@ -374,7 +375,7 @@ namespace ProjectZ.InGame.GameObjects
             ObjectTemplates.Add("break_dungeon_start", null);
 
             ObjectTemplates.Add("dungeon", new GameObjectTemplate(typeof(ObjDungeon), new object[] { null, true, 0 }));
-            ObjectTemplates.Add("dungeonMapless", new GameObjectTemplate(typeof(ObjDungeonMapless), new object[] { null, true }));
+            ObjectTemplates.Add("dungeonEgg", new GameObjectTemplate(typeof(ObjDungeonEgg), new object[] { null, true }));
             ObjectTemplates.Add("dungeonCastle", new GameObjectTemplate(typeof(ObjCastle), new object[] { null, true }));
 
             ObjectTemplates.Add("no follower", new GameObjectTemplate(typeof(ObjNoFollower), new object[] { }));
@@ -531,7 +532,7 @@ namespace ProjectZ.InGame.GameObjects
             ObjectTemplates.Add("maria", new GameObjectTemplate(typeof(ObjMarin), new object[] { }));
             ObjectTemplates.Add("mariaDisabler", new GameObjectTemplate(typeof(ObjMarinDisabler), new object[] { }));
             ObjectTemplates.Add("grandmother", new GameObjectTemplate(typeof(ObjGrandmother), new object[] { null, null }));
-            ObjectTemplates.Add("mariaDungeonEntry", new GameObjectTemplate(typeof(ObjMarinDungeonEntry), new object[] { 16, 16 }));
+            ObjectTemplates.Add("mariaDungeonEntry", new GameObjectTemplate(typeof(ObjMarinDungeonEntry), new object[] { 0, 0 }));
             ObjectTemplates.Add("owl", new GameObjectTemplate(typeof(ObjOwl), new object[] { null, new Rectangle(-16, 32, 48, 32), false, "owl", 0 }));
             ObjectTemplates.Add("fisherman", new GameObjectTemplate(typeof(ObjFisherman), new object[] { }));
             ObjectTemplates.Add("alligator", new GameObjectTemplate(typeof(ObjAlligator), new object[] { }));
