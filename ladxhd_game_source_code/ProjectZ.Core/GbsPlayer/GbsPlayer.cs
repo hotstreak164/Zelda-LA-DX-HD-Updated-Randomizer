@@ -83,7 +83,7 @@ namespace GBSPlayer
                 if (!GbsLoaded)
                     return;
 
-                if (Cpu.IsRunning && trackNr == CurrentTrack)
+                if (trackNr == CurrentTrack)
                     return;
 
                 CurrentTrack = trackNr;
@@ -91,7 +91,7 @@ namespace GBSPlayer
                 SoundGenerator.Stop();
                 GbsInit(trackNr);
                 SoundGenerator.SetStopTime(0);
-                Cpu.IsRunning = true;
+                Cpu.IsRunning = false;
             }
         }
 
@@ -102,13 +102,14 @@ namespace GBSPlayer
             SoundGenerator.Stop();
             GbsInit(trackNr);
             SoundGenerator.SetStopTime(0);
-            Cpu.IsRunning = true;
+            Cpu.IsRunning = false;
         }
 
         private void GbsInit(byte trackNumber)
         {
             Cartridge.Init();
             Cpu.Init();
+            SoundGenerator.Init();
             Cpu.SkipBootROM();
             Cpu.SetPlaybackSpeed(_playbackSpeed);
 

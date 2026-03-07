@@ -488,8 +488,14 @@ namespace ProjectZ.InGame.GameSystems
                 if (mm.CurrentMap.MapMusic[i] >= 0)
                     nextTrack = mm.CurrentMap.MapMusic[i];
 
-            if (currentTrack != nextTrack)
-                Game1.GbsPlayer.Pause();
+            // Clear the music from all slots.
+            Game1.GameManager.SetMusic(-1, 0);
+            Game1.GameManager.SetMusic(-1, 1);
+            Game1.GameManager.SetMusic(-1, 2);
+
+            // Stop whatever music was playing.
+            Game1.GbsPlayer.Stop();
+            Game1.GbsPlayer.Pump();
 
             // Finish loading map
             mm.FinishLoadingMap(mm.CurrentMap);
@@ -504,23 +510,10 @@ namespace ProjectZ.InGame.GameSystems
             // Update the transition into the new map.
             MapManager.ObjLink.UpdateMapTransitionIn(0);
 
-            // If anything set music in slot 2 unload it now.
-            Game1.GameManager.SetMusic(-1, 2);
-
-            // Set the music to play.
-            bool hasMusic = false;
+            // Set the music to play. Music will start in "EndTransition".
             for (var i = 0; i < mm.CurrentMap.MapMusic.Length; i++)
-            {
                 if (mm.CurrentMap.MapMusic[i] >= 0)
-                {
                     gm.SetMusic(mm.CurrentMap.MapMusic[i], i, false);
-                    hasMusic = true;
-                }
-            }
-            if (hasMusic)
-                gm.PlayMusic(true);
-            else
-                Game1.GbsPlayer.Stop();
 
             // Center the camera after the map is done loading.
             var goalPosition = mm.GetCameraTarget();

@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.Controls;
+using ProjectZ.InGame.GameObjects.Base;
+using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.Interface;
+using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.Pages
@@ -67,7 +71,7 @@ namespace ProjectZ.InGame.Pages
             // Toggle: Classic Music Tile Cues
             _toggleAudioClassic = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_classic_music", GameSettings.ClassicMusic, 
-                newState => { GameSettings.ClassicMusic = newState; });
+                newState => { ToggleMusicCues(newState); });
             _contentLayout.AddElement(_toggleAudioClassic);
             _tooltips.Add("tooltip_audio_classic_music");
 
@@ -101,6 +105,27 @@ namespace ProjectZ.InGame.Pages
             _audioSettingsLayout.AddElement(_bottomBar);
             PageLayout = _audioSettingsLayout;
         }
+
+        private void ToggleMusicCues(bool newState)
+        {
+            // Set the new state.
+            GameSettings.ClassicMusic = newState;
+
+            // Get a reference to the map if it exists.
+            var currentMap = MapManager.ObjLink?.Map;
+
+            // If a map exists then find the overworld "music tile" if possible.
+            if (currentMap != null )
+            {
+                // "GetObjectsOfType" is not something that should be used often, but in this case it's fine.
+                List<GameObject> objects = currentMap.Objects.GetObjectsOfType(typeof(ObjMusicTile));
+
+                // There should only be a single music tile object and only on the overworld.
+                foreach (var musicTile in objects.OfType<ObjMusicTile>())
+                    musicTile.UpdateMusicData();
+            }
+        }
+
 
         public override void Update(CButtons pressedButtons, GameTime gameTime)
         {

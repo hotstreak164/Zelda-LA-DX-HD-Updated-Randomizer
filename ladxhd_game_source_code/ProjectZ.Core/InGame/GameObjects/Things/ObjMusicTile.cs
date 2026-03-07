@@ -12,8 +12,8 @@ namespace ProjectZ.InGame.GameObjects.Things
     {
         private string[,] _musicData;
 
-        private bool _currentEnabled;
         private int _lastTrackId = -1;
+        private bool _introMusic;
 
         public ObjMusicTile() : base("editor music") { }
 
@@ -21,50 +21,61 @@ namespace ProjectZ.InGame.GameObjects.Things
         {
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
 
-            // Store current option to detect change later.
-            _currentEnabled = GameSettings.ClassicMusic;
-
             // Load the music tilemap data.
             UpdateMusicData();
+
+            // We should only need to resolve this once on it's creation.
+            _introMusic = Game1.GameManager.SaveManager.GetString("introMusic", "0") == "1";
         }
 
         private void Update()
         {
-            // If there is no music data or Link is showing the sword do not play music.
-            if (_musicData == null || MapManager.ObjLink.IsShowingSword())
+            // There is no valid music data, Link is showing the sword, or the map is currently transitioning.
+            if (_musicData == null || MapManager.ObjLink.IsShowingSword() || MapManager.ObjLink.IsTransitioning)
                 return;
 
-            // Offset the Y position by 4 pixels to match Link's body box center.
-            var position = new Point(
-                (int)(MapManager.ObjLink.PosX - Map.MapOffsetX * Values.TileSize) / 16,
-                (int)(MapManager.ObjLink.PosY - 4 - Map.MapOffsetY * Values.TileSize) / 16);
-
-            if (0 <= position.X && position.X < _musicData.GetLength(0) &&
-                0 <= position.Y && position.Y < _musicData.GetLength(1))
+            // If the intro is taking place (before the sword), force the intro music.
+            if (_introMusic && _lastTrackId != 28)
             {
-                // Hack to play the intro music.
-                if (_lastTrackId != 28 && Game1.GameManager.SaveManager.GetString("introMusic", "0") == "1")
-                {
-                    Game1.GameManager.SetMusic(28, 0, false);
-                    return;
-                }
-                // Play the music from the tile.
+                _lastTrackId = 28;
+                Game1.GameManager.SetMusic(28, 0, true);
+                return;
+            }
+            // If we're not forcing the intro music get the tile data.
+            else if (!_introMusic)
+            {
+                // Offset the Y position by 4 pixels to match Link's body box center.
+                var linkPosX = (int)(MapManager.ObjLink.PosX - Map.MapOffsetX * Values.TileSize) / 16;
+                var linkPosY = (int)(MapManager.ObjLink.PosY - 4 - Map.MapOffsetY * Values.TileSize) / 16;
+                var position = new Point(linkPosX, linkPosY);
+
+                // Check if the current tile has music.
+                var posCheck1 = (0 <= position.X && position.X < _musicData.GetLength(0));
+                var posCheck2 = (0 <= position.Y && position.Y < _musicData.GetLength(1));
+
+                // If the track has been resolved.
                 var trackStr = _musicData[position.X, position.Y];
+
+                // Try to parse as an integer.
                 if (int.TryParse(trackStr, out var trackID))
                 {
                     if (_lastTrackId != trackID)
                     {
                         _lastTrackId = trackID;
-                        Game1.GameManager.SetMusic(trackID, 0, false);
+                        Game1.GameManager.SetMusic(trackID, 0, true);
                     }
                 }
             }
-            // Detect if the user changed the classic music cues option and reload music tilemap data.
-            if (_currentEnabled != GameSettings.ClassicMusic)
-                UpdateMusicData();
         }
 
-        private void UpdateMusicData()
+        public void SwordCollected()
+        {
+            // Signal that the intro music is done.
+            _lastTrackId = -1;
+            _introMusic = false;
+        }
+
+        public void UpdateMusicData()
         {
             // Default to modern music tilemap data.
             string musicTileData = "musicOverworld.data";
@@ -75,9 +86,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // Reload the data into the game.
             _musicData = DataMapSerializer.LoadData(Path.Combine(Values.PathContentFolder, musicTileData));
-
-            // Update the currently enabled boolean to detect a future change.
-            _currentEnabled = GameSettings.ClassicMusic;
         }
+
     }
 }

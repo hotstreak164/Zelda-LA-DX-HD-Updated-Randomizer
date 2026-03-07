@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -4015,6 +4016,13 @@ namespace ProjectZ.InGame.GameObjects
                     var animation = new ObjSparkingEffect(Map, 0, 0, 0, 0);
                     animation.EntityPosition.Set(new Vector2(BodyRectangle.X, EntityPosition.Y - EntityPosition.Z - 30));
                     Map.Objects.SpawnObject(animation);
+
+                    // "GetObjectsOfType" is not something that should be used often, but in this case it's fine.
+                    List<GameObject> objects = Map.Objects.GetObjectsOfType(typeof(ObjMusicTile));
+
+                    // Update that the sword has been collected on the music tile.
+                    foreach (var musicTile in objects.OfType<ObjMusicTile>())
+                        musicTile.SwordCollected();
                 }
                 else
                     return;
