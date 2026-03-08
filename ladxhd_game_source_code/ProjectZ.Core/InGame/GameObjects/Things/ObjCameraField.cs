@@ -15,7 +15,6 @@ namespace ProjectZ.InGame.GameObjects.Things
         {
             EntityPosition = new CPosition(posX, posY, 0);
             EntitySize = new Rectangle(0, 0, 16, 16);
-            Game1.ClassicCamera.AddToList(this);
         }
     }
 }

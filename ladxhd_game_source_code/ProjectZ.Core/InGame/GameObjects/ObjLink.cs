@@ -442,7 +442,6 @@ namespace ProjectZ.InGame.GameObjects
         public Rectangle ContrastField = Rectangle.Empty;
         public ObjFieldBarrier[] FieldBarrier;
         public bool FieldChange;
-        public bool SetFieldObject;
 
         // Prevents Enemy Position Reset
         public bool PreventReset;
@@ -6484,13 +6483,6 @@ namespace ProjectZ.InGame.GameObjects
                 // Make sure to not start falling while transitioning into a 2d map with a ladder.
                 if (Map.Is2dMap)
                     _body.IgnoresZ = true;
-
-                // If the map contains camera objects, set the closest one to Link.
-                if (Camera.ClassicMode && !SetFieldObject)
-                {
-                    SetFieldObject = true;
-                    Game1.ClassicCamera.SetClosestCoords();
-                }
             }
             if (DirectionEntry >= 0)
                 Direction = DirectionEntry;
@@ -6592,12 +6584,6 @@ namespace ProjectZ.InGame.GameObjects
             // Disable black screen override for modern camera.
             else
                 BlackScreenOverride = false;
-
-            // Always clear the list of camera field objects if loading into the overworld.
-            Game1.ClassicCamera.ClearList();
-
-            // Reset the field object variable so it can be set again.
-            SetFieldObject = false;
         }
     }
 }

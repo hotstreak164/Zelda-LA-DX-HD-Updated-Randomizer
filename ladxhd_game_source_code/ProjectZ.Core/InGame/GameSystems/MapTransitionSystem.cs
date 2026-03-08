@@ -254,6 +254,7 @@ namespace ProjectZ.InGame.GameSystems
 
         private void StartTransition()
         {
+            // Do some transition start stuff on ObjLink.
             MapManager.ObjLink.StartTransitioning();
 
             _introTransition = Game1.GameManager.SaveManager.GetString("played_intro", "0") != "1";
@@ -261,21 +262,37 @@ namespace ProjectZ.InGame.GameSystems
             if (!_introTransition)
                 Game1.GameManager.DrawPlayerOnTopPercentage = 1.0f;
 
+            // If classic camera is active.
             if (Camera.ClassicMode || (GameSettings.ClassicCamera && GameSettings.ClassicDungeon) || (!GameSettings.ClassicCamera && GameSettings.ModernOverworld))
+            {
+                // Snap the camera during any transitions.
                 Camera.SnapCamera = true;
+
+                // Find the closest camera to lock onto while exiting the map.
+                if (MapManager.ObjLink.CurrentState != ObjLink.State.OcarinaTeleport)
+                    Game1.ClassicCamera.FindClosestCoords();
+            }
         }
 
         private void EndTransition()
         {
             _knockoutTransition = false;
 
+            // Do some transition end stuff on ObjLink.
             MapManager.ObjLink.EndTransitioning();
 
+            // Start playing the next song.
             Game1.GbsPlayer.SetVolumeMultiplier(1);
             Game1.GbsPlayer.Play();
 
-            MapManager.Camera.SoftUpdate(Game1.GameManager.MapManager.GetCameraTarget());
+            // Stop snapping the camera.
             Camera.SnapCamera = false;
+
+            // Do a soft update to Link's location.
+            MapManager.Camera.SoftUpdate(Game1.GameManager.MapManager.GetCameraTarget());
+
+            // Always clear the list of camera field objects if loading into the overworld.
+            Game1.ClassicCamera.ClearList();
         }
 
         public float TransitionPercentage()
@@ -340,7 +357,7 @@ namespace ProjectZ.InGame.GameSystems
             _transitionObject.TransitionColor = transitionColor;
             _transitionObject.Percentage = startFromMiddle ? 1 : 0;
 
-            // start transition
+            // Start the transition.
             StartTransition();
 
             if (StartDreamTransition)
@@ -359,7 +376,7 @@ namespace ProjectZ.InGame.GameSystems
                 StartKnockoutTransition = false;
                 KnockoutTransition();
             }
-            // start loading the new map in a thread
+            // Start loading the new map in a thread.
             _loadingThread = new Thread(o => ThreadLoading(mapFileName));
             _loadingThread.Start();
         }
@@ -537,10 +554,8 @@ namespace ProjectZ.InGame.GameSystems
             // If classic camera is enabled then find the closest camera. Do not try to find a camera
             // field object during ocarina teleport or it will pan to the nearest one that is found.
             if (Camera.ClassicMode && MapManager.ObjLink.CurrentState != ObjLink.State.OcarinaTeleport)
-            {
-                Game1.ClassicCamera.ClearList();
                 Game1.ClassicCamera.FindClosestCoords();
-            }
+
             // Update the transition into the new map.
             MapManager.ObjLink.UpdateMapTransitionIn(0);
 
