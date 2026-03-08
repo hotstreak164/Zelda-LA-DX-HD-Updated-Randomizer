@@ -205,6 +205,21 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 Activate();
         }
 
+        public override void SetPosition(Vector2 position)
+        {
+            if (_currentState == States.DungeonReturn)
+                return;
+
+            EntityPosition.Set(position);
+        }
+
+        public override void SetFacingDirection(int direction)
+        {
+            _lastDirection = direction;
+            _walkDirection = direction;
+            _animator.Play("stand_" + direction);
+        }
+
         public void LeaveDungeonSequence(Vector2 position, int offsetX = 0, int offsetY = 0)
         {
             _returnInit = true;
@@ -234,14 +249,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 // stop walking
                 _animator.Stop();
             }
-        }
-
-        public override void SetPosition(Vector2 position)
-        {
-            if (_currentState == States.DungeonReturn)
-                return;
-
-            EntityPosition.Set(position);
         }
 
         private void Activate()
@@ -1117,13 +1124,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 transparency = time / 100;
 
             DrawHelper.DrawNormalized(spriteBatch, _spriteNote, position, Color.White * transparency);
-        }
-
-        public override void SetFacingDirection(int direction)
-        {
-            _lastDirection = direction;
-            _walkDirection = direction;
-            _animator.Play("stand_" + direction);
         }
     }
 }

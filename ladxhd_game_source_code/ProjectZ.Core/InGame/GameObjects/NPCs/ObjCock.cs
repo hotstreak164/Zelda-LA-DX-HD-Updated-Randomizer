@@ -145,6 +145,12 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             EntityPosition.Set(position);
         }
 
+        public override void SetFacingDirection(int direction)
+        {
+            _direction = direction;
+            _animator.Play("stand_" + direction);
+        }
+
         private void SetActive(bool isActive)
         {
             IsActive = isActive;
@@ -471,12 +477,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _carriableCompnent.IsActive = true;
             RemoveComponent(CollisionComponent.Index);
             ((DrawComponent)Components[DrawComponent.Index]).Layer = Values.LayerPlayer;
-        }
-
-        public override void SetFacingDirection(int direction)
-        {
-            _direction = direction;
-            _animator.Play("stand_" + direction);
         }
     }
 }

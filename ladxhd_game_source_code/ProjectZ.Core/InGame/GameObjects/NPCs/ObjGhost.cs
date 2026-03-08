@@ -87,6 +87,17 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
         }
 
+        public override void SetPosition(Vector2 position)
+        {
+            _lastDialogPosition = position;
+            EntityPosition.Set(position);
+        }
+
+        public override void SetFacingDirection(int direction)
+        {
+            _animator.Play("stand_" + direction);
+        }
+
         public void StartFollowing()
         {
             // offset the position in a random direction
@@ -103,12 +114,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             Game1.GameManager.StartDialogPath("ghost_start_following");
 
             _aiComponent.ChangeState("startFollow");
-        }
-
-        public override void SetPosition(Vector2 position)
-        {
-            _lastDialogPosition = position;
-            EntityPosition.Set(position);
         }
 
         private void InitReturn()
@@ -271,11 +276,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _aiComponent.ChangeState("return");
                 Game1.GameManager.SaveManager.RemoveString("ghost_return");
             }
-        }
-
-        public override void SetFacingDirection(int direction)
-        {
-            _animator.Play("stand_" + direction);
         }
     }
 }

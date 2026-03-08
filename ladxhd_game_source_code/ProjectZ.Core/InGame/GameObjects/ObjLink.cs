@@ -4755,7 +4755,7 @@ namespace ProjectZ.InGame.GameObjects
             {
                 CurrentState = State.ShowToadstool;
                 Animation.Play("show2");
-                Game1.GameManager.StartDialogPath("toadstool_hole");
+                Game1.GameManager.StartDialogPath("toadstool_hold");
             }
         }
 
@@ -4782,6 +4782,8 @@ namespace ProjectZ.InGame.GameObjects
                 CurrentState = State.Powdering;
                 Animation.Play("powder_" + Direction);
             }
+            // Try to spawn a new toadstool if out of powder.
+            Game1.GameManager.StartDialogPath("toadstool_check");
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
