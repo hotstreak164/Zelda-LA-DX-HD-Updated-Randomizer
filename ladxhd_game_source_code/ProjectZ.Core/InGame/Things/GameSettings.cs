@@ -36,8 +36,7 @@
         // Video Settings
         public static int     GameScale       =  Game1.MaxGameScale + 1;
         public static int     UiScale         =  11;
-        public static bool    IsFullscreen    =  false;
-        public static bool    ExFullscreen    =  false;
+        public static int     ScreenMode      =  0;
         public static bool    GlobalLights    =  true;
         public static bool    ObjectLights    =  true;
         public static bool    EnableShadows   =  true;
@@ -129,8 +128,7 @@
             // Video Settings
             GameScale       =  Game1.MaxGameScale + 1;
             UiScale         =  11;
-            IsFullscreen    =  false;
-            ExFullscreen    =  false;
+            ScreenMode      =  0;
             GlobalLights    =  true;
             ObjectLights    =  true;
             EnableShadows   =  true;

@@ -20,11 +20,11 @@ namespace ProjectZ
 {
     public class Game1 : Game
     {
-        #if WINDOWS
-            private const string SDL_LIB = "SDL2.dll";
-        #else
-            private const string SDL_LIB = "libSDL2-2.0.so.0";
-        #endif
+    #if WINDOWS
+        private const string SDL_LIB = "SDL2.dll";
+    #else
+        private const string SDL_LIB = "libSDL2-2.0.so.0";
+    #endif
 
         // Used to load an icon into the window for OpenGL.
         [DllImport(SDL_LIB, CallingConvention = CallingConvention.Cdecl)]
@@ -101,10 +101,10 @@ namespace ProjectZ
         public static bool AutoLoadSave;
         public static int AutoLoadSlot;
 
-#if ANDROID
+    #if ANDROID
         private static int _androidSurfaceWidthHint;
         private static int _androidSurfaceHeightHint;
-#endif
+    #endif
 
         private static volatile bool _finishedLoading;
         private static volatile bool _isExiting;
@@ -136,7 +136,7 @@ namespace ProjectZ
 
         public static bool FinishedLoading => _finishedLoading;
 
-#if ANDROID
+    #if ANDROID
         public static void SetAndroidSurfaceSizeHint(int width, int height)
         {
             if (width > 0 && height > 0)
@@ -145,13 +145,13 @@ namespace ProjectZ
                 _androidSurfaceHeightHint = height;
             }
         }
-#endif
+    #endif
 
         public static Matrix GetMatrix
         {
             get
             {
-#if ANDROID
+            #if ANDROID
                 if (WindowWidth > 0 && WindowHeight > 0)
                 {
                     var gd = Instance?.GraphicsDevice;
@@ -169,7 +169,7 @@ namespace ProjectZ
                             return Matrix.CreateScale((float)cb.Width / WindowWidth, (float)cb.Height / WindowHeight, 1f);
                     }
                 }
-#endif
+            #endif
                 return Matrix.CreateScale((float)Graphics.PreferredBackBufferWidth / WindowWidth, (float)Graphics.PreferredBackBufferHeight / WindowHeight, 1f);
             }
         }
@@ -206,7 +206,12 @@ namespace ProjectZ
             Graphics.PreferredBackBufferWidth = Values.MinWidth * 3;
             Graphics.PreferredBackBufferHeight = Values.MinHeight * 3;
 
-#if ANDROID
+            // Store the original window size to return to if started in fullscreen mode.
+            _lastWindowWidth  = Graphics.PreferredBackBufferWidth;
+            _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+
+
+        #if ANDROID
             if (_androidSurfaceWidthHint > 0 && _androidSurfaceHeightHint > 0)
             {
                 Graphics.PreferredBackBufferWidth = _androidSurfaceWidthHint;
@@ -221,7 +226,7 @@ namespace ProjectZ
                     Graphics.PreferredBackBufferHeight = displayMode.Height;
                 }
             }
-#endif
+        #endif
 
             Graphics.ApplyChanges();
 
@@ -290,8 +295,25 @@ namespace ProjectZ
             // Alt+Enter: Toggles fullscreen mode.
             else if (e.Key == Keys.Enter)
             {
+                // Get the graphics settings page.
+                if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(GraphicSettingsPage), out var videoPage))
+                {
+                    var GraphicsSettingsPage = (GraphicSettingsPage)videoPage;
+
+                    // Reverse the current screen mode.
+                    if (GameSettings.ScreenMode > 0)
+                    {
+                        GameSettings.ScreenMode = 0;
+                        GraphicsSettingsPage.SetFullscreenMode(0);
+                    }
+                    else
+                    {
+                        GameSettings.ScreenMode = 1;
+                        GraphicsSettingsPage.SetFullscreenMode(1);
+                    }
+                }
+                // Toggle the screen mode and save that it was toggled.
                 ToggleFullscreen();
-                InputHandler.ResetInputState();
                 SettingsSaveLoad.SaveSettings();
             }
         }
@@ -327,13 +349,6 @@ namespace ProjectZ
 
             // Initialize extra monster hit points set by the user.
             EnemyLives.Initialize();
-
-            // If borderless fullscreen is selected we can do it now.
-            if (GameSettings.IsFullscreen && !GameSettings.ExFullscreen)
-            {
-                GameSettings.IsFullscreen = false;
-                ToggleFullscreen();
-            }
         }
 
         private void LoadContentThreaded(Object obj)
@@ -385,9 +400,8 @@ namespace ProjectZ
             if (_firstFrameDrawn && !_fullscreenWasSet)
             {
                 // We need to delay it until the graphics device has been fully set up.
-                if (GameSettings.IsFullscreen && GameSettings.ExFullscreen)
+                if (GameSettings.ScreenMode > 0)
                 {
-                    GameSettings.IsFullscreen = false;
                     ToggleFullscreen();
                 }
                 _fullscreenWasSet = true;
@@ -526,7 +540,7 @@ namespace ProjectZ
                 Graphics.GraphicsDevice.SetRenderTarget(null);
                 GraphicsDevice.Clear(Color.Black);
 
-#if ANDROID
+            #if ANDROID
                 var pp = GraphicsDevice.PresentationParameters;
                 var targetWidth = pp.BackBufferWidth;
                 var targetHeight = pp.BackBufferHeight;
@@ -544,16 +558,16 @@ namespace ProjectZ
                     targetWidth = viewport.Width;
                     targetHeight = viewport.Height;
                 }
-#else
+            #else
                 var viewport = GraphicsDevice.Viewport;
-#endif
+            #endif
 
                 SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-#if ANDROID
+            #if ANDROID
                 SpriteBatch.Draw(MainRenderTarget, new Rectangle(0, 0, targetWidth, targetHeight), Color.White);
-#else
+            #else
                 SpriteBatch.Draw(MainRenderTarget, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
-#endif
+            #endif
                 SpriteBatch.End();
             }
 
@@ -688,14 +702,16 @@ namespace ProjectZ
             #endif
 
             // Enter fullscreen
-            if (_forceFullScreen || !GameSettings.IsFullscreen)
+            if (_forceFullScreen || GameSettings.ScreenMode > 0)
             {
-                FullScreen = GameSettings.IsFullscreen = true;
+                FullScreen = GameSettings.ScreenMode > 0;
 
                 // Save windowed backbuffer size so we can restore later
-                _lastWindowWidth  = Graphics.PreferredBackBufferWidth;
-                _lastWindowHeight = Graphics.PreferredBackBufferHeight;
-
+                if (GameSettings.ScreenMode == 1 && !WasExclusive)
+                {
+                    _lastWindowWidth  = Graphics.PreferredBackBufferWidth;
+                    _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+                }
                 var dm = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 
                 // We want the backbuffer to match the monitor size when fullscreen.
@@ -703,17 +719,18 @@ namespace ProjectZ
                 Graphics.PreferredBackBufferHeight = dm.Height;
 
                 // Exclusive vs borderless.
-                Graphics.HardwareModeSwitch = GameSettings.ExFullscreen;
+                Graphics.HardwareModeSwitch = GameSettings.ScreenMode == 2;
 
                 Graphics.IsFullScreen = true;
                 Graphics.ApplyChanges();
 
-                WasExclusive = GameSettings.ExFullscreen;
+                WasExclusive = GameSettings.ScreenMode == 2;
             }
             // Exit fullscreen
             else
             {
-                FullScreen = GameSettings.IsFullscreen = false;
+                GameSettings.ScreenMode = 0;
+                FullScreen = false;
 
                 Graphics.IsFullScreen = false;
 
@@ -821,7 +838,7 @@ namespace ProjectZ
                 return;
 
         #if !ANDROID
-            if (!GameSettings.IsFullscreen)
+            if (GameSettings.ScreenMode == 0)
             {
                 int minW = Values.MinWidth;
                 int minH = Values.MinHeight;

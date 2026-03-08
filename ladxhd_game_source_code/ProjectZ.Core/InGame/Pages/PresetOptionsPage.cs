@@ -306,6 +306,7 @@ namespace ProjectZ.InGame.Pages
                 GraphicsSettingsPage.SetObjectLighting(GameSettings.ObjectLights);
                 GraphicsSettingsPage.SetDynamicShadows(GameSettings.EnableShadows);
                 GraphicsSettingsPage.SetVerticalSync(GameSettings.VerticalSync);
+                GraphicsSettingsPage.SetOpaqueHudBg(GameSettings.OpaqueHudBg);
             }
             if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(AudioSettingsPage), out var audioPage))
             {

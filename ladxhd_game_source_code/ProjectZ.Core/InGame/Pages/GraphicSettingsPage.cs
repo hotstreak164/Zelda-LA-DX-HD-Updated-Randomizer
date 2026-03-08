@@ -15,8 +15,7 @@ namespace ProjectZ.InGame.Pages
         private readonly InterfaceSlider     _sliderGameScale;
         private readonly InterfaceSlider     _sliderUIScale;
     #if !ANDROID
-        private readonly InterfaceListLayout _toggleFullscreen;
-        private readonly InterfaceListLayout _toggleExFullscreen;
+        private readonly InterfaceSlider     _sliderFullscreen;
     #endif
         private readonly InterfaceListLayout _toggleGlobalLighting;
         private readonly InterfaceListLayout _toggleObjectLighting;
@@ -29,6 +28,9 @@ namespace ProjectZ.InGame.Pages
 
         public void SetGameScaleValue(int value) { ((InterfaceSlider)_sliderGameScale).CurrentStep = value; }
         public void SetUserInterfaceScale(int value) { ((InterfaceSlider)_sliderUIScale).CurrentStep = value; }
+    #if !ANDROID
+        public void SetFullscreenMode(int value) { ((InterfaceSlider)_sliderFullscreen).CurrentStep = value; ((InterfaceSlider)_sliderFullscreen).UpdateLanguageText(); }
+    #endif
         public void SetGlobalLighting(bool state) => ((InterfaceToggle)_toggleGlobalLighting.Elements[1]).ToggleState = state;
         public void SetObjectLighting(bool state) => ((InterfaceToggle)_toggleObjectLighting.Elements[1]).ToggleState = state;
         public void SetDynamicShadows(bool state) => ((InterfaceToggle)_toggleDynamicShadows.Elements[1]).ToggleState = state;
@@ -62,24 +64,20 @@ namespace ProjectZ.InGame.Pages
             _sliderUIScale = new InterfaceSlider("settings_graphics_ui_scale",
                 buttonWidth, sliderHeight, new Point(1, 2), 1, 11, 1, GameSettings.UiScale-1,
                 number => { GameSettings.UiScale = number; Game1.ScaleChanged = true; })
-                { SetString = number => UIScaleSliderAdjustmentString(number) };
+                { SetString = (number) => UIScaleSliderAdjustmentString(number) };
             _contentLayout.AddElement(_sliderUIScale);
             _tooltips.Add("tooltip_graphics_ui_scale");
 
         #if !ANDROID
-            // Toggle: Fullscreen
-            _toggleFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
-                "settings_graphics_fullscreen", GameSettings.IsFullscreen,
-                newState => { Game1.ToggleFullscreen(); Game1.ScaleChanged = true; });
-            _contentLayout.AddElement(_toggleFullscreen);
+
+            // Slider: Screen Mode
+            _sliderFullscreen = new InterfaceSlider("settings_graphics_fullscreen",
+                buttonWidth, sliderHeight, new Point(1, 2), 0, 2, 1, GameSettings.ScreenMode,
+                number => { FullscreenSliderAdjustment(number); })
+                { SetString = number => FullscreenSliderText(number) };
+            _contentLayout.AddElement(_sliderFullscreen);
             _tooltips.Add("tooltip_graphics_fullscreen");
 
-            // Toggle: Exclusive Fullscreen
-            _toggleExFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
-                "settings_graphics_exfullscreen", GameSettings.ExFullscreen,
-                newState => { GameSettings.ExFullscreen = newState; });
-            _contentLayout.AddElement(_toggleExFullscreen);
-            _tooltips.Add("tooltip_graphics_exfullscreen");
         #endif
 
             // Toggle: Disable Global Lighting
@@ -129,7 +127,6 @@ namespace ProjectZ.InGame.Pages
         {
             base.Update(pressedButtons, gameTime);
 
-            UpdateFullscreenState();
             UpdateGameScaleSlider();
 
             // The back button was pressed.
@@ -173,6 +170,18 @@ namespace ProjectZ.InGame.Pages
             return " " + number + "x";
         }
 
+        private string FullscreenSliderText(int number)
+        {
+            return " " + Game1.LanguageManager.GetString("settings_graphics_fullscreen_0" + (number + 1).ToString(), "error");
+        }
+
+        private void FullscreenSliderAdjustment(int number)
+        {
+            GameSettings.ScreenMode = number;
+            Game1.ToggleFullscreen();
+            Game1.ScaleChanged = true;
+        }
+
         public override void OnLoad(Dictionary<string, object> intent)
         {
             // the left button is always the first one selected
@@ -187,15 +196,6 @@ namespace ProjectZ.InGame.Pages
         public override void OnResize(int newWidth, int newHeight)
         {
 
-        }
-
-        private void UpdateFullscreenState()
-        {
-        #if !ANDROID
-            var toggle = (InterfaceToggle)_toggleFullscreen.Elements[1];
-            if (toggle.ToggleState != GameSettings.IsFullscreen)
-                toggle.SetToggle(GameSettings.IsFullscreen);
-        #endif
         }
 
         private void UpdateGameScaleSlider()

@@ -48,8 +48,7 @@ namespace ProjectZ.InGame.SaveLoad
             // Video Settings
             GameSettings.GameScale = saveManager.GetInt("GameScale", GameSettings.GameScale);
             GameSettings.UiScale = saveManager.GetInt("UIScale", GameSettings.UiScale);
-            GameSettings.IsFullscreen = saveManager.GetBool("IsFullscreen", GameSettings.IsFullscreen);
-            GameSettings.ExFullscreen = saveManager.GetBool("ExFullscreen", GameSettings.ExFullscreen);
+            GameSettings.ScreenMode = saveManager.GetInt("ScreenMode", GameSettings.ScreenMode);
             GameSettings.GlobalLights = saveManager.GetBool("GlobalLights", GameSettings.GlobalLights);
             GameSettings.ObjectLights = saveManager.GetBool("ObjectLights", GameSettings.ObjectLights);
             GameSettings.EnableShadows = saveManager.GetBool("EnableShadows", GameSettings.EnableShadows);
@@ -137,8 +136,7 @@ namespace ProjectZ.InGame.SaveLoad
             // Video Settings
             saveManager.SetInt("GameScale", GameSettings.GameScale);
             saveManager.SetInt("UIScale", GameSettings.UiScale);
-            saveManager.SetBool("IsFullscreen", GameSettings.IsFullscreen);
-            saveManager.SetBool("ExFullscreen", GameSettings.ExFullscreen);
+            saveManager.SetInt("ScreenMode", GameSettings.ScreenMode);
             saveManager.SetBool("GlobalLights", GameSettings.GlobalLights);
             saveManager.SetBool("ObjectLights", GameSettings.ObjectLights);
             saveManager.SetBool("EnableShadows", GameSettings.EnableShadows);
