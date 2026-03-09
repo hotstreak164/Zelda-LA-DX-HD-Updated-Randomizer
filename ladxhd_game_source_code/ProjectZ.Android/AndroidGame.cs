@@ -40,13 +40,17 @@ namespace ProjectZ.Android
             var keyboardState = Keyboard.GetState();
             var gamePadState = GamePad.GetState(PlayerIndex.One);
 
-            if (keyboardState.IsKeyDown(Keys.Escape) ||
-                keyboardState.IsKeyDown(Keys.Back) ||
-                gamePadState.Buttons.Back == ButtonState.Pressed)
+            if (keyboardState.IsKeyDown(Keys.Escape) || keyboardState.IsKeyDown(Keys.Back) || gamePadState.Buttons.Back == ButtonState.Pressed)
             {
-                try { Exit(); } catch (PlatformNotSupportedException) { }
-            }
+                try 
+                {
+                    Exit(); 
+                } 
+                catch (PlatformNotSupportedException) 
+                { 
 
+                }
+            }
             base.Update(gameTime);
         }
 

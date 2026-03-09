@@ -129,7 +129,8 @@ namespace ProjectZ.Editor
                     _game.TargetElapsedTime = new TimeSpan((long)Math.Ceiling(_debugFrameTimes[_currentFrameTimeIndex] * 10000));
                 }
             }
-            if (InputHandler.KeyPressed(Keys.Escape) || InputHandler.KeyPressed(Keys.OemPeriod))
+
+            if (InputHandler.KeyPressed(Keys.Escape))
             {
                 if (Game1.ScreenManager.CurrentScreenId != Values.ScreenNameEditor &&
                     Game1.ScreenManager.CurrentScreenId != Values.ScreenNameEditorTileset &&
@@ -156,7 +157,8 @@ namespace ProjectZ.Editor
                             editorScreen.MousePixelPosition.Y));
                 }
             }
-            if (InputHandler.KeyPressed(Game1.DebugToggleDebugModeKey))
+
+            if (InputHandler.KeyPressed(Game1.DebugToggleMode))
                 Game1.DebugMode = !Game1.DebugMode;
 
             if (InputHandler.KeyPressed(Game1.DebugBox))

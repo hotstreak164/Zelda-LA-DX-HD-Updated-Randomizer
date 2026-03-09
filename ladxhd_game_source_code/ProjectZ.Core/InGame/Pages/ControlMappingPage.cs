@@ -76,7 +76,8 @@ namespace ProjectZ.InGame.Pages
             }
             // Bottom Bar / Reset Button / Back Button:
             _bottomBar = new InterfaceListLayout { Size = new Point(width - 50, (int)(height * Values.MenuFooterSize) - 20), HorizontalMode = true, Selectable = true };
-            _bottomBar.AddElement(new InterfaceButton(new Point(64, 18), new Point(2, 4), "settings_controls_reset", OnClickReset));
+            _bottomBar.AddElement(new InterfaceButton(new Point(64, 18), new Point(2, 4), "settings_controls_style_01", SetControlStyle1));
+            _bottomBar.AddElement(new InterfaceButton(new Point(64, 18), new Point(2, 4), "settings_controls_style_02", SetControlStyle2));
             _bottomBar.AddElement(new InterfaceButton(new Point(64, 18), new Point(2, 4), "settings_menu_back", element => { Game1.UiPageManager.PopPage(); }));
             controlLayout.AddElement(remapButtons);
             controlLayout.AddElement(_bottomBar);
@@ -195,11 +196,19 @@ namespace ProjectZ.InGame.Pages
             ControlHandler.ButtonDictionary[_selectedButton].Buttons = new Buttons[] { newButton };
         }
 
-        private void OnClickReset(InterfaceElement element)
+        private void SetControlStyle1(InterfaceElement element)
         {
-            ControlHandler.ResetControls();
+            ControlHandler.SetControlStyle1();
             UpdateUi();
             InputHandler.ResetInputState();
         }
+
+        private void SetControlStyle2(InterfaceElement element)
+        {
+            ControlHandler.SetControlStyle2();
+            UpdateUi();
+            InputHandler.ResetInputState();
+        }
+
     }
 }

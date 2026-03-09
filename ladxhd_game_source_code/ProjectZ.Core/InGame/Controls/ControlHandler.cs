@@ -31,7 +31,7 @@ namespace ProjectZ.InGame.Controls
 
         public static void Initialize()
         {
-            ResetControls();
+            SetControlStyle1();
 
             // A simple array to reference the names by index.
             ControllerNames = new string[]{ "XBox", "Nintendo", "Playstation" };
@@ -77,25 +77,47 @@ namespace ProjectZ.InGame.Controls
                 : buttonName;
         }
 
-        public static void ResetControls()
+        public static void SetControlStyle1()
         {
             ButtonDictionary.Clear();
             ButtonDictionary.Add(CButtons.Up, new ButtonMapper(new[] { Keys.Up }, new[] { Buttons.DPadUp }));
             ButtonDictionary.Add(CButtons.Down, new ButtonMapper(new[] { Keys.Down }, new[] { Buttons.DPadDown }));
             ButtonDictionary.Add(CButtons.Left, new ButtonMapper(new[] { Keys.Left }, new[] { Buttons.DPadLeft }));
             ButtonDictionary.Add(CButtons.Right, new ButtonMapper(new[] { Keys.Right }, new[] { Buttons.DPadRight }));
-            ButtonDictionary.Add(CButtons.A, new ButtonMapper(new[] { Keys.S }, new[] { Buttons.A }));
-            ButtonDictionary.Add(CButtons.B, new ButtonMapper(new[] { Keys.D }, new[] { Buttons.B }));
-            ButtonDictionary.Add(CButtons.X, new ButtonMapper(new[] { Keys.A }, new[] { Buttons.X }));
-            ButtonDictionary.Add(CButtons.Y, new ButtonMapper(new[] { Keys.W }, new[] { Buttons.Y }));
-            ButtonDictionary.Add(CButtons.LB, new ButtonMapper(new[] { Keys.OemMinus }, new[] { Buttons.LeftShoulder }));
-            ButtonDictionary.Add(CButtons.RB, new ButtonMapper(new[] { Keys.OemPlus }, new[] { Buttons.RightShoulder }));
-            ButtonDictionary.Add(CButtons.LT, new ButtonMapper(new[] { Keys.OemOpenBrackets }, new[] { Buttons.LeftTrigger }));
-            ButtonDictionary.Add(CButtons.RT, new ButtonMapper(new[] { Keys.OemCloseBrackets }, new[] { Buttons.RightTrigger }));
+            ButtonDictionary.Add(CButtons.A, new ButtonMapper(new[] { Keys.X }, new[] { Buttons.A }));
+            ButtonDictionary.Add(CButtons.B, new ButtonMapper(new[] { Keys.C }, new[] { Buttons.B }));
+            ButtonDictionary.Add(CButtons.X, new ButtonMapper(new[] { Keys.Z }, new[] { Buttons.X }));
+            ButtonDictionary.Add(CButtons.Y, new ButtonMapper(new[] { Keys.S }, new[] { Buttons.Y }));
+            ButtonDictionary.Add(CButtons.LB, new ButtonMapper(new[] { Keys.A }, new[] { Buttons.LeftShoulder }));
+            ButtonDictionary.Add(CButtons.RB, new ButtonMapper(new[] { Keys.D }, new[] { Buttons.RightShoulder }));
+            ButtonDictionary.Add(CButtons.LT, new ButtonMapper(new[] { Keys.Q }, new[] { Buttons.LeftTrigger }));
+            ButtonDictionary.Add(CButtons.RT, new ButtonMapper(new[] { Keys.W }, new[] { Buttons.RightTrigger }));
             ButtonDictionary.Add(CButtons.Select, new ButtonMapper(new[] { Keys.Space }, new[] { Buttons.Back }));
             ButtonDictionary.Add(CButtons.Start, new ButtonMapper(new[] { Keys.Enter }, new[] { Buttons.Start }));
-            ButtonDictionary.Add(CButtons.LS, new ButtonMapper(new[] { Keys.Q }, new[] { Buttons.LeftStick }));
-            ButtonDictionary.Add(CButtons.RS, new ButtonMapper(new[] { Keys.W }, new[] { Buttons.RightStick }));
+            ButtonDictionary.Add(CButtons.LS, new ButtonMapper(new[] { Keys.E }, new[] { Buttons.LeftStick }));
+            ButtonDictionary.Add(CButtons.RS, new ButtonMapper(new[] { Keys.R }, new[] { Buttons.RightStick }));
+            SetConfirmCancelButtons();
+        }
+
+        public static void SetControlStyle2()
+        {
+            ButtonDictionary.Clear();
+            ButtonDictionary.Add(CButtons.Up, new ButtonMapper(new[] { Keys.W }, new[] { Buttons.DPadUp }));
+            ButtonDictionary.Add(CButtons.Down, new ButtonMapper(new[] { Keys.S }, new[] { Buttons.DPadDown }));
+            ButtonDictionary.Add(CButtons.Left, new ButtonMapper(new[] { Keys.A }, new[] { Buttons.DPadLeft }));
+            ButtonDictionary.Add(CButtons.Right, new ButtonMapper(new[] { Keys.D }, new[] { Buttons.DPadRight }));
+            ButtonDictionary.Add(CButtons.A, new ButtonMapper(new[] { Keys.NumPad1 }, new[] { Buttons.A }));
+            ButtonDictionary.Add(CButtons.B, new ButtonMapper(new[] { Keys.NumPad2 }, new[] { Buttons.B }));
+            ButtonDictionary.Add(CButtons.X, new ButtonMapper(new[] { Keys.NumPad4 }, new[] { Buttons.X }));
+            ButtonDictionary.Add(CButtons.Y, new ButtonMapper(new[] { Keys.NumPad5 }, new[] { Buttons.Y }));
+            ButtonDictionary.Add(CButtons.LB, new ButtonMapper(new[] { Keys.NumPad7 }, new[] { Buttons.LeftShoulder }));
+            ButtonDictionary.Add(CButtons.RB, new ButtonMapper(new[] { Keys.NumPad8 }, new[] { Buttons.RightShoulder }));
+            ButtonDictionary.Add(CButtons.LT, new ButtonMapper(new[] { Keys.NumPad9 }, new[] { Buttons.LeftTrigger }));
+            ButtonDictionary.Add(CButtons.RT, new ButtonMapper(new[] { Keys.NumPad6 }, new[] { Buttons.RightTrigger }));
+            ButtonDictionary.Add(CButtons.Select, new ButtonMapper(new[] { Keys.Space }, new[] { Buttons.Back }));
+            ButtonDictionary.Add(CButtons.Start, new ButtonMapper(new[] { Keys.Enter }, new[] { Buttons.Start }));
+            ButtonDictionary.Add(CButtons.LS, new ButtonMapper(new[] { Keys.NumPad0 }, new[] { Buttons.LeftStick }));
+            ButtonDictionary.Add(CButtons.RS, new ButtonMapper(new[] { Keys.Decimal }, new[] { Buttons.RightStick }));
             SetConfirmCancelButtons();
         }
 

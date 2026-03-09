@@ -83,12 +83,12 @@ namespace ProjectZ.Editor
 
         public void EditorUpdate(GameTime gameTime)
         {
-            if (InputHandler.KeyPressed(Keys.N))
+            if (InputHandler.KeyPressed(Game1.DebugStepStart))
                 Game1.DebugStepper = !Game1.DebugStepper;
             if (Game1.ScreenManager.CurrentScreenId != Values.ScreenNameGame)
                 Game1.DebugStepper = false;
 
-            if (Game1.DebugStepper && InputHandler.KeyPressed(Keys.M))
+            if (Game1.DebugStepper && InputHandler.KeyPressed(Game1.DebugStepNext))
             {
                 Game1.TimeMultiplier = _game.TargetElapsedTime.Ticks / 166667f;
                 Game1.DeltaTime = (float)_game.TargetElapsedTime.TotalMilliseconds;
@@ -97,11 +97,11 @@ namespace ProjectZ.Editor
                 Game1.TotalTime += _game.TargetElapsedTime.Milliseconds;
                 Game1.TotalGameTime += _game.TargetElapsedTime.Milliseconds;
             }
-            if (InputHandler.KeyPressed(Keys.Q))
+            if (InputHandler.KeyPressed(Game1.DebugReloadMap))
                 Game1.GameManager.MapManager.ReloadMap();
-            if (InputHandler.KeyPressed(Keys.Add))
+            if (InputHandler.KeyPressed(Game1.DebugTimeScaleUp))
                 Game1.DebugTimeScale += 0.125f;
-            if (InputHandler.KeyPressed(Keys.Subtract) && Game1.DebugTimeScale > 0)
+            if (InputHandler.KeyPressed(Game1.DebugTimeScaleDown) && Game1.DebugTimeScale > 0)
                 Game1.DebugTimeScale -= 0.125f;
 
             if (InputHandler.KeyPressed(Game1.DebugShadowKey))
@@ -129,7 +129,7 @@ namespace ProjectZ.Editor
                     _game.TargetElapsedTime = new TimeSpan((long)Math.Ceiling(_debugFrameTimes[_currentFrameTimeIndex] * 10000));
                 }
             }
-            if (InputHandler.KeyPressed(Keys.Escape) || InputHandler.KeyPressed(Keys.OemPeriod))
+            if (InputHandler.KeyPressed(Game1.DebugEditor))
             {
                 if (Game1.ScreenManager.CurrentScreenId != Values.ScreenNameEditor &&
                     Game1.ScreenManager.CurrentScreenId != Values.ScreenNameEditorTileset &&
@@ -156,7 +156,7 @@ namespace ProjectZ.Editor
                             editorScreen.MousePixelPosition.Y));
                 }
             }
-            if (InputHandler.KeyPressed(Game1.DebugToggleDebugModeKey))
+            if (InputHandler.KeyPressed(Game1.DebugToggleMode))
                 Game1.DebugMode = !Game1.DebugMode;
 
             if (InputHandler.KeyPressed(Game1.DebugBox))

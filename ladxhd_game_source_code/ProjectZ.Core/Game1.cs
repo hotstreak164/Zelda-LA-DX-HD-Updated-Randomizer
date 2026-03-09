@@ -118,12 +118,19 @@ namespace ProjectZ
         public static bool ShowDebugText;
         private Vector2 _debugTextSize;
 
-        public static Keys DebugToggleDebugText = Keys.F1;
-        public static Keys DebugToggleDebugModeKey = Keys.F2;
-        public static Keys DebugBox = Keys.F3;
-        public static Keys DebugSaveKey = Keys.F5;
-        public static Keys DebugLoadKey = Keys.F6;
-        public static Keys DebugShadowKey = Keys.F9;
+        // Keyboard keys for debug functions.
+        public static Keys DebugEditor        = Keys.Escape;
+        public static Keys DebugToggleText    = Keys.F1;
+        public static Keys DebugToggleMode    = Keys.F2;
+        public static Keys DebugBox           = Keys.F3;
+        public static Keys DebugReloadMap     = Keys.F4;
+        public static Keys DebugSaveKey       = Keys.F5;
+        public static Keys DebugLoadKey       = Keys.F6;
+        public static Keys DebugShadowKey     = Keys.F9;
+        public static Keys DebugStepStart     = Keys.Insert;
+        public static Keys DebugStepNext      = Keys.Home;
+        public static Keys DebugTimeScaleUp   = Keys.Add;
+        public static Keys DebugTimeScaleDown = Keys.Subtract;
 
         // True when in-game after selecting save file. False at main menu and intro.
         public static bool InProgress;
@@ -456,7 +463,7 @@ namespace ProjectZ
                 UiPageManager.Update(gameTime);
             }
             // If editor is enabled and F1 key is pressed.
-            if (EditorMode && InputHandler.KeyPressed(DebugToggleDebugText))
+            if (EditorMode && InputHandler.KeyPressed(DebugToggleText))
                 ShowDebugText = !ShowDebugText;
 
             // Debug Stepper (N Key) is not active.
