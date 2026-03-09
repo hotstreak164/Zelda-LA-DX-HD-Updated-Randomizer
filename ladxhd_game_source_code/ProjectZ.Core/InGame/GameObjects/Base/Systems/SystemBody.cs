@@ -75,6 +75,70 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
             }
         }
 
+        private void ResolveStoneLinkOverlap(BodyComponent stoneBody)
+        {
+            var linkBody = MapManager.ObjLink?._body;
+            if (linkBody == null || !linkBody.IsActive || !stoneBody.IsActive)
+                return;
+
+            if (stoneBody.Position.Z > 0 || linkBody.Position.Z > 0)
+                return;
+
+            var move = stoneBody.LastAdditionalMovementVT;
+            if (move == Vector2.Zero)
+                return;
+
+            var stoneBox = stoneBody.BodyBox.Box;
+            var linkBox = linkBody.BodyBox.Box;
+
+            if (!stoneBox.Intersects(linkBox))
+                return;
+
+            var stoneCenter = stoneBox.Center;
+            var linkCenter = linkBox.Center;
+
+            var testBox = Box.Empty;
+
+            if (Math.Abs(move.X) > Math.Abs(move.Y) && move.X != 0)
+            {
+                if ((move.X > 0 && linkCenter.X <= stoneCenter.X) ||
+                    (move.X < 0 && linkCenter.X >= stoneCenter.X))
+                    return;
+
+                // Only push if Link center is within the stone's vertical span
+                if (linkCenter.Y < stoneBox.Y || linkCenter.Y > stoneBox.Front)
+                    return;
+
+                float newX = linkBody.Position.X + move.X;
+
+                if (!Collision(linkBody, newX, linkBody.Position.Y,
+                    move.X < 0 ? 0 : 2,
+                    linkBody.CollisionTypes, false, ref testBox))
+                {
+                    linkBody.Position.X = newX;
+                }
+            }
+            else if (move.Y != 0)
+            {
+                if ((move.Y > 0 && linkCenter.Y <= stoneCenter.Y) ||
+                    (move.Y < 0 && linkCenter.Y >= stoneCenter.Y))
+                    return;
+
+                // Only push if Link center is within the stone's horizontal span
+                if (linkCenter.X < stoneBox.X || linkCenter.X > stoneBox.Right)
+                    return;
+
+                float newY = linkBody.Position.Y + move.Y;
+
+                if (!Collision(linkBody, linkBody.Position.X, newY,
+                    move.Y < 0 ? 1 : 3,
+                    linkBody.CollisionTypes, false, ref testBox))
+                {
+                    linkBody.Position.Y = newY;
+                }
+            }
+        }
+
         private void UpdateBody(BodyComponent body)
         {
             var collisionType = Values.BodyCollision.None;
@@ -110,23 +174,26 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
             body.DisableVelocityTargetMultiplier = false;
 
             var velocityTarget = body.VelocityTarget * body.SpeedMultiply * velocityTargetMult;
-
-            // AdditionalMovement should slide because the raft is using it to move
             var bodyOffset = velocityTarget + body.HoleAbsorption + body.AdditionalMovementVT;
             var slideOffset = body.SlideOffset;
+            var externalMove = slideOffset + bodyOffset * Game1.TimeMultiplier;
 
             var velocityOffset = (new Vector2(body.Velocity.X, body.Velocity.Y) * (0.5f + body.SpeedMultiply * 0.5f)) * Game1.TimeMultiplier;
 
             body.LastVelocityTarget = body.VelocityTarget;
             body.LastAdditionalMovementVT = body.AdditionalMovementVT;
 
+            collisionType |= MoveBody(body, externalMove,
+                body.CollisionTypes | body.AvoidTypes,
+                body.IsPusher, body.IsSlider, false);
+
+            if (body.LastAdditionalMovementVT != Vector2.Zero && body.Owner is ObjStone)
+                ResolveStoneLinkOverlap(body);
+
             if (body.RestAdditionalMovement)
                 body.AdditionalMovementVT = Vector2.Zero;
 
             body.SlideOffset = Vector2.Zero;
-
-            collisionType |= MoveBody(body, slideOffset + bodyOffset * Game1.TimeMultiplier, body.CollisionTypes | body.AvoidTypes,
-                             body.IsPusher, body.IsSlider, false);
 
             // in 2d mode the velocity is also used to push, currently used for stomping goombas
             // if the player gets pushed onto a push trigger it should not get activated
