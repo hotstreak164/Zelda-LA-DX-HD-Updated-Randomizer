@@ -19,6 +19,10 @@ namespace LADXHD_Patcher
             if (Config.SelectedPlatform == Platform.Android)
                 return "patches_android.zip";
 
+            // If Android is selected then choose its patches.
+            if (Config.SelectedPlatform == Platform.Linux)
+                return "patches_linux.zip";
+
             // If Windows and OpenGL is selected choose those patches.
             if (Config.SelectedPlatform == Platform.Windows)
                 if (Config.SelectedGraphics == GraphicsAPI.OpenGL)
@@ -165,6 +169,17 @@ namespace LADXHD_Patcher
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
+        }
+
+        public static void ExtractLinuxFiles()
+        {
+            // Set the patches and zipfile paths.
+            string zipFilePath = Path.Combine(Config.TempFolder, "linux_files.zip");
+
+            // Write the zipfile, extract it, then delete it.
+            File.WriteAllBytes(zipFilePath, (byte[])resources["linux_files.zip"]);
+            ZipFile.ExtractToDirectory(zipFilePath, Config.BaseFolder);
+            zipFilePath.RemovePath();
         }
     }
 }

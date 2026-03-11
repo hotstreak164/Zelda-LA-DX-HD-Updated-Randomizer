@@ -55,7 +55,7 @@
 #========================================================================================================================================
 
 $GameVersion = "1.6.4"
-$PlatformAPI = "Android"
+$PlatformAPI = "Linux"
 $OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
 $NewGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated"
 $ZipFilePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD-Updated\ladxhd_patcher_source_code\Resources"
@@ -88,7 +88,7 @@ if (!(Test-Path (Join-Path $OldGamePath "Link's Awakening DX HD.exe"))) {
     Write-Host "Invalid path for original game (OldGamePath)."
     PauseBeforeClose
 }
-if ((!(Test-Path (Join-Path $NewGamePath "Link's Awakening DX HD.exe"))) -and (!($PlatformAPI -eq "Android"))) {
+if ((!(Test-Path (Join-Path $NewGamePath "Link's Awakening DX HD.exe"))) -and (!($PlatformAPI -eq "Android")) -and (!($PlatformAPI -eq "Linux"))) {
     Write-Host "Invalid path for updated game (NewGamePath)."
     PauseBeforeClose
 }
@@ -171,6 +171,10 @@ $ReverseFileTargets = Build-ReverseMap -Targets $FileTargets
 
 function GetOldFilePath([object]$File, [string]$RelativePath)
 {
+    if (($PlatformAPI -eq "Linux") -and ($File.Name -eq "Link's Awakening DX HD"))
+    {
+        return Join-Path $OldGamePath ($RelativePath + ".exe")
+    }
     if ($ReverseFileTargets.ContainsKey($File.Name.ToLower())) 
     {
         return Join-Path $OldGamePath ($File.DirectoryName.Substring($OldGamePath.Length).TrimStart('\') + "\" + $ReverseFileTargets[$File.Name.ToLower()] )

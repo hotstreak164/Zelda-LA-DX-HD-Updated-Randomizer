@@ -59,6 +59,14 @@ namespace LADXHD_Patcher
                 combBox_API.Items.Add("OpenGL");
                 button_Patch.Text = "Create APK";
             }
+            if (comboBox.SelectedIndex == 2)
+            {
+                Config.SelectedPlatform = Platform.Linux;
+
+                combBox_API.Items.Clear();
+                combBox_API.Items.Add("OpenGL");
+                button_Patch.Text = "Patch";
+            }
             combBox_API.SelectedIndex = 0;
         }
 

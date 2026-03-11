@@ -268,12 +268,13 @@ namespace LADXHD_Patcher
             // Now is a good time to remove any files that the game no longer needs or may cause problems.
             RemoveObsolete();
 
-            // Create the mod folders if patching for Windows.
-            if (Config.SelectedPlatform == Platform.Windows)
-                CreateModFolders();
-
-            if (Config.SelectedPlatform == Platform.Android)
-                GenerateAPKFile();
+            // Do something unique for each Platform.
+            switch (Config.SelectedPlatform)
+            {
+                case Platform.Windows: { CreateModFolders(); break; }
+                case Platform.Android: { GenerateAPKFile(); break; }
+                case Platform.Linux:   { CreateModFolders(); ZipFunctions.ExtractLinuxFiles(); break; }
+            }
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -347,6 +348,27 @@ namespace LADXHD_Patcher
 
         private static void PatchGameFiles()
         {
+            // Check to see if we are on Android.
+            bool isAndroid = Config.SelectedPlatform == Platform.Android;
+            bool isWindows = Config.SelectedPlatform == Platform.Windows;
+            bool isLinux   = Config.SelectedPlatform == Platform.Linux;
+            
+            // Remove the extension from the executable for Linux.
+            if (isLinux)
+            {
+                // We're probably going to be working from the backup file.
+                string backupExe = Path.Combine(Config.BackupPath, "Link's Awakening DX HD.exe");
+                string linuxFile = Config.ZeldaEXE.Substring(0, Config.ZeldaEXE.Length - 4);
+
+                // If backup file exists, restore it. If it doesn't, then simply rename the current executable.
+                if (backupExe.TestPath())
+                    backupExe.MovePath(linuxFile, true);
+                else
+                    Config.ZeldaEXE.RenamePath(linuxFile, true);
+
+                // When restoring from backup the executable will still be around.
+                Config.ZeldaEXE.RemovePath();
+            }
             // Remove any garbage files that will just mess up the patcher.
             RemoveBadBackupFiles();
             _filesPatched = 0;
@@ -356,10 +378,6 @@ namespace LADXHD_Patcher
 
             // Get a count of how many files there are.
             _totalCount = _gameFileLookup.Count;
-
-            // Check to see if we are on Android.
-            bool isAndroid = Config.SelectedPlatform == Platform.Android;
-            bool isWindows = Config.SelectedPlatform == Platform.Windows;
 
             // Loop through all files in the collection.
             foreach (var kvp in _gameFileLookup)
@@ -378,7 +396,7 @@ namespace LADXHD_Patcher
                     continue;
     
                 // On Windows we skip the patcher or the Mods folder.
-                else if (isWindows && (fileItem.Name == "xdelta3.exe" || fileItem.IsInFolder("Mods")))
+                else if ((isWindows || isLinux) && (fileItem.Name == "xdelta3.exe" || fileItem.IsInFolder("Mods")))
                     continue;
 
                 // Get the backup path to test for existing backups and create new ones to it.
@@ -411,7 +429,7 @@ namespace LADXHD_Patcher
                         fullPath.CopyPath(outputFile, true);
                 }
                 // Windows is a bit simpler.
-                else if (isWindows)
+                else if (isWindows || isLinux)
                 {
                     // If a patch file exists.
                     if (patchExists)
@@ -528,8 +546,6 @@ namespace LADXHD_Patcher
 
         public static void StartPatching()
         {
-            ReportFinished();
-
             // Reset progress bar and set whether we are patching from v1.0.0 or backup files.
             ResetProgress();
             SetSourceFiles();

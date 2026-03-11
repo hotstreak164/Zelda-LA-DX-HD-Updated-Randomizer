@@ -154,4 +154,12 @@
     <value>..\Resources\patches_gl.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>ZIP File</comment>
   </data>
+  <data name="patches_linux.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\patches_linux.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP File</comment>
+  </data>
+  <data name="linux_files.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\linux_files.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP File</comment>
+  </data>
 </root>
