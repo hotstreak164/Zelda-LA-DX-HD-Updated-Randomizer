@@ -1,6 +1,7 @@
 *.vs
 *.csproj.user
 assets_original/
+~Publish/
 ladxhd_game_source_code/.vs/
 ladxhd_game_source_code/~Publish/
 ladxhd_game_source_code/%LocalAppData%/

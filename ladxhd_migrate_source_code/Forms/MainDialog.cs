@@ -49,6 +49,20 @@ namespace LADXHD_Migrater
                 combBox_API.Items.Clear();
                 combBox_API.Items.Add("OpenGL");
             }
+            if (comboBox.SelectedIndex == 2)
+            {
+                Config.SelectedPlatform = Platform.Linux_x86;
+
+                combBox_API.Items.Clear();
+                combBox_API.Items.Add("OpenGL");
+            }
+            if (comboBox.SelectedIndex == 3)
+            {
+                Config.SelectedPlatform = Platform.Linux_Arm64;
+
+                combBox_API.Items.Clear();
+                combBox_API.Items.Add("OpenGL");
+            }
             combBox_API.SelectedIndex = 0;
         }
 
@@ -171,7 +185,7 @@ namespace LADXHD_Migrater
 
             // Let the user know it's finished.
             Forms.OkayDialog.Display("Finished", 250, 40, 28, 16, 15,
-                "Finished build process. If the build was successful, it can be found in the \"zelda_ladxhd_build\" folder.");
+                "Finished build process. If the build was successful, it can be found in the \"~Publish\" folder.");
 
             // Enable the dialog's controls.
             ToggleDialog(true);

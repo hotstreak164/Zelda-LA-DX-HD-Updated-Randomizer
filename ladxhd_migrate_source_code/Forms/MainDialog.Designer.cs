@@ -116,7 +116,9 @@
             this.comboBox_Platform.FormattingEnabled = true;
             this.comboBox_Platform.Items.AddRange(new object[] {
             "Windows",
-            "Android"});
+            "Android",
+            "Linux (x86-64)",
+            "Linux (Arm64)"});
             this.comboBox_Platform.Location = new System.Drawing.Point(63, 255);
             this.comboBox_Platform.Name = "comboBox_Platform";
             this.comboBox_Platform.Size = new System.Drawing.Size(97, 21);

@@ -285,19 +285,25 @@ namespace LADXHD_Migrater
             {
                 // Stores where to move the result.
                 string MoveDestination = "";
+                string publishFolder = Path.Combine(Config.BaseFolder, "~Publish").CreatePath();
 
                 // If it succeeded, move the folder to the main folder.
                 if (Config.SelectedPlatform == Platform.Windows)
                 {
                     if (Config.SelectedGraphics == GraphicsAPI.DirectX)
-                        MoveDestination = Config.BaseFolder + "\\zelda_ladxhd_build_windows_dx";
+                        MoveDestination = Path.Combine(publishFolder, "zelda_ladxhd_build_windows_dx");
                     else if (Config.SelectedGraphics == GraphicsAPI.OpenGL)
-                        MoveDestination = Config.BaseFolder + "\\zelda_ladxhd_build_windows_gl";
+                        MoveDestination = Path.Combine(publishFolder, "zelda_ladxhd_build_windows_gl");
                 }
                 else if (Config.SelectedPlatform == Platform.Android)
-                {
-                    MoveDestination = Config.BaseFolder + "\\zelda_ladxhd_build_android";
-                }
+                    MoveDestination = Path.Combine(publishFolder, "zelda_ladxhd_build_android");
+                
+                else if (Config.SelectedPlatform == Platform.Linux_x86)
+                    MoveDestination = Path.Combine(publishFolder, "zelda_ladxhd_build_linux_x86_64");
+                
+                else if (Config.SelectedPlatform == Platform.Linux_Arm64)
+                    MoveDestination = Path.Combine(publishFolder, "zelda_ladxhd_build_linux_arm64");
+                
                 // Move the publish folder to the root directory.
                 Config.Build_Path.MovePath(MoveDestination, true);
             }
