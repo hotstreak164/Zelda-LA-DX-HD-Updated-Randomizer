@@ -26,10 +26,10 @@ namespace LADXHD_Patcher
             // If Windows and OpenGL is selected choose those patches.
             if (Config.SelectedPlatform == Platform.Windows)
                 if (Config.SelectedGraphics == GraphicsAPI.OpenGL)
-                    return "patches_gl.zip";
+                    return "patches_win_gl.zip";
 
             // Default to Windows Direct-X patches.
-            return "patches_dx.zip";
+            return "patches_win_dx.zip";
         }
 
         public static void ExtractPatches()

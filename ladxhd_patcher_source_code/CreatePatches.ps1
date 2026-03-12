@@ -24,15 +24,14 @@
 
   Requirements:
   - Original v1.0.0 of the game.
-  - New build of the game.
+  - New builds of the game.
   - Both must be fully built and playable.
 
   How to use:
   - Set the paths to the games below in "CONFIGURATION."
   - Version 1.0.0 should be set to "OldGamePath".
-  - The new build should be set to "NewGamePath".
-  - Set the "GameVersion" which will output to that folder in "Resources".
-  - Set the "GraphicsAPI" to either "DX" or "GL" depending on version generated.
+  - The new builds should be set to their respective folders.
+  - Set the "GameVersion" which will tag the output folders in "Resources".
   - Right click this script, select "Run with PowerShell".
   - Generated patches can be found in the "Resources" folder.
   - Obviously, the xdelta patches can be found in this folder.
@@ -55,18 +54,49 @@
 #========================================================================================================================================
 
 $GameVersion = "1.6.4"
-$PlatformAPI = "Linux"
 $OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
-$NewGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated"
+
+$WinDXInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_win_dx"
+$WinGLInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_win_gl"
+$DroidInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_android"
+$LinuxInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_linux"
+
+$CreateWinDX = $true
+$CreateWinGL = $true
+$CreateDroid = $true
+$CreateLinux = $true
+
 $ZipFilePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD-Updated\ladxhd_patcher_source_code\Resources"
 
 #========================================================================================================================================
 # SETUP XDELTA & OUTPUTS
 #========================================================================================================================================
 
-$BaseFolder  = Split-Path $script:MyInvocation.MyCommand.Path
-$XDelta3     = Join-Path $BaseFolder ("\Resources\xdelta3.exe")
-$PatchFolder = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (" + $PlatformAPI + ") Patches")
+$BaseFolder = Split-Path $script:MyInvocation.MyCommand.Path
+$XDelta3Path  = Join-Path $BaseFolder ("\Resources\xdelta3.exe")
+
+$PatchFolder  = Join-Path $BaseFolder "\Patches"
+$WinDXPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Win-DX) Patches")
+$WinGLPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Win-GL) Patches")
+$DroidPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Android) Patches")
+$LinuxPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Linux) Patches")
+
+#========================================================================================================================================
+# CREATE PATCHES FOLDER
+#========================================================================================================================================
+
+if ($CreateWinDX -and (!(Test-Path $WinDXPatches))) {
+    New-Item -Path $WinDXPatches -ItemType Directory | Out-Null
+}
+if ($CreateWinGL -and (!(Test-Path $WinGLPatches))) {
+    New-Item -Path $WinGLPatches -ItemType Directory | Out-Null
+}
+if ($CreateDroid -and (!(Test-Path $DroidPatches))) {
+    New-Item -Path $DroidPatches -ItemType Directory | Out-Null
+}
+if ($CreateLinux -and (!(Test-Path $LinuxPatches))) {
+    New-Item -Path $LinuxPatches -ItemType Directory | Out-Null
+}
 
 #========================================================================================================================================
 # MISCELLANEOUS
@@ -78,31 +108,6 @@ function PauseBeforeClose
     Write-Host "Press any key to close this window."
     [void][System.Console]::ReadKey()
     Exit
-}
-
-#========================================================================================================================================
-# VERIFICATION
-#========================================================================================================================================
-
-if (!(Test-Path (Join-Path $OldGamePath "Link's Awakening DX HD.exe"))) {
-    Write-Host "Invalid path for original game (OldGamePath)."
-    PauseBeforeClose
-}
-if ((!(Test-Path (Join-Path $NewGamePath "Link's Awakening DX HD.exe"))) -and (!($PlatformAPI -eq "Android")) -and (!($PlatformAPI -eq "Linux"))) {
-    Write-Host "Invalid path for updated game (NewGamePath)."
-    PauseBeforeClose
-}
-if (!(Test-Path $XDelta3)) {
-    Write-Host "Missing xdelta3.exe in script folder."
-    PauseBeforeClose
-}
-
-#========================================================================================================================================
-# CREATE PATCHES FOLDER
-#========================================================================================================================================
-
-if (!(Test-Path $PatchFolder)) {
-    New-Item -Path $PatchFolder -ItemType Directory | Out-Null
 }
 
 #========================================================================================================================================
@@ -151,15 +156,14 @@ $FileTargets = @{
     "mapPlayer.ani"		  = $dungeonani
 }
 
+
 function Build-ReverseMap($Targets)
 {
     $Reverse = @{}
-
     foreach ($Key in $Targets.Keys) 
     {
         $ShortName = $Key
         $LongNames = $Targets[$Key]
-
         foreach ($LongName in $LongNames) 
         {
             $Reverse[$LongName.ToLower()] = $ShortName
@@ -169,15 +173,23 @@ function Build-ReverseMap($Targets)
 }
 $ReverseFileTargets = Build-ReverseMap -Targets $FileTargets
 
-function GetOldFilePath([object]$File, [string]$RelativePath)
+
+function GetOldFilePath([object]$File, [string]$GamePath, [string]$RelativePath, [string]$Platform)
 {
-    if (($PlatformAPI -eq "Linux") -and ($File.Name -eq "Link's Awakening DX HD"))
+    if (($Platform -eq "Linux") -and ($File.Name -eq "Link's Awakening DX HD"))
     {
         return Join-Path $OldGamePath ($RelativePath + ".exe")
     }
-    if ($ReverseFileTargets.ContainsKey($File.Name.ToLower())) 
+    if ($ReverseFileTargets.ContainsKey($File.Name.ToLower()))
     {
-        return Join-Path $OldGamePath ($File.DirectoryName.Substring($OldGamePath.Length).TrimStart('\') + "\" + $ReverseFileTargets[$File.Name.ToLower()] )
+        $relativeDir = $File.DirectoryName.Substring($GamePath.Length).TrimStart('\','/')
+        $mappedName  = $ReverseFileTargets[$File.Name.ToLower()]
+
+        if ([string]::IsNullOrWhiteSpace($relativeDir))
+        {
+            return Join-Path $OldGamePath $mappedName
+        }
+        return Join-Path $OldGamePath (Join-Path $relativeDir $mappedName)
     }
     return Join-Path $OldGamePath $RelativePath
 }
@@ -186,47 +198,100 @@ function GetOldFilePath([object]$File, [string]$RelativePath)
 # CREATE ZIP FILE
 #========================================================================================================================================
 
-function CreateZipFile()
+function CreateZipFile([string]$PatchOutput, [string]$Platform)
 {
-  $ZipPath = $PatchFolder + "\*"
-  $ZipFile = $ZipFilePath + "\patches_" + $PlatformAPI.ToLower() + ".zip"
+  $ZipPath = $PatchOutput + "\*"
+  $ZipFile = $ZipFilePath + "\patches_" + $Platform.ToLower() + ".zip"
 
   Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
   Compress-Archive -Path $ZipPath -DestinationPath $ZipFile | Out-Null
 }
 
 #========================================================================================================================================
+# VERIFICATION
+#========================================================================================================================================
+function VerifyOriginal()
+{
+    if (!(Test-Path (Join-Path $OldGamePath "Link's Awakening DX HD.exe"))) 
+    {
+        Write-Host "Invalid path or missing executable for original game (OldGamePath)."
+        return $false
+    }
+    return $true
+}
+
+function VerifyXDelta()
+{
+    if (!(Test-Path $XDelta3Path)) 
+    {
+        Write-Host 'Missing "xdelta3.exe" in "Resources" folder.'
+        return $false
+    }
+    return $true
+}
+
+function VerifyExecutable([string]$Platform, [string]$GamePath)
+{
+    switch -wildcard ($Platform)
+    {
+        "Win_*"   { if (!(Test-Path (Join-Path $GamePath "Link's Awakening DX HD.exe"))) { return $false } }
+        "Linux"   { if (!(Test-Path (Join-Path $GamePath "Link's Awakening DX HD"))) { return $false } }
+        "Android" { return $true }
+    }
+    return $true
+}
+
+#========================================================================================================================================
 # GENERATE PATCHES
 #========================================================================================================================================
 
-Write-Host ("Generating new patches for Link's Awakening DX HD v" + $GameVersion + "...")
-Write-Host ""
-
-foreach ($file in Get-ChildItem -LiteralPath $NewGamePath -Recurse -File) 
+function GeneratePatches([bool]$CreatePatches, [string]$GamePath, [string]$PatchOutput, [string]$Platform)
 {
-    $RelativePath = $file.FullName.Substring($NewGamePath.Length).TrimStart('\')
-    $OldFilePath  = GetOldFilePath -File $file -RelativePath $RelativePath
-    $NewFilePath  = $file.FullName
+    if ((!$CreatePatches) -or (!(VerifyExecutable -Platform $Platform -GamePath $GamePath))) { return }
 
-    if (!(Test-Path -LiteralPath $OldFilePath)) { continue }
+    Write-Host "------------------------------------------------------------------------------------------"
+    Write-Host ("Generating " + $Platform + " patches for Link's Awakening DX HD v" + $GameVersion + "...")
+    Write-Host ""
 
-    $OldMD5 = (Get-FileHash -Path $OldFilePath -Algorithm MD5).Hash
-    $NewMD5 = (Get-FileHash -Path $NewFilePath -Algorithm MD5).Hash
-
-    if ($OldMD5 -ne $NewMD5) 
+    foreach ($file in Get-ChildItem -LiteralPath $GamePath -Recurse -File) 
     {
-        $PatchFile = Join-Path $PatchFolder ($file.Name + ".xdelta")
+        $RelativePath = $file.FullName.Substring($GamePath.Length).TrimStart('\')
+        $OldFilePath  = GetOldFilePath -File $file -GamePath $GamePath -RelativePath $RelativePath -Platform $Platform
+        $NewFilePath  = $file.FullName
 
-        Write-Host ("Generating patch for: " + $file.Name)
-        & $XDelta3 -f -e -s $OldFilePath $NewFilePath $PatchFile
+        if (!(Test-Path -LiteralPath $OldFilePath)) { continue }
+
+        $OldMD5 = (Get-FileHash -Path $OldFilePath -Algorithm MD5).Hash
+        $NewMD5 = (Get-FileHash -Path $NewFilePath -Algorithm MD5).Hash
+
+        if ($OldMD5 -ne $NewMD5) 
+        {
+            $PatchFile = Join-Path $PatchOutput ($file.Name + ".xdelta")
+
+            Write-Host ("Generating patch for: " + $file.Name)
+            & $XDelta3Path -f -e -s $OldFilePath $NewFilePath $PatchFile
+        }
     }
+    Write-Host ""
+    Write-Host ('Generating "patches_' + $Platform.ToLower() + '.zip" for patcher program.')
+    CreateZipFile -PatchOutput $PatchOutput -Platform $Platform
 }
-Write-Host ""
-Write-Host 'Generating "patches.zip" for patcher program.'
-CreateZipFile
+
+if ((VerifyOriginal) -and (VerifyXDelta))
+{
+    GeneratePatches -CreatePatches $CreateWinDX -GamePath $WinDXInPath -PatchOutput $WinDXPatches -Platform "Win_DX"
+    GeneratePatches -CreatePatches $CreateWinGL -GamePath $WinGLInPath -PatchOutput $WinGLPatches -Platform "Win_GL"
+    GeneratePatches -CreatePatches $CreateDroid -GamePath $DroidInPath -PatchOutput $DroidPatches -Platform "Android"
+    GeneratePatches -CreatePatches $CreateLinux -GamePath $LinuxInPath -PatchOutput $LinuxPatches -Platform "Linux"
+    
+    Write-Host "------------------------------------------------------------------------------------------"
+    Write-Host ""
+    Write-Host "Patch generation complete. Patches can be found in folder:"
+    Write-Host $PatchFolder
+    Write-Host ""
+    Write-Host "------------------------------------------------------------------------------------------"
+}
 
 Write-Host ""
-Write-Host "Patch generation complete. Patches can be found in folder:"
-Write-Host $PatchFolder
-Write-Host ""
+
 PauseBeforeClose

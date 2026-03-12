@@ -143,29 +143,29 @@ namespace LADXHD_Patcher {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] patches_dx_zip {
-            get {
-                object obj = ResourceManager.GetObject("patches_dx.zip", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] patches_gl_zip {
-            get {
-                object obj = ResourceManager.GetObject("patches_gl.zip", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] patches_linux_zip {
             get {
                 object obj = ResourceManager.GetObject("patches_linux.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] patches_win_dx_zip {
+            get {
+                object obj = ResourceManager.GetObject("patches_win_dx.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] patches_win_gl_zip {
+            get {
+                object obj = ResourceManager.GetObject("patches_win_gl.zip", resourceCulture);
                 return ((byte[])(obj));
             }
         }

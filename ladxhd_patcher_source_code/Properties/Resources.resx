@@ -146,12 +146,12 @@
     <value>..\Resources\patches_android.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>ZIP Archive</comment>
   </data>
-  <data name="patches_dx.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\patches_dx.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="patches_win_dx.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\patches_win_dx.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>ZIP Archive</comment>
   </data>
-  <data name="patches_gl.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\patches_gl.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="patches_win_gl.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\patches_win_gl.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>ZIP Archive</comment>
   </data>
   <data name="patches_linux.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
