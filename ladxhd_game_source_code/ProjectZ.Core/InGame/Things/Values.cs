@@ -40,6 +40,9 @@ namespace ProjectZ.InGame.Things
         public static Color[] SkirtColors = { new Color(16, 168, 64), new Color(0, 38, 255), new Color(255, 0, 0) };
 
         public static string WorkingDirectory = AppContext.BaseDirectory;
+        public static string UserDataRoot { get; private set; } = AppContext.BaseDirectory;
+        public static void SetUserDataRoot(string root) { UserDataRoot = root; }
+
         public static string AppDataFolder = Environment.ExpandEnvironmentVariables("%LocalAppData%");
 
         public static string PathContentFolder = "Data";
@@ -50,8 +53,6 @@ namespace ProjectZ.InGame.Things
         public static string PathLightsFolder => Path.Combine(PathContentFolder, "Lights");
         public static string PathAnimationFolder => Path.Combine(PathContentFolder, "Animations");
         public static string PathMinimapFolder => Path.Combine(PathContentFolder, "Dungeon");
-        public static string UserDataRoot { get; private set; } = ".";
-        public static void SetUserDataRoot(string root) { UserDataRoot = root; }
         public static string PathMods => Path.Combine(UserDataRoot, "Mods");
         public static string PathLAHDMods => Path.Combine(PathMods, "LAHDMods");
         public static string PathGraphicsMods => Path.Combine(PathMods, "Graphics");
