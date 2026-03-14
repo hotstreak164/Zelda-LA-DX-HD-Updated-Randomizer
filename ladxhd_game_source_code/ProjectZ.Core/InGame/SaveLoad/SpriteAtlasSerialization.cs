@@ -30,10 +30,10 @@ namespace ProjectZ.InGame.SaveLoad
         // ----------------------------------------------------------------------------------------------------
         public static void SaveSpriteAtlas(string filePath, SpriteAtlas spriteAtlas)
         {
-#if ANDROID
+        #if ANDROID
             // APK assets are read-only; saving is editor/desktop only.
             throw new NotSupportedException("SaveSpriteAtlas is not supported on Android.");
-#else
+        #else
             if (spriteAtlas == null) throw new ArgumentNullException(nameof(spriteAtlas));
             if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentException("Invalid path.", nameof(filePath));
 
@@ -61,7 +61,7 @@ namespace ProjectZ.InGame.SaveLoad
                     $"{o.Y / scale}"
                 );
             }
-#endif
+        #endif
         }
 
         // ----------------------------------------------------------------------------------------------------
@@ -70,8 +70,11 @@ namespace ProjectZ.InGame.SaveLoad
         public static bool LoadSpriteAtlas(string filePath, SpriteAtlas spriteAtlas, bool clearExisting = true)
         {
             if (spriteAtlas == null) throw new ArgumentNullException(nameof(spriteAtlas));
+            if (string.IsNullOrWhiteSpace(filePath))
+                return false;
 
-            filePath = GameFS.ToAssetPath(filePath);
+            filePath = GameFS.NormalizePath(filePath);
+
             if (!GameFS.Exists(filePath))
                 return false;
 
@@ -81,7 +84,7 @@ namespace ProjectZ.InGame.SaveLoad
             using var stream = GameFS.OpenRead(filePath);
             using var reader = new StreamReader(stream);
 
-            var version = reader.ReadLine(); // unused
+            _ = reader.ReadLine();
 
             var scaleLine = reader.ReadLine();
             if (!int.TryParse(scaleLine, NumberStyles.Integer, CultureInfo.InvariantCulture, out var scale) || scale <= 0)
@@ -106,10 +109,7 @@ namespace ProjectZ.InGame.SaveLoad
                 if (parts.Length < 4)
                     continue;
 
-                if (!TryInt(parts, 0, out int x) ||
-                    !TryInt(parts, 1, out int y) ||
-                    !TryInt(parts, 2, out int w) ||
-                    !TryInt(parts, 3, out int h))
+                if (!TryInt(parts, 0, out int x) || !TryInt(parts, 1, out int y) || !TryInt(parts, 2, out int w) || !TryInt(parts, 3, out int h))
                     continue;
 
                 float ox = 0, oy = 0;
@@ -118,7 +118,6 @@ namespace ProjectZ.InGame.SaveLoad
                     TryFloat(parts, 4, out ox);
                     TryFloat(parts, 5, out oy);
                 }
-
                 spriteAtlas.Data.Add(new AtlasEntry
                 {
                     EntryId = id,
@@ -126,7 +125,6 @@ namespace ProjectZ.InGame.SaveLoad
                     Origin = new Vector2(ox, oy)
                 });
             }
-
             return true;
         }
 
@@ -146,7 +144,7 @@ namespace ProjectZ.InGame.SaveLoad
             {
                 var e = spriteAtlas.Data[i];
                 var dictEntry = new DictAtlasEntry(texture, e.SourceRectangle, e.Origin, spriteAtlas.Scale);
-                dictionary.TryAdd(e.EntryId, dictEntry);
+                dictionary[e.EntryId] = dictEntry;
             }
         }
 

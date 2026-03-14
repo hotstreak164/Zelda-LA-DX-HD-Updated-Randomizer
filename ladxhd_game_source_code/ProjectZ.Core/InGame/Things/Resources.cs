@@ -212,7 +212,7 @@ namespace ProjectZ.InGame.Things
         private static (AtlasLanguage, AtlasVariant) ParseAtlasTags(string filePath)
         {
             string[] parts = Path.GetFileNameWithoutExtension(filePath)
-                .ToLower()
+                .ToLowerInvariant()
                 .Split('_');
 
             AtlasLanguage lang = AtlasLanguage.English;
@@ -264,22 +264,25 @@ namespace ProjectZ.InGame.Things
             LoadTexture(out SprButtons, Path.Combine(Values.PathContentFolder, "Buttons", "buttons.png"));
         #endif
 
-            // Try to load custom Intro graphics first.
-            if (GameFS.IsDirectory(Values.PathGraphicsMods))
+            // base first
+            var introPath = GameFS.NormalizePath(Path.Combine(Values.PathContentFolder, "Intro"));
+            LoadTexturesFromFolder(introPath, false);
+
+            // mods second
+            var graphicsModsPath = GameFS.NormalizePath(Values.PathGraphicsMods);
+
+            if (GameFS.IsDirectory(graphicsModsPath))
             {
-                var introDirs = Directory.EnumerateDirectories(Values.PathGraphicsMods, "Intro", SearchOption.AllDirectories);
+                var introDirs = GameFS.EnumerateDirectories(graphicsModsPath, recursive: true, acceptDirectory: dir => string.Equals(dir, "Intro", StringComparison.OrdinalIgnoreCase));
 
                 foreach (var introDir in introDirs)
                     LoadTexturesFromFolder(introDir, false);
             }
-            var introPath = GameFS.NormalizePath(Path.Combine(Values.PathContentFolder, "Intro"));
-            LoadTexturesFromFolder(introPath, false);
-
             AddSoundEffect(content, "D378-15-0F");
             AddSoundEffect(content, "D378-12-0C");
             AddSoundEffect(content, "D378-25-19");
         }
-        
+
         public static void LoadBlurEffect(ContentManager content)
         {
             BlurEffect = content.Load<Effect>("Shader/EffectBlur");
@@ -296,10 +299,6 @@ namespace ProjectZ.InGame.Things
         public static void LoadTextures(GraphicsDevice graphics, ContentManager content)
         {
             LoadTilesetSizes();
-
-            // Try to load graphics mods before other places.
-            if (GameFS.IsDirectory(Values.PathGraphicsMods))
-                LoadTexturesFromFolder(Values.PathGraphicsMods, true);
 
             // Load game sequence textures.
             LoadTexture(out SprGameSequences, Path.Combine(Values.PathContentFolder, "Sequences", "game sequences.png"));
@@ -349,6 +348,12 @@ namespace ProjectZ.InGame.Things
             // Load the tilesets and map objects.
             LoadTexturesFromFolder(Values.PathMapObjectFolder);
             LoadTexturesFromFolder(Values.PathTilesetFolder);
+
+            // Load graphics mods last so they override base assets
+            var graphicsModsPath = GameFS.NormalizePath(Values.PathGraphicsMods);
+
+            if (GameFS.IsDirectory(graphicsModsPath))
+                LoadTexturesFromFolder(graphicsModsPath, true);
 
             // Static resources that never change.
             SprLink = GetTexture("link0.png");
@@ -524,7 +529,7 @@ namespace ProjectZ.InGame.Things
         public static void LoadSounds(ContentManager content)
         {
             // RootDirectory is usually "Content"
-            var dir = $"{GameFS.NormalizePath(content.RootDirectory)}/SoundEffects";
+            var dir = GameFS.NormalizePath(Path.Combine(content.RootDirectory, "SoundEffects"));
 
             foreach (var file in GameFS.EnumerateFiles(dir, recursive: false, acceptFile: name => 
             name.EndsWith(".xnb", StringComparison.OrdinalIgnoreCase)))
@@ -536,20 +541,29 @@ namespace ProjectZ.InGame.Things
 
         public static void LoadTexturesFromFolder(string path, bool recurse = false)
         {
-            foreach (var full in GameFS.EnumerateFiles(path, recurse, name => 
-            name.EndsWith(".png", StringComparison.OrdinalIgnoreCase), 
-            skipDirectory: dir => string.Equals(dir, "Intro", StringComparison.OrdinalIgnoreCase)))
+            foreach (var full in GameFS.EnumerateFiles(path, recurse, name => name.EndsWith(".png", StringComparison.OrdinalIgnoreCase), skipDirectory: dir => string.Equals(dir, "Intro", StringComparison.OrdinalIgnoreCase)))
             {
-                var newTexture = new Texture(Path.GetFileName(full));
-                LoadTexture(out newTexture.SprTexture, full);
-                TextureList.Add(newTexture);
+                string textureName = Path.GetFileName(full);
+                var existing = TextureList.FirstOrDefault(t => t.Name.Equals(textureName, StringComparison.OrdinalIgnoreCase));
+
+                if (existing != null)
+                {
+                    LoadTexture(out existing.SprTexture, full);
+                }
+                else
+                {
+                    var newTexture = new Texture(textureName);
+                    LoadTexture(out newTexture.SprTexture, full);
+                    TextureList.Add(newTexture);
+                }
             }
         }
 
         public static Texture2D GetTexture(string name)
         {
             // Try exact match first.
-            var match = TextureList.FirstOrDefault(t => t.Name == name);
+            var match = TextureList.FirstOrDefault(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
             if (match != null)
                 return match.SprTexture;
 
@@ -558,7 +572,7 @@ namespace ProjectZ.InGame.Things
 
             // Rebuild filename skipping language parts.
             string newName = string.Join("_", parts.Where(p => !_languageList.Contains(p))) + Path.GetExtension(name);
-            match = TextureList.FirstOrDefault(t => t.Name == newName);
+            match = TextureList.FirstOrDefault(t => t.Name.Equals(newName, StringComparison.OrdinalIgnoreCase));
             return match?.SprTexture;
         }
 
@@ -608,7 +622,7 @@ namespace ProjectZ.InGame.Things
         public static Rectangle SourceRectangle(string id)
         {
             // We don't need to get any special atlas since all versions share the same dimensions.
-            return SpriteAtlas.ContainsKey(id) ? SpriteAtlas[id].ScaledRectangle : Rectangle.Empty;
+            return SpriteAtlas.TryGetValue(id, out var entry) ? entry.ScaledRectangle : Rectangle.Empty;
         }
 
         private static DictAtlasEntry GetSpriteInternal(string id, bool variation)

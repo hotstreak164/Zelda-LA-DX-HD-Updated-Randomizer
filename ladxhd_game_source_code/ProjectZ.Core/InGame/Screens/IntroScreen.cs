@@ -16,6 +16,7 @@ namespace ProjectZ.InGame.Screens
         private Texture2D _sprRain;
         private Texture2D _sprWaves;
         private Texture2D _sprCloud;
+
         public static Texture2D _sprIntro_eng, _sprIntro_chn, _sprIntro_deu, _sprIntro_esp, _sprIntro_fre, _sprIntro_ind, _sprIntro_ita, _sprIntro_por, _sprIntro_rus;
 
         public static Texture2D _sprIntro
