@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using LADXHD_Migrater;
 using static LADXHD_Patcher.Config;
 using static LADXHD_Patcher.XDelta3;
 
@@ -188,28 +189,6 @@ namespace LADXHD_Patcher
             }
         }
 
-        private static void RemoveObsolete()
-        {
-            string[] obsoleteFiles = new[] {  
-                "cave bird.map.data", "dungeon_end.map.data", "dungeon3_1.map", "dungeon3_1.map.data", "dungeon3_2.map", "dungeon3_2.map.data", "dungeon3_3.map", 
-                "dungeon3_3.map.data", "dungeon3_4.map", "dungeon3_4.map.data", "dungeon 7_2d.map.data", "three_1.txt", "three_2.txt", "three_3.txt" 
-            };
-
-            foreach (string file in Config.BaseFolder.GetFiles("*", true))
-            {
-                // Get the file as a file item which gives us some cool properties to reference.
-                FileItem fileItem = new FileItem(file);
-
-                // Skip backup files for safety.
-                if (fileItem.IsInFolder("Backup"))
-                    continue;
-
-                // If the obsolete file exists then delete it.
-                if (obsoleteFiles.Contains(fileItem.Name))
-                    fileItem.FullName.RemovePath();
-            }
-        }
-
         private static void CreateModFolders()
         {
             // The path to where Mods used to be located.
@@ -217,7 +196,7 @@ namespace LADXHD_Patcher
 
             // Create the new mods folders.
             Config.LAHDModPath.CreatePath(true);
-            Config.GraphicsModPath.CreatePath(true);
+            Config.Graphics.CreatePath(true);
 
             // Find the old "Mods" path for lahdmods and exit if it doesn't exist.
             if (!Directory.Exists(previousModPath))
@@ -269,8 +248,8 @@ namespace LADXHD_Patcher
             // They will probably be there again so remove them one more time.
             RemoveBadBackupFiles();
 
-            // Now is a good time to remove any files that the game no longer needs or may cause problems.
-            RemoveObsolete();
+            // After migration, some map files are not needed.
+            CleanUp.RemoveJunkMapFiles();
 
             // Do something unique for each Platform.
             switch (Config.SelectedPlatform)
@@ -357,6 +336,9 @@ namespace LADXHD_Patcher
             bool isAndroid = Config.SelectedPlatform == Platform.Android;
             bool isWindows = Config.SelectedPlatform == Platform.Windows;
             bool isLinux   = Config.SelectedPlatform == Platform.Linux_x86 || Config.SelectedPlatform == Platform.Linux_Arm64;
+
+            // Create the backup path if it doesn't exist.
+            Config.BackupPath.CreatePath();
 
             // Remove the extension from the executable for Linux.
             if (isLinux)

@@ -53,7 +53,7 @@
 # CONFIGURATION
 #========================================================================================================================================
 
-$GameVersion = "1.6.4"
+$GameVersion = "1.6.5"
 $OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
 
 $WinDXInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_win_dx"
@@ -68,7 +68,7 @@ $CreateDroid = $true
 $CreateLix86 = $true
 $CreateLiArm = $true
 
-$ZipFilePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD-Updated\ladxhd_patcher_source_code\Resources"
+$ResourcePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD-Updated\ladxhd_patcher_source_code\Resources"
 
 #========================================================================================================================================
 # SETUP XDELTA & OUTPUTS
@@ -201,19 +201,6 @@ function GetOldFilePath([object]$File, [string]$GamePath, [string]$RelativePath,
 }
 
 #========================================================================================================================================
-# CREATE PATCH ZIP FILES
-#========================================================================================================================================
-
-function CreateZipFile([string]$PatchOutput, [string]$Platform)
-{
-  $ZipPath = $PatchOutput + "\*"
-  $ZipFile = $ZipFilePath + "\patches_" + $Platform.ToLower() + ".zip"
-
-  Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
-  Compress-Archive -Path $ZipPath -DestinationPath $ZipFile | Out-Null
-}
-
-#========================================================================================================================================
 # ANDROID EXTRA FILES
 #========================================================================================================================================
 
@@ -241,7 +228,7 @@ function PrepareAndroid([string]$GamePath)
     }
     $ContPath = Join-Path (Join-Path $TempPath "assets") "Content"
     $DataPath = Join-Path (Join-Path $TempPath "assets") "Data"
-    $ZipFile = Join-Path $ZipFilePath "android_files.zip"
+    $ZipFile = Join-Path $ResourcePath "android_files.zip"
 
     Move-Item -LiteralPath $ContPath -Destination $GamePath
     Move-Item -LiteralPath $DataPath -Destination $GamePath
@@ -270,7 +257,7 @@ function CreateLinuxExtraFilesZip([bool]$CreatePatches, [string]$GamePath, [stri
     if ((!$CreatePatches) -or ($Platform -notlike "Linux_*")) { return }
 
     $ZipName = $Platform.ToLower() + "_files.zip"
-    $ZipFile = Join-Path $ZipFilePath $ZipName
+    $ZipFile = Join-Path $ResourcePath $ZipName
 
     $TempPath = Join-Path ([System.IO.Path]::GetTempPath()) ("ladxhd_" + $Platform.ToLower() + "_extra_files")
     $AllFiles = Get-ChildItem -LiteralPath $GamePath -File
@@ -364,7 +351,12 @@ function GeneratePatches([bool]$CreatePatches, [string]$GamePath, [string]$Patch
     Write-Host ""
     Write-Host ('Generating "patches_' + $Platform.ToLower() + '.zip" for patcher program.')
     Write-Host ""
-    CreateZipFile -PatchOutput $PatchOutput -Platform $Platform
+
+    $ZipPath = Join-Path $PatchOutput  "\*"
+    $ZipFile = Join-Path $ResourcePath ("\patches_" + $Platform.ToLower() + ".zip")
+    Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
+    Compress-Archive -Path $ZipPath -DestinationPath $ZipFile | Out-Null
+
     CreateLinuxExtraFilesZip -CreatePatches $CreatePatches -GamePath $GamePath -Platform $Platform
 }
 

@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Reflection;
+using LADXHD_Migrater;
 
 namespace LADXHD_Patcher
 {
     internal class Config
     {
-        // The hash for "newHash" will need to be calculated for each new version.
-        public const string Version = "1.6.4";
+        public const string Version = "1.6.5";
 
         public static string AppPath;
         public static string BaseFolder;
@@ -15,7 +15,7 @@ namespace LADXHD_Patcher
         public static string BackupPath;
 
         public static string LAHDModPath;
-        public static string GraphicsModPath;
+        public static string Graphics;
 
         public static string ApkSign;
         public static string ZipAlign;
@@ -31,20 +31,19 @@ namespace LADXHD_Patcher
 
         public static void Initialize()
         {
-            AppPath = Assembly.GetExecutingAssembly().Location;
-            BaseFolder = Path.GetDirectoryName(AppPath);
-            TempFolder = Path.Combine(BaseFolder, "~temp");
-            ZeldaEXE = Path.Combine(BaseFolder, "Link's Awakening DX HD.exe");
-            BackupPath = (Path.Combine(BaseFolder, "Data", "Backup")).CreatePath();
-
+            AppPath     = Assembly.GetExecutingAssembly().Location;
+            BaseFolder  = Path.GetDirectoryName(AppPath);
+            TempFolder  = Path.Combine(BaseFolder, "~temp");
+            ZeldaEXE    = Path.Combine(BaseFolder, "Link's Awakening DX HD.exe");
+            BackupPath  = Path.Combine(BaseFolder, "Data", "Backup");
             LAHDModPath = Path.Combine(BaseFolder, "Mods", "LAHDMods");
-            GraphicsModPath = Path.Combine(BaseFolder, "Mods", "Graphics");
-
-            ApkSign  = Path.Combine(TempFolder, "android", "apksigner.jar");
-            ZipAlign = Path.Combine(TempFolder, "android", "zipalign.exe");
-            KeyStore = Path.Combine(TempFolder, "android", "keystore.jks");
-            JavaExe  = Path.Combine(TempFolder, "android", "java", "bin", "java.exe");
-            SevenZip = Path.Combine(TempFolder, "7z.exe");
+            Graphics    = Path.Combine(BaseFolder, "Mods", "Graphics");
+            ApkSign     = Path.Combine(TempFolder, "android", "apksigner.jar");
+            ZipAlign    = Path.Combine(TempFolder, "android", "zipalign.exe");
+            KeyStore    = Path.Combine(TempFolder, "android", "keystore.jks");
+            JavaExe     = Path.Combine(TempFolder, "android", "java", "bin", "java.exe");
+            SevenZip    = Path.Combine(TempFolder, "7z.exe");
+            CleanUp.Init();
         }
     }
 }

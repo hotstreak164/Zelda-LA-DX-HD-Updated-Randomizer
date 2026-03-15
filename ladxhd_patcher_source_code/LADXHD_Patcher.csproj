@@ -77,6 +77,7 @@
     <Compile Include="Imported\FileItem.cs" />
     <Compile Include="Imported\Resources.cs" />
     <Compile Include="Initialization.cs" />
+    <Compile Include="Program\CleanUp.cs" />
     <Compile Include="Program\Config.cs" />
     <Compile Include="Program\Forms.cs" />
     <Compile Include="Program\Functions.cs" />

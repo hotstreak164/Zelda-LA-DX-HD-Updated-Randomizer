@@ -1,5 +1,7 @@
-﻿using System.IO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
+using LADXHD_Patcher;
+using static LADXHD_Patcher.Config;
 
 namespace LADXHD_Migrater
 {
@@ -100,15 +102,23 @@ namespace LADXHD_Migrater
 
         public static void RemoveJunkMapFiles()
         {
+            // Set the path to "Data" based on platform selected.
+            string dataPath = Path.Combine(Config.BaseFolder, "Data");
+
+            if (Config.SelectedPlatform == Platform.Android)
+                dataPath = Path.Combine(Config.TempFolder, "android", "com.zelda.ladxhd", "assets", "Data");
+
             foreach (string file in miniMapData)
             {
-                string currentFile = Path.Combine(Config.Update_Data, "Dungeon", file);
+                string currentFile = Path.Combine(dataPath, "Dungeon", file);
+                System.Diagnostics.Debug.WriteLine(currentFile);
                 currentFile.RemovePath();
             }
 
             foreach (string file in removeMaps)
             {
-                string currentFile = Path.Combine(Config.Update_Data, "Maps", file);
+                string currentFile = Path.Combine(dataPath, "Maps", file);
+                System.Diagnostics.Debug.WriteLine(currentFile);
                 currentFile.RemovePath();
             }
         }

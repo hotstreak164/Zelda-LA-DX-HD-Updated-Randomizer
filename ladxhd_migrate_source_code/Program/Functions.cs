@@ -276,6 +276,7 @@ namespace LADXHD_Migrater
             Path.Combine(Config.Patcher_Source, "obj").RemovePath();
             Path.Combine(Config.ModMaker_Source, "bin").RemovePath();
             Path.Combine(Config.ModMaker_Source, "obj").RemovePath();
+            Path.Combine(Config.BaseFolder, "~Publish").RemovePath();
             Path.Combine(Config.BaseFolder, "zelda_ladxhd_build_android").RemovePath();
             Path.Combine(Config.BaseFolder, "zelda_ladxhd_build_windows_dx").RemovePath();
             Path.Combine(Config.BaseFolder, "zelda_ladxhd_build_windows_gl").RemovePath();
