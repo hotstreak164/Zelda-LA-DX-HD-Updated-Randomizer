@@ -1,4 +1,4 @@
-### $\color{Red}\Huge{\textsf{THIS REPOSITORY DOES NOT INCLUDE COPYRIGHTED GAME ASSETS!}}$
+## $\color{Red}\Huge{\textsf{THIS REPOSITORY DOES NOT INCLUDE COPYRIGHTED GAME ASSETS!}}$
 
 ## TLoZ: LADXHD Updated - Windows / Android / Linux
 
