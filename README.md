@@ -1,6 +1,6 @@
-## TLoZ: LADXHD Updated - Windows / Android / Linux
+### $\color{Red}\Huge{\textsf{THIS REPOSITORY DOES NOT INCLUDE COPYRIGHTED GAME ASSETS!}}$
 
-### $${\color{red}THIS \space REPOSITORY \space DOES \space NOT \space INCLUDE \space COPYRIGHTED \space GAME \space ASSETS!}$$
+## TLoZ: LADXHD Updated - Windows / Android / Linux
 
 This fork requires the user to provide the assets from the original v1.0.0 release.<br>
 I have created tooling to make migrating everything to the latest version much easier.<br>
