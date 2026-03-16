@@ -170,42 +170,44 @@ namespace ProjectZ.InGame.Overlay
 
         public void Draw(SpriteBatch spriteBatch, float transparency)
         {
+            var scale = Game1.UiScale + GameSettings.SeqScaleAmplify;
+
             // draw the book
             var bookPosition = new Vector2(
-                Game1.WindowWidth / 2 - (_spriteBook.SourceRectangle.Width * Game1.UiScale) / 2,
-                Game1.WindowHeight / 2 - (_spriteBook.SourceRectangle.Height * Game1.UiScale) / 2);
+                Game1.WindowWidth / 2 - (_spriteBook.SourceRectangle.Width * scale) / 2,
+                Game1.WindowHeight / 2 - (_spriteBook.SourceRectangle.Height * scale) / 2);
             spriteBatch.Draw(_spriteBook.Texture, bookPosition, _spriteBook.SourceRectangle,
-                Color.White * transparency, 0, Vector2.Zero, new Vector2(Game1.UiScale), SpriteEffects.None, 0);
+                Color.White * transparency, 0, Vector2.Zero, new Vector2(scale), SpriteEffects.None, 0);
 
             // draw the images
             for (var i = 0; i < 12; i++)
             {
                 var imageSprite = _unlockState[i] ? _spriteOk : _spriteNop;
                 var position = bookPosition +
-                               new Vector2(27 + (i % 2) * 32 + (i / 6) * 88, 19 + ((i % 6) / 2) * 32) * Game1.UiScale -
-                               new Vector2(imageSprite.SourceRectangle.Width / 2, 0) * Game1.UiScale;
+                               new Vector2(27 + (i % 2) * 32 + (i / 6) * 88, 19 + ((i % 6) / 2) * 32) * scale -
+                               new Vector2(imageSprite.SourceRectangle.Width / 2, 0) * scale;
                 spriteBatch.Draw(imageSprite.Texture, position, imageSprite.SourceRectangle,
-                    Color.White * transparency, 0, Vector2.Zero, new Vector2(Game1.UiScale), SpriteEffects.None, 0);
+                    Color.White * transparency, 0, Vector2.Zero, new Vector2(scale), SpriteEffects.None, 0);
             }
 
             // draw the cursor
             var cursorPosition = bookPosition +
-                           new Vector2(12 + (_cursorIndex % 2) * 32 + (_cursorIndex / 6) * 88, 8 + ((_cursorIndex % 6) / 2) * 32) * Game1.UiScale +
-                           new Vector2(21, 21) * Game1.UiScale -
-                           new Vector2(2, 2) * Game1.UiScale * _cursorState;
+                           new Vector2(12 + (_cursorIndex % 2) * 32 + (_cursorIndex / 6) * 88, 8 + ((_cursorIndex % 6) / 2) * 32) * scale +
+                           new Vector2(21, 21) * scale -
+                           new Vector2(2, 2) * scale * _cursorState;
             spriteBatch.Draw(_spriteCursor.Texture, cursorPosition, _spriteCursor.SourceRectangle,
-                Color.White * transparency, 0, Vector2.Zero, new Vector2(Game1.UiScale), SpriteEffects.None, 0);
+                Color.White * transparency, 0, Vector2.Zero, new Vector2(scale), SpriteEffects.None, 0);
 
             // draw the selected image
             if (_transitionValue != 0)
             {
-                var pictureStartPosition = bookPosition + new Vector2(27 + (_cursorIndex % 2) * 32 + (_cursorIndex / 6) * 88, 27 + ((_cursorIndex % 6) / 2) * 32) * Game1.UiScale;
+                var pictureStartPosition = bookPosition + new Vector2(27 + (_cursorIndex % 2) * 32 + (_cursorIndex / 6) * 88, 27 + ((_cursorIndex % 6) / 2) * 32) * scale;
                 var picturePosition = Vector2.Lerp(pictureStartPosition, new Vector2(Game1.WindowWidth / 2, Game1.WindowHeight / 2), _transitionValue);
 
                 spriteBatch.Draw(_spritePhotos[_cursorIndex].Texture, picturePosition, _spritePhotos[_cursorIndex].SourceRectangle,
                     Color.White * transparency * _transitionValue, 0,
                     new Vector2(_spritePhotos[_cursorIndex].SourceRectangle.Width / 2, _spritePhotos[_cursorIndex].SourceRectangle.Height / 2f),
-                    new Vector2(Game1.UiScale * (0.1f + _transitionValue * 0.9f)), SpriteEffects.None, 0);
+                    new Vector2(scale * (0.1f + _transitionValue * 0.9f)), SpriteEffects.None, 0);
             }
         }
     }
