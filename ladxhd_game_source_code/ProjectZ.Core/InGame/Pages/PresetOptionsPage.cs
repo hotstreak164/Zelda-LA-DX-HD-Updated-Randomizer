@@ -2,6 +2,7 @@
 using System.Security.AccessControl;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.Core.InGame.Pages;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
 using ProjectZ.InGame.Things;
@@ -301,17 +302,21 @@ namespace ProjectZ.InGame.Pages
                 CameraSettingsPage.SetCameraScreenShake(GameSettings.ScreenShake);
                 CameraSettingsPage.SetCameraExScreenShake(GameSettings.ExScreenShake);
             }
-            if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(GraphicSettingsPage), out var videoPage))
+            if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(VideoSettingsPage), out var videoPage))
             {
-                var GraphicsSettingsPage = (GraphicSettingsPage)videoPage;
+                var GraphicsSettingsPage = (VideoSettingsPage)videoPage;
                 GraphicsSettingsPage.SetGameScaleValue(GameSettings.GameScale);
                 GraphicsSettingsPage.SetUserInterfaceScale(GameSettings.UiScale);
+                GraphicsSettingsPage.SetVerticalSync(GameSettings.VerticalSync);
+                GraphicsSettingsPage.SetOpaqueHudBg(GameSettings.OpaqueHudBg);
+            }
+            if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(GraphicsSettingsPage), out var graphicsPage))
+            {
+                var GraphicsSettingsPage = (GraphicsSettingsPage)graphicsPage;
                 GraphicsSettingsPage.SetGlobalLighting(GameSettings.GlobalLights);
                 GraphicsSettingsPage.SetObjectLighting(GameSettings.ObjectLights);
                 GraphicsSettingsPage.SetDynamicShadows(GameSettings.EnableShadows);
                 GraphicsSettingsPage.SetFogEffects(GameSettings.FogEffects);
-                GraphicsSettingsPage.SetVerticalSync(GameSettings.VerticalSync);
-                GraphicsSettingsPage.SetOpaqueHudBg(GameSettings.OpaqueHudBg);
             }
             if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(AudioSettingsPage), out var audioPage))
             {

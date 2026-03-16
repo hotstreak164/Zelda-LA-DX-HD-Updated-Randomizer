@@ -317,7 +317,6 @@ namespace ProjectZ.InGame.Things
 
                 MapManager.CurrentMap.Objects.ShadowTexture = _shadowRenderTarget;
             }
-
             ChangeRenderTarget();
             Game1.Graphics.GraphicsDevice.Clear(Color.Black);
 

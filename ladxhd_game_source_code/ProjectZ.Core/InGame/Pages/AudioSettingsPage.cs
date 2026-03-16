@@ -69,7 +69,8 @@ namespace ProjectZ.InGame.Pages
             _tooltips.Add("tooltip_audio_effect_volume");
 
             // Toggle: Classic Music Tile Cues
-            _toggleAudioClassic = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleAudioClassic = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_classic_music", GameSettings.ClassicMusic, 
                 newState => { ToggleMusicCues(newState); });
             _contentLayout.AddElement(_toggleAudioClassic);
@@ -77,7 +78,8 @@ namespace ProjectZ.InGame.Pages
 
         #if !ANDROID
             // Toggle: Mute Inactive Window
-            _toggleMuteInactive = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleMuteInactive = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_mute_inactive", GameSettings.MuteInactive, 
                 newState => { GameSettings.MuteInactive = newState; });
             _contentLayout.AddElement(_toggleMuteInactive);
@@ -85,14 +87,16 @@ namespace ProjectZ.InGame.Pages
         #endif
 
             // Toggle: Low Hearts Alarm
-            _toggleHealthAlarm = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleHealthAlarm = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_heartbeep", GameSettings.HeartBeep, 
                 newState => { GameSettings.HeartBeep = newState; });
             _contentLayout.AddElement(_toggleHealthAlarm);
             _tooltips.Add("tooltip_audio_heartbeep");
 
             // Toggle: Mute Powerup Music
-            _togglePowerupMusic = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _togglePowerupMusic = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_audio_mute_powerups", GameSettings.MutePowerups, 
                 newState => { GameSettings.MutePowerups = newState; });
             _contentLayout.AddElement(_togglePowerupMusic);

@@ -66,31 +66,36 @@ namespace ProjectZ.InGame.Pages
             _contentLayout.AddElement(_sliderMenuBricks);
 
             // Toggle: Classic Sword
-            _toggleClassicSword = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleClassicSword = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_game_classicsword", GameSettings.ClassicSword, 
                 newState => { GameSettings.ClassicSword = newState; });
             _contentLayout.AddElement(_toggleClassicSword);
 
             // Toggle: Save Position
-            _toggleSavePosition = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleSavePosition = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_game_saveposition", GameSettings.StoreSavePos, 
                 newState => { GameSettings.StoreSavePos = newState; });
             _contentLayout.AddElement(_toggleSavePosition);
 
             // Toggle: AutoSave
-            _toggleAutosave = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleAutosave = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_game_autosave", GameSettings.Autosave, 
                 newState => { GameSettings.Autosave = newState; });
             _contentLayout.AddElement(_toggleAutosave);
 
             // Toggle: Items on Right
-            _toggleItemSlotSide = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleItemSlotSide = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_game_items_on_right", GameSettings.ItemsOnRight, 
                 newState => { GameSettings.ItemsOnRight = newState; });
             _contentLayout.AddElement(_toggleItemSlotSide);
 
             // Toggle: Epilepsy Safe
-            _toggleEpilepsySafe = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleEpilepsySafe = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_game_epilepsysafe", GameSettings.EpilepsySafe,
                 newState => { GameSettings.EpilepsySafe = newState; });
             _contentLayout.AddElement(_toggleEpilepsySafe);

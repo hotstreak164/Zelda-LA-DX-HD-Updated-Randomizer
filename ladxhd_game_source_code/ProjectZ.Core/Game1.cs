@@ -89,9 +89,9 @@ namespace ProjectZ
         private double _startDelayElapsed;
         private bool _startDelayFinished;
 
+        public static int MaxGameScale;
         public static int UiScale;
         public static bool ScaleChanged;
-        public static int MaxGameScale;
 
         public static bool WasActive;
         public static bool UpdateGame;
@@ -303,9 +303,9 @@ namespace ProjectZ
             else if (e.Key == Keys.Enter)
             {
                 // Get the graphics settings page.
-                if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(GraphicSettingsPage), out var videoPage))
+                if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(VideoSettingsPage), out var videoPage))
                 {
-                    var GraphicsSettingsPage = (GraphicSettingsPage)videoPage;
+                    var GraphicsSettingsPage = (VideoSettingsPage)videoPage;
 
                     // Reverse the current screen mode.
                     if (GameSettings.ScreenMode > 0)

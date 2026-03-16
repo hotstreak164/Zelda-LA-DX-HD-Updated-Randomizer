@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.Core.InGame.Pages;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
 using ProjectZ.InGame.Things;
@@ -56,7 +57,8 @@ namespace ProjectZ.InGame.Pages
             AddPage(new NewGamePage(_width, _height));
             AddPage(new SettingsPage(_width, _height));
             AddPage(new GameSettingsPage(_width, _height, content));
-            AddPage(new GraphicSettingsPage(_width, _height));
+            AddPage(new VideoSettingsPage(_width, _height));
+            AddPage(new GraphicsSettingsPage(_width, _height));
             AddPage(new AudioSettingsPage(_width, _height));
             AddPage(new ControlSettingsPage(_width, _height));
             AddPage(new ControlMappingPage(_width, _height));

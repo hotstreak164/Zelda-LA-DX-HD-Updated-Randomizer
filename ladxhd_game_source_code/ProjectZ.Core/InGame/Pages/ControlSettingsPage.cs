@@ -87,40 +87,46 @@ namespace ProjectZ.InGame.Pages
             _tooltips.Add("tooltip_controls_gamepad");
 
             // Button: Remap Settings
-            _contentLayout.AddElement(new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(1, 2), 
+            _contentLayout.AddElement(new InterfaceButton(
+                new Point(buttonWidth, buttonHeight), new Point(1, 2), 
                 "settings_controls_remap", element => { Game1.UiPageManager.ChangePage(typeof(ControlMappingPage)); }));
             _tooltips.Add("tooltip_controls_remap");
 
             // Toggle: Triggers Scale Game
-            _toggleTriggersScale = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleTriggersScale = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_triggersscale", GameSettings.TriggersScale, 
                 newState => { GameSettings.TriggersScale = newState; });
             _contentLayout.AddElement(_toggleTriggersScale);
             _tooltips.Add("tooltip_controls_triggersscale");
 
             // Toggle: Toggle Six Buttons
-            _toggleSixButtons = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleSixButtons = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_sixbuttons", GameSettings.SixButtons, 
                 newState => { UpdateSixButtonToggle(newState); });
             _contentLayout.AddElement(_toggleSixButtons);
             _tooltips.Add("tooltip_controls_triggersscale");
 
             // Toggle: Swap Confirm & Cancel
-            _toggleSwapButtons = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleSwapButtons = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_swapbuttons", GameSettings.SwapButtons, 
                 newState => { _controlCooldown = 500f; GameSettings.SwapButtons = newState; ControlHandler.SetConfirmCancelButtons(); });
             _contentLayout.AddElement(_toggleSwapButtons);
             _tooltips.Add("tooltip_controls_swapconfirm");
 
             // Toggle: Classic Movement
-            _toggleClassicMove = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleClassicMove = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_classicmove", GameSettings.OldMovement, 
                 newState => { GameSettings.OldMovement = newState; });
             _contentLayout.AddElement(_toggleClassicMove);
             _tooltips.Add("tooltip_controls_classicmove");
 
             // Toggle: Digital Analog
-            _toggleDigitalAnalog = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleDigitalAnalog = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_digitalanalog", GameSettings.DigitalAnalog, 
                 newState => { GameSettings.DigitalAnalog = newState; });
             _contentLayout.AddElement(_toggleDigitalAnalog);

@@ -101,31 +101,36 @@ namespace ProjectZ.InGame.Pages
             _contentLayout.AddElement(_sliderBorderOpacity);
 
             // Toggle: Classic Scale Lock
-            _toggleClassicScaling = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleClassicScaling = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_classicscaling", GameSettings.ClassicScaling, 
                 newState => { GameSettings.ClassicScaling = newState; Game1.ScaleChanged = true; Camera.SnapCameraTimer = 10f; });
             _contentLayout.AddElement(_toggleClassicScaling);
 
             // Toggle: Camera Lock
-            _toggleCameraLock = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleCameraLock = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_cameralock", GameSettings.CameraLock, 
                 newState => { GameSettings.CameraLock = newState; });
             _contentLayout.AddElement(_toggleCameraLock);
 
             // Toggle: Smooth Camera
-            _toggleCameraSmooth = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleCameraSmooth = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_smoothcamera", GameSettings.SmoothCamera, 
                 newState => { GameSettings.SmoothCamera = newState; });
             _contentLayout.AddElement(_toggleCameraSmooth);
 
             // Toggle: Screen-Shake
-            _toggleScreenShake = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleScreenShake = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_screenshake", GameSettings.ScreenShake, 
                 newState => { GameSettings.ScreenShake = newState; });
             _contentLayout.AddElement(_toggleScreenShake);
 
             // Toggle: Extra Screen-Shake
-            _toggleExScreenShake = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleExScreenShake = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_exscreenshake", GameSettings.ExScreenShake, 
                 newState => { GameSettings.ExScreenShake = newState; });
             _contentLayout.AddElement(_toggleExScreenShake);

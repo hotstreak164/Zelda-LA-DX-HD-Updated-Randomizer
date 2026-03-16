@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectZ.Core.InGame.Pages;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
 using ProjectZ.InGame.SaveLoad;
@@ -31,7 +32,7 @@ namespace ProjectZ.InGame.Pages
             }
             _settingsLayout.AddElement(headerLayout);
             _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize) - 12), Selectable = true };
-            var buttonSize = new Point(150, 16);
+            var buttonSize = new Point(150, 14);
 
             // Button: Game Settings
             _contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_game", element => { Game1.UiPageManager.ChangePage(typeof(GameSettingsPage)); }));
@@ -43,7 +44,10 @@ namespace ProjectZ.InGame.Pages
             _contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_camera", element => { Game1.UiPageManager.ChangePage(typeof(CameraSettingsPage)); }));
 
             // Button: Video Settings
-            _contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_video", element => { Game1.UiPageManager.ChangePage(typeof(GraphicSettingsPage)); }));
+            _contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_video", element => { Game1.UiPageManager.ChangePage(typeof(VideoSettingsPage)); }));
+
+            // Button: Graphics Settings
+            _contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_graphics", element => { Game1.UiPageManager.ChangePage(typeof(GraphicsSettingsPage)); }));
 
             // Button: Audio Settings
             _contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_audio", element => { Game1.UiPageManager.ChangePage(typeof(AudioSettingsPage)); }));

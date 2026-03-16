@@ -76,23 +76,27 @@ namespace ProjectZ.InGame.Pages
             _contentLayout.AddElement(_sliderMovementSpeed);
 
             // Toggle: No Heart Drops
-            _toggleNoHeartDrops = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleNoHeartDrops = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_mods_nohearts", GameSettings.NoHeartDrops, 
                 newState => { GameSettings.NoHeartDrops = newState; });
             _contentLayout.AddElement(_toggleNoHeartDrops);
 
             // Toggle: No Damage Launch
-            _toggleNoDmgLaunch = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleNoDmgLaunch = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_mods_dmglaunch", GameSettings.NoDamageLaunch, 
                 newState => { GameSettings.NoDamageLaunch = newState; });
             _contentLayout.AddElement(_toggleNoDmgLaunch);
 
             // Button: Extra Sword Interactions
-            _contentLayout.AddElement(new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(1, 2), 
+            _contentLayout.AddElement(new InterfaceButton(
+                new Point(buttonWidth, buttonHeight), new Point(1, 2), 
                 "settings_mods_swordinteract", element => { Game1.UiPageManager.ChangePage(typeof(SwordInteractPage)); }));
 
             // Toggle: Mirror Shield Reflects
-            _toggleMirrorReflects = InterfaceToggle.GetToggleButton(new Point(buttonWidth, buttonHeight), new Point(5, 2),
+            _toggleMirrorReflects = InterfaceToggle.GetToggleButton(
+                new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_mods_mirrorreflect", GameSettings.MirrorReflects, 
                 newState => { GameSettings.MirrorReflects = newState; });
             _contentLayout.AddElement(_toggleMirrorReflects);
