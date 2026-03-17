@@ -16,7 +16,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             _position = new CPosition(posX, posY, 0);
 
-            var animator = AnimatorSaveLoad.LoadAnimator("nightmares/anger fish stone");
+            var animator = AnimatorSaveLoad.LoadAnimator("Nightmares/anger fish stone");
             animator.Play("run");
 
             _body = new BodyComponent(_position, -8, -14, 16, 14, 8)
