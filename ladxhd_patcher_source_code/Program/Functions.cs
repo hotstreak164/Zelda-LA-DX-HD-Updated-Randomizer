@@ -118,7 +118,11 @@ namespace LADXHD_Patcher
         private static void Dungeon3PatchFix()
         {
             // I fucked up. After the dungeon name change the file "dungeon3_1.map" no longer exists.
-            string d3map = Path.Combine(Config.BackupPath, "dungeon3_1.map");
+            string d3map = Path.Combine(Config.BaseFolder, "Data", "Maps", "dungeon3_1.map");
+
+            // If it doesn't exist in the original path, check the backup folder.
+            if (!d3map.TestPath())
+                d3map = Path.Combine(Config.BackupPath, "dungeon3_1.map");
 
             // Look for the backup dungeon 3 file as it should still exist.
             if (d3map.TestPath())
@@ -131,6 +135,13 @@ namespace LADXHD_Patcher
                     patchedFile = Path.Combine(Config.TempFolder, "android", "com.zelda.ladxhd", "assets", "Data", "Maps", "dungeon3.map");
 
                 XDelta3.Execute(Operation.Apply, d3map, xdelta3File, patchedFile);
+            }
+            // If the dungeon 3 map file was not able to be patched, output an error message.
+            else
+            {
+                string title = "Patching \"dungeon3.map\" Failed";
+                string message = "Unable to locate or patch the correct map file for dungeon 3. The patch may succeed but this dungeon will crash the game!";
+                Forms.OkayDialog.Display(title, 260, 40, 34, 16, 10, message);
             }
         }
 
