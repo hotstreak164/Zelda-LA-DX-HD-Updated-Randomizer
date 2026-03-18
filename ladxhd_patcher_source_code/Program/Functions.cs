@@ -250,7 +250,7 @@ namespace LADXHD_Patcher
 
         private static void PostPatchingFunctions()
         {
-            // Because of a mistake I made not keeping "dungeon_3_1.map" around, it now needs a special fix.
+            // Because of a mistake I made not keeping "dungeon3_1.map" around, it now needs a special fix.
             Dungeon3PatchFix();
 
             // We need the new FNT files for Chinese font, the new editor fonts, and a bitmap icon for OpenGL.
@@ -341,6 +341,20 @@ namespace LADXHD_Patcher
             }
         }
 
+        private static void VerifyCreateDungeon3Map()
+        {
+            // Check for either instance of the original "dungeon3_1.map" which is required for patching.
+            string realD3 = Path.Combine(Config.BaseFolder, "Data", "Maps", "dungeon3_1.map");
+            string backD3 = Path.Combine(Config.BackupPath, "dungeon3_1.map");
+
+            // If neither exist then recreate the original map file for patching.
+            if (!realD3.TestPath() && !backD3.TestPath())
+            {
+                Config.BackupPath.CreatePath(false);
+                File.WriteAllBytes(backD3, (byte[])resources["dungeon3_1.map"]);
+            }
+        }
+
         private static void PrepareLinuxFiles()
         {
             // The path where we want the extensionless executable.
@@ -379,6 +393,9 @@ namespace LADXHD_Patcher
             // Remove any garbage files that will just mess up the patcher.
             RemoveBadBackupFiles();
             _filesPatched = 0;
+
+            // Dungeon 3 map has caused me grief. Let's put an end to it.
+            VerifyCreateDungeon3Map();
 
             // Build fast lookup of game files (name -> full path)
             BuildGameFileLookup();

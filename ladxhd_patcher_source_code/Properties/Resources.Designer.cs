@@ -101,6 +101,16 @@ namespace LADXHD_Patcher {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] dungeon3_1_map {
+            get {
+                object obj = ResourceManager.GetObject("dungeon3_1.map", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Icon_bmp {
