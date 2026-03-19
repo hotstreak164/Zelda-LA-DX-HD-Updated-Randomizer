@@ -71,6 +71,8 @@
         // On-Screen Control Settings
         public static int     TouchControls   =  1;
         public static int     TouchScaling    =  10;
+        public static int     TouchOpacity    =  30;
+        public static int     ShadowOpacity   =  15;
         public static bool    TouchTopMiddle  =  false;
         public static bool    TouchSticks     =  false;
 
@@ -170,6 +172,8 @@
             // On-Screen Control Settings
             TouchControls   =  1;
             TouchScaling    =  10;
+            TouchOpacity    =  40;
+            ShadowOpacity   =  20;
             TouchTopMiddle  =  false;
             TouchSticks     =  false;
 

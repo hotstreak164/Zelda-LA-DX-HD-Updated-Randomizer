@@ -14,8 +14,8 @@ namespace ProjectZ.InGame.Controls
         public bool IsDown;
         public bool WasDown;
 
-        public float DisplayAlpha = VirtualController.ButtonMinAlpha;
-        public float ShadowAlpha = VirtualController.ShadowMinAlpha;
+        public float DisplayAlpha = GameSettings.TouchOpacity * 0.01f;
+        public float ShadowAlpha = GameSettings.ShadowOpacity * 0.01f;
 
         public int? TouchId;
 

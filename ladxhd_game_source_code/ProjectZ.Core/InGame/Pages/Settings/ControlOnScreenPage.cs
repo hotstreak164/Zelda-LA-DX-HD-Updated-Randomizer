@@ -15,10 +15,14 @@ namespace ProjectZ.Core.InGame.Pages.Settings
 
         private readonly InterfaceSlider _sliderTouchControls;
         private readonly InterfaceSlider _sliderTouchScale;
+        private readonly InterfaceSlider _sliderTouchOpacity;
+        private readonly InterfaceSlider _sliderShadowOpacity;
         private readonly InterfaceListLayout _toggleTouchMiddleTop;
 
         List<string> _tooltips = new List<string>();
         private bool _showTooltip;
+
+        public void SetOnScreenControlsSlider(int value) { ((InterfaceSlider)_sliderTouchControls).CurrentStep = value; }
 
         public ControlOnScreenPage(int width, int height)
         {
@@ -41,9 +45,25 @@ namespace ProjectZ.Core.InGame.Pages.Settings
             _contentLayout.AddElement(_sliderTouchControls);
             _tooltips.Add("tooltip_controls_onscreenpad");
 
+            // Slider: Fade Opacity
+            _sliderTouchOpacity = new InterfaceSlider("settings_controls_fadeopacity", 
+                buttonWidth, sliderHeight, new Point(1, 2), 0, 100, 1, GameSettings.TouchOpacity,
+                number => { GameSettings.TouchOpacity = number; })
+                { SetString = number => FadeOpacitySliderAdjustmentString(number) };
+            _contentLayout.AddElement(_sliderTouchOpacity);
+            _tooltips.Add("tooltip_controls_fadeopacity");
+
+            // Slider: Shadow Opacity
+            _sliderShadowOpacity = new InterfaceSlider("settings_controls_shadowopacity", 
+                buttonWidth, sliderHeight, new Point(1, 2), 0, 100, 1, GameSettings.ShadowOpacity,
+                number => { GameSettings.ShadowOpacity = number; })
+                { SetString = number => FadeOpacitySliderAdjustmentString(number) };
+            _contentLayout.AddElement(_sliderShadowOpacity);
+            _tooltips.Add("tooltip_controls_shadowopacity");
+
             // Slider: Controls Scaling
             _sliderTouchScale = new InterfaceSlider("settings_controls_onscreenscale", 
-                buttonWidth, sliderHeight, new Point(1, 2), 1, 20, 1, GameSettings.TouchScaling,
+                buttonWidth, sliderHeight, new Point(1, 2), 4, 20, 1, GameSettings.TouchScaling - 4,
                 number => { GameSettings.TouchScaling = number; })
                 { SetString = number => OnScreenScaleSliderAdjustmentString(number) };
             _contentLayout.AddElement(_sliderTouchScale);
@@ -111,6 +131,15 @@ namespace ProjectZ.Core.InGame.Pages.Settings
                 1 => Game1.LanguageManager.GetString("settings_controls_onscreenpad_02", "error"),
                 2 => Game1.LanguageManager.GetString("settings_controls_onscreenpad_03", "error"),
             };
+        }
+
+        private string FadeOpacitySliderAdjustmentString(int number)
+        {
+            // Apply the scaling settings to the controls.
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+
+            // Display the updated value.
+            return ": " + (number) + "%";
         }
 
         private string OnScreenScaleSliderAdjustmentString(int number)

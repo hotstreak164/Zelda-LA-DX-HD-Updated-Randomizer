@@ -16,3 +16,4 @@ button_dpad:0,512,384,384,0,0
 button_share:128,384,128,128,0,0
 button_menu:256,384,128,128,0,0
 button_outer:384,384,128,128,0,0
+button_controller:384,512,128,128,0,0

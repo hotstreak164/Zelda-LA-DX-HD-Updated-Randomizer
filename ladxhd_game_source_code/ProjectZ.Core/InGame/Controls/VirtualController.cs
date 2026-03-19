@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using ProjectZ.Base;
+using ProjectZ.Core.InGame.Pages.Settings;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
 
@@ -11,22 +12,21 @@ namespace ProjectZ.InGame.Controls
     public static class VirtualController
     {
         private static readonly List<VirtualButton> _buttons = new List<VirtualButton>();
+        private static VirtualButton _controllerButton;
         private static VirtualStick _leftStick;
         private static VirtualStick _rightStick;
 
         private static DictAtlasEntry _dPadSprite;
         private static Rectangle _dPadBounds;
 
+        private static float _controllerHideTimer;
+        private const float ControllerHideDelay = 5000f;
+        private static bool _controllerButtonHidden;
+
         private static float ControlsScale => GameSettings.TouchScaling * 0.25f;
 
-        public static float ButtonMinAlpha = 0.30f;
-        public static float ButtonMaxAlpha = 0.85f;
-
-        public static float ShadowMinAlpha = 0.15f;
-        public static float ShadowMaxAlpha = 0.30f;
-
-        public static float DPadButtonAlpha = ButtonMinAlpha;
-        public static float DPadShadowAlpha = ShadowMaxAlpha;
+        public static float DPadButtonAlpha = GameSettings.TouchOpacity * 0.01f;
+        public static float DPadShadowAlpha = GameSettings.ShadowOpacity * 0.01f;
 
         public static VirtualStick GetLeftStick() => _leftStick;
         public static VirtualStick GetRightStick() => _rightStick;
@@ -44,6 +44,9 @@ namespace ProjectZ.InGame.Controls
         public static void Initialize(int screenWidth, int screenHeight)
         {
             _buttons.Clear();
+            _controllerButton = null;
+            _controllerHideTimer = 0f;
+            _controllerButtonHidden = false;
 
             float scale = ControlsScale;
             int buttonSize = (int)(40 * scale);
@@ -153,14 +156,32 @@ namespace ProjectZ.InGame.Controls
 
             if (GameSettings.TouchTopMiddle)
             {
-                _buttons.Add(new VirtualButton("button_share", CButtons.Select, new Rectangle(centerX - buttonSize - spacing, topY, buttonSize, buttonSize)));
-                _buttons.Add(new VirtualButton("button_menu", CButtons.Start, new Rectangle(centerX + spacing, topY, buttonSize, buttonSize)));
+                _buttons.Add(new VirtualButton("button_share", CButtons.Select, new Rectangle(centerX - (buttonSize * 2) - spacing, topY, buttonSize, buttonSize)));
+                _controllerButton = new VirtualButton("button_controller", CButtons.None, new Rectangle(centerX - (buttonSize / 2), topY, buttonSize, buttonSize));
+                _buttons.Add(new VirtualButton("button_menu", CButtons.Start, new Rectangle(centerX + buttonSize + spacing, topY, buttonSize, buttonSize)));
             }
             else
             {
-                _buttons.Add(new VirtualButton("button_share", CButtons.Select, new Rectangle(centerX - buttonSize - spacing, bottomY, buttonSize, buttonSize)));
-                _buttons.Add(new VirtualButton("button_menu", CButtons.Start, new Rectangle(centerX + spacing, bottomY, buttonSize, buttonSize)));
+                _buttons.Add(new VirtualButton("button_share", CButtons.Select, new Rectangle(centerX - (buttonSize * 2) - spacing, bottomY, buttonSize, buttonSize)));
+                _controllerButton = new VirtualButton("button_controller", CButtons.None, new Rectangle(centerX - (buttonSize / 2), bottomY, buttonSize, buttonSize));
+                _buttons.Add(new VirtualButton("button_menu", CButtons.Start, new Rectangle(centerX + buttonSize + spacing, bottomY, buttonSize, buttonSize)));
             }
+        }
+
+        public static bool ControllerButtonDown()
+        {
+            return _controllerButton != null && _controllerButton.IsDown;
+        }
+
+        public static bool ControllerButtonPressed()
+        {
+            return _controllerButton != null && _controllerButton.Pressed();
+        }
+
+        public static bool ControllerButtonReleased()
+        {
+            System.Diagnostics.Debug.WriteLine("BUTTON RELEASED");
+            return _controllerButton != null && _controllerButton.Released();
         }
 
         public static void UpdateButtonsAlpha()
@@ -169,6 +190,11 @@ namespace ProjectZ.InGame.Controls
             {
                 button.DisplayAlpha = UpdateButtonAlpha(button.DisplayAlpha, button.IsDown);
                 button.ShadowAlpha  = UpdateShadowAlpha(button.ShadowAlpha, button.IsDown);
+            }
+            if (_controllerButton != null)
+            {
+                _controllerButton.DisplayAlpha = UpdateButtonAlpha(_controllerButton.DisplayAlpha, _controllerButton.IsDown, true);
+                _controllerButton.ShadowAlpha  = UpdateShadowAlpha(_controllerButton.ShadowAlpha, _controllerButton.IsDown, true);
             }
             if (_leftStick != null)
             {
@@ -185,47 +211,160 @@ namespace ProjectZ.InGame.Controls
             DPadShadowAlpha = UpdateShadowAlpha(DPadShadowAlpha, dPadActive);
         }
 
-        private static float UpdateButtonAlpha(float currentAlpha, bool isActive)
+        private static float UpdateButtonAlpha(float currentAlpha, bool isActive, bool isControllerButton = false)
         {
+            float buttonMaxAlpha = 1.00f;
             float targetAlpha;
 
-            if (GameSettings.TouchControls == 0)
+            if (isControllerButton)
+            {
+                if (GameSettings.TouchControls == 0 && _controllerButtonHidden)
+                    targetAlpha = 0f;
+                else
+                    targetAlpha = isActive ? buttonMaxAlpha : GameSettings.TouchOpacity * 0.01f;
+            }
+            else if (GameSettings.TouchControls == 0)
                 targetAlpha = 0f;
             else if (GameSettings.TouchControls == 2)
-                targetAlpha = ButtonMaxAlpha;
+                targetAlpha = buttonMaxAlpha;
             else
-                targetAlpha = isActive ? ButtonMaxAlpha : ButtonMinAlpha;
+                targetAlpha = isActive ? buttonMaxAlpha : GameSettings.TouchOpacity * 0.01f;
 
             float speed = 0.01f * Game1.DeltaTime;
             return MathHelper.Lerp(currentAlpha, targetAlpha, MathHelper.Clamp(speed, 0f, 1f));
         }
 
-        private static float UpdateShadowAlpha(float currentAlpha, bool isActive)
+        private static float UpdateShadowAlpha(float currentAlpha, bool isActive, bool isControllerButton = false)
         {
             float targetAlpha;
 
-            if (GameSettings.TouchControls == 0)
+            if (isControllerButton)
+            {
+                if (GameSettings.TouchControls == 0 && _controllerButtonHidden)
+                    targetAlpha = 0f;
+                else
+                    targetAlpha = GameSettings.ShadowOpacity * 0.01f;
+            }
+            else if (GameSettings.TouchControls == 0)
                 targetAlpha = 0f;
-            else if (GameSettings.TouchControls == 2)
-                targetAlpha = ShadowMaxAlpha;
             else
-                targetAlpha = isActive ? ShadowMaxAlpha : ShadowMinAlpha;
+                targetAlpha = GameSettings.ShadowOpacity * 0.01f;
 
             float speed = 0.01f * Game1.DeltaTime;
             return MathHelper.Lerp(currentAlpha, targetAlpha, MathHelper.Clamp(speed, 0f, 1f));
         }
 
-    #if ANDROID
         public static void Update()
         {
             foreach (var button in _buttons)
                 button.BeginUpdate();
 
+            _controllerButton?.BeginUpdate();
             _leftStick?.BeginUpdate();
             _rightStick?.BeginUpdate();
 
+#if ANDROID
+            var touches = InputHandler.TouchState;
+#else
+            var touches = new TouchCollection();
+#endif
+
+            int holdPadding = (int)(12 * ControlsScale);
+            bool anyTouchActive = false;
+
+            for (int i = 0; i < touches.Count; i++)
+            {
+                TouchLocation touch = touches[i];
+
+                if (touch.State == TouchLocationState.Pressed ||
+                    touch.State == TouchLocationState.Moved)
+                {
+                    anyTouchActive = true;
+                    break;
+                }
+            }
+
+            // --------------------------------------------------------------------------------------------------------------------
+            // CONTROLLER BUTTON AUTO-HIDE
+            // --------------------------------------------------------------------------------------------------------------------
             if (GameSettings.TouchControls == 0)
             {
+                if (anyTouchActive)
+                {
+                    _controllerHideTimer = 0f;
+                    _controllerButtonHidden = false;
+                }
+                else
+                {
+                    _controllerHideTimer += Game1.DeltaTime;
+
+                    if (_controllerHideTimer >= ControllerHideDelay)
+                        _controllerButtonHidden = true;
+                }
+            }
+            else
+            {
+                _controllerHideTimer = 0f;
+                _controllerButtonHidden = false;
+            }
+
+            // --------------------------------------------------------------------------------------------------------------------
+            // KEEP CONTROLLER BUTTON ALIVE
+            // --------------------------------------------------------------------------------------------------------------------
+            if (_controllerButton != null && _controllerButton.TouchId != null)
+            {
+                bool foundTouch = false;
+
+                for (int i = 0; i < touches.Count; i++)
+                {
+                    TouchLocation touch = touches[i];
+
+                    if (touch.Id != _controllerButton.TouchId.Value)
+                        continue;
+
+                    if (touch.State == TouchLocationState.Released ||
+                        touch.State == TouchLocationState.Invalid)
+                        break;
+
+                    foundTouch = true;
+
+                    if (_controllerButton.ContainsExpanded(touch.Position.ToPoint(), holdPadding))
+                        _controllerButton.IsDown = true;
+
+                    break;
+                }
+
+                if (!foundTouch || !_controllerButton.IsDown)
+                    _controllerButton.TouchId = null;
+            }
+
+            // --------------------------------------------------------------------------------------------------------------------
+            // TOUCH CONTROLS DISABLED
+            // Only the controller button is allowed to work here.
+            // --------------------------------------------------------------------------------------------------------------------
+            if (GameSettings.TouchControls == 0)
+            {
+                if (_controllerButton != null &&
+                    !_controllerButtonHidden &&
+                    _controllerButton.TouchId == null)
+                {
+                    for (int i = 0; i < touches.Count; i++)
+                    {
+                        TouchLocation touch = touches[i];
+
+                        if (touch.State != TouchLocationState.Pressed &&
+                            touch.State != TouchLocationState.Moved)
+                            continue;
+
+                        if (_controllerButton.Contains(touch.Position.ToPoint()))
+                        {
+                            _controllerButton.IsDown = true;
+                            _controllerButton.TouchId = touch.Id;
+                            break;
+                        }
+                    }
+                }
+
                 foreach (var button in _buttons)
                     button.TouchId = null;
 
@@ -235,16 +374,25 @@ namespace ProjectZ.InGame.Controls
                 if (_rightStick != null)
                     _rightStick.TouchId = null;
 
-                // Update the alpha for all buttons.
                 UpdateButtonsAlpha();
+
+                if (ControllerButtonPressed())
+                {
+                    GameSettings.TouchControls = 1;
+
+                    if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(ControlOnScreenPage), out var onScreenControlsPage))
+                    {
+                        var onScreenSettingsPage = (ControlOnScreenPage)onScreenControlsPage;
+                        onScreenSettingsPage.SetOnScreenControlsSlider(GameSettings.TouchControls);
+                    }
+                }
+
                 return;
             }
-        
-            var touches = InputHandler.TouchState;
-            int holdPadding = (int)(12 * ControlsScale);
 
-            // First pass:
-            // Keep already-owned buttons alive if their finger is still active.
+            // --------------------------------------------------------------------------------------------------------------------
+            // KEEP NORMAL BUTTONS ALIVE
+            // --------------------------------------------------------------------------------------------------------------------
             foreach (var button in _buttons)
             {
                 if (button.TouchId == null)
@@ -265,18 +413,19 @@ namespace ProjectZ.InGame.Controls
 
                     foundTouch = true;
 
-                    Point point = touch.Position.ToPoint();
-
-                    if (button.ContainsExpanded(point, holdPadding))
+                    if (button.ContainsExpanded(touch.Position.ToPoint(), holdPadding))
                         button.IsDown = true;
 
                     break;
                 }
+
                 if (!foundTouch || !button.IsDown)
                     button.TouchId = null;
             }
 
-            // Keep left stick alive if its finger is still active.
+            // --------------------------------------------------------------------------------------------------------------------
+            // KEEP LEFT STICK ALIVE
+            // --------------------------------------------------------------------------------------------------------------------
             if (_leftStick != null && _leftStick.TouchId != null)
             {
                 bool foundTouch = false;
@@ -302,7 +451,9 @@ namespace ProjectZ.InGame.Controls
                     _leftStick.TouchId = null;
             }
 
-            // Keep right stick alive if its finger is still active.
+            // --------------------------------------------------------------------------------------------------------------------
+            // KEEP RIGHT STICK ALIVE
+            // --------------------------------------------------------------------------------------------------------------------
             if (_rightStick != null && _rightStick.TouchId != null)
             {
                 bool foundTouch = false;
@@ -328,8 +479,9 @@ namespace ProjectZ.InGame.Controls
                     _rightStick.TouchId = null;
             }
 
-            // Second pass:
-            // Any unclaimed active touch can claim a free button or free stick.
+            // --------------------------------------------------------------------------------------------------------------------
+            // CLAIM NEW TOUCHES
+            // --------------------------------------------------------------------------------------------------------------------
             for (int i = 0; i < touches.Count; i++)
             {
                 TouchLocation touch = touches[i];
@@ -340,12 +492,18 @@ namespace ProjectZ.InGame.Controls
 
                 bool alreadyUsed = false;
 
-                foreach (var button in _buttons)
+                if (_controllerButton != null && _controllerButton.TouchId == touch.Id)
+                    alreadyUsed = true;
+
+                if (!alreadyUsed)
                 {
-                    if (button.TouchId == touch.Id)
+                    foreach (var button in _buttons)
                     {
-                        alreadyUsed = true;
-                        break;
+                        if (button.TouchId == touch.Id)
+                        {
+                            alreadyUsed = true;
+                            break;
+                        }
                     }
                 }
 
@@ -360,7 +518,17 @@ namespace ProjectZ.InGame.Controls
 
                 Point point = touch.Position.ToPoint();
 
-                // Try buttons first.
+                // Try controller button first.
+                if (_controllerButton != null && _controllerButton.TouchId == null && _controllerButton.Contains(point))
+                {
+                    _controllerButton.IsDown = true;
+                    _controllerButton.TouchId = touch.Id;
+                    continue;
+                }
+
+                // Try buttons next.
+                bool claimed = false;
+
                 foreach (var button in _buttons)
                 {
                     if (button.TouchId != null)
@@ -370,12 +538,12 @@ namespace ProjectZ.InGame.Controls
                     {
                         button.IsDown = true;
                         button.TouchId = touch.Id;
-                        alreadyUsed = true;
+                        claimed = true;
                         break;
                     }
                 }
 
-                if (alreadyUsed)
+                if (claimed)
                     continue;
 
                 // Then try left stick.
@@ -395,10 +563,20 @@ namespace ProjectZ.InGame.Controls
                     _rightStick.SetTouchPosition(touch.Position);
                 }
             }
-            // Update the alpha for all buttons.
+
             UpdateButtonsAlpha();
+
+            if (ControllerButtonPressed())
+            {
+                GameSettings.TouchControls = 0;
+
+                if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(ControlOnScreenPage), out var onScreenControlsPage))
+                {
+                    var onScreenSettingsPage = (ControlOnScreenPage)onScreenControlsPage;
+                    onScreenSettingsPage.SetOnScreenControlsSlider(GameSettings.TouchControls);
+                }
+            }
         }
-    #endif
 
         public static bool ButtonDown(CButtons button)
         {
@@ -438,6 +616,32 @@ namespace ProjectZ.InGame.Controls
 
         public static void Draw(SpriteBatch spriteBatch)
         {
+            if (_controllerButton != null)
+            {
+                float alpha = _controllerButton.DisplayAlpha;
+
+                if (_controllerButton.Sprite != null)
+                {
+                    float shadowAlpha = _controllerButton.ShadowAlpha;
+                    Point shadowOffset = GetShadowOffset();
+
+                    Rectangle src = _controllerButton.Sprite.ScaledRectangle;
+                    Vector2 position = new Vector2(_controllerButton.Bounds.X, _controllerButton.Bounds.Y);
+                    Vector2 shadowPosition = new Vector2(_controllerButton.Bounds.X + shadowOffset.X, _controllerButton.Bounds.Y + shadowOffset.Y);
+
+                    float scaleX = _controllerButton.Bounds.Width / (float)src.Width;
+                    float scaleY = _controllerButton.Bounds.Height / (float)src.Height;
+                    Vector2 scale = new Vector2(scaleX, scaleY);
+
+                    spriteBatch.Draw(_controllerButton.Sprite.Texture, shadowPosition, src, Color.Black * shadowAlpha, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(_controllerButton.Sprite.Texture, position, src, Color.White * alpha, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                }
+                else if (_controllerButton.SpriteName != "null")
+                {
+                    spriteBatch.Draw(Resources.SprWhite, _controllerButton.Bounds, Color.White * alpha);
+                }
+            }
+
             if (GameSettings.TouchControls == 0)
                 return;
 

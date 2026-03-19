@@ -61,14 +61,6 @@ namespace ProjectZ.InGame.Pages
                 new Point(buttonWidth, (int)(height * Values.MenuHeaderSize)), new Point(0, 0)));
             _contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize) - 12), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
 
-        #if ANDROID
-            // Button: On-Screen Controls
-            _contentLayout.AddElement(new InterfaceButton(
-                new Point(buttonWidth, buttonHeight), new Point(1, 2), 
-                "settings_controls_onscreen", element => { Game1.UiPageManager.ChangePage(typeof(ControlOnScreenPage)); }));
-            _tooltips.Add("tooltip_controls_remap");
-        #endif
-
             // Slider: Deadzone
             _sliderDeadZone = new InterfaceSlider("settings_controls_deadzone", 
                 buttonWidth, sliderHeight, new Point(1, 2), 0, 100, 1, (int)(GameSettings.DeadZone * 100),
@@ -76,6 +68,14 @@ namespace ProjectZ.InGame.Pages
                 { SetString = number => ": " + number + "%" };
             _contentLayout.AddElement(_sliderDeadZone);
             _tooltips.Add("tooltip_controls_deadzone");
+
+        #if ANDROID
+            // Button: On-Screen Controls
+            _contentLayout.AddElement(new InterfaceButton(
+                new Point(buttonWidth, buttonHeight), new Point(1, 2), 
+                "settings_controls_onscreen", element => { Game1.UiPageManager.ChangePage(typeof(ControlOnScreenPage)); }));
+            _tooltips.Add("tooltip_controls_remap");
+        #endif
 
             // Button: Controller Type
             _contentLayout.AddElement(_controllerType = new InterfaceButton(new Point(buttonWidth, buttonHeight), new Point(0, 2), "", PressButtonSetController));
