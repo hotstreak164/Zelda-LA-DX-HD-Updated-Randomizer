@@ -11,6 +11,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
         {
             _sequenceWidth = 160;
             _sequenceHeight = 144;
+            _textBoxOffset = false;
 
             // background
             Sprites.Add(new SeqSprite("alligator_painting", new Vector2(0, 0), 0));
