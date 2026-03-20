@@ -251,10 +251,9 @@ namespace ProjectZ.InGame.Pages
 
         public void ReloadVirtualController()
         {
-            #if ANDROID
-                                        // Move the LB and RB buttons near the face buttons on the virtual controller.
-                                        VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
-            #endif
+        #if ANDROID
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+        #endif
         }
     }
 }

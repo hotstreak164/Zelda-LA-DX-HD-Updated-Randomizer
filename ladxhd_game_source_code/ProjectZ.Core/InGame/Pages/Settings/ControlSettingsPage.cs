@@ -187,10 +187,9 @@ namespace ProjectZ.InGame.Pages
 
         public void ReloadVirtualController()
         {
-            #if ANDROID
-                            // Move the LB and RB buttons near the face buttons on the virtual controller.
-                            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
-            #endif
+        #if ANDROID
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+        #endif
         }
         
         public void UpdateSixButtonToggle(bool newState)
@@ -208,10 +207,11 @@ namespace ProjectZ.InGame.Pages
             if (Game1.InProgress)
                 Game1.GameManager.UpdateEquipment();
 
+            // Move the LB and RB buttons near the face buttons on the virtual controller.
             ReloadVirtualController();
         }
 
-    public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
         {
             // Always draw the menu even when not showing tooltips.
             base.Draw(spriteBatch, position, height, alpha);
