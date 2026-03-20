@@ -107,7 +107,7 @@ namespace ProjectZ.InGame.Pages
             _toggleCameraLock = InterfaceToggle.GetToggleButton(
                 new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_camera_cameralock", GameSettings.CameraLock, 
-                newState => { GameSettings.CameraLock = newState; });
+                newState => { GameSettings.CameraLock = newState; ReloadVirtualController(); });
             _contentLayout.AddElement(_toggleCameraLock);
 
             // Toggle: Smooth Camera
@@ -247,6 +247,14 @@ namespace ProjectZ.InGame.Pages
             }
             // Display the tooltip in the tooltip window.
             return tooltip;
+        }
+
+        public void ReloadVirtualController()
+        {
+            #if ANDROID
+                                        // Move the LB and RB buttons near the face buttons on the virtual controller.
+                                        VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+            #endif
         }
     }
 }

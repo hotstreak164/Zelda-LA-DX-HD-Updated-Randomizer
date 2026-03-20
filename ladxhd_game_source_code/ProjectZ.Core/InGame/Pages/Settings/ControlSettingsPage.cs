@@ -92,7 +92,7 @@ namespace ProjectZ.InGame.Pages
             _toggleTriggersScale = InterfaceToggle.GetToggleButton(
                 new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_triggersscale", GameSettings.TriggersScale, 
-                newState => { GameSettings.TriggersScale = newState; });
+                newState => { GameSettings.TriggersScale = newState; ReloadVirtualController(); });
             _contentLayout.AddElement(_toggleTriggersScale);
             _tooltips.Add("tooltip_controls_triggersscale");
 
@@ -185,6 +185,14 @@ namespace ProjectZ.InGame.Pages
             ControlMappingPage.UpdateLabels();
         }
 
+        public void ReloadVirtualController()
+        {
+            #if ANDROID
+                            // Move the LB and RB buttons near the face buttons on the virtual controller.
+                            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+            #endif
+        }
+        
         public void UpdateSixButtonToggle(bool newState)
         {
             // Enable or disable the six inventory button state.
@@ -200,13 +208,10 @@ namespace ProjectZ.InGame.Pages
             if (Game1.InProgress)
                 Game1.GameManager.UpdateEquipment();
 
-        #if ANDROID
-            // Move the LB and RB buttons near the face buttons on the virtual controller.
-            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
-        #endif
+            ReloadVirtualController();
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
+    public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
         {
             // Always draw the menu even when not showing tooltips.
             base.Draw(spriteBatch, position, height, alpha);
