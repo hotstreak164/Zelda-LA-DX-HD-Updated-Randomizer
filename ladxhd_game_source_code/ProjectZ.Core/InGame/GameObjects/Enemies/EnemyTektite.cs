@@ -69,7 +69,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageState = new AiDamageState(this, _body, _aiComponent, sprite, _lives) { OnBurn = OnBurn };
             _aiComponent.ChangeState("idle");
 
-            var damageBox = new CBox(EntityPosition, -6, -12, 0, 12, 12, 4);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -7, -12, 0, 14, 12, 8, true);
             var pushableBox = new CBox(EntityPosition, -7, -12, 0, 14, 12, 8, true);
 

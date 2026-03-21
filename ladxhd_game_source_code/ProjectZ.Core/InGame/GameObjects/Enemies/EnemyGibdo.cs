@@ -73,9 +73,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiStunnedState = new AiStunnedState(_aiComponent, animationComponent, 3300, 900) { ShakeOffset = 1, SilentStateChange = false, ReturnState = "walk" };
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
 
-            var damageBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 4);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0, 6,  6,  4);
             var pushableBox = new CBox(EntityPosition, -6, -13, 0, 12, 13, 4);
-            var hittableBox = new CBox(EntityPosition, -7, -15, 14, 15, 8);
+            var hittableBox = new CBox(EntityPosition, -7, -15, 0, 14, 15, 8);
 
             _stalfos = new EnemyStalfosOrange(Map, posX, posY, true) { IsActive = false, WasSpawned = true };
             Map.Objects.SpawnObject(_stalfos);

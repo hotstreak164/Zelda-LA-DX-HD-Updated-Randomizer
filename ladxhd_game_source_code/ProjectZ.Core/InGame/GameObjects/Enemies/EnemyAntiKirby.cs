@@ -89,8 +89,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             };
             _damageState.OnDeath = OnDeath;
 
+            var damageBox   = new CBox(EntityPosition, -4, -10, 0,  8,  8, 4);
             var hittableBox = new CBox(EntityPosition, -7, -13, 0, 14, 13, 8, true);
-            var damageBox = new CBox(EntityPosition, -6, -12, 12, 12, 2);
 
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);

@@ -89,8 +89,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("waiting");
 
-            var damageBox = new CBox(EntityPosition, -5, -5, 0, 10, 10, 4);
-            var hittableBox = new CBox(EntityPosition, -7, -7, 14, 14, 8);
+            var damageBox   = new CBox(EntityPosition, -3, -3, 0,  6,  6, 4);
+            var hittableBox = new CBox(EntityPosition, -7, -7, 0, 14, 14, 8);
 
             AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(hittableBox, OnPush));
             AddComponent(BodyComponent.Index, _body);

@@ -80,8 +80,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _direction = Game1.RandomNumber.Next(0, 4);
             _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "walking" : "idle");
 
-            var damageBox = new CBox(EntityPosition, -8, -12, 0, 16, 12, 4);
-            var hittabelBox = new CBox(EntityPosition, -7, -15, 14, 15, 8);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
+            var hittabelBox = new CBox(EntityPosition, -7, -15, 0, 14, 15, 8);
             var pushableBox = new CBox(EntityPosition, -7, -11, 0, 14, 11, 4);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));

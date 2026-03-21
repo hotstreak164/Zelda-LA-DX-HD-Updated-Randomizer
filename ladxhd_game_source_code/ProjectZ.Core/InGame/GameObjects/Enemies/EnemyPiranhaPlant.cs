@@ -53,7 +53,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("hidden");
 
             _headPosition = new CPosition(posX + 8, posY, 0);
-            _headBox = new CBox(_headPosition, -7, 0, 14, 14, 8);
+            _headBox = new CBox(_headPosition, -6, 0, 12, 14, 8);
 
             _aiDamageState = new AiDamageState(this, _body, _aiComponent, _sprite, _lives)
             {

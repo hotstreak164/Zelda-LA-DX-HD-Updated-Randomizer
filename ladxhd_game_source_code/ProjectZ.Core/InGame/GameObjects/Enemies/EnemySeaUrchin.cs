@@ -123,7 +123,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 return true;
             }
             if (_dealsDamage)
-                MapManager.ObjLink.HitPlayer(-direction, HitType.Enemy, _collisionDamage, false);
+                MapManager.ObjLink.HitPlayer(-direction * 2, HitType.Enemy, _collisionDamage, false);
 
             return false;
         }

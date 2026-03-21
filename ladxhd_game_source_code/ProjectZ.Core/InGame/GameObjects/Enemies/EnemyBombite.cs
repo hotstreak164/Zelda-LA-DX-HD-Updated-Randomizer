@@ -77,7 +77,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("idle");
             ChangeDirection();
 
-            var damageBox = new CBox(EntityPosition, -6, -13, 0, 12, 12, 4);
+            var damageBox = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             _pongCollider = new CBox(EntityPosition, -6, -12, 0, 12, 11, 8);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 4));

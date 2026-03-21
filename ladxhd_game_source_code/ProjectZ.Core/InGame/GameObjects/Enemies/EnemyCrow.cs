@@ -91,7 +91,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("waiting");
 
-            _damageCollider = new CBox(EntityPosition, -6, -14, 0, 12, 14, 4, true);
+            _damageCollider = new CBox(EntityPosition, -3, -10, 0,  6,  6, 4, true);
             var hittableBox = new CBox(EntityPosition, -8, -32, 0, 16, _goldLeaf ? 48 : 36, 8);
             _hittableBoxFly = new CBox(EntityPosition, -8, -16, 0, 16, 16, 8, true);
 

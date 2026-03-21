@@ -76,7 +76,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _direction = Game1.RandomNumber.Next(0, 4);
             _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "walking" : "idle");
 
-            var damageBox = new CBox(EntityPosition, -8, -12, 0, 16, 12, 4);
+            var damageBox = new CBox(EntityPosition, -4, -10, 0, 8, 8, 4);
             var hittableBox = new CBox(EntityPosition, -7, -15, 14, 15, 8);
             var pushableBox = new CBox(EntityPosition, -7, -11, 0, 14, 11, 4);
 

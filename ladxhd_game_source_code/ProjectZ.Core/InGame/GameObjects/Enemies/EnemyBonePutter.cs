@@ -81,16 +81,16 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageState = new AiDamageState(this, _body, _aiComponent, sprite, _hasWings ? _livesWings : _lives, false);
             _aiComponent.ChangeState(_hasWings ? "flying" : "jumping");
 
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 2,  6,  6, 4, true);
             var hittableBox = new CBox(EntityPosition, -6, -15, 2, 12, 14, 8, true);
-            var damageBox = new CBox(EntityPosition, -6, -15, 2, 12, 14, 4, true);
-            var pushBox = new CBox(EntityPosition, -6, -15, 2, 12, 14, 4, true);
+            var pushableBox = new CBox(EntityPosition, -6, -15, 2, 12, 14, 4, true);
 
             AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BodyComponent.Index, _body);
             AddComponent(BaseAnimationComponent.Index, _animatorComponent);
-            AddComponent(PushableComponent.Index, new PushableComponent(pushBox, OnPush));
+            AddComponent(PushableComponent.Index, new PushableComponent(pushableBox, OnPush));
             AddComponent(DrawComponent.Index, new BodyDrawComponent(_body, sprite, Values.LayerPlayer));
             AddComponent(DrawShadowComponent.Index, new BodyDrawShadowComponent(_body, sprite));
 

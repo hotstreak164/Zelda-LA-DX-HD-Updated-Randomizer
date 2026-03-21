@@ -65,8 +65,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("shoot", stateShot);
             _aiComponent.ChangeState("idle");
 
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -5, -12, 0, 10, 14, 8);
-            var damageBox = new CBox(EntityPosition, -5, -12, 0, 10, 14, 4);
 
             AddComponent(BodyComponent.Index, body);
             AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 1));

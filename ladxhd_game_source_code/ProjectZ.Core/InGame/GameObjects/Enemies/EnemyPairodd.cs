@@ -78,8 +78,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiStunnedState = new AiStunnedState(_aiComponent, animationComponent, 3300, 900) { ShakeOffset = 1, SilentStateChange = false, ReturnState = "idle" };
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
 
-            var damageBox = new CBox(EntityPosition, -7, -12, 0, 12, 7);
-            var hittableBox = new CBox(EntityPosition, -7, -14, 14, 14, 8);
+            var damageBox   = new CBox(EntityPosition, -3, -10, 0,  6, 6, 4);
+            var hittableBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 8);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 4));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));

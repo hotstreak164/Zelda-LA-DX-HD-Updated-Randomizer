@@ -83,9 +83,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("hidden");
 
-            var hittableBox = new CBox(EntityPosition, -7, -15, 14, 15, 8);
-            var damageBox = new CBox(EntityPosition, -7, -14, 14, 14, 4);
-            var pushableBox = new CBox(EntityPosition, -6, -14, 12, 14, 8);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
+            var hittableBox = new CBox(EntityPosition, -7, -15, 0, 14, 15, 8);
+            var pushableBox = new CBox(EntityPosition, -6, -14, 0, 12, 14, 8);
 
             AddComponent(BodyComponent.Index, _body);
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));

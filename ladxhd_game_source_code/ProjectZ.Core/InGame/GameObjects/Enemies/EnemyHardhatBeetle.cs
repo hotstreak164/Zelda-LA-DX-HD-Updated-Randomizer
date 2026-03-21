@@ -79,11 +79,11 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("waiting");
             _maxSpeed = GameMath.GetRandomFloat(0.25f, 0.55f);
 
-            var damageCollider = new CBox(EntityPosition, -7, -11, 0, 14, 11, 4);
-            var hittableRectangle = new CBox(EntityPosition, -8, -14, 16, 14, 8);
+            var damageBox   = new CBox(EntityPosition, -4, -8, 0, 8, 6, 16);
+            var hittableBox = new CBox(EntityPosition, -8, -14, 16, 14, 8);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 4) { PushMultiplier = 2.00f });
-            AddComponent(HittableComponent.Index, new HittableComponent(hittableRectangle, OnHit));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 4) { PushMultiplier = 2.00f });
+            AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush) { RepelMultiplier = 2.05f });
             AddComponent(BaseAnimationComponent.Index, animationComponent);

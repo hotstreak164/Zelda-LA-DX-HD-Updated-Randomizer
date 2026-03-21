@@ -73,16 +73,17 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiFallState = new AiFallState(_aiComponent, _body, OnHoleAbsorb, null);
             _body.HoleAbsorb = OnHoleAbsorb;
 
+            _damageState  = new AiDamageState(this, _body, _aiComponent, _sprite, _lives) { OnBurn = OnBurn };
+            
             var playerDirection = MapManager.ObjLink.Position - EntityPosition.Position;
             playerDirection.Normalize();
             _body.VelocityTarget = playerDirection * _walkSpeed;
 
             _aiComponent.ChangeState("moving");
 
-            var damageCollider = new CBox(EntityPosition, -6, -10, 0, 12, 10, 4);
-            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, _lives) { OnBurn = OnBurn };
-            
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            var damageBox = new CBox(EntityPosition, -2, -6, 0, 4, 4, 4);
+
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(_body.BodyBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);

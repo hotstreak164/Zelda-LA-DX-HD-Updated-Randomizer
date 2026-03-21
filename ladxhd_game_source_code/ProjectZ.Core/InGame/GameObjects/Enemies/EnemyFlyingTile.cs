@@ -93,10 +93,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageState = new AiDamageState(this, _body, _aiComponent, sprite, _lives) { OnBurn = OnBurn, FlameOffset = new Point(0, 7), ExplosionOffsetY = 7 };
             _aiComponent.ChangeState("idle");
 
-            var damageCollider = new CBox(EntityPosition, -3, -3, 0, 6, 6, 4, true);
+            var damageBox   = new CBox(EntityPosition, -3, -3, 0, 6, 6, 4, true);
             var hittableBox = new CBox(EntityPosition, -5, -5, 0, 10, 10, 8, true);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2) { OnDamagedPlayer = OnDamagePlayer, IsActive = false });
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2) { OnDamagedPlayer = OnDamagePlayer, IsActive = false });
             AddComponent(BodyComponent.Index, _body);
             AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(hittableBox, OnPush));
             AddComponent(AiComponent.Index, _aiComponent);

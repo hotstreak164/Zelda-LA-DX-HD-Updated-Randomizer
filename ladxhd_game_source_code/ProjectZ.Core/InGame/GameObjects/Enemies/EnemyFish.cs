@@ -75,7 +75,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("swim");
 
-            var damageBox = new CBox(EntityPosition, -6, -10, 0, 12, 12, 4, true);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4, true);
             var hittableBox = new CBox(EntityPosition, -8, -11, 0, 16, 14, 8, true);
             var pushableBox = new CBox(EntityPosition, -7, -11, 0, 14, 14, 8, true);
 

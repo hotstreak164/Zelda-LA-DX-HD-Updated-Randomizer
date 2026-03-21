@@ -53,8 +53,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             {
                 CollisionTypes = Values.CollisionTypes.Normal |
                                  Values.CollisionTypes.Field |
-                                 Values.CollisionTypes.Enemy |
-                                 Values.CollisionTypes.Player,
+                                 Values.CollisionTypes.Enemy,
                 AvoidTypes =     Values.CollisionTypes.Hole |
                                  Values.CollisionTypes.NPCWall,
                 Bounciness = 0.25f,
@@ -68,8 +67,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var stateMoving = new AiState(UpdateMoving);
             stateMoving.Trigger.Add(new AiTriggerRandomTime(ToLeaving, 2000, 3000));
             var stateLeaving = new AiState(UpdateLeaving);
+
             var stateWaiting = new AiState();
             stateWaiting.Trigger.Add(new AiTriggerRandomTime(Spawn, 1000, 2000));
+
+            var stateRespawn = new AiState();
+            stateRespawn.Trigger.Add(new AiTriggerRandomTime(Spawn, 5, 10));
 
             _aiComponent = new AiComponent();
             _aiComponent.States.Add("init", stateInit);
@@ -78,11 +81,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("moving", stateMoving);
             _aiComponent.States.Add("leaving", stateLeaving);
             _aiComponent.States.Add("waiting", stateWaiting);
+            _aiComponent.States.Add("respawn", stateRespawn);
             _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, _lives) { OnBurn = OnBurn };
 
             _aiComponent.ChangeState("init");
 
-            var damageBox = new CBox(EntityPosition, -8, -13, 0, 16, 14, 4);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4, true);
             var hittableBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 8);
             var spawnRectangle = new Rectangle(posX + 8 + EntitySize.X, posY + 16 + EntitySize.Y, EntitySize.Width, EntitySize.Height);
 
@@ -142,26 +146,35 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void Spawn()
         {
-            // find new position
+            // Find a position.
             var newPosition = new Vector2(
                 _fieldPosition.X + Game1.RandomNumber.Next(0, 10) * 16,
                 _fieldPosition.Y + Game1.RandomNumber.Next(0, 8) * 16);
 
-            // make sure to not spawn directly at the player
+            // Make sure to not spawn directly at the player.
             var playerDistance = MapManager.ObjLink.Position - new Vector2(newPosition.X + 8, newPosition.Y + 16);
-            if (playerDistance.Length() < 24)
+            if (playerDistance.Length() < 16)
                 return;
 
-            // respawn if the position is free
-            var collidingRectangle = Box.Empty;
+            // Check the field state is not inside water.
             var fieldState = Map.GetFieldState(newPosition);
-            if ((fieldState & (MapStates.FieldStates.Water | MapStates.FieldStates.DeepWater)) == 0 &&
-                !Map.Objects.Collision(new Box(newPosition.X, newPosition.Y, 0, 16, 16, 16), Box.Empty,
-                Values.CollisionTypes.Normal | Values.CollisionTypes.NPCWall | Values.CollisionTypes.Enemy | Values.CollisionTypes.Player, 0, 0, ref collidingRectangle))
+            bool fieldStateCheck = (fieldState & (MapStates.FieldStates.Water | MapStates.FieldStates.DeepWater)) == 0;
+
+            // Check if the new position is not colliding with with the wall, other enemies, or the player.
+            var posBox = new Box(newPosition.X, newPosition.Y, 0, 16, 16, 16);
+            var refBox = Box.Empty;
+            var colTypes = Values.CollisionTypes.Normal | Values.CollisionTypes.NPCWall | Values.CollisionTypes.Enemy | Values.CollisionTypes.Player;
+            bool collisionCheck = !Map.Objects.Collision(posBox, Box.Empty, colTypes, 0, 0, ref refBox);
+
+            // If the position is valid, spawn the leever. 
+            if (fieldStateCheck && collisionCheck)
             {
                 EntityPosition.Set(newPosition + new Vector2(8, 16));
                 ToSpawning();
             }
+            // If it is not, rapid fire searching for a new a position.
+            else
+                _aiComponent.ChangeState("respawn");
         }
 
         private void ToSpawning()

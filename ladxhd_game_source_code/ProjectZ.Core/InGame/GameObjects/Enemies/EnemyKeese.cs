@@ -78,10 +78,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("cooldown");
 
-            var damageCollider = new CBox(EntityPosition, -5, -20, 0, 10, 8, 4);
+            var damageBox   = new CBox(EntityPosition, -3, -18, 2, 6, 4, 4);
             var pushableBox = new CBox(EntityPosition, -4, -18, 0, 8, 6, 4);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(_body.BodyBox, OnHit));
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BodyComponent.Index, _body);

@@ -88,9 +88,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             // random start position/state
             ToWalking();
 
-            var damageBox = new CBox(EntityPosition, -8, -12, 0, 16, 12, 4);
-            var hittableBox = new CBox(EntityPosition, -8, -14, 16, 14, 8);
-            var pushableBox = new CBox(EntityPosition, -7, -13, 14, 13, 8);
+            var damageBox   = new CBox(EntityPosition, -3, -8, 0,  6,  4, 4);
+            var hittableBox = new CBox(EntityPosition, -8, -14, 0, 16, 14, 8);
+            var pushableBox = new CBox(EntityPosition, -7, -13, 0, 14, 13, 8);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));

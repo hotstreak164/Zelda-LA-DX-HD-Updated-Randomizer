@@ -61,8 +61,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             { SpawnItems = false, HitMultiplierX = 6, HitMultiplierY = 6 };
             _aiComponent.ChangeState("moving");
 
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -8, -14, 0, 16, 14, 8);
-            var damageBox = new CBox(EntityPosition, -7, -12, 0, 14, 12, 4);
 
             AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));

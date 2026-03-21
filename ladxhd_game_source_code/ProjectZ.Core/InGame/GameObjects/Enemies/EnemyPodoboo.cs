@@ -71,9 +71,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("flying", stateFlying);
             _aiComponent.States.Add("hidden", stateHidden);
 
-            var damageCollider = new CBox(EntityPosition, -5, -8 - 5, 0, 10, 10, 4);
+            var damageBox = new CBox(EntityPosition, -3, -11, 0, 6, 6, 8, true);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BaseAnimationComponent.Index, _animationComponent);

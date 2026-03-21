@@ -61,9 +61,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.VelocityTarget = new Vector2(
                 Game1.RandomNumber.Next(0, 2) * 2 - 1, Game1.RandomNumber.Next(0, 2) * 2 - 1) * 0.7f;
 
-            var damageCollider = new CBox(EntityPosition, -12, -12, 0, 24, 24, 8);
+            var damageBox = new CBox(EntityPosition, -9, -9, 0, 18, 18, 8);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));

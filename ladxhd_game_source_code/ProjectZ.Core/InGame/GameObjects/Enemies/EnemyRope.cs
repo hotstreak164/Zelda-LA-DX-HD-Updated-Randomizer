@@ -75,7 +75,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("walk");
 
-            var damageBox = new CBox(EntityPosition, -8, -14, 0, 16, 14, 4);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -8, -15, 0, 16, 15, 8);
             var pushableBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 8);
 

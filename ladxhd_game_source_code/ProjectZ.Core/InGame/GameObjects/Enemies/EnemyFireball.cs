@@ -19,7 +19,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly CBox _damageBox;
         private readonly Rectangle _fieldRectangle;
 
-        private double _liveTime = 2250;
+        private double _liveTime = 2500;
         private bool _reflected;
 
         public EnemyFireball(Map.Map map, int posX, int posY, float speed, bool hittable = true) : base(map)
@@ -85,11 +85,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (_liveTime <= 125)
                 _sprite.Color = Color.White * ((float)_liveTime / 125f);
-            // start despawning if we get outside of the current room
-            else if (!_fieldRectangle.Contains(EntityPosition.Position))
-                _liveTime = 125;
-
-            if (_liveTime < 0)
+            else if (_liveTime < 0)
                 Delete();
 
             // If the shot was reflected, try to hit an enemy.
@@ -153,7 +149,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _hitComponent.IsActive = false;
             _damageField.IsActive = false;
             _pushComponent.IsActive = false;
-            _liveTime = 2250;
+            _liveTime = 4000;
 
             // Use the incoming direction and the shield reflect direction to determine new direction.
             shieldDirection.Normalize();

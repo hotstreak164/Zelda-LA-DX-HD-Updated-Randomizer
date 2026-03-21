@@ -86,8 +86,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 HitMultiplierY = 0,
                 OnDeath = OnDeath
             };
+            var damageBox = new CBox(EntityPosition, -3, -8, 2, 6, 6, 4, true);
 
-            var damageBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 8);
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(body.BodyBox, OnHit));
             AddComponent(BodyComponent.Index, body);

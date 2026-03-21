@@ -83,7 +83,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComp.ChangeState("walking");
 
-            var damageBox = new CBox(EntityPosition, -4, -4 - SpriteOffsetY, 8, 8, 4);
+            var damageBox = new CBox(EntityPosition, -2, -2 - SpriteOffsetY, 4, 4, 4);
             var hittableBox = new CBox(EntityPosition, -6, -6 - SpriteOffsetY, 12, 12, 8);
 
             AddComponent(AiComponent.Index, _aiComp);

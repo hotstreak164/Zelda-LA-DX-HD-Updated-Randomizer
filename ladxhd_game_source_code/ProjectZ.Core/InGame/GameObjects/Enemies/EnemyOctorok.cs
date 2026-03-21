@@ -77,7 +77,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("walking");
 
             _damageState = new AiDamageState(this, _body, _aiComponent, sprite, _lives) { OnBurn = OnBurn };
-            var damageBox = new CBox(EntityPosition, -8, -13, 0, 16, 13, 4);
+
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -7, -15, 0, 14, 15, 8);
             var pushableBox = new CBox(EntityPosition, -7, -13, 0, 14, 13, 4);
 

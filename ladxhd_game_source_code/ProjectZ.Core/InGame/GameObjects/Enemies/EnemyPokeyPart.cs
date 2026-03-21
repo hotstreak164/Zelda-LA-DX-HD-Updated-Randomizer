@@ -52,9 +52,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiDamageState = new AiDamageState(this, _body, _aiComponent, sprite, _lives) { IsActive = false };
             _aiComponent.ChangeState("spawning");
 
-            var damageCollider = new CBox(EntityPosition, -6, -13, 0, 12, 12, 4, true);
+            var damageBox = new CBox(EntityPosition, -3, -8, 0, 6, 6, 16);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2) { OnDamage = OnDamage });
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2) { OnDamage = OnDamage });
             AddComponent(HittableComponent.Index, new HittableComponent(_body.BodyBox, _aiDamageState.OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush) { RepelMultiplier = 0.2f });

@@ -88,8 +88,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("start");
 
+            var damageBox   = new CBox(EntityPosition, -3, -10, 0,  6,  6, 4, true);
             var hittableBox = new CBox(EntityPosition, -6, -14, 0, 12, 14, 8, true);
-            var damageBox = new CBox(EntityPosition, -6, -14, 0, 12, 14, 4, true);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));

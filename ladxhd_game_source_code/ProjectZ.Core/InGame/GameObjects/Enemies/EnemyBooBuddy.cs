@@ -85,9 +85,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("fading", stateFading);
             _aiDamageState = new AiDamageState(this, _body, _aiComponent, sprite, _lives, true, false);
 
-            var damageCollider = new CBox(EntityPosition, -7, -20, 0, 14, 14, 8);
+            var damageBox = new CBox(EntityPosition, -3, -16, 0, 6, 6, 4);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(_body.BodyBox, OnHit));
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BodyComponent.Index, _body);

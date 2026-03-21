@@ -40,7 +40,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 CollisionTypes = Values.CollisionTypes.None
             };
 
-            var damageBox = new CBox(EntityPosition, -6, -6, 0, 12, 12, 8, true);
+            var damageBox   = new CBox(EntityPosition, -3, -3, 0,  6,  6, 8, true);
             var hittableBox = new CBox(EntityPosition, -7, -7, 0, 14, 14, 8, true);
 
             AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));

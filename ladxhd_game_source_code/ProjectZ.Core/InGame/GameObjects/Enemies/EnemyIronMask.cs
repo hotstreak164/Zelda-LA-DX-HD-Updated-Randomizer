@@ -76,9 +76,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _animator.Play("walk_" + _direction);
             _animator.IsPlaying = false;
 
-            var damageBox = new CBox(EntityPosition, -8, -12, 0, 16, 12, 4);
-            var hittableBox = new CBox(EntityPosition, -7, -14, 14, 14, 8);
-            var pushableBox = new CBox(EntityPosition, -7, -12, 14, 12, 8);
+            var damageBox   = new CBox(EntityPosition, -4,  -8, 0,  8, 6, 16);
+            var hittableBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 8);
+            var pushableBox = new CBox(EntityPosition, -7, -12, 0, 14, 12, 8);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));

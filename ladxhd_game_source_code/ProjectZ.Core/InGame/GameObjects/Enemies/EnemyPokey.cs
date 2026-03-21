@@ -70,8 +70,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("moving");
 
-            var damageBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 16);
-            var hittableBox = new CBox(EntityPosition, -7, -14, 14, 14, 24);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 16);
+            var hittableBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 24);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));

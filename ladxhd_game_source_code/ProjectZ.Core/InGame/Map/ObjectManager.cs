@@ -651,22 +651,6 @@ namespace ProjectZ.InGame.Map
                     }
                 }
 
-                // draw the bodies
-                if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 1)
-                {
-                    db_bodyList.Clear();
-                    _gameObjectPool.GetComponentList(db_bodyList,
-                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), BodyComponent.Mask);
-                    foreach (var drawTile in db_bodyList)
-                    {
-                        var body = drawTile.Components[BodyComponent.Index] as BodyComponent;
-                        DrawRectangle(spriteBatch, body.BodyBox.Box.Rectangle(), Color.Red);
-                    }
-                }
-
                 // draw the damage fields
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 2)
                 {
@@ -712,6 +696,22 @@ namespace ProjectZ.InGame.Map
                     {
                         var pushableComponent = drawTile.Components[PushableComponent.Index] as PushableComponent;
                         DrawRectangle(spriteBatch, pushableComponent.PushableBox.Box.Rectangle(), Color.Orange);
+                    }
+                }
+
+                // draw the bodies
+                if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 1)
+                {
+                    db_bodyList.Clear();
+                    _gameObjectPool.GetComponentList(db_bodyList,
+                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), BodyComponent.Mask);
+                    foreach (var drawTile in db_bodyList)
+                    {
+                        var body = drawTile.Components[BodyComponent.Index] as BodyComponent;
+                        DrawRectangle(spriteBatch, body.BodyBox.Box.Rectangle(), Color.Red);
                     }
                 }
 

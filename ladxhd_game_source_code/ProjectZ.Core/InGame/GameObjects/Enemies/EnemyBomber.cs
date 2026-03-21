@@ -73,11 +73,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("waiting");
             _damageState = new AiDamageState(this, _body, _aiComponent, sprite, _lives) { OnBurn = OnBurn, OnDeath = OnDeath };
 
-            var hittableBox = new CBox(EntityPosition, -7, -12, 0, 14, 12, 8, true);
-            var damageBox = new CBox(EntityPosition, -7, -12, 0, 14, 12, 4, true);
+            var damageBox = new CBox(EntityPosition, -3, -8, 0, 6, 6, 4, true);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
-            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
+            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(damageBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BaseAnimationComponent.Index, animationComponent);

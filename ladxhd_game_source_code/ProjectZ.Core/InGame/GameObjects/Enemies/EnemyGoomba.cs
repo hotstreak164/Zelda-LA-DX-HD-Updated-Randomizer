@@ -81,9 +81,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             CBox damageCollider;
             if (Map.Is2dMap)
-                damageCollider = new CBox(EntityPosition, -_body.Width / 2 - 1, -8, 0, _body.Width + 2, 8, 4);
+                damageCollider = new CBox(EntityPosition, -3, -8, 0, 6, 6, 4);
             else
-                damageCollider = new CBox(EntityPosition, -_body.Width / 2 - 1, -_body.Height, 0, _body.Width + 2, _body.Height, 4);
+                damageCollider = new CBox(EntityPosition, -3, -10, 0, 6, 6, 4);
+
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
 
             if (Map.Is2dMap)

@@ -43,10 +43,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             };
             _body.Velocity = direction;
 
-            var hitBox = new CBox(EntityPosition, -5, -11, 0, 10, 10, 10, true);
-            AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(hitBox, OnPush));
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(hitBox, HitType.Enemy, 2));
-            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hitBox, OnHit));
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6,  4, true);
+            var hittableBox = new CBox(EntityPosition, -5, -11, 0, 10, 10, 10, true);
+
+            AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(hittableBox, OnPush));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerPlayer));
 

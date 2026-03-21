@@ -85,16 +85,16 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageState.OnDeath = OnDeath;
             _aiComponent.ChangeState(spawnAnimation ? "init" : "flying");
 
-            var damageCollider = new CBox(EntityPosition, -6, -14, 0, 12, 14, 8, true);
+            var damageBox = new CBox(EntityPosition, -3, -10, 0, 6, 6, 4, true);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 4) { IsActive = !spawnAnimation });
-            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(damageCollider, OnHit));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 4) { IsActive = !spawnAnimation });
+            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(damageBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(DrawComponent.Index, new BodyDrawComponent(_body, _sprite, Values.LayerPlayer));
             AddComponent(DrawShadowComponent.Index, new ShadowBodyDrawComponent(EntityPosition));
-            AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(damageCollider, OnPush));
+            AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(damageBox, OnPush));
 
             new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
         }

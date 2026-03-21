@@ -94,8 +94,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             ToMoving();
 
             var hittableBox = new CBox(EntityPosition, -8, -14, 0, 16, 12, 8);
-            _damageBox = new CBox(EntityPosition, -5, -8, 0, 10, 8, 4);
-            _headJumpBox = new CBox(EntityPosition, -6, -16, 0, 12, 6, 8);
+            _damageBox      = new CBox(EntityPosition, -5, -8, 0, 10, 8, 4);
+            _headJumpBox    = new CBox(EntityPosition, -6, -16, 0, 12, 6, 8);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(_damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));

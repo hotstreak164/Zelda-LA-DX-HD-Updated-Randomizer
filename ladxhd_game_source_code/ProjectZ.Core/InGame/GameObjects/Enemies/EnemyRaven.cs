@@ -73,11 +73,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("idle");
 
             // the player can jump over the enemy...
-            var damageCollider = new CBox(EntityPosition, -6, -14, 0, 12, 14, 8, true);
+            var damageBox   = new CBox(EntityPosition, -3, -10, 0,  6,  6, 4, true);
+            var hittableBox = new CBox(EntityPosition, -8, -16, 0, 16, 16, 8, true);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2) { IsActive = false });
-            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(damageCollider, OnHit));
-            AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(damageCollider, OnPush));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2) { IsActive = false });
+            AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
+            AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(hittableBox, OnPush));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BaseAnimationComponent.Index, animationComponent);

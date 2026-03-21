@@ -63,8 +63,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             ToMoveUp();
 
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -7, -14, 0, 14, 12, 8);
-            var damageBox = new CBox(EntityPosition, -7, -14, 0, 14, 12, 4);
             
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, _damageState.OnHit));
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));

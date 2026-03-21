@@ -67,7 +67,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState("jumping");
 
-            var damageBox = new CBox(EntityPosition, -7, -11, 0, 14, 11, 4);
+            var damageBox   = new CBox(EntityPosition, -3, -8, 0, 6, 6, 16);
             var hittableBox = new CBox(EntityPosition, -6, -12, 0, 12, 12, 8, true);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 1));

@@ -136,7 +136,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "idle" : "walk");
             _aiComponent.ChangeState("walk");
 
-            var damageBox = new CBox(EntityPosition, -8, -14, 0, 16, 14, 4);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -8, -14, 0, 16, 14, 8);
             var pushableBox = new CBox(EntityPosition, -8, -14, 0, 16, 14, 8);
 

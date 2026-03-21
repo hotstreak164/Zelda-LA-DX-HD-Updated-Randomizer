@@ -83,8 +83,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 OnBurn = OnBurn
             };
 
+            var damageBox   = new CBox(EntityPosition, -2, -2, 0,  4,  4, 4);
             var hittableBox = new CBox(EntityPosition, -8, -8, 0, 16, 16, 8);
-            var damageBox = new CBox(EntityPosition, -7, -7, 0, 14, 14, 4);
 
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
             AddComponent(AiComponent.Index, _aiComponent);

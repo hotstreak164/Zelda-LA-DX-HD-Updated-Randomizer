@@ -70,10 +70,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _stunnedState = new AiStunnedState(_aiComponent, animationComponent, 3300, 900) { ShakeOffset = 1, SilentStateChange = false, ReturnState = "walking" };
             new AiFallState(_aiComponent, _body, OnHolePull, OnHoleDeath, 400);
 
-            var interactionBox = new CBox(EntityPosition, -10, -16, 20, 20, 8);
-            var hittableBox = new CBox(EntityPosition, -6, -14, 12, 14, 8);
-            var damageBox = new CBox(EntityPosition, -5, -12, 0, 10, 12, 4);
-            var pushableBox = new CBox(EntityPosition, -4, -11, 0, 8, 11, 4);
+            var interactionBox = new CBox(EntityPosition, -10, -16, 0, 20, 20, 8);
+            var hittableBox    = new CBox(EntityPosition,  -6, -14, 0, 12, 14, 8);
+            var damageBox      = new CBox(EntityPosition,  -2, -10, 0,  4,  8, 4);
+            var pushableBox    = new CBox(EntityPosition,  -4, -11, 0,  8, 11, 4);
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));

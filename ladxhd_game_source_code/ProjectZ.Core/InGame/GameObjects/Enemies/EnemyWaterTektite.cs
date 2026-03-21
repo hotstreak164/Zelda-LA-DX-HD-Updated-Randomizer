@@ -65,8 +65,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 IgnoreHeight = true,
             };
 
-            var hittableBox = new CBox(EntityPosition, -7, -15, 14, 14, 8);
-            var damageBox = new CBox(EntityPosition, -7, -15, 0, 14, 13, 4);
+            var damageBox   = new CBox(EntityPosition, -3, -10, 0,  6,  6, 4);
+            var hittableBox = new CBox(EntityPosition, -7, -15, 0, 14, 14, 8);
 
             var stateMoving = new AiState(UpdateMoving);
             stateMoving.Trigger.Add(_movementTimer = new AiTriggerRandomTime(ToStop, 400, 750));

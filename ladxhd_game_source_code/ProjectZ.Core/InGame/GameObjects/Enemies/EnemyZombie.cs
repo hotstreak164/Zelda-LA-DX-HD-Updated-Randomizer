@@ -65,8 +65,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
             _aiComponent.ChangeState("spawn");
 
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -6, -15, 0, 12, 15, 8);
-            var damageBox = new CBox(EntityPosition, -6, -14, 0, 12, 14, 4);
             var pushableBox = new CBox(EntityPosition, -6, -13, 0, 12, 13, 8);
 
             AddComponent(PushableComponent.Index, _pushComponent = new PushableComponent(pushableBox, OnPush));

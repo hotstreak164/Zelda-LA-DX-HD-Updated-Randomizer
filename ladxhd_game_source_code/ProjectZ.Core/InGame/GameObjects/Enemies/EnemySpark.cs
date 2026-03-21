@@ -90,7 +90,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                                  Values.CollisionTypes.NPCWall
             };
 
-            var damageBox = new CBox(EntityPosition, -4, -4, 0, 8, 8, 4);
+            var damageBox = new CBox(EntityPosition, -2, -2, 0, 4, 4, 4);
             var hittableBox = new CBox(EntityPosition, -6, -6, 12, 12, 8);
 
             if (!string.IsNullOrEmpty(destructionKey))

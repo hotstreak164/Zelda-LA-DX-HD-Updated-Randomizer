@@ -92,13 +92,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _animator.Play("walk_" + _direction);
             _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "idle" : "walking");
 
-            var damageCollider = new CBox(EntityPosition, -8, -13, 4, 16, 13, 4);
+            var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
             var hittableBox = new CBox(EntityPosition, -7, -15, 0, 14, 15, 8, true);
             var pushableBox = new CBox(EntityPosition, -7, -13, 0, 14, 13, 4, true);
 
             _bodyDrawComponent = new BodyDrawComponent(_body, sprite, Values.LayerPlayer);
 
-            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, _hitComponent = new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);

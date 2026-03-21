@@ -74,7 +74,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiComponent.ChangeState(spawnAnimation ? "spawning" : "flying");
 
-            var damageBox = new CBox(EntityPosition, -12, -28, 0, 24, 26, 8, true);
+            var damageBox = new CBox(EntityPosition, -9, -22, 0, 18, 18, 8, true);
             var hittableBox = new CBox(EntityPosition, -13, -29, 0, 26, 28, 8, true);
             _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, _lives, true, false) { OnDeath = OnDeath, IsActive = !spawnAnimation };
 
