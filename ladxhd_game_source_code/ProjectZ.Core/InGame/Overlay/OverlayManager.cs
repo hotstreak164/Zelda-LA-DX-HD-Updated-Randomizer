@@ -273,6 +273,7 @@ namespace ProjectZ.InGame.Overlay
         {
             // Get the maximum scale and add 1 for auto-scale.
             int maxScale = Game1.MaxGameScale + 1;
+            int curScale = GameSettings.GameScale;
 
             // Do not adjust the scale when classic camera is active.
             if (Camera.ClassicMode && GameSettings.ClassicScaling)
@@ -290,10 +291,18 @@ namespace ProjectZ.InGame.Overlay
 
             // Do not let the scale fall outside the slider range.
             if (newScale >= -3 && newScale < maxScale)
+            {
+                // Apply the new scaling value.
                 GameSettings.GameScale = newScale;
-            
-            // Apply current scaling settings.
-            Game1.ScaleChanged = true;
+
+                // Apply current scaling settings.
+                Game1.ScaleChanged = true;
+            }
+            // Do not try to apply scaling settings if we hit scale bedrock or ceiling.
+            else
+            {
+                GameSettings.GameScale = curScale;
+            }
         }
 
         public void ButtonScaleChange()
