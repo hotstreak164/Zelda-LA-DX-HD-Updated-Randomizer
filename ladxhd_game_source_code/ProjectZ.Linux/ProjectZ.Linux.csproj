@@ -43,8 +43,8 @@
 
   <ItemGroup>
     <MonoGameContentReference Include="..\ProjectZ.Core\Content\Content.mgcb">
-      <OutputFolder Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)/%(Filename)</OutputFolder>
-      <OutputFolder Condition="'$(RuntimeIdentifier)' == ''">%(Filename)</OutputFolder>
+      <OutputFolder>$(MSBuildProjectName)/$(TargetFramework)/%(Filename)</OutputFolder>
+      <OutputFolder Condition="'$(RuntimeIdentifier)' != ''">$(MSBuildProjectName)/$(TargetFramework)/$(RuntimeIdentifier)/%(Filename)</OutputFolder>
     </MonoGameContentReference>
   </ItemGroup>
 
