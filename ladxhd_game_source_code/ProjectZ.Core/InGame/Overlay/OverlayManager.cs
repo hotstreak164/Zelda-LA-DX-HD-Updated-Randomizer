@@ -719,11 +719,19 @@ namespace ProjectZ.InGame.Overlay
         private void ToggleState(MenuState newState)
         {
             if (_currentMenuState == MenuState.None)
+            {
                 SetState(newState);
+#if ANDROID
+                VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, true);
+#endif
+            }
             else
             {
                 _mapOpened = false;
                 CloseOverlay();
+#if ANDROID
+                VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight,false);
+#endif
             }
         }
 

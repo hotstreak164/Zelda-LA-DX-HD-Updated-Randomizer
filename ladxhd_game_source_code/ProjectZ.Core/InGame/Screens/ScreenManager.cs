@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.Things;
+using ProjectZ.InGame.Controls;
 
 namespace ProjectZ.InGame.Screens
 {
@@ -99,6 +100,9 @@ namespace ProjectZ.InGame.Screens
         public void ChangeScreen(string nextScreen)
         {
             CurrentScreenId = nextScreen.ToUpper();
+#if ANDROID
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, CurrentScreenId != "GAME");
+#endif
 
             foreach (var screen in _screens)
             {
