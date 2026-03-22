@@ -28,8 +28,8 @@ namespace ProjectZ.Core.InGame.Pages.Settings
         {
             EnableTooltips = true;
             var buttonWidth = 320;
-            var buttonHeight = 16;
-            var sliderHeight = 12;
+            var buttonHeight = 15;
+            var sliderHeight = 10;
 
             // On-Screen Button Settings Layout
             _controlSettingsList = new InterfaceListLayout { Size = new Point(width, height - 12), Selectable = true };
@@ -68,6 +68,14 @@ namespace ProjectZ.Core.InGame.Pages.Settings
                 { SetString = number => OnScreenScaleSliderAdjustmentString(number) };
             _contentLayout.AddElement(_sliderTouchScale);
             _tooltips.Add("tooltip_controls_onscreenscale");
+
+            // Slider: Touch Momement Options
+            _sliderTouchScale = new InterfaceSlider("settings_controls_touchmovement", 
+                buttonWidth, sliderHeight, new Point(1, 2), 0, 2, 1, GameSettings.TouchMovement,
+                number => { GameSettings.TouchMovement = number; })
+                { SetString = number => TouchMovementSliderAdjustmentString(number) };
+            _contentLayout.AddElement(_sliderTouchScale);
+            _tooltips.Add("tooltip_controls_touchmovement");
 
             // Toggle: Select/Start On Top
             _toggleTouchMiddleTop = InterfaceToggle.GetToggleButton(
@@ -149,6 +157,20 @@ namespace ProjectZ.Core.InGame.Pages.Settings
 
             // Display the updated value.
             return ": " + (number * 5) + "%";
+        }
+
+        private string TouchMovementSliderAdjustmentString(int number)
+        {
+            // Apply the scaling settings to the controls.
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+
+            // Display the updated string.
+            return ": " + number switch
+            {
+                0 => Game1.LanguageManager.GetString("settings_controls_touchmovement_01", "error"),
+                1 => Game1.LanguageManager.GetString("settings_controls_touchmovement_02", "error"),
+                2 => Game1.LanguageManager.GetString("settings_controls_touchmovement_03", "error"),
+            };
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)

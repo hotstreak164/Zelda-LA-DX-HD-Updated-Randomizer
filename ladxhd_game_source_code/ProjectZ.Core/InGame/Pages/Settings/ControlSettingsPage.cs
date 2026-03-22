@@ -100,7 +100,7 @@ namespace ProjectZ.InGame.Pages
             _toggleSixButtons = InterfaceToggle.GetToggleButton(
                 new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_sixbuttons", GameSettings.SixButtons, 
-                newState => { UpdateSixButtonToggle(newState); });
+                newState => { UpdateSixButtonToggle(newState); ReloadVirtualController(); });
             _contentLayout.AddElement(_toggleSixButtons);
             _tooltips.Add("tooltip_controls_triggersscale");
 

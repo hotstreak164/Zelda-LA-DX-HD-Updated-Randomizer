@@ -73,6 +73,7 @@
         public static int     TouchScaling    =  10;
         public static int     TouchOpacity    =  30;
         public static int     ShadowOpacity   =  15;
+        public static int     TouchMovement   =  0;
         public static bool    TouchTopMiddle  =  false;
         public static bool    TouchSticks     =  false;
 

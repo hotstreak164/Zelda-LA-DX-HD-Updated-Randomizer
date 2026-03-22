@@ -43,6 +43,9 @@ namespace ProjectZ.InGame.Controls
 
         public static void Initialize(int screenWidth, int screenHeight)
         {
+            _dPadSprite = null;
+            _leftStick = null;
+            _rightStick = null;
             _buttons.Clear();
             _controllerButton = null;
             _controllerHideTimer = 0f;
@@ -59,29 +62,31 @@ namespace ProjectZ.InGame.Controls
             int leftX = margin;
             int leftY = screenHeight - margin;
 
-            _dPadSprite = Resources.GetSprite("button_dpad");
-            _dPadBounds = new Rectangle(leftX, leftY - (buttonSize * 3) - (spacing * 2), buttonSize * 3 + spacing * 2, buttonSize * 3 + spacing * 2);
+            if (GameSettings.TouchMovement < 2)
+            {
+                _dPadSprite = Resources.GetSprite("button_dpad");
+                _dPadBounds = new Rectangle(leftX, leftY - (buttonSize * 3) - (spacing * 2), buttonSize * 3 + spacing * 2, buttonSize * 3 + spacing * 2);
 
-            Rectangle rectLeft = new Rectangle(leftX, leftY - (buttonSize * 2) - spacing, buttonSize, buttonSize);
-            Rectangle rectUp = new Rectangle(leftX + buttonSize + spacing, leftY - (buttonSize * 3) - (spacing * 2), buttonSize, buttonSize);
-            Rectangle rectRight = new Rectangle(leftX + (buttonSize * 2) + (spacing * 2), leftY - (buttonSize * 2) - spacing, buttonSize, buttonSize);
-            Rectangle rectDown = new Rectangle(leftX + buttonSize + spacing, leftY - buttonSize, buttonSize, buttonSize);
+                Rectangle rectLeft = new Rectangle(leftX, leftY - (buttonSize * 2) - spacing, buttonSize, buttonSize);
+                Rectangle rectUp = new Rectangle(leftX + buttonSize + spacing, leftY - (buttonSize * 3) - (spacing * 2), buttonSize, buttonSize);
+                Rectangle rectRight = new Rectangle(leftX + (buttonSize * 2) + (spacing * 2), leftY - (buttonSize * 2) - spacing, buttonSize, buttonSize);
+                Rectangle rectDown = new Rectangle(leftX + buttonSize + spacing, leftY - buttonSize, buttonSize, buttonSize);
 
-            _buttons.Add(new VirtualButton("null", CButtons.Left, rectLeft));
-            _buttons.Add(new VirtualButton("null", CButtons.Up, rectUp));
-            _buttons.Add(new VirtualButton("null", CButtons.Right, rectRight));
-            _buttons.Add(new VirtualButton("null", CButtons.Down, rectDown));
+                _buttons.Add(new VirtualButton("null", CButtons.Left, rectLeft));
+                _buttons.Add(new VirtualButton("null", CButtons.Up, rectUp));
+                _buttons.Add(new VirtualButton("null", CButtons.Right, rectRight));
+                _buttons.Add(new VirtualButton("null", CButtons.Down, rectDown));
 
-            Rectangle rectUpLeft = new Rectangle(leftX, leftY - (buttonSize * 3) - (spacing * 2), buttonSize, buttonSize);
-            Rectangle rectUpRight = new Rectangle(leftX + (buttonSize * 2) + (spacing * 2), leftY - (buttonSize * 3) - (spacing * 2), buttonSize, buttonSize);
-            Rectangle rectDownLeft = new Rectangle(leftX, leftY - buttonSize, buttonSize, buttonSize);
-            Rectangle rectDownRight = new Rectangle(leftX + (buttonSize * 2) + (spacing * 2), leftY - buttonSize, buttonSize, buttonSize);
+                Rectangle rectUpLeft = new Rectangle(leftX, leftY - (buttonSize * 3) - (spacing * 2), buttonSize, buttonSize);
+                Rectangle rectUpRight = new Rectangle(leftX + (buttonSize * 2) + (spacing * 2), leftY - (buttonSize * 3) - (spacing * 2), buttonSize, buttonSize);
+                Rectangle rectDownLeft = new Rectangle(leftX, leftY - buttonSize, buttonSize, buttonSize);
+                Rectangle rectDownRight = new Rectangle(leftX + (buttonSize * 2) + (spacing * 2), leftY - buttonSize, buttonSize, buttonSize);
 
-            _buttons.Add(new VirtualButton("null", CButtons.Up | CButtons.Left, rectUpLeft));
-            _buttons.Add(new VirtualButton("null", CButtons.Up | CButtons.Right, rectUpRight));
-            _buttons.Add(new VirtualButton("null", CButtons.Down | CButtons.Left, rectDownLeft));
-            _buttons.Add(new VirtualButton("null", CButtons.Down | CButtons.Right, rectDownRight));
-
+                _buttons.Add(new VirtualButton("null", CButtons.Up | CButtons.Left, rectUpLeft));
+                _buttons.Add(new VirtualButton("null", CButtons.Up | CButtons.Right, rectUpRight));
+                _buttons.Add(new VirtualButton("null", CButtons.Down | CButtons.Left, rectDownLeft));
+                _buttons.Add(new VirtualButton("null", CButtons.Down | CButtons.Right, rectDownRight));
+            }
             // ------------------------------------------------------------------------------------------------------------------------
             // RIGHT SIDE: X / Y / B / A
             // ------------------------------------------------------------------------------------------------------------------------
@@ -115,16 +120,20 @@ namespace ProjectZ.InGame.Controls
             // ANALOG STICKS
             // ------------------------------------------------------------------------------------------------------------------------
             float stickRadius = 40f * scale;
-
             float clusterWidth = buttonSize * 3 + spacing * 2;
             float stickGap = spacing * 2 + stickRadius;
             int stickLift = (int)(20 * scale);
 
-            Vector2 leftStickCenter = new Vector2(leftX + clusterWidth + stickGap, screenHeight - margin - stickRadius - stickLift);
-            Vector2 rightStickCenter = new Vector2(rightX - clusterWidth - stickGap, screenHeight - margin - stickRadius - stickLift);
-
-            _leftStick  = new VirtualStick("button_ls", leftStickCenter, stickRadius);
-            _rightStick = new VirtualStick("button_rs", rightStickCenter, stickRadius);
+            if (GameSettings.TouchMovement != 1)
+            {
+                Vector2 leftStickCenter = new Vector2(leftX + clusterWidth + stickGap, screenHeight - margin - stickRadius - stickLift);
+                _leftStick  = new VirtualStick("button_ls", leftStickCenter, stickRadius);
+            }
+            if (!GameSettings.CameraLock)
+            {
+                Vector2 rightStickCenter = new Vector2(rightX - clusterWidth - stickGap, screenHeight - margin - stickRadius - stickLift);
+                _rightStick = new VirtualStick("button_rs", rightStickCenter, stickRadius);
+            }
 
             // ------------------------------------------------------------------------------------------------------------------------
             // TOP SHOULDER BUTTONS / SIX BUTTON LAYOUT
@@ -661,10 +670,7 @@ namespace ProjectZ.InGame.Controls
             }
 
             DrawStick(spriteBatch, _leftStick);
-            if (!GameSettings.CameraLock)
-            {
-                DrawStick(spriteBatch, _rightStick);
-            }
+            DrawStick(spriteBatch, _rightStick);
 
             for (int i = 0; i < _buttons.Count; i++)
             {

@@ -187,6 +187,13 @@ namespace ProjectZ.InGame.Pages
                 _contentLayout.ReplaceElement(_toggleClassicDungeon, _toggleModernOverworld);
         }
 
+        public void ReloadVirtualController()
+        {
+        #if ANDROID
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+        #endif
+        }
+
         public void UpdateInterfaceColors()
         {
             _toggleClassicDungeon.ToggleElementColors(GameSettings.ClassicCamera);
@@ -247,13 +254,6 @@ namespace ProjectZ.InGame.Pages
             }
             // Display the tooltip in the tooltip window.
             return tooltip;
-        }
-
-        public void ReloadVirtualController()
-        {
-        #if ANDROID
-            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
-        #endif
         }
     }
 }
