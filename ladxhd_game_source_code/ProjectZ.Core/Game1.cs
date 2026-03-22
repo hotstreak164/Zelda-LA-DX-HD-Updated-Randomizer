@@ -327,7 +327,7 @@ namespace ProjectZ
 
         #if ANDROID
             // Load the on-screen controller if on Android.
-            VirtualController.Initialize(Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight);
+            VirtualController.Initialize(Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight, true);
         #endif
 
             // Load the users saved settings.
@@ -977,7 +977,7 @@ namespace ProjectZ
 
         #if ANDROID
             // Update virtual button sizes.
-            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, null);
         #endif
 
             // This needs to go false or it will run every loop.

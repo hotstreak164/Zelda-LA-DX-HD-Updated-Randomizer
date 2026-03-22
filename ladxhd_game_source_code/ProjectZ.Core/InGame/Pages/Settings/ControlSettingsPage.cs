@@ -188,7 +188,7 @@ namespace ProjectZ.InGame.Pages
         public void ReloadVirtualController()
         {
         #if ANDROID
-            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, true);
         #endif
         }
         

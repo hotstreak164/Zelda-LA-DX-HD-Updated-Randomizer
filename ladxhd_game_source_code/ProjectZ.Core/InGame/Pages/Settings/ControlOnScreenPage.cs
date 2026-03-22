@@ -71,7 +71,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
 
             // Slider: Touch Momement Options
             _sliderTouchScale = new InterfaceSlider("settings_controls_touchmovement", 
-                buttonWidth, sliderHeight, new Point(1, 2), 0, 2, 1, GameSettings.TouchMovement,
+                buttonWidth, sliderHeight, new Point(1, 2), 0, 3, 1, GameSettings.TouchMovement,
                 number => { GameSettings.TouchMovement = number; })
                 { SetString = number => TouchMovementSliderAdjustmentString(number) };
             _contentLayout.AddElement(_sliderTouchScale);
@@ -81,7 +81,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
             _toggleTouchMiddleTop = InterfaceToggle.GetToggleButton(
                 new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_onscreenmiddletop", GameSettings.TouchTopMiddle, 
-                newState => { GameSettings.TouchTopMiddle = newState; VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight); });
+                newState => { GameSettings.TouchTopMiddle = newState; VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, true); });
             _contentLayout.AddElement(_toggleTouchMiddleTop);
             _tooltips.Add("tooltip_controls_onscreenmiddletop");
 
@@ -89,7 +89,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
             _toggleTouchMiddleTop = InterfaceToggle.GetToggleButton(
                 new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_controls_onscreenanalogbuttons", GameSettings.TouchSticks, 
-                newState => { GameSettings.TouchSticks = newState; VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight); });
+                newState => { GameSettings.TouchSticks = newState; VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, true); });
             _contentLayout.AddElement(_toggleTouchMiddleTop);
             _tooltips.Add("tooltip_controls_onscreenanalogbuttons");
 
@@ -144,7 +144,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
         private string FadeOpacitySliderAdjustmentString(int number)
         {
             // Apply the scaling settings to the controls.
-            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, true);
 
             // Display the updated value.
             return ": " + (number) + "%";
@@ -153,7 +153,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
         private string OnScreenScaleSliderAdjustmentString(int number)
         {
             // Apply the scaling settings to the controls.
-            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, true);
 
             // Display the updated value.
             return ": " + (number * 5) + "%";
@@ -162,7 +162,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
         private string TouchMovementSliderAdjustmentString(int number)
         {
             // Apply the scaling settings to the controls.
-            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight);
+            VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, true);
 
             // Display the updated string.
             return ": " + number switch
@@ -170,6 +170,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
                 0 => Game1.LanguageManager.GetString("settings_controls_touchmovement_01", "error"),
                 1 => Game1.LanguageManager.GetString("settings_controls_touchmovement_02", "error"),
                 2 => Game1.LanguageManager.GetString("settings_controls_touchmovement_03", "error"),
+                3 => Game1.LanguageManager.GetString("settings_controls_touchmovement_04", "error"),
             };
         }
 

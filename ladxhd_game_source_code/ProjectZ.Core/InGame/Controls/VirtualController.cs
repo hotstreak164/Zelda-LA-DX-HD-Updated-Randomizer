@@ -28,6 +28,8 @@ namespace ProjectZ.InGame.Controls
         public static float DPadButtonAlpha = GameSettings.TouchOpacity * 0.01f;
         public static float DPadShadowAlpha = GameSettings.ShadowOpacity * 0.01f;
 
+        private static bool menu = true;
+
         public static VirtualStick GetLeftStick() => _leftStick;
         public static VirtualStick GetRightStick() => _rightStick;
         public static List<VirtualButton> GetButtons() => _buttons;
@@ -41,7 +43,7 @@ namespace ProjectZ.InGame.Controls
             return new Point(offset, offset);
         }
 
-        public static void Initialize(int screenWidth, int screenHeight)
+        public static void Initialize(int screenWidth, int screenHeight, bool? isMenu)
         {
             _dPadSprite = null;
             _leftStick = null;
@@ -50,6 +52,7 @@ namespace ProjectZ.InGame.Controls
             _controllerButton = null;
             _controllerHideTimer = 0f;
             _controllerButtonHidden = false;
+            if (isMenu != null) menu = isMenu.Value;
 
             float scale = ControlsScale;
             int buttonSize = (int)(40 * scale);
@@ -62,7 +65,7 @@ namespace ProjectZ.InGame.Controls
             int leftX = margin;
             int leftY = screenHeight - margin;
 
-            if (GameSettings.TouchMovement < 2)
+            if (GameSettings.TouchMovement < 2 || (GameSettings.TouchMovement == 3 && menu))
             {
                 _dPadSprite = Resources.GetSprite("button_dpad");
                 _dPadBounds = new Rectangle(leftX, leftY - (buttonSize * 3) - (spacing * 2), buttonSize * 3 + spacing * 2, buttonSize * 3 + spacing * 2);
@@ -124,11 +127,17 @@ namespace ProjectZ.InGame.Controls
             float stickGap = spacing * 2 + stickRadius;
             int stickLift = (int)(20 * scale);
 
-            if (GameSettings.TouchMovement != 1)
+            if (GameSettings.TouchMovement == 0)
             {
                 Vector2 leftStickCenter = new Vector2(leftX + clusterWidth + stickGap, screenHeight - margin - stickRadius - stickLift);
-                _leftStick  = new VirtualStick("button_ls", leftStickCenter, stickRadius);
+                _leftStick = new VirtualStick("button_ls", leftStickCenter, stickRadius);
             }
+            else if (GameSettings.TouchMovement == 2 || (GameSettings.TouchMovement == 3 && !menu))
+            {
+                Vector2 leftStickCenter = new Vector2(leftX + stickGap, screenHeight - margin - stickRadius - stickLift);
+                _leftStick = new VirtualStick("button_ls", leftStickCenter, stickRadius);
+            }
+
             if (!GameSettings.CameraLock)
             {
                 Vector2 rightStickCenter = new Vector2(rightX - clusterWidth - stickGap, screenHeight - margin - stickRadius - stickLift);
