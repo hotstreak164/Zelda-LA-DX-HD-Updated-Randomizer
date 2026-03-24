@@ -4399,12 +4399,8 @@ namespace ProjectZ.InGame.GameObjects
             if (hitCollision != Values.HitCollision.None && hitCollision != Values.HitCollision.NoneBlocking)
                 _stopCharging = true;
 
-            // Default beam direction to current direction.
-            var beamDirection = Direction;
-
-            // If it's a 2D map, use the "corrected" direction assessed when attacking.
-            if (Map.Is2dMap)
-                beamDirection = _beamDirection;
+            // Use the direction that was set when the attack took place.
+            var beamDirection = _beamDirection;
 
             // Shoot the sword if the player has the Level 2 sword and full health.
             if (!_shotSword && (Game1.GameManager.SwordLevel == 2 || swordbeam_level1) && (Game1.GameManager.CurrentHealth >= Game1.GameManager.MaxHearts * 4 || swordbeam_always) && AnimatorWeapons.CurrentFrameIndex == 2)
