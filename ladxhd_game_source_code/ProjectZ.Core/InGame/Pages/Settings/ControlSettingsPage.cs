@@ -102,7 +102,7 @@ namespace ProjectZ.InGame.Pages
                 "settings_controls_sixbuttons", GameSettings.SixButtons, 
                 newState => { UpdateSixButtonToggle(newState); ReloadVirtualController(); });
             _contentLayout.AddElement(_toggleSixButtons);
-            _tooltips.Add("tooltip_controls_triggersscale");
+            _tooltips.Add("tooltip_controls_sixbuttons");
 
             // Toggle: Swap Confirm & Cancel
             _toggleSwapButtons = InterfaceToggle.GetToggleButton(
