@@ -24,7 +24,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
 
             _key = key;
 
-            var hittableBox = new CBox(posX, posY + 4, 0, 16, 13, 16);
+            var hittableBox = new CBox(posX, posY, 0, 16, 16, 16);
             var collisionBox = new CBox(posX + 1, posY + 5, 0, 14, 11, 16);
             _sprite = new CSprite("dungeon_switch", EntityPosition, new Vector2(0, -16));
 
