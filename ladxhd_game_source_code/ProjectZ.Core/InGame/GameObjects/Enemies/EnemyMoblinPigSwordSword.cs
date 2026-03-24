@@ -62,10 +62,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void Update()
         {
-            // Optimization: Skip the update function if Link is not in the same rect as the enemy.
-            if (!_fieldRect.Contains(MapManager.ObjLink.Position))
-                return;
-
             // Get the difference between the X and Y positions between Link and the Darknut.
             _difference = new Vector2(MapManager.ObjLink.EntityPosition.X - _owner.EntityPosition.X, MapManager.ObjLink.EntityPosition.Y - _owner.EntityPosition.Y);
 
@@ -103,26 +99,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _collisionBox.Box.Y = collisionY;
             _collisionBox.Box.Width = collisionW;
             _collisionBox.Box.Height = collisionH;
-
-            // If enemy is aggroed and moving towards the player, "HittableBox" will contract and be offset away from Link to allow Link's sword to poke without
-            // erroneously landing a hit. The behavior of the original game is that the enemy should be impervious from the front, but also the swords should appear
-            // to overlap by 3-4 pixels. Hit box is only adjusted if Link and the Darknut are within 5 pixels of being "level" with each other based on direction.
-            if (_owner.AiState == "attack")
-            {
-                if (_direction == 0 && Math.Abs(_difference.Y) < 5)
-                    _owner.HittableBox = new CBox(EntityPosition, 1, -14, 3, 12, 8);
-                if (_direction == 1 && Math.Abs(_difference.X+8) < 5)
-                    _owner.HittableBox = new CBox(EntityPosition, -4, -6, 8, 5, 8);
-                if (_direction == 2 && Math.Abs(_difference.Y) < 5)
-                    _owner.HittableBox = new CBox(EntityPosition, -4, -14, 3, 12, 8);
-                if (_direction == 3 && Math.Abs(_difference.X-8) < 5)
-                    _owner.HittableBox = new CBox(EntityPosition, -4, -14, 8, 5, 8);
-            }
-            // If not aggroed or not level with opponent, hitbox is set to default values so other attacks or interactions behave as expected right away again.
-            else if ((_direction == 0 || _direction == 2) && (Math.Abs(_difference.Y) > 5) || (_direction == 1 || _direction == 3) && (Math.Abs(_difference.X) > 5))
-
-            if ((_direction == 0 || _direction == 2) && Math.Abs(_difference.Y) > 5 || (_direction == 1 && Math.Abs(_difference.X+8) > 5) || (_direction == 3) && (Math.Abs(_difference.X-8) > 5))
-                _owner.HittableBox = new CBox(EntityPosition, -4, -14, 8, 12, 8);
         }
 
         private bool OnPush(Vector2 direction, PushableComponent.PushType type)

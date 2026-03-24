@@ -103,7 +103,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             };
 
             var damageBox   = new CBox(EntityPosition, -3,  -8, 0,  6,  6, 4);
-            var hittableBox = new CBox(EntityPosition, -4, -14, 0,  8, 12, 8);
+            var hittableBox = new CBox(EntityPosition, -3, -12, 0, 6, 8, 8);
             var pushableBox = new CBox(EntityPosition, -7, -11, 0, 14, 11, 4);
 
             _drawComponent = new BodyDrawComponent(Body, _sprite, Values.LayerPlayer);
