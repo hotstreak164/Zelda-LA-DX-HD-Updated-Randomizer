@@ -59,7 +59,7 @@ namespace ProjectZ.Core.InGame.Pages
                 "settings_graphics_shadow", GameSettings.EnableShadows,
                 newState => GameSettings.EnableShadows = newState);
             _contentLayout.AddElement(_toggleDynamicShadows);
-            _tooltips.Add("tooptip_graphics_shadows");
+            _tooltips.Add("tooltip_graphics_shadows");
 
             // Toggle: Fog Effects
             _toggleFogEffects = InterfaceToggle.GetToggleButton(
