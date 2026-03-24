@@ -529,8 +529,9 @@ namespace ProjectZ.Editor
             // load the sprite atlas if there is one
             var atlasFileName = Resources.FindAtlasFile(_lastFileName);
 
-            if (!SpriteAtlasSerialization.LoadSpriteAtlas(atlasFileName, _spriteAtlas))
-                AddAtlasEntry();
+            if (atlasFileName != null)
+                if (!SpriteAtlasSerialization.LoadSpriteAtlas(atlasFileName, _spriteAtlas))
+                    AddAtlasEntry();
 
             // need to be scaled to actually have the source rectangle
             foreach (var entry in _spriteAtlas.Data)

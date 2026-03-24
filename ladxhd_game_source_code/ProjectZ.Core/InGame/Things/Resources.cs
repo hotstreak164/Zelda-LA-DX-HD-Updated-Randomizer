@@ -54,10 +54,6 @@ namespace ProjectZ.InGame.Things
         public static SpriteFont GameHeaderFont;
         public static SpriteFont FontCredits, FontCreditsHeader;
         public static SpriteFont smallFont, smallFont_redux, smallFont_vwf, smallFont_vwf_redux;
-        public static BitmapFont smallFont_chn, smallFont_chn_redux;
-
-        public static BitmapFont ChinaFont => GameSettings.Uncensored ? smallFont_chn_redux : smallFont_chn;
-
         public static SpriteFont GameFont 
         {
             get
@@ -72,6 +68,9 @@ namespace ProjectZ.InGame.Things
                 };
             }
         }
+        public static BitmapFont smallFont_chn, smallFont_chn_redux;
+        public static BitmapFont ChinaFont => GameSettings.Uncensored ? smallFont_chn_redux : smallFont_chn;
+
         public static Texture2D EditorEyeOpen, EditorEyeClosed, EditorIconDelete;
         public static Texture2D SprWhite, SprTiledBlock, SprObjectsAnimated, SprNpCs, SprNpCsRedux;
         public static Texture2D SprEnemies, SprMidBoss, SprNightmares;
@@ -264,7 +263,8 @@ namespace ProjectZ.InGame.Things
 
             if (GameFS.IsDirectory(graphicsModsPath))
             {
-                var introDirs = GameFS.EnumerateDirectories(graphicsModsPath, recursive: true, acceptDirectory: dir => string.Equals(dir, "Intro", StringComparison.OrdinalIgnoreCase));
+                var introDirs = GameFS.EnumerateDirectories(graphicsModsPath, recursive: true, 
+                    acceptDirectory: dir => string.Equals(dir, "Intro", StringComparison.OrdinalIgnoreCase));
 
                 foreach (var introDir in introDirs)
                     LoadTexturesFromFolder(introDir, false);
@@ -532,9 +532,7 @@ namespace ProjectZ.InGame.Things
 
         public static void LoadTexturesFromFolder(string path, bool recurse = false)
         {
-            foreach (var full in GameFS.EnumerateFiles(
-                path, 
-                recurse, 
+            foreach (var full in GameFS.EnumerateFiles(path, recurse, 
                 name => name.EndsWith(".png", StringComparison.OrdinalIgnoreCase), 
                 skipDirectory: dir => string.Equals(dir, "Intro", StringComparison.OrdinalIgnoreCase)))
             {
@@ -603,14 +601,21 @@ namespace ProjectZ.InGame.Things
             string fallbackName = stripped + ".atlas";
             string fallbackPath = GameFS.NormalizePath(Path.Combine(Path.GetDirectoryName(textureName) ?? "", fallbackName));
 
-            return _atlasPathCache[textureName] = fallbackPath;
+            if (GameFS.Exists(fallbackPath))
+                return _atlasPathCache[textureName] = fallbackPath;
+
+            return _atlasPathCache[textureName] = null;
         }
 
         public static void LoadContentTextureWithAtlas(ContentManager content, string filePath)
         {
             var texture = content.Load<Texture2D>(filePath);
-            var atlasPath = FindAtlasFile(Path.Combine(Values.PathDataFolder, filePath));
-            SpriteAtlasSerialization.LoadSourceDictionary(texture, atlasPath, SpriteAtlas);
+            var atlasFileName = FindAtlasFile(Path.Combine(Values.PathDataFolder, filePath));
+
+            if (atlasFileName == null)
+                return;
+
+            SpriteAtlasSerialization.LoadSourceDictionary(texture, atlasFileName, SpriteAtlas);
         }
 
         public static void LoadTexture(out Texture2D texture, string assetPath)
@@ -621,6 +626,10 @@ namespace ProjectZ.InGame.Things
             texture = Texture2D.FromStream(Game1.Graphics.GraphicsDevice, stream);
 
             string atlasFileName = FindAtlasFile(assetPath);
+
+            if (atlasFileName == null)
+                return;
+
             var (lang, variant) = ParseAtlasTags(assetPath);
 
             if (!Atlases.TryGetValue((lang, variant), out var atlasDesignation))
