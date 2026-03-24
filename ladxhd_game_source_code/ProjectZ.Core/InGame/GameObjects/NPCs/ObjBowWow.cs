@@ -205,22 +205,25 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void EndIdle()
         {
-            _treasurePosition = GetTreasurePosition();
-            if (_treasurePosition != Vector2.Zero)
+            if (_followMode)
             {
-                var direction = _treasurePosition - EntityPosition.Position;
-                if (direction != Vector2.Zero)
-                    direction.Normalize();
-                _body.VelocityTarget = direction * 1.5f;
+                _treasurePosition = GetTreasurePosition();
 
-                // update the animation
-                _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
-                _animator.Play("walk_" + _direction);
+                if (_treasurePosition != Vector2.Zero)
+                {
+                    var direction = _treasurePosition - EntityPosition.Position;
+                    if (direction != Vector2.Zero)
+                        direction.Normalize();
+                    _body.VelocityTarget = direction * 1.5f;
 
-                _aiComponent.ChangeState("treasure");
-                return;
+                    // update the animation
+                    _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
+                    _animator.Play("walk_" + _direction);
+
+                    _aiComponent.ChangeState("treasure");
+                    return;
+                }
             }
-
             if (!_followMode || Game1.RandomNumber.Next(0, 100) < 35)
                 _aiComponent.ChangeState("walking");
             else
