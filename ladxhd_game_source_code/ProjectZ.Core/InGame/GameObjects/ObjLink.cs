@@ -3796,6 +3796,14 @@ namespace ProjectZ.InGame.GameObjects
                 _showItemOffset.X = item.ShowAnimation == 1 ? 0 : -4;
                 _showItemOffset.Y = -15;
 
+                // Despawn boomerang or hookshot if it collected an item that is shown.
+                if (ShowItem.Name != null)
+                {
+                    if (Hookshot != null)
+                        Hookshot.Despawn();
+                    if (Boomerang != null)
+                        Boomerang.Despawn();
+                }
                 // Initialize the powerup state if it's a powerup item.
                 if (ShowItem.Name == "guardianAcorn")
                     Game1.GameManager.InitGuardianAcorn();

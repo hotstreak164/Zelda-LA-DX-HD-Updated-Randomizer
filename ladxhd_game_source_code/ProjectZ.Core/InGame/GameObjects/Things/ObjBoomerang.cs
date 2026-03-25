@@ -160,10 +160,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
                 // Remove the boomerang when it returns to Link.
                 if ((Map.Is2dMap || Math.Abs(Link.EntityPosition.Z - EntityPosition.Z) <= 6) && distance < 2)
-                {
-                    _isReady = true;
-                    Map.Objects.DeleteObjects.Add(this);
-                }
+                    Despawn();
             }
             // Find items to collect.
             CollectItem();
@@ -235,6 +232,14 @@ namespace ProjectZ.InGame.GameObjects.Things
                 else
                     _itemsGrabbed.Remove(item);
             }
+        }
+
+        public void Despawn()
+        {
+            _isReady = true;
+
+            if (Map != null)
+                Map.Objects.DeleteObjects.Add(this);
         }
 
         private void UpdateFairyPosition(CPosition position)
