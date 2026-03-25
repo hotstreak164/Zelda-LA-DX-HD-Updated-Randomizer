@@ -83,6 +83,7 @@ namespace ProjectZ.InGame.Things
         public static Texture2D SprLight;
         public static Texture2D SprLightRoomH;
         public static Texture2D SprLightRoomV;
+        public static Texture2D SprMamuLight;
         public static Texture2D NoiseTexture;
         public static Texture2D SprIconOptions, SprIconErase, SprIconCopy, EditorIconEdit, EditorIconSelect;
         public static Texture2D sgbBorder;
@@ -424,6 +425,7 @@ namespace ProjectZ.InGame.Things
             SprLight = content.Load<Texture2D>("Light/light");
             SprLightRoomH = content.Load<Texture2D>("Light/ligth room");
             SprLightRoomV = content.Load<Texture2D>("Light/ligth room vertical");
+            SprMamuLight = content.Load<Texture2D>("Light/mamuLight");
             SprShadow = content.Load<Texture2D>("Light/shadow");
             LoadContentTextureWithAtlas(content, "Light/doorLight");
 

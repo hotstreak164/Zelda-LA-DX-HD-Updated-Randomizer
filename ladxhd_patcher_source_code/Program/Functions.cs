@@ -36,6 +36,7 @@ namespace LADXHD_Patcher
         private static string[] langDialog = new[] { "dialog_chn.lng", "dialog_deu.lng", "dialog_esp.lng", "dialog_fre.lng", "dialog_ind.lng", "dialog_ita.lng", "dialog_por.lng", "dialog_rus.lng" };
         private static string[] smallFonts = new[] { "smallFont_redux.xnb", "smallFont_vwf.xnb", "smallFont_vwf_redux.xnb", "smallFont_chn.xnb", "smallFont_chn_0.xnb", "smallFont_chn_redux.xnb", "smallFont_chn_redux_0.xnb" };
         private static string[] backGround = new[] { "menuBackgroundB.xnb", "menuBackgroundC.xnb", "sgb_border.xnb" };
+        private static string[] lighting   = new[] { "mamuLight.xnb" };
         private static string[] linkImages = new[] { "link1.png" };
         private static string[] npcImages  = new[] { "npcs_redux.png" };
         private static string[] itemImages = new[] { "items_chn.png", "items_deu.png", "items_esp.png", "items_fre.png", "items_ind.png", "items_ita.png", "items_por.png", "items_rus.png", "items_redux.png", 
@@ -57,24 +58,25 @@ namespace LADXHD_Patcher
 
         private static readonly Dictionary<string, string[]> fileTargets = new Dictionary<string, string[]>
         {
-            { "eng.lng",             langFiles },
-            { "dialog_eng.lng",     langDialog },
-            { "smallFont.xnb",      smallFonts },
-            { "menuBackground.xnb", backGround },
-            { "link0.png",          linkImages },
-            { "npcs.png",            npcImages },
-            { "items.png",          itemImages },
-            { "intro.png",          introImage },
-            { "intro.atlas",        introAtlas },
-            { "minimap.png",        miniMapImg },
-            { "objects.png",        objectsImg },
-            { "photos.png",         photograph },
-            { "ui.png",               uiImages },
-            { "musicOverworld.data", musicTile },
-            { "dungeon3_1.map",      dungeon3M },
-            { "dungeon3_1.map.data", dungeon3D },
-            { "BowWow.ani",         bowwowanim },
-            { "mapPlayer.ani",      dungeonani }
+            { "eng.lng",              langFiles },
+            { "dialog_eng.lng",      langDialog },
+            { "smallFont.xnb",       smallFonts },
+            { "menuBackground.xnb",  backGround },
+            { "ligth room.xnb",        lighting },
+            { "link0.png",           linkImages },
+            { "npcs.png",             npcImages },
+            { "items.png",           itemImages },
+            { "intro.png",           introImage },
+            { "intro.atlas",         introAtlas },
+            { "minimap.png",         miniMapImg },
+            { "objects.png",         objectsImg },
+            { "photos.png",          photograph },
+            { "ui.png",                uiImages },
+            { "musicOverworld.data",  musicTile },
+            { "dungeon3_1.map",       dungeon3M },
+            { "dungeon3_1.map.data",  dungeon3D },
+            { "BowWow.ani",          bowwowanim },
+            { "mapPlayer.ani",       dungeonani }
         };
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -183,7 +185,7 @@ namespace LADXHD_Patcher
         private static void RemoveBadBackupFiles()
         {
             // Because old versions of the patchers saved "new" files, we need to remove them or they will cause problems.
-            string[][] list = { langFiles, langDialog, smallFonts, backGround, linkImages, npcImages, itemImages, introImage, introAtlas, 
+            string[][] list = { langFiles, langDialog, smallFonts, backGround, lighting, linkImages, npcImages, itemImages, introImage, introAtlas, 
                                 miniMapImg, objectsImg, photograph, uiImages, musicTile, dungeon3M, dungeon3D, bowwowanim, dungeonani };
 
             string[] remove = list.SelectMany(x => x).ToArray();

@@ -26,6 +26,7 @@ namespace LADXHD_ModMaker
         private static string[] langDialog = new[] { "dialog_chn.lng", "dialog_deu.lng", "dialog_esp.lng", "dialog_fre.lng", "dialog_ind.lng", "dialog_ita.lng", "dialog_por.lng", "dialog_rus.lng" };
         private static string[] smallFonts = new[] { "smallFont_redux.png", "smallFont_vwf.png", "smallFont_vwf_redux.png", "smallFont_chn_0.png", "smallFont_chn_redux_0.png" };
         private static string[] backGround = new[] { "menuBackgroundB.png", "menuBackgroundC.png", "sgb_border.png" };
+        private static string[] lighting   = new[] { "mamuLight.png" };
         private static string[] linkImages = new[] { "link1.png" };
         private static string[] npcImages  = new[] { "npcs_redux.png" };
         private static string[] itemImages = new[] { "items_chn.png", "items_deu.png", "items_esp.png", "items_fre.png", "items_ind.png", "items_ita.png", "items_por.png", "items_rus.png", "items_redux.png", 
@@ -47,24 +48,25 @@ namespace LADXHD_ModMaker
 
         private static readonly Dictionary<string, string[]> fileTargets = new Dictionary<string, string[]>
         {
-            { "eng.lng",             langFiles },
-            { "dialog_eng.lng",     langDialog },
-            { "smallFont.png",      smallFonts },
-            { "menuBackground.png", backGround },
-            { "link0.png",          linkImages },
-            { "npcs.png",            npcImages },
-            { "items.png",          itemImages },
-            { "intro.png",          introImage },
-            { "intro.atlas",        introAtlas },
-            { "minimap.png",        miniMapImg },
-            { "objects.png",        objectsImg },
-            { "photos.png",         photograph },
-            { "ui.png",               uiImages },
-            { "musicOverworld.data", musicTile },
-            { "dungeon3_1.map",      dungeon3M },
-            { "dungeon3_1.map.data", dungeon3D },
-            { "BowWow.ani",         bowwowanim },
-            { "mapPlayer.ani",      dungeonani }
+            { "eng.lng",              langFiles },
+            { "dialog_eng.lng",      langDialog },
+            { "smallFont.png",       smallFonts },
+            { "menuBackground.png",  backGround },
+            { "ligth room.png",        lighting },
+            { "link0.png",           linkImages },
+            { "npcs.png",             npcImages },
+            { "items.png",           itemImages },
+            { "intro.png",           introImage },
+            { "intro.atlas",         introAtlas },
+            { "minimap.png",         miniMapImg },
+            { "objects.png",         objectsImg },
+            { "photos.png",          photograph },
+            { "ui.png",                uiImages },
+            { "musicOverworld.data",  musicTile },
+            { "dungeon3_1.map",       dungeon3M },
+            { "dungeon3_1.map.data",  dungeon3D },
+            { "BowWow.ani",          bowwowanim },
+            { "mapPlayer.ani",       dungeonani }
         };
 
         // CREATE A REVERSE MAP OF THE DICTIONARY SO IT CAN EASILY BE SEARCHED IN EITHER DIRECTION

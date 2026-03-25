@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
@@ -12,6 +13,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
     {
         private readonly BodyComponent _body;
         private readonly Animator _animator;
+        private readonly BodyDrawComponent _bodyDrawComponent;
 
         private readonly ObjPersonNew _leftFrog;
         private readonly ObjPersonNew _rightFrog;
@@ -20,6 +22,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private bool _wasColliding;
 
         private readonly string _saveKey;
+        private bool _drawDarkness;
+        private float _lightOpacity;
+        private bool _fadingOut;
 
         struct AnimationKeyframe
         {
@@ -99,6 +104,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private int _songIndex;
         private bool _isPlaying;
         private bool _startedPlaying;
+        private float _flickerTimer;
+        private bool _flickerVisible;
 
         public ObjMamu() : base("mamu") { }
 
@@ -124,6 +131,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             var animationComponent = new AnimationComponent(_animator, sprite, Vector2.Zero);
 
             _body = new BodyComponent(EntityPosition, -16, -32, 32, 32, 8);
+            _bodyDrawComponent = new BodyDrawComponent(_body, sprite, 1);
 
             var interactBox = new CBox(posX + 2, posY + 16, 0, 28, 16, 8);
             AddComponent(InteractComponent.Index, new InteractComponent(interactBox, OnInteract));
@@ -132,7 +140,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             AddComponent(CollisionComponent.Index, new BodyCollisionComponent(_body, Values.CollisionTypes.Normal | Values.CollisionTypes.NPC));
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
-            AddComponent(DrawComponent.Index, new BodyDrawComponent(_body, sprite, Values.LayerPlayer));
+            AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerPlayer, EntityPosition));
             AddComponent(DrawShadowComponent.Index, new DrawShadowCSpriteComponent(sprite));
             AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(OnKeyChange));
 
@@ -166,10 +174,12 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             Game1.GameManager.SetMusic(52, 2);
             _isPlaying = true;
             _startedPlaying = true;
+            _drawDarkness = true;
         }
 
         private void Update()
         {
+            // When Link gets close to Mamu start the dialog.
             if (!_startedPlaying && MapManager.ObjLink.IsGrounded())
             {
                 var colliding = MapManager.ObjLink.BodyRectangle.Intersects(_interactRectangle);
@@ -177,46 +187,80 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 {
                     Game1.GameManager.StartDialogPath("mamu");
                 }
-
                 _wasColliding = colliding;
             }
 
+            // When the delay is set count down.
             if (_startDelay != 0)
             {
                 _startDelay -= Game1.DeltaTime;
+
+                // When the delay hits zero start the song.
                 if (_startDelay <= 0)
                 {
                     _startDelay = 0;
+                    _lightOpacity = 1f;
                     StartSong();
                 }
+                // Fade in darkness layer over 2.5 seconds.
+                _lightOpacity = 1f - (_startDelay / 2500f);
 
                 MapManager.ObjLink.FreezePlayer();
                 Game1.GameManager.InGameOverlay.DisableInventoryToggle = true;
             }
 
+            // Fade out darkness layer over 1.5 seconds.
+            if (_fadingOut)
+            {
+                _lightOpacity -= Game1.DeltaTime / 1500f;
+                if (_lightOpacity <= 0)
+                {
+                    _lightOpacity = 0;
+                    _fadingOut = false;
+                }
+            }
+
+            // Return early if not playing the song.
             if (!_isPlaying)
                 return;
 
+            // Freeze Link during the song and disable the inventory.
             MapManager.ObjLink.FreezePlayer();
             Game1.GameManager.InGameOverlay.DisableInventoryToggle = true;
 
+            // Keep track of how long the song played.
             _songCounter += Game1.DeltaTime;
 
-            // new keyframe?
+            // Start a new key frame.
             if (_songCounter >= _songKeyframes[_songIndex].Time * 1000)
             {
-                // set the animations
+                // Set the animations.
                 _leftFrog.Animator.Play(_songKeyframes[_songIndex].Left);
                 _animator.Play(_songKeyframes[_songIndex].Middle);
                 _rightFrog.Animator.Play(_songKeyframes[_songIndex].Right);
-
-                // finished playing?
                 _songIndex++;
+
+                // Song has finished. Stop song, fade out darkness layer, start ending dialog.
                 if (_songIndex >= _songKeyframes.Length)
                 {
                     _isPlaying = false;
+                    _drawDarkness = false;
+                    _fadingOut = true;
                     Game1.GameManager.StartDialogPath("mamu_finished");
                 }
+            }
+        }
+
+        private void Draw(SpriteBatch spriteBatch)
+        {
+            // Draw Mamu's body sprite.
+            _bodyDrawComponent.Draw(spriteBatch);
+
+            // Draw the darkness layer.
+            if (_drawDarkness || _lightOpacity > 0)
+            {
+                var color = Color.White * (_drawDarkness ? 1f : _lightOpacity);
+                spriteBatch.Draw(Resources.SprMamuLight, new Vector2(16, 16), color);
             }
         }
     }
