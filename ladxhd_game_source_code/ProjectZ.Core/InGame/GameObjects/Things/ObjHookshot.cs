@@ -188,7 +188,9 @@ namespace ProjectZ.InGame.GameObjects.Things
         public void Despawn()
         {
             IsMoving = false;
-            Map.Objects.DeleteObjects.Add(this);
+
+            if (Map != null)
+                Map.Objects.DeleteObjects.Add(this);
         }
 
         private void CollectItem()
