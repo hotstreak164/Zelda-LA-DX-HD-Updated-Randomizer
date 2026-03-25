@@ -406,8 +406,9 @@ namespace ProjectZ.InGame.Things
             foreach (var entry in Directory.EnumerateFileSystemEntries(dir, "*", SearchOption.TopDirectoryOnly))
             {
                 var name = Path.GetFileName(entry);
+                var isDir = (File.GetAttributes(entry) & FileAttributes.Directory) != 0;
 
-                if (Directory.Exists(entry))
+                if (isDir)
                 {
                     if (skipDirectory != null && skipDirectory(name))
                         continue;
@@ -522,7 +523,6 @@ namespace ProjectZ.InGame.Things
                 yield return subDir;
         #endif
         }
-
         private static IEnumerable<string> EnumerateRealDirectoriesRecursive(string dir, Func<string, bool> acceptDirectory, Func<string, bool> skipDirectory)
         {
             foreach (var subDir in Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly))
