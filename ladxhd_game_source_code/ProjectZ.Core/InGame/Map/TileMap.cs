@@ -37,7 +37,7 @@ namespace ProjectZ.InGame.Map
                 return;
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, MapManager.Camera.Scale >= 1 ?
-                SamplerState.PointWrap : SamplerState.AnisotropicWrap, null, null, null, MapManager.Camera.TransformMatrix);
+                SamplerState.PointClamp : SamplerState.AnisotropicWrap, null, null, null, MapManager.Camera.TransformMatrix);
 
             for (var i = 0; i < ArrayTileMap.GetLength(2) - (BlurLayer ? 1 : 0); i++)
                 DrawTileLayer(spriteBatch, SprTileset, i);

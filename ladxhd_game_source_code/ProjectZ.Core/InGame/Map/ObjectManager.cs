@@ -512,7 +512,7 @@ namespace ProjectZ.InGame.Map
 
             CurrentEffect = spriteShader?.Effect;
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
-                MapManager.Camera.Scale >= 1 ? SamplerState.PointWrap : SamplerState.AnisotropicWrap,
+                MapManager.Camera.Scale >= 1 ? SamplerState.PointClamp : SamplerState.AnisotropicWrap,
                 null, null, CurrentEffect, MapManager.Camera.TransformMatrix);
         }
 
@@ -601,7 +601,7 @@ namespace ProjectZ.InGame.Map
                 return;
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
-                MapManager.Camera.Scale >= 1 ? SamplerState.PointWrap : SamplerState.AnisotropicWrap,
+                MapManager.Camera.Scale >= 1 ? SamplerState.PointClamp : SamplerState.AnisotropicWrap,
                 null, null, null, MapManager.Camera.TransformMatrix);
             _drawPool.DrawPool(spriteBatch,
                 (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
@@ -611,7 +611,7 @@ namespace ProjectZ.InGame.Map
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
-                MapManager.Camera.Scale >= 1 ? SamplerState.PointWrap : SamplerState.AnisotropicWrap,
+                MapManager.Camera.Scale >= 1 ? SamplerState.PointClamp : SamplerState.AnisotropicWrap,
                 null, null, null, MapManager.Camera.TransformMatrix);
             _drawPoolB.DrawPool(spriteBatch,
                 (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
@@ -624,7 +624,7 @@ namespace ProjectZ.InGame.Map
             if (Game1.DebugMode)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, null,
-                    MapManager.Camera.Scale >= 1 ? SamplerState.PointWrap : SamplerState.AnisotropicWrap,
+                    MapManager.Camera.Scale >= 1 ? SamplerState.PointClamp : SamplerState.AnisotropicWrap,
                     null, null, null, MapManager.Camera.TransformMatrix);
 
                 // draw entity size rectangle
