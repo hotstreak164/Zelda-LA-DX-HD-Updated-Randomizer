@@ -141,6 +141,7 @@ namespace ProjectZ.InGame.Overlay
                 if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
                 {
                     _hideButtons = !_hideButtons;
+                    Game1.GameManager.PlaySoundEffect("D360-21-15");
                 }
 
                 // Close the image.
