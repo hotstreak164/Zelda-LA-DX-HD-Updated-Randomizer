@@ -121,7 +121,6 @@ namespace ProjectZ.InGame.Interface
                 // The text is a "key" to pull up the "value" from the language dictionary. Compare the
                 // text found in the "value" against placeholder tags and replace ones that are found.
                 string setText = Game1.LanguageManager.GetString(_textKey, "error");
-                setText = Game1.LanguageManager.ReplacePlaceholderTag(setText);
                 SetText(setText);
             }
             // If override text was used, then use it directly without using it as a "key".

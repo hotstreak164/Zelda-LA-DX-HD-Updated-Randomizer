@@ -578,7 +578,6 @@ namespace ProjectZ.InGame.Overlay
 
         public string SetUpString(string inputString)
         {
-            inputString = Game1.LanguageManager.ReplacePlaceholderTag(inputString);
             inputString = ReplaceKeys(inputString);
             return SetUpStringSplit(inputString);
         }

@@ -44,7 +44,10 @@ namespace ProjectZ.InGame.Things
             if (Game1.LanguageManager.CurrentLanguageCode == "chn")
                 return Resources.ChinaFont.MeasureString(text);
 
-            return Resources.GameFont.MeasureString(text);
+            // The "catch" return doesn't matter. An exception can be thrown from font spillover
+            // from Chinese language to anything else (happens in Photo Book Overlay for example).
+            try    { return Resources.GameFont.MeasureString(text); }
+            catch  { return new Vector2(0,0); }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------

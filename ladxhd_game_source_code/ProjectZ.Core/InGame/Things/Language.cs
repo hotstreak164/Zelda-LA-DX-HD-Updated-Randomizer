@@ -106,16 +106,26 @@ namespace ProjectZ.InGame.Things
 
         public string GetString(string strKey, string defaultString)
         {
+            // Without a key there's no string to get.
             if (strKey == null)
                 return "null";
 
+            // Try to get the string in the selected language.
             if (Strings.TryGetValue(strKey, out var value))
+            {
+                value = Game1.LanguageManager.ReplacePlaceholderTag(value);
                 return value;
+            }
 
-            // use the english text if there is no translation
+            // Use the English text if a translated string is not found.
             if (_languageStrings[0].TryGetValue(strKey, out value))
+            {
+                value = Game1.LanguageManager.ReplacePlaceholderTag(value);
                 return value;
+            }
 
+            // Return the default string if it's not in the dictionary.
+            defaultString = Game1.LanguageManager.ReplacePlaceholderTag(defaultString);
             return defaultString;
         }
 

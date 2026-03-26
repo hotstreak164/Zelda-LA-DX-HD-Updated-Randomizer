@@ -28,9 +28,6 @@ namespace ProjectZ.InGame.Interface
 
         public static void Draw(SpriteBatch spriteBatch, string text)
         {
-            // Try to find placeholder tags if present.
-            text = Game1.LanguageManager.ReplacePlaceholderTag(text);
-
             // Update these as the scale may change.
             paddingX = 10f * Game1.UiScale;
             paddingY = 10f * Game1.UiScale;
