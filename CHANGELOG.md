@@ -1,5 +1,21 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.6.9**
+### The "Finally Fully Finished Finalizing the Final Finishing Touches Finale" Update
+  * More German menu translation fixes and German dialog fixes (credit @mrmercy82).
+  * The editor is now fully functional on Linux. Forms was replaced with "NativeFileDialogSharp".
+  * The Photo Book has finally been finished. Sound effects, button labels, hints, and textbox.
+  * Add the Mamu spotlight lighting effects from the original games when Mamu is singing his song.
+  * Adjust hitboxes of sword wielding enemies. I noticed sometimes the sword would pass through them.
+  * Don't search for diggable treasure for Bow Wow when he is not a follower (slight optimization).
+  * Add enemy colliders to some of the rooms in Level 7 dungeon on the first and second floors.
+  * When collecting "shown" items with hookshot or boomerang, immediately remove the hookshot/boomerang.
+  * Fix a crash with the hookshot to retrieve a Piece of Power or a Guardian Acorn upon its return.
+  * Fix missing tooltip for "Graphics" which also threw off the tooltips for all options below it.
+  * Fix the "this looks really heavy" message from popping up after collecting the power bracelet.
+  * Fix sword beam travelling in the correct direction if Link turns on the last second after attacking.
+  * Fix dungeon switches that raise/lower barriers to be hittable with projectiles from the top.
+
 ## **v1.6.8**
 ### The "Closing the Gap" Update
   * Support additional Android versions: Android-x86, Android-x64, Android-ARM, and Android-ARM64.
