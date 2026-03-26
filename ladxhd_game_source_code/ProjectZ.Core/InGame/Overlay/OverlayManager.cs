@@ -91,7 +91,7 @@ namespace ProjectZ.InGame.Overlay
 
         public Dictionary<Point, (int Level, Vector2 Teleport)> TeleportMap = new()
         {
-            // Tile Position    = Level, Link Teleport Position
+            // Tile Position    = Level, Link Teleport Position(X, Y)
             [new Point(5, 4)]   = (0, new Vector2(872, 606)),   // Manbo's Pond
             [new Point(3, 13)]  = (1, new Vector2(600, 1720)),  // Dungeon 1
             [new Point(4, 2)]   = (2, new Vector2(736, 340)),   // Dungeon 2
@@ -236,9 +236,12 @@ namespace ProjectZ.InGame.Overlay
                 // Pause updating the game.
                 Game1.UpdateGame = false;
 
-                // Update the textbox overlay and photo overlay.
+                // Update the textbox overlay.
                 TextboxOverlay.Update();
-                _photoOverlay.Update();
+
+                // When textbox overlay is closed update photo overlay.
+                if (!TextboxOverlay.IsOpen)
+                    _photoOverlay.Update();
             }
             // Sequence overlay is currently open (Marin on the beach, Mr.Write Christine picture, painting, etc.).
             else if (_currentMenuState == MenuState.GameSequence)
@@ -645,6 +648,7 @@ namespace ProjectZ.InGame.Overlay
         {
             // Open photo overlay and set the menu state.
             _photoOverlay.OnOpen();
+            Game1.GameManager.StartDialogPath("photo_book_text");
             SetState(MenuState.PhotoBook);
         }
 
