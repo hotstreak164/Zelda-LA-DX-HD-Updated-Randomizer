@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Main configuration. -->
   <PropertyGroup>
     <AssemblyName>ProjectZ.Android</AssemblyName>
     <RootNamespace>ProjectZ.Android</RootNamespace>
     <ApplicationId>com.projectz.game</ApplicationId>
-    <ApplicationVersion>168</ApplicationVersion>
-    <ApplicationDisplayVersion>1.6.8</ApplicationDisplayVersion>
+    <ApplicationVersion>169</ApplicationVersion>
+    <ApplicationDisplayVersion>1.6.9</ApplicationDisplayVersion>
     <TargetFramework>net8.0-android</TargetFramework>
     <RuntimeIdentifiers>android-x86;android-x64;android-arm;android-arm64</RuntimeIdentifiers>
     <SupportedOSPlatformVersion>24.0</SupportedOSPlatformVersion>
@@ -18,6 +19,7 @@
     <CheckEolWorkloads>false</CheckEolWorkloads>
   </PropertyGroup>
 
+  <!-- Release Builds: Most optimizations are disabled for compatibility packing multiple ABIs. -->
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <RunAOTCompilation>false</RunAOTCompilation>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
@@ -25,6 +27,7 @@
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
   </PropertyGroup>
 
+  <!-- Debug Builds: Configured for debugging in emulators like Bluestacks or LDPlayer both which now support Hyper-V. -->
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
@@ -33,16 +36,13 @@
     <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-  </PropertyGroup>
-
+  <!-- Add the MonoGame references. -->
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
-    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.4.1" />
   </ItemGroup>
 
+  <!-- Include the Android files that are needed. -->
   <ItemGroup>
     <None Include="AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -54,10 +54,12 @@
     <AndroidResource Include="Resources\layout\splash_layout.xml" />
   </ItemGroup>
 
+  <!-- Include ProjectZ.Core which is the game data. -->
   <ItemGroup>
     <ProjectReference Include="..\ProjectZ.Core\ProjectZ.Core.csproj" />
   </ItemGroup>
 
+  <!-- Build the MonoGame "Content" folder. -->
   <ItemGroup>
     <MonoGameContentReference Include="..\ProjectZ.Core\Content\Content.mgcb">
       <OutputFolder>$(MSBuildProjectName)/$(TargetFramework)/%(Filename)</OutputFolder>
@@ -65,15 +67,11 @@
     </MonoGameContentReference>
   </ItemGroup>
 
+  <!-- Package the "Data" folder as Android assets into the APK. -->
   <ItemGroup>
-    <AndroidAsset Include="..\ProjectZ.Core\Data\**\*" Link="Data\%(RecursiveDir)%(Filename)%(Extension)" />
+    <AndroidAsset 
+      Include="..\ProjectZ.Core\Data\**\*" 
+      Link="Data\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
-
-  <Target Name="DumpAllDataAssets" BeforeTargets="_BuildApk">
-    <Message Importance="High" Text="---- AndroidAsset items (Data/*) ----" />
-    <Message Importance="High"
-        Text="AssetLink=%(AndroidAsset.Link)  Identity=%(AndroidAsset.Identity)"
-        Condition="$([System.String]::Copy('%(AndroidAsset.Link)').StartsWith('Data/'))" />
-  </Target>
 
 </Project>

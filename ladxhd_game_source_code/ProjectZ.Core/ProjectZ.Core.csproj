@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Main configuration. -->
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>ProjectZ.Core</AssemblyName>
@@ -7,34 +8,35 @@
     <CheckEolWorkloads>false</CheckEolWorkloads>
   </PropertyGroup>
 
-  <!-- Exclude debug symbols when publishing -->
+  <!-- Exclude debug symbols when publishing. -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
+  <!-- Overrides the default target frameworks when building on Windows. -->
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <TargetFrameworks>net8.0-windows;net8.0;net8.0-android</TargetFrameworks>
   </PropertyGroup>
 
-  <!-- Global: All Projects -->
+  <!-- Global: Packages to include in all projects. -->
   <ItemGroup>
     <PackageReference Include="MonoGame.Extended" Version="5.4.0" />
     <PackageReference Include="NativeFileDialogSharp" Version="0.5.0"
-                      Condition="'$(TargetFramework)' != 'net8.0-android'" />
+      Condition="'$(TargetFramework)' != 'net8.0-android'"/>
   </ItemGroup>
-  
-  <!-- Windows: DirectX -->
+
+  <!-- Windows DirectX: Forms is needed only to set the icon.  -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
     <UseWindowsForms>true</UseWindowsForms>
     <DefineConstants>$(DefineConstants);WINDOWS;DIRECTX</DefineConstants>
   </PropertyGroup>
-  
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />
   </ItemGroup>
-  
-  <!-- Windows: OpenGL -->
+
+  <!-- Windows OpenGL: Forms will not work in OpenGL builds. SDL2 is used to set the icon. -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' and $([MSBuild]::IsOSPlatform('Windows'))">
     <DefineConstants>$(DefineConstants);WINDOWS;DESKTOPGL</DefineConstants>
   </PropertyGroup>
@@ -51,7 +53,7 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
   </ItemGroup>
-  
+
   <!-- Linux -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' and $([MSBuild]::IsOSPlatform('Linux'))">
     <DefineConstants>$(DefineConstants);LINUX;DESKTOPGL</DefineConstants>

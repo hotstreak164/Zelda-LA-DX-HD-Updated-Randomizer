@@ -53,7 +53,7 @@
 # CONFIGURATION
 #========================================================================================================================================
 
-$GameVersion = "1.6.8"
+$GameVersion = "1.6.9"
 $OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
 $SevenZipExe = "C:\Program Files\7-Zip\7z.exe"
 
@@ -247,45 +247,6 @@ function PrepareAndroid([string]$GamePath)
 }
 
 #========================================================================================================================================
-# LINUX EXTRA FILES
-#========================================================================================================================================
-
-$LinuxExtraFiles = @(
-    "System.IO.Compression.Native.a",
-    "System.Native.a",
-    "System.Net.Http.Native.a",
-    "System.Net.Security.Native.a",
-    "System.Security.Cryptography.Native.OpenSsl.a"
-)
-
-function CreateLinuxExtraFilesZip([bool]$CreatePatches, [string]$GamePath, [string]$Platform)
-{
-    if ((!$CreatePatches) -or ($Platform -notlike "Linux_*")) { return }
-
-    $ZipName = $Platform.ToLower() + "_files.zip"
-    $ZipFile = Join-Path $ResourcePath $ZipName
-
-    $TempPath = Join-Path ([System.IO.Path]::GetTempPath()) ("ladxhd_" + $Platform.ToLower() + "_extra_files")
-    $AllFiles = Get-ChildItem -LiteralPath $GamePath -File
-
-    Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
-    New-Item -Path $TempPath -ItemType Directory | Out-Null
-
-    foreach ($FileName in $LinuxExtraFiles)
-    {
-        $SourceFile = $AllFiles | Where-Object { $_.Name -eq $FileName } | Select-Object -First 1
-        Copy-Item -LiteralPath $SourceFile.FullName -Destination (Join-Path $TempPath $FileName) -Force
-    }
-    if ((Get-ChildItem -LiteralPath $TempPath -File | Measure-Object).Count -gt 0)
-    {
-        Write-Host ('Generating "' + $ZipName + '" for patcher program.')
-        Write-Host ""
-        Compress-Archive -Path (Join-Path $TempPath "*") -DestinationPath $ZipFile | Out-Null
-    }
-    Remove-Item -Path $TempPath -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-}
-
-#========================================================================================================================================
 # VERIFICATION
 #========================================================================================================================================
 
@@ -362,8 +323,6 @@ function GeneratePatches([bool]$CreatePatches, [string]$GamePath, [string]$Patch
     $ZipFile = Join-Path $ResourcePath ("\patches_" + $Platform.ToLower() + ".zip")
     Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
     Compress-Archive -Path $ZipPath -DestinationPath $ZipFile | Out-Null
-
-    CreateLinuxExtraFilesZip -CreatePatches $CreatePatches -GamePath $GamePath -Platform $Platform
 }
 
 if ((VerifyOriginal) -and (VerifyXDelta))

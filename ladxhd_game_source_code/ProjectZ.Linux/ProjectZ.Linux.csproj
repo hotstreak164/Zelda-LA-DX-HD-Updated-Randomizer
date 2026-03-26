@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Main configuration. -->
   <PropertyGroup>
     <AssemblyName>Link's Awakening DX HD</AssemblyName>
-    <Version>1.6.8</Version>
+    <Version>1.6.9</Version>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
     <StartupObject>ProjectZ.Program</StartupObject>
-    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
     <OutputType>Exe</OutputType>
     <RootNamespace>ProjectZ</RootNamespace>
     <Nullable>disable</Nullable>
@@ -15,32 +15,35 @@
     <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
-    <UseWindowsForms>true</UseWindowsForms>
-  </PropertyGroup>
+  <!-- Include the editor from the Windows source. -->
+  <ItemGroup>
+    <Compile Include="..\ProjectZ.Desktop\Editor\*" Link="Editor\*" />
+  </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <UseWindowsForms>false</UseWindowsForms>
-  </PropertyGroup>
-
+  <!-- Exclude MonoGame content pipeline build folders from the project. -->
   <ItemGroup>
     <Compile Remove="Content\bin\**" />
     <Compile Remove="Content\obj\**" />
-    <Compile Remove="Fix\**" />
     <EmbeddedResource Remove="Content\bin\**" />
     <EmbeddedResource Remove="Content\obj\**" />
-    <EmbeddedResource Remove="Fix\**" />
     <None Remove="Content\bin\**" />
     <None Remove="Content\obj\**" />
-    <None Remove="Fix\**" />
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
   </ItemGroup>
 
+  <!-- Add the MonoGame references. -->
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
+  </ItemGroup>
+
+  <!-- Include ProjectZ.Core which is the game data. -->
   <ItemGroup>
     <ProjectReference Include="..\ProjectZ.Core\ProjectZ.Core.csproj" />
   </ItemGroup>
 
+  <!-- Build the MonoGame "Content" folder. -->
   <ItemGroup>
     <MonoGameContentReference Include="..\ProjectZ.Core\Content\Content.mgcb">
       <OutputFolder>$(MSBuildProjectName)/$(TargetFramework)/%(Filename)</OutputFolder>
@@ -48,22 +51,13 @@
     </MonoGameContentReference>
   </ItemGroup>
 
+  <!-- Copy the "Data" folder into the output. -->
   <ItemGroup>
-    <None Include="..\ProjectZ.Core\Data\**\*" CopyToOutputDirectory="PreserveNewest" TargetPath="Data\%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
-
-  <!-- Load the editor from the Windows version: ProjectZ.Desktop. -->
-  <ItemGroup>
-    <Compile Include="..\ProjectZ.Desktop\Editor\*" Link="Editor\*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
-    <PackageReference Include="MonoGame.Extended" Version="5.4.0" />
-    <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="5.4.0" />
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
-    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.4.1" />
-    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0" />
+    <None Include="..\ProjectZ.Core\Data\**\*"
+      CopyToOutputDirectory="PreserveNewest"
+      TargetPath="Data\%(RecursiveDir)%(Filename)%(Extension)"
+      ExcludeFromSingleFile="true"
+      CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -37,5 +37,15 @@ echo Publishing Linux Arm64...
 wsl bash -c "export MGFXC_WINE_PATH=/home/bighead/.wine-mgfxc && cd /mnt/c/Users/Bighead/source/repos/Zelda-LA-DX-HD-Updated/ladxhd_game_source_code && dotnet publish ProjectZ.Linux/ProjectZ.Linux.csproj -c Release -f net8.0 -r linux-arm64 --no-restore -p:PublishProfile=FolderProfile_Linux_Arm"
 if %errorlevel% neq 0 ( echo Linux arm64 build failed! & pause & exit /b 1 )
 
-echo Done! Builds are in the Publish folder.
-pause
+echo.
+echo Cleaning up junk files...
+for /r "%~dp0~Publish" %%f in (nfd.lib nfd.pdb sosdocsunix.txt com.zelda.ladxhd.apk _Microsoft.Android.Resource.Designer.dll) do (
+  if exist "%%f" (
+    echo Deleting: %%f
+    del "%%f"
+  )
+)
+
+echo.
+echo Done! Builds are in the Publish folder. Press a key to close the window.
+pause >nul
