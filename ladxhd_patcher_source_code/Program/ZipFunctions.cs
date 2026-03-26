@@ -177,21 +177,5 @@ namespace LADXHD_Patcher
                 CreateNoWindow = true
             });
         }
-
-        public static void ExtractLinuxFiles()
-        {
-            // The files are different depending on Linux CPU.
-            string zipName = Config.SelectedPlatform == Platform.Linux_x86 
-                ? "linux_x86_files.zip" 
-                : "linux_arm64_files.zip";
-
-            // Set the patches and zipfile paths.
-            string zipFilePath = Path.Combine(Config.TempFolder, zipName);
-
-            // Write the zipfile, extract it, then delete it.
-            File.WriteAllBytes(zipFilePath, (byte[])resources[zipName]);
-            ZipFile.ExtractToDirectory(zipFilePath, Config.BaseFolder);
-            zipFilePath.RemovePath();
-        }
     }
 }

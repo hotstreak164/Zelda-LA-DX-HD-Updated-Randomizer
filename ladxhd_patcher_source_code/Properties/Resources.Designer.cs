@@ -143,26 +143,6 @@ namespace LADXHD_Patcher {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] linux_arm64_files_zip {
-            get {
-                object obj = ResourceManager.GetObject("linux_arm64_files.zip", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] linux_x86_files_zip {
-            get {
-                object obj = ResourceManager.GetObject("linux_x86_files.zip", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] patches_android_zip {
             get {
                 object obj = ResourceManager.GetObject("patches_android.zip", resourceCulture);

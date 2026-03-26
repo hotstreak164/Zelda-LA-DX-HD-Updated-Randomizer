@@ -166,14 +166,6 @@
     <value>..\Resources\patches_linux_arm64.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>ZIP Archive</comment>
   </data>
-  <data name="linux_arm64_files.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\linux_arm64_files.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    <comment>ZIP Archive</comment>
-  </data>
-  <data name="linux_x86_files.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\linux_x86_files.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    <comment>ZIP Archive</comment>
-  </data>
   <data name="android_buttons.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\android_buttons.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>ZIP Archive</comment>
