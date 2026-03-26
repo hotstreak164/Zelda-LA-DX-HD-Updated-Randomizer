@@ -43,7 +43,7 @@ namespace ProjectZ.InGame.Things
         public static string UserDataRoot { get; private set; } = AppContext.BaseDirectory;
         public static void SetUserDataRoot(string root) { UserDataRoot = root; }
 
-        public static string AppDataFolder = Environment.ExpandEnvironmentVariables("%LocalAppData%");
+        public static string AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static string PathSaveFolder => SaveManager.GetSaveFilePath();
 
         public static string PathDataFolder = "Data";
