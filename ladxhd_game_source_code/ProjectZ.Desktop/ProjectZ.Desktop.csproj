@@ -75,4 +75,16 @@
       TargetPath="SDL2.dll" />
   </ItemGroup>
 
+  <!-- Workaround: these two font files are not picked up correctly during publish. -->
+  <ItemGroup>
+    <None Include="$(MSBuildProjectDirectory)\$(OutputPath)Content\Fonts\smallFont_chn_0.xnb"
+      ExcludeFromSingleFile="true"
+      CopyToPublishDirectory="PreserveNewest"
+      TargetPath="Content\Fonts\smallFont_chn_0.xnb" />
+    <None Include="$(MSBuildProjectDirectory)\$(OutputPath)Content\Fonts\smallFont_chn_redux_0.xnb"
+      ExcludeFromSingleFile="true"
+      CopyToPublishDirectory="PreserveNewest"
+      TargetPath="Content\Fonts\smallFont_chn_redux_0.xnb" />
+  </ItemGroup>
+
 </Project>
