@@ -277,8 +277,6 @@ namespace LADXHD_Patcher
             {
                 case Platform.Windows:     { CreateModFolders(); break; }
                 case Platform.Android:     { ZipFunctions.ExtractAndroidIcons(); GenerateAPKFile(); break; }
-                case Platform.Linux_x86:   { CreateModFolders(); ZipFunctions.ExtractLinuxFiles(); break; }
-                case Platform.Linux_Arm64: { CreateModFolders(); ZipFunctions.ExtractLinuxFiles(); break; }
             }
         }
 
