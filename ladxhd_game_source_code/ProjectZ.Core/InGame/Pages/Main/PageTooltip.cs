@@ -98,27 +98,8 @@ namespace ProjectZ.InGame.Interface
             }
         }
 
-        private static void FindCrashChars(string text)
-        {
-            // Split the entire string into a character array.
-            var chars = text.ToCharArray();
-
-            // Loop through the character array.
-            foreach (char c in chars)
-            {
-                // Write the current character.
-                System.Diagnostics.Debug.WriteLine(c);
-
-                // Try to measure it. If this crashes, the last character printed out is what crashed the game.
-                float lineWidth = GameFS.MeasureString(c.ToString()).X * Game1.UiScale;
-            }
-        }
-
         private static List<string> WrapText(string text, float maxLineWidth)
         {
-            // Debug function to find characters in the tooltip that crash.
-            // FindCrashChars(font, text);
-
             // A list to hold the lines and a reference to the current line.
             List<string> lines = new List<string>();
             string currentLine = "";
