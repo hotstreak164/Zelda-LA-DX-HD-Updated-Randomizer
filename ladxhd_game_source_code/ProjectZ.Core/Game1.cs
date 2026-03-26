@@ -158,15 +158,15 @@ namespace ProjectZ
         {
             get
             {
-            #if ANDROID
-                if (Instance?.GraphicsDevice != null)
-                {
-                    var pp = Instance.GraphicsDevice.PresentationParameters;
-                    if (pp.BackBufferWidth > 0 && pp.BackBufferHeight > 0 && WindowWidth > 0 && WindowHeight > 0)
-                        return Matrix.CreateScale((float)pp.BackBufferWidth  / WindowWidth, (float)pp.BackBufferHeight / WindowHeight, 1f);
-                }
-            #endif
-                return Matrix.CreateScale((float)Graphics.PreferredBackBufferWidth / WindowWidth, (float)Graphics.PreferredBackBufferHeight / WindowHeight, 1f);
+                var gd = Instance?.GraphicsDevice;
+                if (gd == null || WindowWidth <= 0 || WindowHeight <= 0)
+                    return Matrix.Identity;
+
+                // Viewport represents the actual usable physical pixels (e.g. safe area on devices with a "notch")
+                var viewport = gd.Viewport;
+                return Matrix.CreateScale(
+                    (float)viewport.Width / WindowWidth,
+                    (float)viewport.Height / WindowHeight, 1f);
             }
         }
         // lahdmod values
