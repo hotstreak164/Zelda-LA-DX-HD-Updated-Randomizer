@@ -9,8 +9,8 @@ using ProjectZ.Base.UI;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
-#if WINDOWS
-using System.Windows.Forms;
+#if !ANDROID
+using NativeFileDialogSharp;
 #endif
 
 namespace ProjectZ.Editor
@@ -166,17 +166,12 @@ namespace ProjectZ.Editor
 
         public void LoadMaps()
         {
-#if WINDOWS
-            var openFileDialog = new OpenFileDialog
-            {
-                Filter = "Map file (*.map)|*.map",
-                Multiselect = true
-            };
+        #if !ANDROID
+            var result = Dialog.FileOpenMultiple("map");
+            if (!result.IsOk)
+                return;
 
-            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-
-            // add the selected maps
-            foreach (var fileName in openFileDialog.FileNames)
+            foreach (var fileName in result.Paths)
                 AddMap(fileName);
 
             _outputHeight = (int)Math.Ceiling(_tileSetData.Count / (float)_outputWidth);
@@ -185,24 +180,21 @@ namespace ProjectZ.Editor
             _tileSetData.Sort();
 
             RemapTiles();
-#endif
+        #endif
         }
 
         public void SaveChanges()
         {
-#if WINDOWS
-            var saveFileDialog = new SaveFileDialog()
-            {
-                Filter = "Map file (*.png)|*.png"
-            };
+        #if !ANDROID
+            var result = Dialog.FileSave("png");
+            if (!result.IsOk)
+                return;
 
-            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
-
-            var filePath = saveFileDialog.FileName;
+            var filePath = result.Path;
             var fileName = Path.GetFileName(filePath);
 
             // save the tileset
-            SaveTileset(saveFileDialog.FileName);
+            SaveTileset(filePath);
 
             // save the changes to the map
             foreach (var map in _loadedMaps)
@@ -212,7 +204,7 @@ namespace ProjectZ.Editor
                 // save the map to the original path
                 SaveLoadMap.SaveMapFile(map.FilePath, map.Map);
             }
-#endif
+        #endif
         }
 
         public void SaveTileset(string path)

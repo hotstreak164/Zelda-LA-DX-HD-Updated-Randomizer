@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>ProjectZ.Core</AssemblyName>
@@ -16,7 +17,14 @@
     <TargetFrameworks>net8.0-windows;net8.0;net8.0-android</TargetFrameworks>
   </PropertyGroup>
 
-  <!-- Windows DirectX -->
+  <!-- Global: All Projects -->
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Extended" Version="5.4.0" />
+    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0"
+                      Condition="'$(TargetFramework)' != 'net8.0-android'" />
+  </ItemGroup>
+  
+  <!-- Windows: DirectX -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
     <UseWindowsForms>true</UseWindowsForms>
     <DefineConstants>$(DefineConstants);WINDOWS;DIRECTX</DefineConstants>
@@ -26,7 +34,7 @@
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />
   </ItemGroup>
   
-  <!-- Windows OpenGL (net8.0 built on Windows) -->
+  <!-- Windows: OpenGL -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' and $([MSBuild]::IsOSPlatform('Windows'))">
     <DefineConstants>$(DefineConstants);WINDOWS;DESKTOPGL</DefineConstants>
   </PropertyGroup>
@@ -44,12 +52,9 @@
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
   </ItemGroup>
   
-  <!-- Linux (net8.0 built on Linux) -->
+  <!-- Linux -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' and $([MSBuild]::IsOSPlatform('Linux'))">
     <DefineConstants>$(DefineConstants);LINUX;DESKTOPGL</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MonoGame.Extended" Version="5.4.0" />
-  </ItemGroup>
 </Project>

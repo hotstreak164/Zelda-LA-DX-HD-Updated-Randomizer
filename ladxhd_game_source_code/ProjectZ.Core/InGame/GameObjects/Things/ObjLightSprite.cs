@@ -37,7 +37,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             if (_sprite == null)
             {
-                Console.WriteLine("Could not find spriteId: " + spriteId);
+                System.Diagnostics.Debug.WriteLine("Could not find spriteId: " + spriteId);
                 IsDead = true;
                 return;
             }

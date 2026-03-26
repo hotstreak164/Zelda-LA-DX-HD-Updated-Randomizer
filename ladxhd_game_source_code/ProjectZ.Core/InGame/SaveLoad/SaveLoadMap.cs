@@ -4,8 +4,8 @@ using System.IO;
 using ProjectZ.InGame.GameObjects;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Things;
-#if DIRECTX
-    using System.Windows.Forms;
+#if !ANDROID
+using NativeFileDialogSharp;
 #endif
 
 namespace ProjectZ.InGame.SaveLoad
@@ -14,19 +14,15 @@ namespace ProjectZ.InGame.SaveLoad
     {
         public static void LoadMap(Map.Map map)
         {
-#if DIRECTX
-            var openFileDialog = new OpenFileDialog
-            {
-                Filter = "Map files (*.map)|*.map",
-                InitialDirectory = Path.GetFullPath(Path.GetDirectoryName(map.MapFileName)),
-                RestoreDirectory = true,
-            };
+        #if !ANDROID
+            var defaultPath = string.IsNullOrEmpty(map.MapFileName)
+                ? null
+                : Path.GetDirectoryName(Path.GetFullPath(map.MapFileName));
 
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-
-            EditorLoadMap(openFileDialog.FileName, map);
-#endif
+            var result = Dialog.FileOpen("map", defaultPath);
+            if (result.IsOk)
+                EditorLoadMap(result.Path, map);
+        #endif
         }
 
         public static void EditorLoadMap(string filePath, Map.Map map)
@@ -45,18 +41,15 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static void SaveMapDialog(Map.Map map)
         {
-#if DIRECTX
-            var openFileDialog = new SaveFileDialog
-            {
-                FileName = Path.GetFileName(map.MapFileName),
-                InitialDirectory = Path.GetFullPath(Path.GetDirectoryName(map.MapFileName)),
-                RestoreDirectory = true,
-                Filter = "Map File (*.map)|*.map"
-            };
+        #if !ANDROID
+            var defaultPath = string.IsNullOrEmpty(map.MapFileName)
+                ? null
+                : Path.GetDirectoryName(Path.GetFullPath(map.MapFileName));
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-                SaveMapFile(openFileDialog.FileName, map);
-#endif
+            var result = Dialog.FileSave("map", defaultPath);
+            if (result.IsOk)
+                SaveMapFile(result.Path, map);
+        #endif
         }
 
         public static void SaveMap(Map.Map map)
@@ -67,49 +60,43 @@ namespace ProjectZ.InGame.SaveLoad
         // this function is used to update the file format of existing maps
         public static void UpdateMaps()
         {
-#if DIRECTX
-            var openFileDialog = new OpenFileDialog()
-            {
-                Filter = "Map files (*.map)|*.map",
-                Multiselect = true
-            };
-
-            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+        #if !ANDROID
+            var result = Dialog.FileOpenMultiple("map");
+            if (!result.IsOk)
+                return;
 
             var newMap = new Map.Map();
 
-            foreach (var fileName in openFileDialog.FileNames)
+            foreach (var fileName in result.Paths)
             {
                 // load the map file
                 LoadMapFile(fileName, newMap);
                 // save the map file
                 SaveMapFile(fileName, newMap);
             }
-#endif
+        #endif
         }
 
         public static void ImportTilemap()
         {
-#if DIRECTX
-            var openFileDialog = new OpenFileDialog
-            {
-                Filter = "Text files (*.txt)|*.txt"
-            };
-
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
+        #if !ANDROID
+            var result = Dialog.FileOpen("txt");
+            if (!result.IsOk)
                 return;
 
-            var reader = new StreamReader(openFileDialog.FileName);
+            var filePath = result.Path;
+            var reader = new StreamReader(filePath);
 
-            var tilesetName = Path.GetFileName(openFileDialog.FileName).Replace(".txt", "") + ".png";
+            var tilesetName = Path.GetFileName(filePath).Replace(".txt", "") + ".png";
 
             var mapWidth = Convert.ToInt32(reader.ReadLine());
             var mapDepth = 3;
 
             var mapHeight = Convert.ToInt32(reader.ReadLine());
+
             // create a new map
             Game1.GameManager.MapManager.CurrentMap = Map.Map.CreateEmptyMap();
-            Game1.GameManager.MapManager.CurrentMap.MapFileName = openFileDialog.FileName.Replace(".txt", ".map");
+            Game1.GameManager.MapManager.CurrentMap.MapFileName = filePath.Replace(".txt", ".map");
             Game1.GameManager.MapManager.CurrentMap.TileMap.TilesetPath = tilesetName;
 
             Game1.GameManager.MapManager.CurrentMap.Objects.SpawnObject(MapManager.ObjLink);
@@ -148,7 +135,7 @@ namespace ProjectZ.InGame.SaveLoad
                         Game1.GameManager.MapManager.CurrentMap.TileMap.ArrayTileMap[x, y, z] = -1;
 
             Game1.GameManager.MapManager.CurrentMap.DigMap = new string[mapWidth, mapHeight];
-#endif
+        #endif
         }
 
         public static void SaveMapFile(string savePath, Map.Map map)

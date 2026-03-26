@@ -8,6 +8,9 @@ using ProjectZ.Base;
 using ProjectZ.Base.UI;
 using ProjectZ.InGame.Screens;
 using ProjectZ.InGame.Things;
+#if !ANDROID
+using NativeFileDialogSharp;
+#endif
 
 namespace ProjectZ.Editor
 {
@@ -260,34 +263,26 @@ namespace ProjectZ.Editor
 
         private void Button_LoadImage(UiElement element)
         {
-#if WINDOWS
-            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog.Filter = "(*.png)|*.png";
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        #if !ANDROID
+            var result = Dialog.FileOpen("png");
+            if (!result.IsOk)
+                return;
+
+            var path = result.Path;
+
+            try
             {
-                var path = openFileDialog.FileName;
-
-                //try to load the texture
-                try
-                {
-                    Resources.LoadTexture(out _inputTexture, path);
-
-                    // get the file name
-                    var info = new FileInfo(path);
-                    _imageName = info.Name.Replace(".png", "");
-
-                }
-                catch { }
-
-                //could not load the texture
-                if (_inputTexture == null)
-                    return;
-
-                _tileMap = TileTexture();
-
-                LoadOutput();
+                Resources.LoadTexture(out _inputTexture, path);
+                _imageName = Path.GetFileNameWithoutExtension(path);
             }
-#endif
+            catch { }
+
+            if (_inputTexture == null)
+                return;
+
+            _tileMap = TileTexture();
+            LoadOutput();
+        #endif
         }
 
         private int[,,] TileTexture()
@@ -478,55 +473,39 @@ namespace ProjectZ.Editor
 
         public void ButtonSaveTileset(UiElement element)
         {
-#if WINDOWS
-            string filePath;
-
-            var openFileDialog = new System.Windows.Forms.SaveFileDialog();
-            openFileDialog.Filter = "png files (*.png)|*.png|All files (*.*)|*.*";
-            openFileDialog.FileName = _imageName;
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                filePath = openFileDialog.FileName;
-            else
+        #if !ANDROID
+            var result = Dialog.FileSave("png");
+            if (!result.IsOk)
                 return;
 
-            // save the map
-            var saveFile = File.Create(filePath);
+            var saveFile = File.Create(result.Path);
             _outputTexture.SaveAsPng(saveFile, _outputTexture.Width, _outputTexture.Height);
             saveFile.Close();
-#endif
+        #endif
         }
 
         public void ButtonSaveRemoveTileset(UiElement element)
         {
-#if WINDOWS
-            string filePath;
-
-            var openFileDialog = new System.Windows.Forms.SaveFileDialog();
-            openFileDialog.Filter = "png files (*.png)|*.png|All files (*.*)|*.*";
-            openFileDialog.FileName = _imageName + "Deleted";
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                filePath = openFileDialog.FileName;
-            else
+        #if !ANDROID
+            var result = Dialog.FileSave("png");
+            if (!result.IsOk)
                 return;
 
-            // save the map
-            var saveFile = File.Create(filePath);
+            var saveFile = File.Create(result.Path);
             _outputTextureRemoved.SaveAsPng(saveFile, _outputTextureRemoved.Width, _outputTextureRemoved.Height);
             saveFile.Close();
-#endif
+        #endif
         }
 
         public void ButtonSaveTilemap(UiElement element)
         {
-#if WINDOWS
-            // open save dialog
-            var openFileDialog = new System.Windows.Forms.SaveFileDialog();
-            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            openFileDialog.FileName = _imageName;
+        #if !ANDROID
+            var result = Dialog.FileSave("txt");
+            if (!result.IsOk)
+                return;
 
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                SaveTilemap(openFileDialog.FileName);
-#endif
+            SaveTilemap(result.Path);
+        #endif
         }
 
         private void SaveTilemap(string path)

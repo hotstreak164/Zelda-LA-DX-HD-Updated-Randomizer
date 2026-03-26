@@ -24,8 +24,6 @@ namespace ProjectZ.InGame.Map
         public float RoundX => (int)Math.Round(Location.X + RoundedShakeX * Scale, MidpointRounding.AwayFromZero);
         public float RoundY => (int)Math.Round(Location.Y + RoundedShakeY * Scale, MidpointRounding.AwayFromZero);
 
-        private static bool IsFinite(float v) => !(float.IsNaN(v) || float.IsInfinity(v));
-
         public Matrix TransformMatrix
         {
             get

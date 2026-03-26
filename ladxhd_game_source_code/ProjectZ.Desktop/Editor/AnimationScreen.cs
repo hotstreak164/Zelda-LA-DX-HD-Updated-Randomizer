@@ -8,8 +8,8 @@ using ProjectZ.Base.UI;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
-#if WINDOWS
-using System.Windows.Forms;
+#if !ANDROID
+using NativeFileDialogSharp;
 #endif
 
 namespace ProjectZ.Editor
@@ -599,22 +599,13 @@ namespace ProjectZ.Editor
 
         public void SaveAnimationDialog()
         {
-#if WINDOWS
-            var saveFileDialog = new SaveFileDialog()
-            {
-                RestoreDirectory = true,
-                Filter = "animator files (*.ani)|*.ani",
-            };
+        #if !ANDROID
+            var defaultPath = _lastFileName != null ? Path.GetDirectoryName(Path.GetFullPath(_lastFileName)) : null;
 
-            if (_lastFileName != null)
-            {
-                saveFileDialog.FileName = Path.GetFileName(_lastFileName);
-                saveFileDialog.InitialDirectory = Path.GetFullPath(Path.GetDirectoryName(_lastFileName));
-            }
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                AnimatorSaveLoad.SaveAnimator(saveFileDialog.FileName, _animator);
-#endif
+            var result = Dialog.FileSave("ani", defaultPath);
+            if (result.IsOk)
+                AnimatorSaveLoad.SaveAnimator(result.Path, _animator);
+        #endif
         }
 
         public void SaveAnimation()
@@ -624,17 +615,13 @@ namespace ProjectZ.Editor
 
         public void LoadAnimation()
         {
-#if WINDOWS
-            var openFileDialog = new OpenFileDialog()
-            {
-                Filter = "animator files (*.ani)|*.ani"
-            };
-
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
+        #if !ANDROID
+            var result = Dialog.FileOpen("ani");
+            if (!result.IsOk)
                 return;
 
-            EditorLoadAnimation(openFileDialog.FileName);
-#endif
+            EditorLoadAnimation(result.Path);
+        #endif
         }
 
         public void EditorLoadAnimation(string filePath)
@@ -650,59 +637,46 @@ namespace ProjectZ.Editor
 
         private void LoadOverlayAnimation()
         {
-#if WINDOWS
-            var openFileDialog = new OpenFileDialog()
-            {
-                Filter = "animator files (*.ani)|*.ani"
-            };
+        #if !ANDROID
+            var result = Dialog.FileOpen("ani");
+            if (!result.IsOk)
+                return;
 
-            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-
-            _overlayAnimator = AnimatorSaveLoad.LoadAnimatorFile(openFileDialog.FileName);
-#endif
+            _overlayAnimator = AnimatorSaveLoad.LoadAnimatorFile(result.Path);
+        #endif
         }
 
         public void UpdateAnimations()
         {
-#if WINDOWS
-            var openFileDialog = new OpenFileDialog()
-            {
-                Filter = "animator files (*.ani)|*.ani",
-                Multiselect = true
-            };
+        #if !ANDROID
+            var result = Dialog.FileOpenMultiple("ani");
+            if (!result.IsOk)
+                return;
 
-            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-
-            foreach (var fileName in openFileDialog.FileNames)
+            foreach (var fileName in result.Paths)
             {
                 _animator = AnimatorSaveLoad.LoadAnimatorFile(fileName);
                 AnimatorSaveLoad.SaveAnimator(fileName, _animator);
             }
-#endif
+        #endif
         }
 
         public void LoadImage()
         {
-#if WINDOWS
-            var openFileDialog = new OpenFileDialog()
-            {
-                Filter = "png files (*.png)|*.png"
-            };
-
-            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+        #if !ANDROID
+            var result = Dialog.FileOpen("png");
+            if (!result.IsOk)
+                return;
 
             try
             {
-                using (var stream = File.OpenRead(openFileDialog.FileName))
-                {
-                    _sprAnimator = Texture2D.FromStream(Game1.Graphics.GraphicsDevice, stream);
-                    _sprPath = Path.GetFileName(openFileDialog.FileName);
-                    _animator.SpritePath = _sprPath;
-                }
+                using var stream = File.OpenRead(result.Path);
+                _sprAnimator = Texture2D.FromStream(Game1.Graphics.GraphicsDevice, stream);
+                _sprPath = Path.GetFileName(result.Path);
+                _animator.SpritePath = _sprPath;
             }
             catch { }
-#endif
+        #endif
         }
-
     }
 }

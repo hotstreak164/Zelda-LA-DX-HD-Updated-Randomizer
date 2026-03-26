@@ -58,7 +58,7 @@ namespace ProjectZ.InGame.GameObjects.Effects
 
             if (Animator == null)
             {
-                Console.WriteLine("Error: could not load animation \"{0}\"", animatorName);
+                System.Diagnostics.Debug.WriteLine("Error: could not load animation \"{0}\"", animatorName);
                 IsDead = true;
                 return;
             }

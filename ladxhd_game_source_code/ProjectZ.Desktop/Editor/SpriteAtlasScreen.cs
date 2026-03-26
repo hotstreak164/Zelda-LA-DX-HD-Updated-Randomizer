@@ -10,8 +10,8 @@ using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
-#if WINDOWS
-using System.Windows.Forms;
+#if !ANDROID
+using NativeFileDialogSharp;
 #endif
 
 namespace ProjectZ.Editor
@@ -498,17 +498,13 @@ namespace ProjectZ.Editor
 
         private void LoadSprite()
         {
-#if WINDOWS
-            var openFileDialog = new OpenFileDialog()
-            {
-                Filter = "sprite file (*.png)|*.png"
-            };
-
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
+        #if !ANDROID
+            var result = Dialog.FileOpen("png");
+            if (!result.IsOk)
                 return;
 
-            LoadSpriteEditor(openFileDialog.FileName);
-#endif
+            LoadSpriteEditor(result.Path);
+        #endif
         }
 
         public void LoadSpriteEditor(string filePath)
@@ -553,22 +549,13 @@ namespace ProjectZ.Editor
 
         private void SaveSpriteAtlasDialog()
         {
-#if WINDOWS
-            var saveFileDialog = new SaveFileDialog()
-            {
-                RestoreDirectory = true,
-                Filter = "sprite file (*.png)|*.png",
-            };
+        #if !ANDROID
+            var defaultPath = _lastFileName != null ? Path.GetDirectoryName(Path.GetFullPath(_lastFileName)) : null;
 
-            if (_lastFileName != null)
-            {
-                saveFileDialog.FileName = Path.GetFileName(_lastFileName);
-                saveFileDialog.InitialDirectory = Path.GetFullPath(Path.GetDirectoryName(_lastFileName));
-            }
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                SaveSpriteAtlas(saveFileDialog.FileName);
-#endif
+            var result = Dialog.FileSave("png", defaultPath);
+            if (result.IsOk)
+                SaveSpriteAtlas(result.Path);
+        #endif
         }
 
         private void SaveSpriteAtlas(string filePath)

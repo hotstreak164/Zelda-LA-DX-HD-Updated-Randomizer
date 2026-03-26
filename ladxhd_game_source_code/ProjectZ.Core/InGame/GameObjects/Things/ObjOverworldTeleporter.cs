@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             _teleporterId = teleporterId;
             if (_teleporterId < 0)
-                Console.WriteLine("Error: teleporter id needs to be bigger than -1");
+                System.Diagnostics.Debug.WriteLine("Error: teleporter id needs to be bigger than -1");
 
             _field = Map.GetField(posX, posY);
 
