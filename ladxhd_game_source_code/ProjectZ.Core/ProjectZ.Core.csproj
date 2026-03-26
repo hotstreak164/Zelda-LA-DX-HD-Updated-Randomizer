@@ -15,8 +15,9 @@
   </PropertyGroup>
 
   <!-- Overrides the default target frameworks when building on Windows. -->
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <TargetFrameworks>net8.0-windows;net8.0;net8.0-android</TargetFrameworks>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net8.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net8.0-windows</TargetFrameworks>
   </PropertyGroup>
 
   <!-- Global: Packages to include in all projects. -->
