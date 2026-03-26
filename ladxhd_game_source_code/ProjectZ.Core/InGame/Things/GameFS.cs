@@ -64,11 +64,11 @@ namespace ProjectZ.InGame.Things
             if (string.IsNullOrEmpty(path))
                 return string.Empty;
 
-    #if WINDOWS
+        #if WINDOWS
             return path.Replace('/', '\\');
-    #else
+        #else
             return path.Replace('\\', '/');
-    #endif
+        #endif
         }
 
         /// <summary>
@@ -79,17 +79,17 @@ namespace ProjectZ.InGame.Things
         {
             path = NormalizePath(path).TrimStart('/', '\\');
 
-    #if WINDOWS
+        #if WINDOWS
             return path.StartsWith("Data\\", StringComparison.OrdinalIgnoreCase) ||
                    path.Equals("Data", StringComparison.OrdinalIgnoreCase) ||
                    path.StartsWith("Content\\", StringComparison.OrdinalIgnoreCase) ||
                    path.Equals("Content", StringComparison.OrdinalIgnoreCase);
-    #else
+        #else
             return path.StartsWith("Data/", StringComparison.OrdinalIgnoreCase) ||
                    path.Equals("Data", StringComparison.OrdinalIgnoreCase) ||
                    path.StartsWith("Content/", StringComparison.OrdinalIgnoreCase) ||
                    path.Equals("Content", StringComparison.OrdinalIgnoreCase);
-    #endif
+        #endif
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace ProjectZ.InGame.Things
 
             if (IsRealFileSystemPath(path))
             {
-    #if WINDOWS
+            #if WINDOWS
                 int dataIdx = path.IndexOf("\\Data\\", StringComparison.OrdinalIgnoreCase);
                 if (dataIdx >= 0)
                     return path.Substring(dataIdx + 1);
@@ -132,7 +132,7 @@ namespace ProjectZ.InGame.Things
                     return path.Substring(contentIdx + 1);
 
                 return path;
-    #else
+            #else
                 int dataIdx = path.IndexOf("/Data/", StringComparison.OrdinalIgnoreCase);
                 if (dataIdx >= 0)
                     return path.Substring(dataIdx + 1);
@@ -142,16 +142,13 @@ namespace ProjectZ.InGame.Things
                     return path.Substring(contentIdx + 1);
 
                 return path;
-    #endif
+            #endif
             }
-            path = path.TrimStart('/', '\\');
 
-            if (IsPackagedAssetPath(path))
-                return path;
-
-            return path;
+            return path.TrimStart('/', '\\'); // ← was a dead if/else, both branches returned path
         }
 
+        #if !ANDROID
         /// <summary>
         /// Converts a packaged asset path like "Data/..." or "Content/..." into an on-disk path rooted at BaseDirectory.
         /// Only use this for packaged asset paths on desktop.
@@ -165,13 +162,14 @@ namespace ProjectZ.InGame.Things
 
             path = path.TrimStart('/', '\\');
 
-    #if WINDOWS
+        #if WINDOWS
             var parts = path.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
-    #else
+        #else
             var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-    #endif
+        #endif
             return Path.GetFullPath(Path.Combine(new[] { BaseDir }.Concat(parts).ToArray()));
         }
+        #endif
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------
         //
@@ -321,9 +319,25 @@ namespace ProjectZ.InGame.Things
             dir = ToAssetPath(dir);
 
         #if ANDROID
-            // AssetManager can't directly distinguish files from directories reliably.
-            // A directory generally returns child entries; files return empty.
-            return List(dir).Length > 0;
+            // AssetManager.List() returns empty for both empty directories AND files,
+            // so we can't rely on it alone. Instead, try to open the path as a stream:
+            // files succeed, directories throw. Fall back to List() only if open fails,
+            // because a failed open could also mean the path simply doesn't exist.
+            AssetManager am = Android.App.Application.Context.Assets;
+
+            try
+            {
+                // Opened as a file successfully → not a directory.
+                using var stream = am.Open(dir);
+                return false;
+            }
+            catch
+            {
+                // Could be a directory, or could be a missing path entirely.
+                // List() returning non-null (even empty) confirms it's a known directory.
+                var entries = am.List(dir);
+                return entries != null;
+            }
         #else
             return Directory.Exists(ToDiskPath(dir));
         #endif
@@ -401,8 +415,14 @@ namespace ProjectZ.InGame.Things
         #endif
         }
 
-        private static IEnumerable<string> EnumerateRealFilesRecursive(string dir, Func<string, bool> acceptFile, Func<string, bool> skipDirectory)
+        private static IEnumerable<string> EnumerateRealFilesRecursive(string dir, Func<string, bool> acceptFile, Func<string, bool> skipDirectory, HashSet<string> visited = null)
         {
+            visited ??= new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            string realDir = Path.GetFullPath(dir);
+            if (!visited.Add(realDir))
+                yield break;
+
             foreach (var entry in Directory.EnumerateFileSystemEntries(dir, "*", SearchOption.TopDirectoryOnly))
             {
                 var name = Path.GetFileName(entry);
@@ -413,7 +433,7 @@ namespace ProjectZ.InGame.Things
                     if (skipDirectory != null && skipDirectory(name))
                         continue;
 
-                    foreach (var sub in EnumerateRealFilesRecursive(entry, acceptFile, skipDirectory))
+                    foreach (var sub in EnumerateRealFilesRecursive(entry, acceptFile, skipDirectory, visited))
                         yield return sub;
 
                     continue;
@@ -523,8 +543,16 @@ namespace ProjectZ.InGame.Things
                 yield return subDir;
         #endif
         }
-        private static IEnumerable<string> EnumerateRealDirectoriesRecursive(string dir, Func<string, bool> acceptDirectory, Func<string, bool> skipDirectory)
+
+        private static IEnumerable<string> EnumerateRealDirectoriesRecursive(string dir, Func<string, bool> acceptDirectory, Func<string, bool> skipDirectory, HashSet<string> visited = null)
         {
+            visited ??= new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            // Resolve the real path to catch symlinks pointing to already visited dirs
+            string realDir = Path.GetFullPath(dir);
+            if (!visited.Add(realDir))
+                yield break;
+
             foreach (var subDir in Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly))
             {
                 var name = Path.GetFileName(subDir);
@@ -535,7 +563,7 @@ namespace ProjectZ.InGame.Things
                 if (acceptDirectory == null || acceptDirectory(name))
                     yield return NormalizePath(subDir);
 
-                foreach (var sub in EnumerateRealDirectoriesRecursive(subDir, acceptDirectory, skipDirectory))
+                foreach (var sub in EnumerateRealDirectoriesRecursive(subDir, acceptDirectory, skipDirectory, visited))
                     yield return sub;
             }
         }
