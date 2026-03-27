@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Main configuration. -->
+  <PropertyGroup>
+    <AssemblyName>Link's Awakening DX HD</AssemblyName>
+    <Version>1.6.9</Version>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <RuntimeIdentifiers>osx-arm64;osx-x64</RuntimeIdentifiers>
+    <StartupObject>ProjectZ.Program</StartupObject>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ProjectZ</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>true</TieredCompilation>
+  </PropertyGroup>
+
+  <!-- Include the editor from the Windows source. -->
+  <ItemGroup>
+    <Compile Include="..\ProjectZ.Desktop\Editor\*" Link="Editor\*" />
+  </ItemGroup>
+
+  <!-- Exclude MonoGame content pipeline build folders from the project. -->
+  <ItemGroup>
+    <Compile Remove="Content\bin\**" />
+    <Compile Remove="Content\obj\**" />
+    <EmbeddedResource Remove="Content\bin\**" />
+    <EmbeddedResource Remove="Content\obj\**" />
+    <None Remove="Content\bin\**" />
+    <None Remove="Content\obj\**" />
+    <None Remove=".gitignore" />
+    <None Remove=".gitmodules" />
+  </ItemGroup>
+
+  <!-- Add the MonoGame references. -->
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
+  </ItemGroup>
+
+  <!-- Include ProjectZ.Core which is the game data. -->
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectZ.Core\ProjectZ.Core.csproj" />
+  </ItemGroup>
+
+  <!-- Build the MonoGame "Content" folder. -->
+  <ItemGroup>
+    <MonoGameContentReference Include="..\ProjectZ.Core\Content\Content.mgcb">
+      <OutputFolder>$(MSBuildProjectName)/$(TargetFramework)/%(Filename)</OutputFolder>
+      <OutputFolder Condition="'$(RuntimeIdentifier)' != ''">$(MSBuildProjectName)/$(TargetFramework)/$(RuntimeIdentifier)/%(Filename)</OutputFolder>
+    </MonoGameContentReference>
+  </ItemGroup>
+
+  <!-- Copy the "Data" folder into the output. -->
+  <ItemGroup>
+    <None Include="..\ProjectZ.Core\Data\**\*"
+      CopyToOutputDirectory="PreserveNewest"
+      TargetPath="Data\%(RecursiveDir)%(Filename)%(Extension)"
+      ExcludeFromSingleFile="true"
+      CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

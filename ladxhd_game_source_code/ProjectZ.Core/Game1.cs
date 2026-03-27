@@ -22,6 +22,8 @@ namespace ProjectZ
     {
     #if WINDOWS
         private const string SDL_LIB = "SDL2.dll";
+    #elif OSX
+        private const string SDL_LIB = "libSDL2-2.0.0";
     #else
         private const string SDL_LIB = "libSDL2-2.0.so.0";
     #endif

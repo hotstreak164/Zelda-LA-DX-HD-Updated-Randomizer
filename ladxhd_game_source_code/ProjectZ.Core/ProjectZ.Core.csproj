@@ -64,4 +64,9 @@
     <DefineConstants>$(DefineConstants);LINUX;DESKTOPGL</DefineConstants>
   </PropertyGroup>
 
+  <!-- MacOS -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' and $([MSBuild]::IsOSPlatform('OSX'))">
+    <DefineConstants>$(DefineConstants);OSX;DESKTOPGL</DefineConstants>
+  </PropertyGroup>
+
 </Project>
