@@ -339,7 +339,7 @@ namespace ProjectZ.InGame.Things
                 // Could be a directory, or could be a missing path entirely.
                 // List() returning non-null (even empty) confirms it's a known directory.
                 var entries = am.List(dir);
-                return entries != null;
+                return entries != null && entries.Length > 0;
             }
         #else
             return Directory.Exists(ToDiskPath(dir));
@@ -421,15 +421,23 @@ namespace ProjectZ.InGame.Things
         private static IEnumerable<string> EnumerateRealFilesRecursive(string dir, Func<string, bool> acceptFile, Func<string, bool> skipDirectory, HashSet<string> visited = null)
         {
             visited ??= new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            string realDir;
+            try
+            {
+                realDir = new DirectoryInfo(dir).ResolveLinkTarget(returnFinalTarget: true)?.FullName ?? Path.GetFullPath(dir);
+            }
+            catch
+            {
+                realDir = Path.GetFullPath(dir);
+            }
 
-            string realDir = Path.GetFullPath(dir);
             if (!visited.Add(realDir))
                 yield break;
 
             foreach (var entry in Directory.EnumerateFileSystemEntries(dir, "*", SearchOption.TopDirectoryOnly))
             {
                 var name = Path.GetFileName(entry);
-                var isDir = (File.GetAttributes(entry) & FileAttributes.Directory) != 0;
+                var isDir = Directory.Exists(entry);
 
                 if (isDir)
                 {
@@ -441,7 +449,6 @@ namespace ProjectZ.InGame.Things
 
                     continue;
                 }
-
                 if (acceptFile == null || acceptFile(name))
                     yield return NormalizePath(entry);
             }
@@ -551,8 +558,18 @@ namespace ProjectZ.InGame.Things
         {
             visited ??= new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            // Resolve the real path to catch symlinks pointing to already visited dirs
-            string realDir = Path.GetFullPath(dir);
+            // Path.GetFullPath does NOT follow symlinks on Android/Linux.
+            // ResolveLinkTarget does, which is essential for the FUSE layer on Android 13.
+            string realDir;
+            try
+            {
+                realDir = new DirectoryInfo(dir).ResolveLinkTarget(returnFinalTarget: true)?.FullName ?? Path.GetFullPath(dir);
+            }
+            catch
+            {
+                realDir = Path.GetFullPath(dir);
+            }
+
             if (!visited.Add(realDir))
                 yield break;
 
