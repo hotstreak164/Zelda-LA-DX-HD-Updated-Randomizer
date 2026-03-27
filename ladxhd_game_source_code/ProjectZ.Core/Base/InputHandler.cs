@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using ProjectZ;
 
 #if ANDROID
 using Microsoft.Xna.Framework.Input.Touch;
@@ -355,11 +356,16 @@ namespace ProjectZ.Base
 
         public static Point MousePosition()
         {
-            return _mouseState.Position;
+            // correct macOS (and potentially others?) notch offset when in fullscreen
+            int offY = Game1.FullScreen ? Game1.Graphics.PreferredBackBufferHeight - Game1.WindowHeight : 0;
+            return new Point(_mouseState.X, _mouseState.Y - offY);
         }
+
         public static Point LastMousePosition()
         {
-            return _lastMouseState.Position;
+            // correct macOS (and potentially others?) notch offset when in fullscreen
+            int offY = Game1.FullScreen ? Game1.Graphics.PreferredBackBufferHeight - Game1.WindowHeight : 0;
+            return new Point(_lastMouseState.X, _lastMouseState.Y - offY);
         }
 
         #endregion
