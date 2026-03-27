@@ -109,9 +109,9 @@ namespace ProjectZ.InGame.Things
 
         public string SaveName 
         {
-            get { return ThiefState ? Game1.LanguageManager.GetString("savename_thief", "error") : RealSaveName; }
+            get { return ThiefState ? Game1.LanguageManager.GetString("savename_thief", "error", true) : RealSaveName; }
             set { RealSaveName = value; } 
-        } 
+        }
         public int GameType = 0;
 
         // playtime tracking

@@ -104,7 +104,7 @@ namespace ProjectZ.InGame.Things
             }
         }
 
-        public string GetString(string strKey, string defaultString)
+        public string GetString(string strKey, string defaultString, bool skipReplaceTag = false)
         {
             // Without a key there's no string to get.
             if (strKey == null)
@@ -113,19 +113,25 @@ namespace ProjectZ.InGame.Things
             // Try to get the string in the selected language.
             if (Strings.TryGetValue(strKey, out var value))
             {
-                value = Game1.LanguageManager.ReplacePlaceholderTag(value);
+                if (!skipReplaceTag)
+                    value = Game1.LanguageManager.ReplacePlaceholderTag(value);
+
                 return value;
             }
 
             // Use the English text if a translated string is not found.
             if (_languageStrings[0].TryGetValue(strKey, out value))
             {
-                value = Game1.LanguageManager.ReplacePlaceholderTag(value);
+                if (!skipReplaceTag)
+                    value = Game1.LanguageManager.ReplacePlaceholderTag(value);
+
                 return value;
             }
 
             // Return the default string if it's not in the dictionary.
-            defaultString = Game1.LanguageManager.ReplacePlaceholderTag(defaultString);
+            if (!skipReplaceTag)
+                defaultString = Game1.LanguageManager.ReplacePlaceholderTag(defaultString);
+
             return defaultString;
         }
 
