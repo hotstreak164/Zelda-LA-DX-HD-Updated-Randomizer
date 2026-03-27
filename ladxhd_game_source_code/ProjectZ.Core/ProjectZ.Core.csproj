@@ -14,9 +14,13 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
-  <!-- Overrides the default target frameworks when building on Windows. -->
+  <!-- Override the default target frameworks per build platform. -->
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-android</TargetFrameworks>
+    <!-- All build hosts support net8.0. -->
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <!-- Only include Android support on Windows and macOS (https://github.com/dotnet/sdk/issues/22411). -->
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows')) or $([MSBuild]::IsOSPlatform('OSX'))">$(TargetFrameworks);net8.0-android</TargetFrameworks>
+    <!-- Only include Windows DirectX support on Windows. -->
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net8.0-windows</TargetFrameworks>
   </PropertyGroup>
 
