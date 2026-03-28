@@ -45,6 +45,7 @@ namespace LADXHD_Migrater
                             false, "Build Error")) return false;
                     }
                 }
+
                 else if (Config.SelectedPlatform == Platform.Android)
                 {
                     Config.Build_Path = Path.Combine(Config.Publish_Path, "Android");
@@ -55,6 +56,7 @@ namespace LADXHD_Migrater
                         "publish ProjectZ.Android\\ProjectZ.Android.csproj -c Release -f net8.0-android --no-restore -p:PublishProfile=FolderProfile_Android",
                         false, "Build Error")) return false;
                 }
+
                 else if (Config.SelectedPlatform == Platform.Linux_x86)
                 {
                     Config.Build_Path = Path.Combine(Config.Publish_Path, "Linux-x86_64");
@@ -72,6 +74,7 @@ namespace LADXHD_Migrater
                         $"dotnet publish ProjectZ.Linux/ProjectZ.Linux.csproj -c Release -f net8.0 -r linux-x64 --no-restore -p:PublishProfile=FolderProfile_Linux\"",
                         true, "Build Error")) return false;
                 }
+
                 else if (Config.SelectedPlatform == Platform.Linux_Arm64)
                 {
                     Config.Build_Path = Path.Combine(Config.Publish_Path, "Linux-Arm64");
@@ -87,6 +90,42 @@ namespace LADXHD_Migrater
                         $"bash -c \"export MGFXC_WINE_PATH={DotNet.WinePath} && " +
                         $"cd {wslPath} && " +
                         $"dotnet publish ProjectZ.Linux/ProjectZ.Linux.csproj -c Release -f net8.0 -r linux-arm64 --no-restore -p:PublishProfile=FolderProfile_Linux_Arm\"",
+                        true, "Build Error")) return false;
+                }
+
+                else if (Config.SelectedPlatform == Platform.MacOS_Arm64)
+                {
+                    Config.Build_Path = Path.Combine(Config.Publish_Path, "MacOS-Arm64");
+                    string wslPath = ToWslPath(Config.Game_Source);
+
+                    if (!RunProcess("wsl",
+                        $"bash -c \"export MGFXC_WINE_PATH={DotNet.WinePath} && " +
+                        $"cd {wslPath} && " +
+                        $"dotnet restore ProjectZ.MacOS/ProjectZ.MacOS.csproj\"",
+                        true, "Restore Error")) return false;
+
+                    if (!RunProcess("wsl",
+                        $"bash -c \"export MGFXC_WINE_PATH={DotNet.WinePath} && " +
+                        $"cd {wslPath} && " +
+                        $"dotnet publish ProjectZ.MacOS/ProjectZ.MacOS.csproj -c Release -f net8.0 -r osx-arm64 --no-restore -p:PublishProfile=FolderProfile_MacOS\"",
+                        true, "Build Error")) return false;
+                }
+
+                else if (Config.SelectedPlatform == Platform.MacOS_x64)
+                {
+                    Config.Build_Path = Path.Combine(Config.Publish_Path, "MacOS-x64");
+                    string wslPath = ToWslPath(Config.Game_Source);
+
+                    if (!RunProcess("wsl",
+                        $"bash -c \"export MGFXC_WINE_PATH={DotNet.WinePath} && " +
+                        $"cd {wslPath} && " +
+                        $"dotnet restore ProjectZ.MacOS/ProjectZ.MacOS.csproj\"",
+                        true, "Restore Error")) return false;
+
+                    if (!RunProcess("wsl",
+                        $"bash -c \"export MGFXC_WINE_PATH={DotNet.WinePath} && " +
+                        $"cd {wslPath} && " +
+                        $"dotnet publish ProjectZ.MacOS/ProjectZ.MacOS.csproj -c Release -f net8.0 -r osx-x64 --no-restore -p:PublishProfile=FolderProfile_MacOS_x64\"",
                         true, "Build Error")) return false;
                 }
             }
@@ -112,6 +151,11 @@ namespace LADXHD_Migrater
             {
                 string linuxBinPath = Path.Combine(Config.Build_Path, "Link's Awakening DX HD");
                 return linuxBinPath.TestPath();
+            }
+            else if (Config.SelectedPlatform == Platform.MacOS_Arm64 || Config.SelectedPlatform == Platform.MacOS_x64)
+            {
+                string macBinPath = Path.Combine(Config.Build_Path, "Link's Awakening DX HD");
+                return macBinPath.TestPath();
             }
             return false;
         }

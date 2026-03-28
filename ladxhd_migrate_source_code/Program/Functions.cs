@@ -278,6 +278,8 @@ namespace LADXHD_Migrater
             Path.Combine(Config.Game_Source, "ProjectZ.Desktop", "obj").RemovePath();
             Path.Combine(Config.Game_Source, "ProjectZ.Linux", "bin").RemovePath();
             Path.Combine(Config.Game_Source, "ProjectZ.Linux", "obj").RemovePath();
+            Path.Combine(Config.Game_Source, "ProjectZ.MacOS", "bin").RemovePath();
+            Path.Combine(Config.Game_Source, "ProjectZ.MacOS", "obj").RemovePath();
             Path.Combine(Config.Migrate_Source, "bin").RemovePath();
             Path.Combine(Config.Migrate_Source, "obj").RemovePath();
             Path.Combine(Config.Patcher_Source, "bin").RemovePath();
@@ -285,9 +287,6 @@ namespace LADXHD_Migrater
             Path.Combine(Config.ModMaker_Source, "bin").RemovePath();
             Path.Combine(Config.ModMaker_Source, "obj").RemovePath();
             Path.Combine(Config.BaseFolder, "~Publish").RemovePath();
-            Path.Combine(Config.BaseFolder, "zelda_ladxhd_build_android").RemovePath();
-            Path.Combine(Config.BaseFolder, "zelda_ladxhd_build_windows_dx").RemovePath();
-            Path.Combine(Config.BaseFolder, "zelda_ladxhd_build_windows_gl").RemovePath();
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -322,6 +321,12 @@ namespace LADXHD_Migrater
                 else if (Config.SelectedPlatform == Platform.Linux_Arm64)
                     MoveDestination = Path.Combine(publishFolder, "zelda_ladxhd_build_linux_arm64");
                 
+                else if (Config.SelectedPlatform == Platform.MacOS_Arm64)
+                    MoveDestination = Path.Combine(publishFolder, "zelda_ladxhd_build_macos_arm64");
+
+                else if (Config.SelectedPlatform == Platform.MacOS_x64)
+                    MoveDestination = Path.Combine(publishFolder, "zelda_ladxhd_build_macos_x64");
+
                 // Move the publish folder to the root directory.
                 Config.Build_Path.MovePath(MoveDestination, true);
 

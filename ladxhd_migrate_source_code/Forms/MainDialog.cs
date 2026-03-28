@@ -63,6 +63,20 @@ namespace LADXHD_Migrater
                 combBox_API.Items.Clear();
                 combBox_API.Items.Add("OpenGL");
             }
+            if (comboBox.SelectedIndex == 4)
+            {
+                Config.SelectedPlatform = Platform.MacOS_x64;
+
+                combBox_API.Items.Clear();
+                combBox_API.Items.Add("OpenGL");
+            }
+            if (comboBox.SelectedIndex == 5)
+            {
+                Config.SelectedPlatform = Platform.MacOS_Arm64;
+
+                combBox_API.Items.Clear();
+                combBox_API.Items.Add("OpenGL");
+            }
             combBox_API.SelectedIndex = 0;
         }
 
