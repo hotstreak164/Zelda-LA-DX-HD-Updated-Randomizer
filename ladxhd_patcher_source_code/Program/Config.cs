@@ -6,7 +6,7 @@ namespace LADXHD_Patcher
 {
     internal class Config
     {
-        public const string Version = "1.6.9";
+        public const string Version = "1.6.9b";
 
         public static string AppPath;
         public static string BaseFolder;
