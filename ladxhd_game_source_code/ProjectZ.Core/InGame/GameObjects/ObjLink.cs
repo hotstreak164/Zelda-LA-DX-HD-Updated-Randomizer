@@ -198,7 +198,7 @@ namespace ProjectZ.InGame.GameObjects
         private Vector2 _knockBackVelocity;
 
         private float _baseRepelStrength = 2.45f;
-        private float _swimRepelStrength = 2.20f;
+        private float _swimRepelStrength = 2.25f;
 
         public static int BlinkTime = 66;
         public static int CooldownTime = BlinkTime * GameSettings.DmgCooldown;
@@ -2334,7 +2334,7 @@ namespace ProjectZ.InGame.GameObjects
                 repelNormal.Normalize();
 
                 // Reduce velocity gradually while on the ground or while swimming.
-                if (_body.IsGrounded || CurrentState == State.Swimming)
+                if (_body.IsGrounded || IsSwimmingState())
                 {
                     float slowDownAmount = 0.12f + (_repelVelocity.Length() * 0.015f);
                     _repelVelocity -= repelNormal * slowDownAmount * Game1.TimeMultiplier;
@@ -2371,7 +2371,7 @@ namespace ProjectZ.InGame.GameObjects
                 shieldRepelNormal.Normalize();
 
                 // Reduce velocity gradually while on the ground or while swimming.
-                if (_body.IsGrounded || CurrentState == State.Swimming)
+                if (_body.IsGrounded || IsSwimmingState())
                 {
                     float slowDownAmount = 0.12f + (_shieldVelocity.Length() * 0.015f);
                     _shieldVelocity -= shieldRepelNormal * slowDownAmount * Game1.TimeMultiplier;
@@ -2408,7 +2408,7 @@ namespace ProjectZ.InGame.GameObjects
                 hitNormal.Normalize();
 
                 // Reduce velocity gradually while on the ground or while swimming.
-                if (_body.IsGrounded || CurrentState == State.Swimming)
+                if (_body.IsGrounded || IsSwimmingState())
                 {
                     var slowDownAmount = 0.05f + MathHelper.Clamp(_hitVelocity.Length() / 25f, 0, 0.05f);
                     _hitVelocity -= hitNormal * slowDownAmount * Game1.TimeMultiplier;
@@ -4155,7 +4155,7 @@ namespace ProjectZ.InGame.GameObjects
                 // Start poking?
                 if (hitCollision != Values.HitCollision.None && hitCollision != Values.HitCollision.NoneBlocking)
                 {
-                    var knockback = CurrentState == State.Swimming ? _swimRepelStrength : _baseRepelStrength;
+                    var knockback = IsSwimmingState() ? _swimRepelStrength : _baseRepelStrength;
 
                     // If it's repelling and the player is charging, don't interrupt the charge.
                     if ((hitCollision & Values.HitCollision.RepellingParticle) != 0 && IsChargingState())
@@ -4425,7 +4425,8 @@ namespace ProjectZ.InGame.GameObjects
                 _hitParticleTime = Game1.TotalGameTime;
                 SpawnRepelParticle(collisionRectangle);
             }
-            var knockback = CurrentState == State.Swimming ? _swimRepelStrength : _baseRepelStrength;
+            var knockback = IsSwimmingState() ? _swimRepelStrength : _baseRepelStrength;
+
             RepelPlayer(hitCollision, direction, knockback);
         }
 
