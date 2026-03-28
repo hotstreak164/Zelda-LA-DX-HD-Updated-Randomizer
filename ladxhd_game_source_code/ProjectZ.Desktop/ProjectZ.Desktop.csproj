@@ -13,7 +13,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>false</ImplicitUsings>
     <PublishReadyToRun>false</PublishReadyToRun>
-    <TieredCompilation>true</TieredCompilation>
+    <TieredCompilation>false</TieredCompilation>
   </PropertyGroup>
 
   <!-- Windows DirectX: Forms is needed only to set the icon. -->

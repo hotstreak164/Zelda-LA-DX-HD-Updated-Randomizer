@@ -17,6 +17,7 @@
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <CheckEolWorkloads>false</CheckEolWorkloads>
+    <TieredCompilation>false</TieredCompilation>
   </PropertyGroup>
 
   <!-- Release Builds: Most optimizations are disabled for compatibility packing multiple ABIs. -->
