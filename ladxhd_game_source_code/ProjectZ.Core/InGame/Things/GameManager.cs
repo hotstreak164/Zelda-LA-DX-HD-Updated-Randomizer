@@ -896,15 +896,15 @@ namespace ProjectZ.InGame.Things
             GuardianAcornDamageCount = 0;
 
             if (!GameSettings.MutePowerups)
-                StartPieceOfPowerMusic(0);
+                StartPowerupMusic(0);
             else
                 PlaySoundEffect("D360-23-17");
         }
 
         public void StopGuardianAcorn()
         {
+            StopPowerupMusic();
             GuardianAcornIsActive = false;
-            SetMusic(-1, 1, true);
         }
 
         public void InitPieceOfPower()
@@ -916,18 +916,18 @@ namespace ProjectZ.InGame.Things
             PieceOfPowerDamageCount = 0;
 
             if (!GameSettings.MutePowerups)
-                StartPieceOfPowerMusic(0);
+                StartPowerupMusic(0);
             else
                 PlaySoundEffect("D360-23-17");
         }
 
         public void StopPieceOfPower()
         {
+            StopPowerupMusic();
             PieceOfPowerIsActive = false;
-            SetMusic(-1, 1, true);
         }
 
-        public void StartPieceOfPowerMusic(int Variation)
+        public void StartPowerupMusic(int Variation)
         {
             // 0: Delayed with sound effect
             // 1: Music starts instantly.
@@ -941,6 +941,20 @@ namespace ProjectZ.InGame.Things
                 Game1.GbsPlayer.CurrentTrack = 72;
                 _musicArray[1] = 72;
             }
+        }
+
+        private void StopPowerupMusic()
+        {
+            // When inside a village, revert the hack which stores the piece of power music in slot 1 and
+            // the village music inside slot 2. This is mostly for Mabe Village where dogs can attack.
+            if (_musicArray[0] == 72 && (_musicArray[1] == 3 || _musicArray[1] == 10))
+            {
+                _musicArray[0] = _musicArray[1];
+                _musicArray[1] = -1;
+                return;
+            }
+            // Any other time we can just set slot 2 to -1.
+            SetMusic(-1, 1, true);
         }
 
         public bool CheckSetMusicConditions(int trackID, int priority)

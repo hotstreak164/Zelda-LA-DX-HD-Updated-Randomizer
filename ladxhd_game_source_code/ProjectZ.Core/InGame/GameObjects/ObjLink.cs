@@ -6574,7 +6574,7 @@ namespace ProjectZ.InGame.GameObjects
             }
             // Restart the music.
             if (!GameSettings.MutePowerups && (Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.GuardianAcornIsActive))
-                Game1.GameManager.StartPieceOfPowerMusic(1);
+                Game1.GameManager.StartPowerupMusic(1);
 
             // Destroy the field barrier after a transition so it can be recreated.
             DestroyFieldBarrier();
