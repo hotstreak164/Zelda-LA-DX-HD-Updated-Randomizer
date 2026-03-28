@@ -49,7 +49,7 @@ namespace ProjectZ.Base
         public static KeyboardState KeyboardState => _keyboardState;
         public static KeyboardState LastKeyboardState => _lastKeyboardState;
         public static MouseState MouseState => _mouseState;
-        public static MouseState LastMousState => _lastMouseState;
+        public static MouseState LastMouseState => _lastMouseState;
 
         private static KeyboardState _keyboardState;
         private static KeyboardState _lastKeyboardState;

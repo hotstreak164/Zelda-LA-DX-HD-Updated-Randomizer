@@ -37,7 +37,7 @@ namespace ProjectZ.Base.UI
             Selection = null;
             MouseOverSelection = null;
 
-            var scrollDirection = MathHelper.Clamp(InputHandler.LastMousState.ScrollWheelValue - InputHandler.MouseState.ScrollWheelValue, -1, 1);
+            var scrollDirection = MathHelper.Clamp(InputHandler.LastMouseState.ScrollWheelValue - InputHandler.MouseState.ScrollWheelValue, -1, 1);
             if (InputHandler.MouseIntersect(Rectangle))
                 SelectionListState += scrollDirection;
 
