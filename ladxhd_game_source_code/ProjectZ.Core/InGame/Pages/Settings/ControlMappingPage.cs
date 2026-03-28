@@ -24,7 +24,6 @@ namespace ProjectZ.InGame.Pages
         private double _remapTimer;
         private const double RemapTimeout = 5.0;
         private int _lastControllerIndex = ControlHandler.ControllerIndex;
-        private int _remapIndex;
 
         public ControlMappingPage(int width, int height)
         {
@@ -96,7 +95,6 @@ namespace ProjectZ.InGame.Pages
 
         private void StartButtonRemap(CButtons eButton, int index)
         {
-            _remapIndex = index;
             _updateButton = true;
             _selectedButton = eButton;
             _remapTimer = RemapTimeout;
