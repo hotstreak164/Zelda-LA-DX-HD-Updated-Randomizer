@@ -178,4 +178,20 @@
     <value>..\Resources\android_base.apk;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>APK File</comment>
   </data>
+  <data name="patches_macos_arm64.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\patches_macos_arm64.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
+  <data name="patches_macos_x86.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\patches_macos_x86.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
+  <data name="macos_arm64_files.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\macos_arm64_files.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
+  <data name="macos_x86_files.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\macos_x86_files.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
 </root>

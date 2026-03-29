@@ -143,7 +143,9 @@
             "Windows",
             "Android",
             "Linux (x86-64)",
-            "Linux (Arm64)"});
+            "Linux (Arm64)",
+            "MacOS (x86-64)",
+            "MacOS (Arm64)"});
             this.comboBox_Platform.Location = new System.Drawing.Point(56, 16);
             this.comboBox_Platform.Name = "comboBox_Platform";
             this.comboBox_Platform.Size = new System.Drawing.Size(110, 21);

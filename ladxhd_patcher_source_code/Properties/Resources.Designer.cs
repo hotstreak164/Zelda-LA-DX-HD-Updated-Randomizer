@@ -143,6 +143,26 @@ namespace LADXHD_Patcher {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] macos_arm64_files_zip {
+            get {
+                object obj = ResourceManager.GetObject("macos_arm64_files.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] macos_x86_files_zip {
+            get {
+                object obj = ResourceManager.GetObject("macos_x86_files.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] patches_android_zip {
             get {
                 object obj = ResourceManager.GetObject("patches_android.zip", resourceCulture);
@@ -166,6 +186,26 @@ namespace LADXHD_Patcher {
         internal static byte[] patches_linux_x86_zip {
             get {
                 object obj = ResourceManager.GetObject("patches_linux_x86.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] patches_macos_arm64_zip {
+            get {
+                object obj = ResourceManager.GetObject("patches_macos_arm64.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] patches_macos_x86_zip {
+            get {
+                object obj = ResourceManager.GetObject("patches_macos_x86.zip", resourceCulture);
                 return ((byte[])(obj));
             }
         }

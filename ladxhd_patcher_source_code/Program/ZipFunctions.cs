@@ -14,19 +14,21 @@ namespace LADXHD_Patcher
 
         private static string GetPatchesName()
         {
-            // If Android is selected then choose its patches.
             if (Config.SelectedPlatform == Platform.Android)
                 return "patches_android.zip";
 
-            // If Android is selected then choose its patches.
             if (Config.SelectedPlatform == Platform.Linux_x86)
                 return "patches_linux_x86.zip";
 
-            // If Android is selected then choose its patches.
             if (Config.SelectedPlatform == Platform.Linux_Arm64)
                 return "patches_linux_arm64.zip";
 
-            // If Windows and OpenGL is selected choose those patches.
+            if (Config.SelectedPlatform == Platform.MacOS_x86)
+                return "patches_macos_x86.zip";
+
+            if (Config.SelectedPlatform == Platform.MacOS_Arm64)
+                return "patches_macos_arm64.zip";
+
             if (Config.SelectedPlatform == Platform.Windows)
                 if (Config.SelectedGraphics == GraphicsAPI.OpenGL)
                     return "patches_win_gl.zip";
@@ -176,6 +178,22 @@ namespace LADXHD_Patcher
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
+        }
+
+        public static void ExtractMacOSFiles()
+        {
+            // The files are different depending on MacOS CPU.
+            string zipName = Config.SelectedPlatform == Platform.MacOS_x86
+                ? "macos_x86_files.zip" 
+                : "macos_arm64_files.zip";
+
+            // Set the patches and zipfile paths.
+            string zipFilePath = Path.Combine(Config.TempFolder, zipName);
+
+            // Write the zipfile, extract it, then delete it.
+            File.WriteAllBytes(zipFilePath, (byte[])resources[zipName]);
+            ZipFile.ExtractToDirectory(zipFilePath, Config.BaseFolder);
+            zipFilePath.RemovePath();
         }
     }
 }

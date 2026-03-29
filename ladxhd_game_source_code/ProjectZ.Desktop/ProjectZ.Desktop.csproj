@@ -3,7 +3,7 @@
   <!-- Main configuration. -->
   <PropertyGroup>
     <AssemblyName>Link's Awakening DX HD</AssemblyName>
-    <Version>1.6.9</Version>
+    <Version>1.7.0</Version>
     <TargetFrameworks>net8.0-windows;net8.0</TargetFrameworks>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <StartupObject>ProjectZ.Program</StartupObject>

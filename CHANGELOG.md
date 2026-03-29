@@ -1,5 +1,16 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.7.0**
+### The "Reaching New Heights" Update
+  * MacOS versions of the game are now available using the patcher. Big thanks to @aitorciki.
+  * More German menu translation fixes and German dialog fixes (credit @mrmercy82, added in v1.6.9b).
+  * Rework button remapping to show ?? for the button being remapped and cancel remap after 5 seconds.
+  * Fix Richard not moving out of the way of the box to the shrub maze upon return visits to his villa.
+  * Fix knockback strength when swimming in 2D maps. It was never meant to be as strong as it was.
+  * Fix a bug where knockback never decays while swimming and charging the sword in 2D maps.
+  * Fix continue playing village music when losing the powerup while inside the village.
+  * Fix stealing crashing the game due to infinite loop causing a stack overflow (fixed in v1.6.9b).
+
 ## **v1.6.9**
 ### The "Finally Fully Finished Finalizing the Final Finishing Touches Finale" Update
   * More German menu translation fixes and German dialog fixes (credit @mrmercy82).

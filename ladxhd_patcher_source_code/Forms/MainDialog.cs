@@ -75,6 +75,22 @@ namespace LADXHD_Patcher
                 combBox_API.Items.Add("OpenGL");
                 button_Patch.Text = "Patch";
             }
+            if (comboBox.SelectedIndex == 4)
+            {
+                Config.SelectedPlatform = Platform.MacOS_x86;
+
+                combBox_API.Items.Clear();
+                combBox_API.Items.Add("OpenGL");
+                button_Patch.Text = "Patch";
+            }
+            if (comboBox.SelectedIndex == 5)
+            {
+                Config.SelectedPlatform = Platform.MacOS_Arm64;
+
+                combBox_API.Items.Clear();
+                combBox_API.Items.Add("OpenGL");
+                button_Patch.Text = "Patch";
+            }
             combBox_API.SelectedIndex = 0;
         }
 

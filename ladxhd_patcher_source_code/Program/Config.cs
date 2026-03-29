@@ -6,7 +6,7 @@ namespace LADXHD_Patcher
 {
     internal class Config
     {
-        public const string Version = "1.6.9b";
+        public const string Version = "1.7.0";
 
         public static string AppPath;
         public static string BaseFolder;
@@ -23,7 +23,7 @@ namespace LADXHD_Patcher
         public static string JavaExe;
         public static string SevenZip;
 
-        public enum Platform { Windows, Android, Linux_x86, Linux_Arm64 }
+        public enum Platform { Windows, Android, Linux_x86, Linux_Arm64, MacOS_x86, MacOS_Arm64 }
         public static Platform SelectedPlatform;
 
         public enum GraphicsAPI { DirectX, OpenGL }

@@ -272,11 +272,21 @@ namespace LADXHD_Patcher
             // After migration, some map files are not needed.
             CleanUp.RemoveJunkMapFiles();
 
-            // Do something unique for each Platform.
-            switch (Config.SelectedPlatform)
+            // Finish up. Android needs the controller buttons and to be made into an APK.
+            if (Config.SelectedPlatform == Platform.Android)
             {
-                case Platform.Windows:     { CreateModFolders(); break; }
-                case Platform.Android:     { ZipFunctions.ExtractAndroidIcons(); GenerateAPKFile(); break; }
+                ZipFunctions.ExtractAndroidIcons(); 
+                GenerateAPKFile();
+            }
+            else if (Config.SelectedPlatform == Platform.MacOS_x86 || Config.SelectedPlatform == Platform.MacOS_Arm64)
+            {
+                ZipFunctions.ExtractMacOSFiles();
+                CreateModFolders();
+            }
+            // Everything else just create Mod folders.
+            else
+            {
+                CreateModFolders();
             }
         }
 
@@ -372,9 +382,10 @@ namespace LADXHD_Patcher
             if (_executable != exePath)
                 _executable.MovePath(exePath, true);
 
-            // Remove any Linux specific files as they will be recopied here.
+            // Remove any Linux specific files as they are not needed.
             string[] linuxFiles = new string[]{ Config.ZeldaEXE, "System.IO.Compression.Native.a", "System.Native.a", 
-                "System.Net.Http.Native.a", "System.Net.Security.Native.a", "System.Security.Cryptography.Native.OpenSsl.a" };
+                "System.Net.Http.Native.a", "System.Net.Security.Native.a", "System.Security.Cryptography.Native.OpenSsl.a",
+                "libopenal.dylib", "libSDL2-2.0.0.dylib"};
 
             // Remove the patched executable and any linux specific files.
             foreach (string file in linuxFiles) 
@@ -390,12 +401,13 @@ namespace LADXHD_Patcher
             bool isAndroid = Config.SelectedPlatform == Platform.Android;
             bool isWindows = Config.SelectedPlatform == Platform.Windows;
             bool isLinux   = Config.SelectedPlatform == Platform.Linux_x86 || Config.SelectedPlatform == Platform.Linux_Arm64;
+            bool isMacOS   = Config.SelectedPlatform == Platform.MacOS_x86 || Config.SelectedPlatform == Platform.MacOS_Arm64;
 
             // Create the backup path if it doesn't exist.
             Config.BackupPath.CreatePath();
 
             // The v1.0.0 executable must be in the base path for Linux without the extension.
-            if (isLinux)
+            if (isLinux || isMacOS)
                 PrepareLinuxFiles();
 
             // Remove any garbage files that will just mess up the patcher.
@@ -428,7 +440,7 @@ namespace LADXHD_Patcher
                     continue;
     
                 // On Windows we skip the patcher or the Mods folder.
-                else if ((isWindows || isLinux) && (fileItem.Name == "xdelta3.exe" || fileItem.IsInFolder("Mods")))
+                else if ((isWindows || isLinux || isMacOS) && (fileItem.Name == "xdelta3.exe" || fileItem.IsInFolder("Mods")))
                     continue;
 
                 // Get the backup path to test for existing backups and create new ones to it.
@@ -461,7 +473,7 @@ namespace LADXHD_Patcher
                         fullPath.CopyPath(outputFile, true);
                 }
                 // Windows is a bit simpler.
-                else if (isWindows || isLinux)
+                else if (isWindows || isLinux || isMacOS)
                 {
                     // If a patch file exists.
                     if (patchExists)

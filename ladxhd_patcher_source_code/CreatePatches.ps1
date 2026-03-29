@@ -53,7 +53,7 @@
 # CONFIGURATION
 #========================================================================================================================================
 
-$GameVersion = "1.6.9"
+$GameVersion = "1.7.0"
 $OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
 $SevenZipExe = "C:\Program Files\7-Zip\7z.exe"
 
@@ -62,12 +62,16 @@ $WinGLInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_win_g
 $DroidInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_android"
 $Linux86Path = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_linux_x86"
 $LinuxArPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_linux_arm64"
+$MacOS86Path = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_macos_x86"
+$MacOSArPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_macos_arm64"
 
 $CreateWinDX = $true
 $CreateWinGL = $true
 $CreateDroid = $true
 $CreateLix86 = $true
 $CreateLiArm = $true
+$CreateMcx86 = $true
+$CreateMcArm = $true
 
 $ResourcePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD-Updated\ladxhd_patcher_source_code\Resources"
 
@@ -84,6 +88,8 @@ $WinGLPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Win-GL) 
 $DroidPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Android) Patches")
 $Lix86Patches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Linux-x86) Patches")
 $LiArmPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Linux-Arm64) Patches")
+$Mcx86Patches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (MacOS-x86) Patches")
+$McArmPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (MacOS-Arm64) Patches")
 
 #========================================================================================================================================
 # CREATE PATCHES FOLDER
@@ -103,6 +109,12 @@ if ($CreateLix86 -and (!(Test-Path $Lix86Patches))) {
 }
 if ($CreateLiArm -and (!(Test-Path $LiArmPatches))) {
     New-Item -Path $LiArmPatches -ItemType Directory | Out-Null
+}
+if ($CreateMcx86 -and (!(Test-Path $Mcx86Patches))) {
+    New-Item -Path $Mcx86Patches -ItemType Directory | Out-Null
+}
+if ($CreateMcArm -and (!(Test-Path $McArmPatches))) {
+    New-Item -Path $McArmPatches -ItemType Directory | Out-Null
 }
 
 #========================================================================================================================================
@@ -185,7 +197,7 @@ $ReverseFileTargets = Build-ReverseMap -Targets $FileTargets
 
 function GetOldFilePath([object]$File, [string]$GamePath, [string]$RelativePath, [string]$Platform)
 {
-    if (($Platform -like "Linux_*") -and ($File.Name -eq "Link's Awakening DX HD"))
+    if (($File.Name -eq "Link's Awakening DX HD") -and (($Platform -like "Linux_*") -or ($Platform -like "MacOS_*")))
     {
         return Join-Path $OldGamePath ($RelativePath + ".exe")
     }
@@ -247,6 +259,42 @@ function PrepareAndroid([string]$GamePath)
 }
 
 #========================================================================================================================================
+# LINUX EXTRA FILES
+#========================================================================================================================================
+
+$MacOSExtraFiles = @(
+    "libopenal.dylib",
+    "libSDL2-2.0.0.dylib"
+)
+
+function CreateMacOSExtraFilesZip([bool]$CreatePatches, [string]$GamePath, [string]$Platform)
+{
+    if ((!$CreatePatches) -or ($Platform -notlike "MacOS_*")) { return }
+
+    $ZipName = $Platform.ToLower() + "_files.zip"
+    $ZipFile = Join-Path $ResourcePath $ZipName
+
+    $TempPath = Join-Path ([System.IO.Path]::GetTempPath()) ("ladxhd_" + $Platform.ToLower() + "_extra_files")
+    $AllFiles = Get-ChildItem -LiteralPath $GamePath -File
+
+    Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
+    New-Item -Path $TempPath -ItemType Directory | Out-Null
+
+    foreach ($FileName in $MacOSExtraFiles)
+    {
+        $SourceFile = $AllFiles | Where-Object { $_.Name -eq $FileName } | Select-Object -First 1
+        Copy-Item -LiteralPath $SourceFile.FullName -Destination (Join-Path $TempPath $FileName) -Force
+    }
+    if ((Get-ChildItem -LiteralPath $TempPath -File | Measure-Object).Count -gt 0)
+    {
+        Write-Host ('Generating "' + $ZipName + '" for patcher program.')
+        Write-Host ""
+        Compress-Archive -Path (Join-Path $TempPath "*") -DestinationPath $ZipFile | Out-Null
+    }
+    Remove-Item -Path $TempPath -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+}
+
+#========================================================================================================================================
 # VERIFICATION
 #========================================================================================================================================
 
@@ -276,6 +324,7 @@ function VerifyExecutable([string]$Platform, [string]$GamePath)
     {
         "Win_*"   { if (!(Test-Path (Join-Path $GamePath "Link's Awakening DX HD.exe"))) { return $false } }
         "Linux_*" { if (!(Test-Path (Join-Path $GamePath "Link's Awakening DX HD"))) { return $false } }
+        "MacOS_*" { if (!(Test-Path (Join-Path $GamePath "Link's Awakening DX HD"))) { return $false } }
         "Android" { return $true }
     }
     return $true
@@ -323,6 +372,8 @@ function GeneratePatches([bool]$CreatePatches, [string]$GamePath, [string]$Patch
     $ZipFile = Join-Path $ResourcePath ("\patches_" + $Platform.ToLower() + ".zip")
     Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
     Compress-Archive -Path $ZipPath -DestinationPath $ZipFile | Out-Null
+
+	CreateMacOSExtraFilesZip -CreatePatches $CreatePatches -GamePath $GamePath -Platform $Platform
 }
 
 if ((VerifyOriginal) -and (VerifyXDelta))
@@ -332,6 +383,8 @@ if ((VerifyOriginal) -and (VerifyXDelta))
     GeneratePatches -CreatePatches $CreateDroid -GamePath $DroidInPath -PatchOutput $DroidPatches -Platform "Android"
     GeneratePatches -CreatePatches $CreateLix86 -GamePath $Linux86Path -PatchOutput $Lix86Patches -Platform "Linux_x86"
     GeneratePatches -CreatePatches $CreateLiArm -GamePath $LinuxArPath -PatchOutput $LiArmPatches -Platform "Linux_Arm64"
+    GeneratePatches -CreatePatches $CreateMcx86 -GamePath $MacOS86Path -PatchOutput $Mcx86Patches -Platform "MacOS_x86"
+    GeneratePatches -CreatePatches $CreateMcArm -GamePath $MacOSArPath -PatchOutput $McArmPatches -Platform "MacOS_Arm64"
 
     Write-Host "------------------------------------------------------------------------------------------"
     Write-Host ""

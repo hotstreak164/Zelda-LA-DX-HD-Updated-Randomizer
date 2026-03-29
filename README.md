@@ -10,13 +10,14 @@ The game can be patched to port to Windows (DX11), Windows (OpenGL), Android, an
 - See the [manual](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/blob/main/MANUAL.md) to learn more about the game (WIP).
 - See the [changelog](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/blob/main/CHANGELOG.md) for a list of changes from v1.0.0.
 - As of v1.1.0, the game is in a really good state and the "feel" is really close to the original game.  
-- As of v1.2.0, the vast majority of bugs have been fixed and features from the [Redux romhack](https://github.com/ShadowOne333/Links-Awakening-Redux) were implemented.
+- As of v1.2.0, all obvious bugs have been fixed and features from the [Redux romhack](https://github.com/ShadowOne333/Links-Awakening-Redux) were implemented.
 - As of v1.3.0, I consider the work that I've done to be "feature complete" and everything from this point is gravy.
 - As of v1.4.0, the gravy train never stopped and much work has been done to make this port more accurate.
 - As of v1.5.0, it has evolved into something I never dreamed of. Hundreds of issues fixed with tons of features.
 - As of v1.6.0, just about every small detail from the original game has been restored and/or replicated.
+- As of v1.7.0, it's been ported to multiple platforms and every single known bug since v1.0.0 has been fixed.
 
-## Patching v1.0.0 (or v1.1.4+) to v1.6.5.
+## Patching v1.0.0 (or v1.1.4+) to v1.7.0.
 
 To download the latest update, there is a patcher on the [Releases](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/releases) page.<br>
 If you wish to build the game yourself, see **Personal Build / Publishing**.
@@ -60,7 +61,7 @@ All software is Windows only aside from the game which has been ported to Androi
 - **ladxhd_game_source_code**: Source code for The Legend of Zelda: Link's Awakening DX HD.
 - **ladxhd_migrate_source_code**: Source code for the migration tool which can apply/create assets patches.
 - **ladxhd_modmaker_source_code**: Source code for the modmaker which can create mod installers.
-- **ladxhd_patcher_source_code**: Source code for the patcher to update the game to v1.6.5.
+- **ladxhd_patcher_source_code**: Source code for the patcher to update the game to v1.7.0.
 - **LADXHD_Migrater.exe**: This is the migration tool used to apply or create patches to the assets.
 - **Unblock-All-Files.ps1**: This script can be used to unblock all files automatically for Visual Studio.
 
