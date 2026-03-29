@@ -123,13 +123,11 @@ namespace ProjectZ.InGame.Controls
 
         public static void SaveButtonMaps(SaveManager saveManager)
         {
-            // load the input settings
             foreach (var buttonMap in ButtonDictionary)
             {
-                // save the keyboard buttons
                 for (var i = 0; i < buttonMap.Value.Keys.Length; i++)
                     saveManager.SetInt("control" + buttonMap.Key + "key" + i, (int)buttonMap.Value.Keys[i]);
-                // save the gamepad buttons
+
                 for (var i = 0; i < buttonMap.Value.Buttons.Length; i++)
                     saveManager.SetInt("control" + buttonMap.Key + "button" + i, (int)buttonMap.Value.Buttons[i]);
             }
@@ -137,10 +135,8 @@ namespace ProjectZ.InGame.Controls
 
         public static void LoadButtonMap(SaveManager saveManager)
         {
-            // load the input settings
             foreach (var buttonMap in ButtonDictionary)
             {
-                // load the keyboard button
                 var index = 0;
                 int key;
                 var keys = new List<Keys>();
@@ -149,12 +145,9 @@ namespace ProjectZ.InGame.Controls
                     keys.Add((Keys)key);
                     index++;
                 }
-
-                // set the loaded keys
                 if (keys.Count > 0)
                     buttonMap.Value.Keys = keys.ToArray();
 
-                // load the gamepad button
                 index = 0;
                 int button;
                 var gamepadButtons = new List<Buttons>();
@@ -163,8 +156,6 @@ namespace ProjectZ.InGame.Controls
                     gamepadButtons.Add((Buttons)button);
                     index++;
                 }
-
-                // set the loaded buttons
                 if (gamepadButtons.Count > 0)
                     buttonMap.Value.Buttons = gamepadButtons.ToArray();
             }
@@ -200,15 +191,22 @@ namespace ProjectZ.InGame.Controls
                 _scrollCounter = ScrollStartTime;
 
             foreach (var button in ButtonDictionary)
+            {
                 for (var i = 0; i < button.Value.Keys.Length; i++)
+                {
                     if (InputHandler.LastKeyDown(button.Value.Keys[i]))
                         LastKeyboardDown = true;
+                }
+            }
 
             foreach (var button in ButtonDictionary)
+            {
                 for (var i = 0; i < button.Value.Buttons.Length; i++)
+                {
                     if (InputHandler.LastGamePadDown(button.Value.Buttons[i]))
                         LastKeyboardDown = false;
-
+                }
+            }
             DebugButtons = CButtons.None;
         }
 
@@ -216,19 +214,20 @@ namespace ProjectZ.InGame.Controls
         {
             float ax = Math.Abs(vec.X);
             float ay = Math.Abs(vec.Y);
-
             float threshold = 0.35f;
 
             if (ax > ay)
             {
                 if (ay / ax >= threshold)
                     return new Vector2(Math.Sign(vec.X), Math.Sign(vec.Y));
+
                 return new Vector2(Math.Sign(vec.X), 0);
             }
             else
             {
                 if (ax / ay >= threshold)
                     return new Vector2(Math.Sign(vec.X), Math.Sign(vec.Y));
+
                 return new Vector2(0, Math.Sign(vec.Y));
             }
         }
@@ -260,6 +259,10 @@ namespace ProjectZ.InGame.Controls
                 return vec;
 
         #if ANDROID
+            Vector2 keyEventStick = PlatformInput.KeyEventRightStick;
+            if (Math.Abs(keyEventStick.X) > GameSettings.DeadZone || Math.Abs(keyEventStick.Y) > GameSettings.DeadZone)
+                return new Vector2(keyEventStick.X, keyEventStick.Y);
+
             Vector2 touchVec = VirtualController.GetRightStickOutput();
             if (touchVec != Vector2.Zero)
                 return touchVec;
@@ -270,18 +273,13 @@ namespace ProjectZ.InGame.Controls
 
         public static Vector2 GetAnalogDirection()
         {
-            // First check physical controller
             var st = InputHandler.GamePadState;
-
             Vector2 vec = new Vector2(st.ThumbSticks.Left.X, -st.ThumbSticks.Left.Y);
-
             if (Math.Abs(vec.X) > GameSettings.DeadZone || Math.Abs(vec.Y) > GameSettings.DeadZone)
                 return vec;
 
         #if ANDROID
-            // If controller stick isn't being used, use the virtual stick
             Vector2 touchVec = VirtualController.GetLeftStickOutput();
-
             if (touchVec != Vector2.Zero)
                 return touchVec;
         #endif
@@ -291,16 +289,16 @@ namespace ProjectZ.InGame.Controls
 
         public static bool LastButtonDown(CButtons button)
         {
-            // check the keyboard buttons
             for (var i = 0; i < ButtonDictionary[button].Keys.Length; i++)
+            {
                 if (InputHandler.LastKeyDown(ButtonDictionary[button].Keys[i]))
                     return true;
-
-            // check the gamepad buttons
+            }
             for (var i = 0; i < ButtonDictionary[button].Buttons.Length; i++)
+            {
                 if (InputHandler.LastGamePadDown(ButtonDictionary[button].Buttons[i]))
                     return true;
-
+            }
             return false;
         }
 
@@ -315,33 +313,28 @@ namespace ProjectZ.InGame.Controls
                     (dir == 2 && button == CButtons.Right) || (dir == 3 && button == CButtons.Down))
                     return true;
             }
-
-            // check the keyboard buttons
             for (var i = 0; i < ButtonDictionary[button].Keys.Length; i++)
+            {
                 if (InputHandler.KeyDown(ButtonDictionary[button].Keys[i]))
                     return true;
-
-            // check the gamepad buttons
+            }
             for (var i = 0; i < ButtonDictionary[button].Buttons.Length; i++)
+            {
                 if (InputHandler.GamePadDown(ButtonDictionary[button].Buttons[i]))
                     return true;
-
+            }
         #if ANDROID
             if (VirtualController.ButtonDown(button))
                 return true;
+            if (PlatformInput.KeyEventButtonDown(button))
+                return true;
         #endif
+
             return false;
         }
 
         public static bool ButtonPressed(CButtons button, bool controllerOnly = false)
         {
-
-        #if ANDROID
-            // Android controllers often send Select as a KeyEvent (ButtonSelect) instead of a GamePad button.
-            if (button == CButtons.Select && InputHandler.PlatformSelectPressed())
-                return true;
-        #endif
-
             var direction = GetAnalogDirection();
 
             if (_initDirection && direction != Vector2.Zero)
@@ -352,23 +345,30 @@ namespace ProjectZ.InGame.Controls
                     return true;
             }
 
-            // check the keyboard buttons
             if (!controllerOnly)
+            {
                 for (var i = 0; i < ButtonDictionary[button].Keys.Length; i++)
+                {
                     if (InputHandler.KeyPressed(ButtonDictionary[button].Keys[i]))
                         return true;
+                }
+            }
 
-            // check the gamepad buttons
             for (var i = 0; i < ButtonDictionary[button].Buttons.Length; i++)
+            {
                 if (InputHandler.GamePadPressed(ButtonDictionary[button].Buttons[i]))
                     return true;
+            }
 
-            // button presses used by tests
             if ((DebugButtons & button) != 0)
                 return true;
 
         #if ANDROID
             if (VirtualController.ButtonPressed(button))
+                return true;
+            if (button == CButtons.Select && InputHandler.PlatformSelectPressed())
+                return true;
+            if (PlatformInput.KeyEventButtonPressed(button))
                 return true;
         #endif
             return false;
@@ -384,19 +384,20 @@ namespace ProjectZ.InGame.Controls
                     (dir == 2 && button == CButtons.Right) || (dir == 3 && button == CButtons.Down))
                     return true;
             }
-
-            // check the keyboard buttons
             for (var i = 0; i < ButtonDictionary[button].Keys.Length; i++)
+            {
                 if (InputHandler.KeyReleased(ButtonDictionary[button].Keys[i]))
                     return true;
-
-            // check the gamepad buttons
+            }
             for (var i = 0; i < ButtonDictionary[button].Buttons.Length; i++)
+            {
                 if (InputHandler.GamePadReleased(ButtonDictionary[button].Buttons[i]))
                     return true;
-
+            }
         #if ANDROID
             if (VirtualController.ButtonReleased(button))
+                return true;
+            if (PlatformInput.KeyEventButtonReleased(button))
                 return true;
         #endif
             return false;
@@ -414,20 +415,20 @@ namespace ProjectZ.InGame.Controls
                     (dir == 2 && button == CButtons.Right) || 
                     (dir == 3 && button == CButtons.Down)) && 
                     (_scrollCounter < 0 || _initDirection))
+                {
                     return true;
+                }
             }
-
             return ButtonPressed(button) || (ButtonDown(button) && _scrollCounter < 0);
         }
 
         public static bool TrendyButtonDown(CButtons button)
         {
-            // Check keyboard bindings.
             foreach (var key in ButtonDictionary[button].Keys)
+            {
                 if (InputHandler.KeyDown(key))
                     return true;
-
-            // Check gamepad bindings.
+            }
             if (button == CancelButton)
                 return InputHandler.GamePadDown(GameSettings.SwapButtons ? Buttons.A : Buttons.B);
 
@@ -441,49 +442,64 @@ namespace ProjectZ.InGame.Controls
         {
             CButtons pressedButtons = 0;
 
+            foreach (var bEntry in ButtonDictionary)
+            {
+                for (var i = 0; i < bEntry.Value.Keys.Length; i++)
+                {
+                    if (InputHandler.KeyPressed(bEntry.Value.Keys[i]))
+                        pressedButtons |= bEntry.Key;
+                }
+                for (var i = 0; i < bEntry.Value.Buttons.Length; i++)
+                {
+                    if (InputHandler.GamePadPressed(bEntry.Value.Buttons[i]))
+                        pressedButtons |= bEntry.Key;
+                }
+            }
         #if ANDROID
             foreach (CButtons button in Enum.GetValues(typeof(CButtons)))
             {
                 if (button == CButtons.None)
                     continue;
-
                 if (VirtualController.ButtonPressed(button))
+                    pressedButtons |= button;
+                if (PlatformInput.KeyEventButtonPressed(button))
                     pressedButtons |= button;
             }
         #endif
-
-            foreach (var bEntry in ButtonDictionary)
-            {
-                for (var i = 0; i < bEntry.Value.Keys.Length; i++)
-                    if (InputHandler.KeyPressed(bEntry.Value.Keys[i]))
-                        pressedButtons |= bEntry.Key;
-
-                // check the gamepad buttons
-                for (var i = 0; i < bEntry.Value.Buttons.Length; i++)
-                    if (InputHandler.GamePadPressed(bEntry.Value.Buttons[i]))
-                        pressedButtons |= bEntry.Key;
-            }
             return pressedButtons;
         }
 
         public static bool AnyButtonPressed()
         {
-            // Detect any digital button press.
             foreach (var bEntry in ButtonDictionary)
             {
                 for (var i = 0; i < bEntry.Value.Keys.Length; i++)
+                {
                     if (InputHandler.KeyPressed(bEntry.Value.Keys[i]))
                         return true;
-
+                }
                 for (var i = 0; i < bEntry.Value.Buttons.Length; i++)
+                {
                     if (InputHandler.GamePadPressed(bEntry.Value.Buttons[i]))
                         return true;
+                }
             }
-            // Detect any movement from the analog.
+
+        #if ANDROID
+            foreach (CButtons button in Enum.GetValues(typeof(CButtons)))
+            {
+                if (button == CButtons.None)
+                    continue;
+                if (VirtualController.ButtonPressed(button))  // <- was missing
+                    return true;
+                if (PlatformInput.KeyEventButtonPressed(button))
+                    return true;
+            }
+        #endif
+
             if (GetMoveVector2() != Vector2.Zero)
                 return true;
 
-            // Otherwise nothing was pressed.
             return false;
         }
     }

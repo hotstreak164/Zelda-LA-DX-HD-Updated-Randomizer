@@ -108,6 +108,7 @@ namespace ProjectZ.Base
             _mouseState = Mouse.GetState();
 
         #if ANDROID
+            PlatformInput.BeginFrame();
             _lastTouchState = _touchState;
             _touchState = TouchPanel.GetState();
         #endif

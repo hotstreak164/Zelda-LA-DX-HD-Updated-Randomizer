@@ -6,6 +6,8 @@ using Android.OS;
 using Android.Views;
 using ProjectZ.Base;
 using ProjectZ.InGame.Things;
+using ProjectZ.InGame.Controls;
+using Microsoft.Xna.Framework;
 
 namespace ProjectZ.Android
 {
@@ -69,9 +71,9 @@ namespace ProjectZ.Android
                 if (display != null)
                 {
                     var size = new global::Android.Graphics.Point();
-#pragma warning disable CS0618
+                #pragma warning disable CS0618
                     display.GetRealSize(size);
-#pragma warning restore CS0618
+                #pragma warning restore CS0618
                     surfaceWidth = size.X;
                     surfaceHeight = size.Y;
                 }
@@ -136,7 +138,7 @@ namespace ProjectZ.Android
                 if (decorView == null)
                     return;
 
-#pragma warning disable CS0618
+            #pragma warning disable CS0618
                 decorView.SystemUiVisibility =
                     (StatusBarVisibility)(
                         SystemUiFlags.LayoutStable |
@@ -145,7 +147,7 @@ namespace ProjectZ.Android
                         SystemUiFlags.HideNavigation |
                         SystemUiFlags.Fullscreen |
                         SystemUiFlags.ImmersiveSticky);
-#pragma warning restore CS0618
+            #pragma warning restore CS0618
             }
         }
 
@@ -161,26 +163,81 @@ namespace ProjectZ.Android
             if (e == null)
                 return base.DispatchKeyEvent(e);
 
-            // Only treat "down" as a press (avoid repeats).
-            if (e.Action == KeyEventActions.Down && e.RepeatCount == 0)
+            // Ignore key repeats - we do our own held-state tracking via BeginFrame().
+            if (e.RepeatCount > 0)
+                return base.DispatchKeyEvent(e);
+
+            bool isDown = e.Action == KeyEventActions.Down;
+            bool isUp   = e.Action == KeyEventActions.Up;
+            if (!isDown && !isUp)
+                return base.DispatchKeyEvent(e);
+
+            // Map Android keycodes to CButtons for devices that route physical
+            // buttons as KeyEvents instead of through the GamePad API.
+            CButtons? mapped = e.KeyCode switch
             {
-                // Catch a wider net than just Back/Select.
-                if (e.KeyCode == Keycode.Back ||
-                    e.KeyCode == Keycode.ButtonSelect ||
-                    e.KeyCode == Keycode.ButtonMode ||
-                    e.KeyCode == Keycode.Menu ||
-                    e.KeyCode == Keycode.Escape) // many controllers map select/back to ESC
-                {
+                Keycode.ButtonA      => CButtons.A,
+                Keycode.ButtonB      => CButtons.B,
+                Keycode.ButtonX      => CButtons.X,
+                Keycode.ButtonY      => CButtons.Y,
+                Keycode.ButtonL1     => CButtons.LB,
+                Keycode.ButtonR1     => CButtons.RB,
+                Keycode.ButtonL2     => CButtons.LT,
+                Keycode.ButtonR2     => CButtons.RT,
+                Keycode.ButtonStart  => CButtons.Start,
+                Keycode.DpadUp       => CButtons.Up,
+                Keycode.DpadDown     => CButtons.Down,
+                Keycode.DpadLeft     => CButtons.Left,
+                Keycode.DpadRight    => CButtons.Right,
+                Keycode.ButtonThumbl => CButtons.LS,
+                Keycode.ButtonThumbr => CButtons.RS,
+                _                    => null
+            };
+
+            if (mapped.HasValue)
+            {
+                PlatformInput.SetKeyEventButton(mapped.Value, isDown);
+                return true;
+            }
+
+            // Legacy select/back handling. Also feeds the new system so ButtonDown(Select) works.
+            if (e.KeyCode == Keycode.Back        ||
+                e.KeyCode == Keycode.ButtonSelect ||
+                e.KeyCode == Keycode.ButtonMode  ||
+                e.KeyCode == Keycode.Menu        ||
+                e.KeyCode == Keycode.Escape)
+            {
+                PlatformInput.SetKeyEventButton(CButtons.Select, isDown);
+                if (isDown)
                     PlatformInput.SelectPressed = true;
-                    return true;
-                }
+                return true;
             }
             return base.DispatchKeyEvent(e);
+        }
+
+        public override bool DispatchGenericMotionEvent(MotionEvent? e)
+        {
+            if (e == null)
+                return base.DispatchGenericMotionEvent(e);
+
+            // Read right stick axes directly for devices that report them via 
+            // motion events but whose source flags MonoGame doesn't recognize.
+            // AXIS_Z (11) = right stick X, AXIS_RZ (14) = right stick Y.
+            float x = e.GetAxisValue(Axis.Z);
+            float y = e.GetAxisValue(Axis.Rz);
+
+            if (Math.Abs(x) > 0.05f || Math.Abs(y) > 0.05f || 
+                PlatformInput.KeyEventRightStick != Vector2.Zero)
+            {
+                PlatformInput.SetKeyEventRightStick(x, y);
+            }
+            return base.DispatchGenericMotionEvent(e);
         }
 
         public override void OnBackPressed()
         {
             PlatformInput.SelectPressed = true;
+            PlatformInput.SetKeyEventButton(CButtons.Select, true);
         }
     }
 }
