@@ -1,27 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- Main configuration. -->
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>ProjectZ.Core</AssemblyName>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <CheckEolWorkloads>false</CheckEolWorkloads>
+
+    <!-- Base Framework. -->
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <!-- Add Android build support on Windows/macOS. -->
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows')) or $([MSBuild]::IsOSPlatform('OSX'))">$(TargetFrameworks);net8.0-android</TargetFrameworks>
+    <!-- Add DirectX build support on Windows. -->
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net8.0-windows</TargetFrameworks>
+
+    <!-- Desktop-specific RIDs (exclude from Android to fix build errors). -->
+    <RuntimeIdentifiers Condition="'$(TargetFramework)' != 'net8.0-android'">win-x64;linux-x64;linux-arm64;osx-arm64;osx-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <!-- Exclude debug symbols when publishing. -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
-  <!-- Override the default target frameworks per build platform. -->
-  <PropertyGroup>
-    <!-- All build hosts support net8.0. -->
-    <TargetFrameworks>net8.0</TargetFrameworks>
-    <!-- Only include Android support on Windows and macOS (https://github.com/dotnet/sdk/issues/22411). -->
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows')) or $([MSBuild]::IsOSPlatform('OSX'))">$(TargetFrameworks);net8.0-android</TargetFrameworks>
-    <!-- Only include Windows DirectX support on Windows. -->
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net8.0-windows</TargetFrameworks>
   </PropertyGroup>
 
   <!-- Global: Packages to include in all projects. -->
@@ -34,39 +33,19 @@
   <!-- Windows DirectX: Forms is needed only to set the icon.  -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
     <UseWindowsForms>true</UseWindowsForms>
-    <DefineConstants>$(DefineConstants);WINDOWS;DIRECTX</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />
   </ItemGroup>
 
-  <!-- Windows OpenGL: Forms will not work in OpenGL builds. SDL2 is used to set the icon. -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' and $([MSBuild]::IsOSPlatform('Windows'))">
-    <DefineConstants>$(DefineConstants);WINDOWS;DESKTOPGL</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
   </ItemGroup>
 
   <!-- Android -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
-    <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
   </ItemGroup>
-
-  <!-- Linux -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' and $([MSBuild]::IsOSPlatform('Linux'))">
-    <DefineConstants>$(DefineConstants);LINUX;DESKTOPGL</DefineConstants>
-  </PropertyGroup>
-
-  <!-- MacOS -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' and $([MSBuild]::IsOSPlatform('OSX'))">
-    <DefineConstants>$(DefineConstants);OSX;DESKTOPGL</DefineConstants>
-  </PropertyGroup>
 
 </Project>
