@@ -352,6 +352,15 @@ namespace ProjectZ
 
             // Initialize extra monster hit points set by the user.
             EnemyLives.Initialize();
+
+            // Update the inventory menu transparency if disable blur is enabled.
+            // There's probably a better place to do this, but I'm tired.
+            Values.InventoryBackgroundColorTop = GameSettings.OpaqueHudBg == true 
+                ? new Color(255, 255, 230) * 0.95f
+                : new Color(255, 255, 230) * 0.85f;
+            Values.InventoryBackgroundColor = GameSettings.OpaqueHudBg == true 
+                ? new Color(255, 255, 230) * 0.95f
+                : new Color(255, 255, 230) * 0.75f;
         }
 
         private void LoadContentThreaded(Object obj)

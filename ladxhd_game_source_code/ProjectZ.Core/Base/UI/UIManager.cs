@@ -41,6 +41,8 @@ namespace ProjectZ.Base.UI
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (HideOverlay) return;
+
             foreach (var element in AllElements.ToList())
                 if (element.Screens.Contains(_currentScreen) && element.IsVisible)
                     element.Draw(spriteBatch);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
 using ProjectZ.InGame.Things;
@@ -82,7 +83,7 @@ namespace ProjectZ.InGame.Pages
             _toggleOpaqueHudBg = InterfaceToggle.GetToggleButton(
                 new Point(buttonWidth, buttonHeight), new Point(5, 2),
                 "settings_video_opaquehud", GameSettings.OpaqueHudBg,
-                newState => { GameSettings.OpaqueHudBg = newState; });
+                newState => { ToggleUIBlur(newState); });
             _contentLayout.AddElement(_toggleOpaqueHudBg);
             _tooltips.Add("tooltip_video_opaquehud");
 
@@ -173,6 +174,18 @@ namespace ProjectZ.InGame.Pages
         {
             // The step starts at 0 and ends at max. Add the amount it goes negative.
             _sliderGameScale.CurrentStep = GameSettings.GameScale + 3;
+        }
+
+        private void ToggleUIBlur(bool newState)
+        {
+            GameSettings.OpaqueHudBg = newState;
+
+            Values.InventoryBackgroundColorTop = newState
+                ? new Color(255, 255, 230) * 0.95f
+                : new Color(255, 255, 230) * 0.85f;
+            Values.InventoryBackgroundColor = newState
+                ? new Color(255, 255, 230) * 0.95f
+                : new Color(255, 255, 230) * 0.75f;
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
