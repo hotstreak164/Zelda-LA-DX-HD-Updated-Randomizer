@@ -69,6 +69,12 @@ namespace ProjectZ
         private static int _lastWindowWidth;
         private static int _lastWindowHeight;
 
+    #if DIRECTX
+        private static System.Windows.Forms.Form _windowForm;
+        private static System.Drawing.Rectangle _lastWindowBounds;
+        private static bool _isBorderless;
+    #endif
+
         public static bool FpsSettingChanged;
         private readonly SimpleFps _fpsCounter = new SimpleFps();
 
@@ -257,6 +263,8 @@ namespace ProjectZ
             {
                 form.Icon = icon;
                 form.ShowIcon = true;
+                _windowForm = form;
+                _lastWindowBounds = form.Bounds; // capture starting window size as the restore target
             }
         #endif
 
@@ -548,7 +556,7 @@ namespace ProjectZ
             // Pump GBS audio on the game thread
             GbsPlayer.Pump();
 
-            if (_finishedLoading)
+            if (_finishedLoading && ShowDebugText)
             {
                 DebugText += _fpsCounter.Msg;
 
@@ -759,54 +767,148 @@ namespace ProjectZ
                 _forceFullScreen = true;
             #endif
 
-            // Enter fullscreen
             if (_forceFullScreen || GameSettings.ScreenMode > 0)
             {
                 FullScreen = GameSettings.ScreenMode > 0;
 
-                // Save windowed backbuffer size so we can restore later
-                if (GameSettings.ScreenMode == 1 && !WasExclusive)
+                if (GameSettings.ScreenMode == 1)
                 {
-                    _lastWindowWidth  = Graphics.PreferredBackBufferWidth;
-                    _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+                    // Borderless fullscreen
+                #if DIRECTX
+                    if (_windowForm != null)
+                    {
+                        // Only save bounds when coming from windowed, not from exclusive
+                        if (!_isBorderless && !WasExclusive)
+                        {
+                            _lastWindowWidth  = Graphics.PreferredBackBufferWidth;
+                            _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+                            _lastWindowBounds = _windowForm.Bounds;
+                        }
+
+                        // If coming from exclusive fullscreen, exit it first
+                        if (WasExclusive)
+                        {
+                            Graphics.IsFullScreen = false;
+                            Graphics.ApplyChanges();
+                        }
+
+                        var screenBounds = System.Windows.Forms.Screen.GetBounds(_windowForm);
+
+                        _windowForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                        _windowForm.WindowState     = System.Windows.Forms.FormWindowState.Normal;
+                        _windowForm.Bounds          = screenBounds;
+
+                        Graphics.PreferredBackBufferWidth  = screenBounds.Width;
+                        Graphics.PreferredBackBufferHeight = screenBounds.Height;
+                        Graphics.ApplyChanges();
+
+                        WindowWidth  = screenBounds.Width;
+                        WindowHeight = screenBounds.Height;
+                        ScaleChanged = true;
+
+                        _isBorderless = true;
+                        WasExclusive  = false;
+
+                        GameManager?.UpdateRenderTargets();
+                        return;
+                    }
+                #endif
+                    // Non-DirectX fallback
+                    if (!WasExclusive)
+                    {
+                        _lastWindowWidth  = Graphics.PreferredBackBufferWidth;
+                        _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+                    }
+                    Graphics.HardwareModeSwitch = false;
+                    Graphics.IsFullScreen = true;
+                    Graphics.ApplyChanges();
+                    WasExclusive = false;
                 }
-                var dm = Graphics.GraphicsDevice.Adapter.CurrentDisplayMode;
+                else if (GameSettings.ScreenMode == 2)
+                {
+                    // Exclusive fullscreen
 
-                // We want the backbuffer to match the monitor size when fullscreen.
-                Graphics.PreferredBackBufferWidth  = dm.Width;
-                Graphics.PreferredBackBufferHeight = dm.Height;
+                // Save bounds only when coming from windowed
+                #if DIRECTX
+                    if (!_isBorderless && !WasExclusive)
+                #else
+                    if (!WasExclusive)
+                #endif
+                    {
+                        _lastWindowWidth  = Graphics.PreferredBackBufferWidth;
+                        _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+                #if DIRECTX
+                        if (_windowForm != null)
+                            _lastWindowBounds = _windowForm.Bounds;
+                #endif
+                    }
 
-                // Exclusive vs borderless.
-                Graphics.HardwareModeSwitch = GameSettings.ScreenMode == 2;
+                    // If coming from borderless, restore WinForms window first
+                #if DIRECTX
+                    if (_isBorderless && _windowForm != null)
+                    {
+                        _windowForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                        _windowForm.Bounds = _lastWindowBounds.Width > 0
+                            ? _lastWindowBounds
+                            : new System.Drawing.Rectangle(100, 100, Values.MinWidth * 3, Values.MinHeight * 3);
+                        _isBorderless = false;
+                    }
+                #endif
 
-                Graphics.IsFullScreen = true;
-                Graphics.ApplyChanges();
-
-                WasExclusive = GameSettings.ScreenMode == 2;
+                    var dm = Game1.Graphics.GraphicsDevice.Adapter.CurrentDisplayMode;
+                    Graphics.PreferredBackBufferWidth  = dm.Width;
+                    Graphics.PreferredBackBufferHeight = dm.Height;
+                    Graphics.HardwareModeSwitch = true;
+                    Graphics.IsFullScreen = true;
+                    Graphics.ApplyChanges();
+                    WasExclusive = true;
+                }
             }
-            // Exit fullscreen
             else
             {
+                // Windowed mode
                 GameSettings.ScreenMode = 0;
-                FullScreen = false;
-
-                Graphics.IsFullScreen = false;
-
-                // Restore prior windowed size
-                if (_lastWindowWidth > 0 && _lastWindowHeight > 0)
-                {
-                    Graphics.PreferredBackBufferWidth  = _lastWindowWidth;
-                    Graphics.PreferredBackBufferHeight = _lastWindowHeight;
-                }
-
-                // Return to normal windowed mode settings
-                Graphics.HardwareModeSwitch = true; // default-ish
-                Graphics.ApplyChanges();
-
+                FullScreen   = false;
                 WasExclusive = false;
-            }
 
-            // Update the render targets / layout
+            #if DIRECTX
+                if (_windowForm != null)
+                {
+                    var restoreBounds = (_lastWindowBounds.Width > 0 && _lastWindowBounds.Height > 0)
+                        ? _lastWindowBounds
+                        : new System.Drawing.Rectangle(100, 100, Values.MinWidth * 3, Values.MinHeight * 3);
+
+                    _windowForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                    _windowForm.Bounds          = restoreBounds;
+                    _isBorderless = false;
+
+                    // Use saved client size, not window bounds (which includes title bar and borders)
+                    int restoreW = _lastWindowWidth  > 0 ? _lastWindowWidth  : Values.MinWidth  * 3;
+                    int restoreH = _lastWindowHeight > 0 ? _lastWindowHeight : Values.MinHeight * 3;
+                    Graphics.PreferredBackBufferWidth  = restoreW;
+                    Graphics.PreferredBackBufferHeight = restoreH;
+                    Graphics.IsFullScreen = false;
+                    Graphics.ApplyChanges();
+
+                    WindowWidth  = restoreW;
+                    WindowHeight = restoreH;
+                    ScaleChanged = true;
+
+                    GameManager?.UpdateRenderTargets();
+                    return;
+                }
+            #endif
+
+                // Non-DirectX fallback
+                int fallbackW = _lastWindowWidth  > 0 ? _lastWindowWidth  : Values.MinWidth  * 3;
+                int fallbackH = _lastWindowHeight > 0 ? _lastWindowHeight : Values.MinHeight * 3;
+
+                Graphics.PreferredBackBufferWidth  = fallbackW;
+                Graphics.PreferredBackBufferHeight = fallbackH;
+                Graphics.IsFullScreen = false;
+                Graphics.HardwareModeSwitch = true;
+                Graphics.ApplyChanges();
+            }
             GameManager?.UpdateRenderTargets();
         }
 

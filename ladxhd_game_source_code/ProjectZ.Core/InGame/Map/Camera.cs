@@ -20,7 +20,6 @@ namespace ProjectZ.InGame.Map
         private float RoundedShakeX => MathF.Round(ShakeOffsetX);
         private float RoundedShakeY => MathF.Round(ShakeOffsetY);
 
-        // This is needed so there is no texture bleeding while rendering the game.
         public float RoundX => (int)Math.Round(Location.X + RoundedShakeX * Scale, MidpointRounding.AwayFromZero);
         public float RoundY => (int)Math.Round(Location.Y + RoundedShakeY * Scale, MidpointRounding.AwayFromZero);
 
@@ -39,7 +38,8 @@ namespace ProjectZ.InGame.Map
 
                 return
                     Matrix.CreateScale(Scale, Scale, 1f) *
-                    Matrix.CreateTranslation(tx, ty, 0f);
+                    Matrix.CreateTranslation(tx, ty, 0f) *
+                    Game1.GameManager.GetMatrix;
             }
         }
 
