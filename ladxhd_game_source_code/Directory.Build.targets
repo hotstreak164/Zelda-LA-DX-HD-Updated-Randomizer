@@ -1,0 +1,27 @@
+<Project>
+  <!-- Define per-platform constants for the generic net8.0 target (DesktopGL). -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <DefineConstants Condition="'$(TargetOS)' == 'win'">$(DefineConstants);WINDOWS;DESKTOPGL</DefineConstants>
+    <DefineConstants Condition="'$(TargetOS)' == 'linux'">$(DefineConstants);LINUX;DESKTOPGL</DefineConstants>
+    <DefineConstants Condition="'$(TargetOS)' == 'osx'">$(DefineConstants);OSX;DESKTOPGL</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Define constants for specific target frameworks. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <DefineConstants>$(DefineConstants);WINDOWS;DIRECTX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-android' or '$(TargetOS)' == 'android'">
+    <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+  </PropertyGroup>
+
+  <Target Name="DebugPlatformConstants" BeforeTargets="BeforeBuild">
+    <Message Importance="High" Text="--- Build Debug Info ---" />
+    <Message Importance="High" Text="Project Name:      $(MSBuildProjectName)" />
+    <Message Importance="High" Text="Target Framework:  $(TargetFramework)" />
+    <Message Importance="High" Text="Runtime ID:        $(RuntimeIdentifier)" />
+    <Message Importance="High" Text="Detected TargetOS: $(TargetOS)" />
+    <Message Importance="High" Text="Final Constants:   $(DefineConstants)" />
+    <Message Importance="High" Text="------------------------" />
+  </Target>
+</Project>

@@ -3,4 +3,13 @@
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <CheckEolWorkloads>false</CheckEolWorkloads>
   </PropertyGroup>
+
+  <!-- Detect target OS from RuntimeIdentifier or host. -->
+  <PropertyGroup>
+    <TargetRID Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier.Split('-')[0])</TargetRID>
+    <TargetOS Condition="'$(TargetRID)' == 'win' or ('$(TargetRID)' == '' and $([MSBuild]::IsOSPlatform('Windows')))">win</TargetOS>
+    <TargetOS Condition="'$(TargetRID)' == 'linux' or ('$(TargetRID)' == '' and $([MSBuild]::IsOSPlatform('Linux')))">linux</TargetOS>
+    <TargetOS Condition="'$(TargetRID)' == 'osx' or ('$(TargetRID)' == '' and $([MSBuild]::IsOSPlatform('OSX')))">osx</TargetOS>
+    <TargetOS Condition="'$(TargetRID)' == 'android' or ('$(TargetRID)' == '' and '$(TargetFramework)' == 'net8.0-android')">android</TargetOS>
+  </PropertyGroup>
 </Project>
