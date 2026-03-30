@@ -34,7 +34,12 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
             // Normal Camera: Update objects that are within the viewport.
             else
             {
-                Pool.GetComponentList(_objectList, ObjectManager.ViewportX, ObjectManager.ViewportY, ObjectManager.ViewportW, ObjectManager.ViewportH, BaseAnimationComponent.Mask);
+                Pool.GetComponentList(_objectList,
+                    (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                    (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                    (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                    (int)(Game1.RenderHeight / MapManager.Camera.Scale), 
+                    BaseAnimationComponent.Mask);
                 _objectListSet.UnionWith(_objectList);
             }
             // Always include certain objects that are flagged as "always animate".

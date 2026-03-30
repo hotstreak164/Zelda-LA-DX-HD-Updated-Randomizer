@@ -71,7 +71,6 @@ namespace ProjectZ.InGame.Map
         private readonly HashSet<GameObject> _updateGameObjectsSet = new();
         private readonly HashSet<GameObject> _collidingObjectsSet = new();
         private readonly HashSet<GameObject> _damageFieldObjectsSet = new();
-        private readonly HashSet<GameObject> _alwaysAnimateSet = new();
 
         // Debug lists. Only relevant for debugging.
         private readonly List<GameObject> db_damageList = new List<GameObject>();
@@ -86,11 +85,6 @@ namespace ProjectZ.InGame.Map
 
         public static Rectangle UpdateField;
         public static Rectangle ActualField;
-
-        public static int ViewportX;
-        public static int ViewportY;
-        public static int ViewportW;
-        public static int ViewportH;
 
         public ObjectManager(Map owner)
         {
@@ -240,15 +234,6 @@ namespace ProjectZ.InGame.Map
                     _ = Owner.ResetCurrentFieldHoleMap();
                 }
             }
-            // Optimization: Computer the viewport once per update loop. This was done almost 20 times per frame so just do it once.
-            else
-            {
-                float scale = MapManager.Camera.Scale;
-                ViewportX = (int)((MapManager.Camera.X - Game1.RenderWidth  / 2) / scale);
-                ViewportY = (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / scale);
-                ViewportW = (int)(Game1.RenderWidth  / scale);
-                ViewportH = (int)(Game1.RenderHeight / scale);
-            }
             // Add the always animate objects from the main list to the temporary list here. The objects are copied to this 
             // list so it can serve as a "static" non-changing list that wont cause crashes due to it being updated mid-loop.
             if (AlwaysAnimateObjectsMain != null && AlwaysAnimateObjectsMain.Count != 0)
@@ -293,7 +278,7 @@ namespace ProjectZ.InGame.Map
         public void RegisterAlwaysAnimateObject(GameObject obj)
         {
             lock (_alwaysAnimateLock)
-                if (_alwaysAnimateSet.Add(obj))
+                if (!AlwaysAnimateObjectsMain.Contains(obj))
                     AlwaysAnimateObjectsMain.Add(obj);
         }
 
@@ -379,7 +364,12 @@ namespace ProjectZ.InGame.Map
             // Normal Camera: Update objects that are within the viewport.
             else
             {
-                _gameObjectPool.GetComponentList(_updateGameObjects, ViewportX, ViewportY, ViewportW, ViewportH, UpdateComponent.Mask);
+                var updateFieldSize = new Vector2(Game1.RenderWidth, Game1.RenderHeight);
+                _gameObjectPool.GetComponentList(_updateGameObjects,
+                   (int)((MapManager.Camera.X - updateFieldSize.X / 2) / MapManager.Camera.Scale),
+                   (int)((MapManager.Camera.Y - updateFieldSize.Y / 2) / MapManager.Camera.Scale),
+                   (int)(updateFieldSize.X / MapManager.Camera.Scale),
+                   (int)(updateFieldSize.Y / MapManager.Camera.Scale), UpdateComponent.Mask);
                 _updateGameObjectsSet.UnionWith(_updateGameObjects);
             }
             // Always update certain objects that are flagged as "always animate".
@@ -506,13 +496,9 @@ namespace ProjectZ.InGame.Map
 
             // Remove the object from the always animate list.
             lock (_alwaysAnimateLock)
-            {
                 foreach (var gameObject in DeleteObjects)
-                {
-                    _alwaysAnimateSet.Remove(gameObject);
                     AlwaysAnimateObjectsMain.Remove(gameObject);
-                }
-            }
+
             // Remove the object from the game.
             foreach (var gameObject in DeleteObjects)
                 RemoveObject(gameObject);
@@ -556,12 +542,20 @@ namespace ProjectZ.InGame.Map
 
             SpriteBatchBegin(spriteBatch, null);
 
-            _drawPool.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 0, 1);
+            _drawPool.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 0, 1);
             spriteBatch.End();
 
             SpriteBatchBegin(spriteBatch, null);
 
-            _drawPoolB.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 0, 1);
+            _drawPoolB.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 0, 1);
             spriteBatch.End();
         }
 
@@ -576,13 +570,21 @@ namespace ProjectZ.InGame.Map
             // holds the pushable stone. This way we can draw game objects >> draw hole map >> draw stones to get the correct order.
 
             SpriteBatchBegin(spriteBatch, null);
-            _drawPool.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 0, 1);
+            _drawPool.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 1, 2);
             spriteBatch.End();
 
             Owner.HoleMap.Draw(spriteBatch);
 
             SpriteBatchBegin(spriteBatch, null);
-            _drawPoolB.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 0, 1);
+            _drawPoolB.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 1, 2);
             spriteBatch.End();
 
             if (GameSettings.EnableShadows && Owner.UseShadows && !Game1.GameManager.UseShockEffect && ShadowTexture != null)
@@ -601,13 +603,21 @@ namespace ProjectZ.InGame.Map
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
                 MapManager.Camera.Scale >= 1 ? SamplerState.PointClamp : SamplerState.AnisotropicWrap,
                 null, null, null, MapManager.Camera.TransformMatrix);
-            _drawPool.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 2, 4);
+            _drawPool.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 2, 4);
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
                 MapManager.Camera.Scale >= 1 ? SamplerState.PointClamp : SamplerState.AnisotropicWrap,
                 null, null, null, MapManager.Camera.TransformMatrix);
-            _drawPoolB.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 2, 4);
+            _drawPoolB.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 2, 4);
             spriteBatch.End();
 
             // draw the body colliders
@@ -621,7 +631,11 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0)
                 {
                     db_gameObjectList.Clear();
-                    _gameObjectPool.GetObjectList(db_gameObjectList, ViewportX, ViewportY, ViewportW, ViewportH);
+                    _gameObjectPool.GetObjectList(db_gameObjectList,
+                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                        (int)(Game1.RenderHeight / MapManager.Camera.Scale));
 
                     foreach (var gameObject in db_gameObjectList)
                     {
@@ -641,7 +655,11 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 2)
                 {
                     db_damageList.Clear();
-                    _gameObjectPool.GetComponentList(db_damageList, ViewportX, ViewportY, ViewportW, ViewportH, DamageFieldComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_damageList,
+                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), DamageFieldComponent.Mask);
                     foreach (var drawTile in db_damageList)
                     {
                         var damageComponent = drawTile.Components[DamageFieldComponent.Index] as DamageFieldComponent;
@@ -653,7 +671,11 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 3)
                 {
                     db_damageList.Clear();
-                    _gameObjectPool.GetComponentList(db_damageList, ViewportX, ViewportY, ViewportW, ViewportH, HittableComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_damageList,
+                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), HittableComponent.Mask);
                     foreach (var drawTile in db_damageList)
                     {
                         var hittableComponent = drawTile.Components[HittableComponent.Index] as HittableComponent;
@@ -665,7 +687,11 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 4)
                 {
                     db_damageList.Clear();
-                    _gameObjectPool.GetComponentList(db_damageList, ViewportX, ViewportY, ViewportW, ViewportH, PushableComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_damageList,
+                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), PushableComponent.Mask);
                     foreach (var drawTile in db_damageList)
                     {
                         var pushableComponent = drawTile.Components[PushableComponent.Index] as PushableComponent;
@@ -677,7 +703,11 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 1)
                 {
                     db_bodyList.Clear();
-                    _gameObjectPool.GetComponentList(db_bodyList, ViewportX, ViewportY, ViewportW, ViewportH, BodyComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_bodyList,
+                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), BodyComponent.Mask);
                     foreach (var drawTile in db_bodyList)
                     {
                         var body = drawTile.Components[BodyComponent.Index] as BodyComponent;
@@ -689,7 +719,11 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 5)
                 {
                     db_damageList.Clear();
-                    _gameObjectPool.GetComponentList(db_damageList, ViewportX, ViewportY, ViewportW, ViewportH, InteractComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_damageList,
+                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), InteractComponent.Mask);
                     foreach (var drawTile in db_damageList)
                     {
                         var pushableComponent = drawTile.Components[InteractComponent.Index] as InteractComponent;
@@ -732,7 +766,11 @@ namespace ProjectZ.InGame.Map
 
             // draw the shadows
             _drawShadowObjects.Clear();
-            _gameObjectPool.GetComponentList(_drawShadowObjects, ViewportX, ViewportY, ViewportW, ViewportH, DrawShadowComponent.Mask);
+            _gameObjectPool.GetComponentList(_drawShadowObjects,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), DrawShadowComponent.Mask);
 
             foreach (var gameObject in _drawShadowObjects)
                 if (gameObject.IsActive)
@@ -744,7 +782,11 @@ namespace ProjectZ.InGame.Map
         public void DrawLight(SpriteBatch spriteBatch)
         {
             _lightObjectList.Clear();
-            _gameObjectPool.GetComponentList(_lightObjectList, ViewportX, ViewportY, ViewportW, ViewportH, LightDrawComponent.Mask);
+            _gameObjectPool.GetComponentList(_lightObjectList,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), LightDrawComponent.Mask);
 
             _lightObjectList.Sort((obj0, obj1) =>
             {
@@ -772,7 +814,11 @@ namespace ProjectZ.InGame.Map
         {
             // draw the shadows
             _drawShadowObjects.Clear();
-            _gameObjectPool.GetComponentList(_drawShadowObjects, ViewportX, ViewportY, ViewportW, ViewportH, BlurDrawComponent.Mask);
+            _gameObjectPool.GetComponentList(_drawShadowObjects,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), BlurDrawComponent.Mask);
 
             foreach (var gameObject in _drawShadowObjects)
                 if (gameObject.IsActive)
@@ -781,9 +827,6 @@ namespace ProjectZ.InGame.Map
 
         public void Clear()
         {
-            lock (_alwaysAnimateLock)
-                _alwaysAnimateSet.Clear();
-
             AlwaysAnimateObjectsMain.Clear();
             AlwaysAnimateObjectsTemp.Clear();
             ObjectList.Clear();
@@ -1173,6 +1216,7 @@ namespace ProjectZ.InGame.Map
             // get the interactable objects at the given position
             _interactableObjectList.Clear();
             _gameObjectPool.GetComponentList(_interactableObjectList, (int)box.X, (int)box.Y, (int)box.Width, (int)box.Height, InteractComponent.Mask);
+
 
             // go through all the interactable objects and check for collision before interacting with them
             foreach (var gameObject in _interactableObjectList)
