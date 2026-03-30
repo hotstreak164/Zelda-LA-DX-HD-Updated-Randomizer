@@ -196,6 +196,9 @@ namespace ProjectZ.Android
 
             if (mapped.HasValue)
             {
+                if ((e.Source & InputSourceType.Gamepad) != 0)
+                    return base.DispatchKeyEvent(e);
+
                 PlatformInput.SetKeyEventButton(mapped.Value, isDown);
                 return true;
             }
