@@ -374,13 +374,13 @@ namespace ProjectZ.InGame.Things
                 Resources.LightShader.Parameters["width"].SetValue(_lightRenderTarget.Width);
                 Resources.LightShader.Parameters["height"].SetValue(_lightRenderTarget.Height);
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, Resources.LightShader, MapManager.Camera.TransformMatrix);
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, Resources.LightShader, MapManager.Camera.TransformMatrix);
                 Link.DrawTransition(spriteBatch);
                 spriteBatch.End();
             }
             else if (DrawPlayerOnTopPercentage > 0)
             {
-                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, MapManager.Camera.TransformMatrix);
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, MapManager.Camera.TransformMatrix);
                 Link.DrawTransition(spriteBatch);
                 spriteBatch.End();
             }
@@ -388,7 +388,7 @@ namespace ProjectZ.InGame.Things
             // draw the output of the light and the dark shader passes
             ChangeRenderTarget();
             Game1.Graphics.GraphicsDevice.SetRenderTarget(Game1.MainRenderTarget);
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicWrap);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             /// RT:CRASH BYPASS
             if (_inactiveRenderTarget1 != null)
