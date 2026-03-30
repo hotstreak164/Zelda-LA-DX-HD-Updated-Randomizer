@@ -411,7 +411,15 @@ namespace ProjectZ
                     }
                 }
             #else
-                if ((WindowWidth != Window.ClientBounds.Width) || (WindowHeight != Window.ClientBounds.Height))
+                if (GraphicsDevice != null)
+                {
+                    var pp = GraphicsDevice.PresentationParameters;
+                    var ppW = pp.BackBufferWidth > 0 ? pp.BackBufferWidth : Window.ClientBounds.Width;
+                    var ppH = pp.BackBufferHeight > 0 ? pp.BackBufferHeight : Window.ClientBounds.Height;
+                    if (WindowWidth != ppW || WindowHeight != ppH)
+                        OnResize();
+                }
+                else if (WindowWidth != Window.ClientBounds.Width || WindowHeight != Window.ClientBounds.Height)
                     OnResize();
             #endif
 
@@ -762,7 +770,7 @@ namespace ProjectZ
                     _lastWindowWidth  = Graphics.PreferredBackBufferWidth;
                     _lastWindowHeight = Graphics.PreferredBackBufferHeight;
                 }
-                var dm = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
+                var dm = Graphics.GraphicsDevice.Adapter.CurrentDisplayMode;
 
                 // We want the backbuffer to match the monitor size when fullscreen.
                 Graphics.PreferredBackBufferWidth  = dm.Width;
@@ -841,46 +849,42 @@ namespace ProjectZ
         {
             int w = 0, h = 0;
 
-        #if ANDROID
-            if (GraphicsDevice == null) return;
-    
-            var pp = GraphicsDevice.PresentationParameters;
-            var cb = Window?.ClientBounds;
+            #if ANDROID
+                if (GraphicsDevice == null) return;
+            #endif
 
-            w = pp.BackBufferWidth;
-            h = pp.BackBufferHeight;
-    
-            // Only fall back to ClientBounds if PP gives us nothing useful
+            if (GraphicsDevice != null)
+            {
+                var pp = GraphicsDevice.PresentationParameters;
+                w = pp.BackBufferWidth;
+                h = pp.BackBufferHeight;
+            }
+
             if (w <= 0 || h <= 0)
             {
-                w = cb?.Width ?? 0;
-                h = cb?.Height ?? 0;
+                w = Window.ClientBounds.Width;
+                h = Window.ClientBounds.Height;
             }
-        #else
-            w = Window.ClientBounds.Width;
-            h = Window.ClientBounds.Height;
-        #endif
 
             if (w <= 0 || h <= 0)
                 return;
 
-        #if !ANDROID
-            if (GameSettings.ScreenMode == 0)
-            {
-                int minW = Values.MinWidth;
-                int minH = Values.MinHeight;
-
-                if (w < minW || h < minH)
+            #if !ANDROID
+                if (GameSettings.ScreenMode == 0)
                 {
-                    Graphics.PreferredBackBufferWidth  = Math.Max(w, minW);
-                    Graphics.PreferredBackBufferHeight = Math.Max(h, minH);
-                    Graphics.ApplyChanges();
-
-                    w = Window.ClientBounds.Width;
-                    h = Window.ClientBounds.Height;
+                    int minW = Values.MinWidth;
+                    int minH = Values.MinHeight;
+                    if (w < minW || h < minH)
+                    {
+                        Graphics.PreferredBackBufferWidth  = Math.Max(w, minW);
+                        Graphics.PreferredBackBufferHeight = Math.Max(h, minH);
+                        Graphics.ApplyChanges();
+                        var pp = GraphicsDevice.PresentationParameters;
+                        w = pp.BackBufferWidth > 0 ? pp.BackBufferWidth : Window.ClientBounds.Width;
+                        h = pp.BackBufferHeight > 0 ? pp.BackBufferHeight : Window.ClientBounds.Height;
+                    }
                 }
-            }
-        #endif
+            #endif
 
             WindowWidth = w;
             WindowHeight = h;

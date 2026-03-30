@@ -19,6 +19,7 @@
   <!-- Windows DirectX: Forms is needed only to set the icon. -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <!-- Exclude MonoGame content pipeline build folders from the project. -->
