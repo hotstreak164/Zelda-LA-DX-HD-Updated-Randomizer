@@ -41,7 +41,18 @@ namespace ProjectZ.Base.UI
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (HideOverlay) return;
+            if (HideOverlay)
+            {
+                // At least draw the dialog box.
+                Game1.GameManager.InGameOverlay.TextboxOverlay.TextboxBackground.Draw(spriteBatch);
+
+                // And draw dialog choices.
+                foreach (var element in Game1.GameManager.InGameOverlay.TextboxOverlay.TextboxBackgroundChoice.ToList())
+                    if (element.Screens.Contains(_currentScreen) && element.IsVisible)
+                        element.Draw(spriteBatch);
+
+                return;
+            } 
 
             foreach (var element in AllElements.ToList())
                 if (element.Screens.Contains(_currentScreen) && element.IsVisible)

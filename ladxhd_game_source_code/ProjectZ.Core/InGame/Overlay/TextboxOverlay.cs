@@ -87,6 +87,9 @@ namespace ProjectZ.InGame.Overlay
         private const int ScrollTime = 125;
         private bool _textScrolling;
 
+        public UiRectangle TextboxBackground => _textboxBackground;
+        public UiRectangle[] TextboxBackgroundChoice => _textboxBackgroundChoice;
+
         // Mod File Values 
         int textbox_scale = 0;
 
