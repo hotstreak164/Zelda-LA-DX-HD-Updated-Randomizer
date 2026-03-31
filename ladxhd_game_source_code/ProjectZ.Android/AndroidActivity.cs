@@ -196,7 +196,14 @@ namespace ProjectZ.Android
 
             if (mapped.HasValue)
             {
-                if ((e.Source & InputSourceType.Gamepad) != 0)
+                // Pass through to MonoGame for proper gamepads, unless it's a device
+                // known to send buttons as KeyEvents despite detected as "SOURCE_GAMEPAD".
+                // - GameMT E5 Ultra with "CH32V203".
+
+                bool isKnownKeyEventDevice = e.Device != null &&
+                    e.Device.Name.Contains("CH32V203", StringComparison.OrdinalIgnoreCase);
+
+                if ((e.Source & InputSourceType.Gamepad) != 0 && !isKnownKeyEventDevice)
                     return base.DispatchKeyEvent(e);
 
                 PlatformInput.SetKeyEventButton(mapped.Value, isDown);
