@@ -429,11 +429,19 @@ namespace ProjectZ.InGame.Controls
                 if (InputHandler.KeyDown(key))
                     return true;
             }
-            if (button == CancelButton)
-                return InputHandler.GamePadDown(GameSettings.SwapButtons ? Buttons.A : Buttons.B);
 
-            if (button == ConfirmButton)
-                return InputHandler.GamePadDown(GameSettings.SwapButtons ? Buttons.B : Buttons.A);
+            if (button == CancelButton && InputHandler.GamePadDown(GameSettings.SwapButtons ? Buttons.A : Buttons.B))
+                return true;
+
+            if (button == ConfirmButton && InputHandler.GamePadDown(GameSettings.SwapButtons ? Buttons.B : Buttons.A))
+                return true;
+
+        #if ANDROID
+            if (VirtualController.ButtonDown(button))
+                return true;
+            if (PlatformInput.KeyEventButtonDown(button))
+                return true;
+        #endif
 
             return false;
         }
