@@ -71,6 +71,7 @@ namespace ProjectZ.InGame.Map
         private readonly HashSet<GameObject> _updateGameObjectsSet = new();
         private readonly HashSet<GameObject> _collidingObjectsSet = new();
         private readonly HashSet<GameObject> _damageFieldObjectsSet = new();
+        private readonly HashSet<GameObject> _alwaysAnimateSet = new();
 
         // Debug lists. Only relevant for debugging.
         private readonly List<GameObject> db_damageList = new List<GameObject>();
@@ -85,6 +86,11 @@ namespace ProjectZ.InGame.Map
 
         public static Rectangle UpdateField;
         public static Rectangle ActualField;
+
+        public static int ViewportX;
+        public static int ViewportY;
+        public static int ViewportW;
+        public static int ViewportH;
 
         public ObjectManager(Map owner)
         {
@@ -176,6 +182,15 @@ namespace ProjectZ.InGame.Map
             _finishedLoading = true;
         }
 
+        public void UpdateViewPort()
+        {
+            float scale = MapManager.Camera.Scale;
+            ViewportX = (int)((MapManager.Camera.X - Game1.RenderWidth  / 2) / scale);
+            ViewportY = (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / scale);
+            ViewportW = (int)(Game1.RenderWidth  / scale);
+            ViewportH = (int)(Game1.RenderHeight / scale);
+        }
+
         public void Update(bool frozen)
         {
             // Link is referenced a lot so let's make the code easier to read.
@@ -234,6 +249,11 @@ namespace ProjectZ.InGame.Map
                     _ = Owner.ResetCurrentFieldHoleMap();
                 }
             }
+            // Optimization: Computer the viewport once per update loop. This was done almost 20 times per frame so just do it once.
+            else
+            {
+                UpdateViewPort();
+            }
             // Add the always animate objects from the main list to the temporary list here. The objects are copied to this 
             // list so it can serve as a "static" non-changing list that wont cause crashes due to it being updated mid-loop.
             if (AlwaysAnimateObjectsMain != null && AlwaysAnimateObjectsMain.Count != 0)
@@ -278,7 +298,7 @@ namespace ProjectZ.InGame.Map
         public void RegisterAlwaysAnimateObject(GameObject obj)
         {
             lock (_alwaysAnimateLock)
-                if (!AlwaysAnimateObjectsMain.Contains(obj))
+                if (_alwaysAnimateSet.Add(obj))
                     AlwaysAnimateObjectsMain.Add(obj);
         }
 
@@ -496,8 +516,13 @@ namespace ProjectZ.InGame.Map
 
             // Remove the object from the always animate list.
             lock (_alwaysAnimateLock)
+            {
                 foreach (var gameObject in DeleteObjects)
+                {
+                    _alwaysAnimateSet.Remove(gameObject);
                     AlwaysAnimateObjectsMain.Remove(gameObject);
+                }
+            }
 
             // Remove the object from the game.
             foreach (var gameObject in DeleteObjects)
@@ -542,20 +567,12 @@ namespace ProjectZ.InGame.Map
 
             SpriteBatchBegin(spriteBatch, null);
 
-            _drawPool.DrawPool(spriteBatch,
-                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 0, 1);
+            _drawPool.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 0, 1);
             spriteBatch.End();
 
             SpriteBatchBegin(spriteBatch, null);
 
-            _drawPoolB.DrawPool(spriteBatch,
-                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 0, 1);
+            _drawPoolB.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 0, 1);
             spriteBatch.End();
         }
 
@@ -570,21 +587,13 @@ namespace ProjectZ.InGame.Map
             // holds the pushable stone. This way we can draw game objects >> draw hole map >> draw stones to get the correct order.
 
             SpriteBatchBegin(spriteBatch, null);
-            _drawPool.DrawPool(spriteBatch,
-                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 1, 2);
+            _drawPool.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 1, 2);
             spriteBatch.End();
 
             Owner.HoleMap.Draw(spriteBatch);
 
             SpriteBatchBegin(spriteBatch, null);
-            _drawPoolB.DrawPool(spriteBatch,
-                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 1, 2);
+            _drawPoolB.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 1, 2);
             spriteBatch.End();
 
             if (GameSettings.EnableShadows && Owner.UseShadows && !Game1.GameManager.UseShockEffect && ShadowTexture != null)
@@ -603,21 +612,13 @@ namespace ProjectZ.InGame.Map
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
                 MapManager.Camera.Scale >= 1 ? SamplerState.PointClamp : SamplerState.AnisotropicWrap,
                 null, null, null, MapManager.Camera.TransformMatrix);
-            _drawPool.DrawPool(spriteBatch,
-                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 2, 4);
+            _drawPool.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 2, 4);
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
                 MapManager.Camera.Scale >= 1 ? SamplerState.PointClamp : SamplerState.AnisotropicWrap,
                 null, null, null, MapManager.Camera.TransformMatrix);
-            _drawPoolB.DrawPool(spriteBatch,
-                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 2, 4);
+            _drawPoolB.DrawPool(spriteBatch, ViewportX, ViewportY, ViewportW, ViewportH, 2, 4);
             spriteBatch.End();
 
             // draw the body colliders
@@ -631,11 +632,7 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0)
                 {
                     db_gameObjectList.Clear();
-                    _gameObjectPool.GetObjectList(db_gameObjectList,
-                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                        (int)(Game1.RenderHeight / MapManager.Camera.Scale));
+                    _gameObjectPool.GetObjectList(db_gameObjectList, ViewportX, ViewportY, ViewportW, ViewportH);
 
                     foreach (var gameObject in db_gameObjectList)
                     {
@@ -655,11 +652,7 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 2)
                 {
                     db_damageList.Clear();
-                    _gameObjectPool.GetComponentList(db_damageList,
-                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), DamageFieldComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_damageList, ViewportX, ViewportY, ViewportW, ViewportH, DamageFieldComponent.Mask);
                     foreach (var drawTile in db_damageList)
                     {
                         var damageComponent = drawTile.Components[DamageFieldComponent.Index] as DamageFieldComponent;
@@ -671,11 +664,7 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 3)
                 {
                     db_damageList.Clear();
-                    _gameObjectPool.GetComponentList(db_damageList,
-                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), HittableComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_damageList, ViewportX, ViewportY, ViewportW, ViewportH, HittableComponent.Mask);
                     foreach (var drawTile in db_damageList)
                     {
                         var hittableComponent = drawTile.Components[HittableComponent.Index] as HittableComponent;
@@ -687,11 +676,7 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 4)
                 {
                     db_damageList.Clear();
-                    _gameObjectPool.GetComponentList(db_damageList,
-                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), PushableComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_damageList, ViewportX, ViewportY, ViewportW, ViewportH, PushableComponent.Mask);
                     foreach (var drawTile in db_damageList)
                     {
                         var pushableComponent = drawTile.Components[PushableComponent.Index] as PushableComponent;
@@ -703,11 +688,7 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 1)
                 {
                     db_bodyList.Clear();
-                    _gameObjectPool.GetComponentList(db_bodyList,
-                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), BodyComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_bodyList, ViewportX, ViewportY, ViewportW, ViewportH, BodyComponent.Mask);
                     foreach (var drawTile in db_bodyList)
                     {
                         var body = drawTile.Components[BodyComponent.Index] as BodyComponent;
@@ -719,11 +700,7 @@ namespace ProjectZ.InGame.Map
                 if (Game1.DebugBoxMode == 0 || Game1.DebugBoxMode == 5)
                 {
                     db_damageList.Clear();
-                    _gameObjectPool.GetComponentList(db_damageList,
-                        (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
-                        (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
-                        (int)(Game1.RenderWidth / MapManager.Camera.Scale),
-                        (int)(Game1.RenderHeight / MapManager.Camera.Scale), InteractComponent.Mask);
+                    _gameObjectPool.GetComponentList(db_damageList, ViewportX, ViewportY, ViewportW, ViewportH, InteractComponent.Mask);
                     foreach (var drawTile in db_damageList)
                     {
                         var pushableComponent = drawTile.Components[InteractComponent.Index] as InteractComponent;
@@ -827,6 +804,9 @@ namespace ProjectZ.InGame.Map
 
         public void Clear()
         {
+           lock (_alwaysAnimateLock)
+                _alwaysAnimateSet.Clear();
+
             AlwaysAnimateObjectsMain.Clear();
             AlwaysAnimateObjectsTemp.Clear();
             ObjectList.Clear();

@@ -116,6 +116,9 @@ namespace ProjectZ.InGame.Map
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            // Update the viewport values before drawing.
+            CurrentMap.Objects.UpdateViewPort();
+
             // draw the objects under the tilemap
             CurrentMap.Objects.DrawBottom(spriteBatch);
 
