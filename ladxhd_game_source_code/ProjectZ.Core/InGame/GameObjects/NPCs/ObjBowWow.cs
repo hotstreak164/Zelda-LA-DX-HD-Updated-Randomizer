@@ -24,7 +24,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private readonly AiComponent _aiComponent;
         private readonly HittableComponent _hitComponent;
         private readonly PushableComponent _pushComponent;
-        private readonly AiTriggerSwitch _changeDirectionSwitch;
 
         private Animator _animator;
 
@@ -33,9 +32,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private Vector2 _currentDirectionOffset;
         private Vector2 _treasurePosition;
 
-        private float _outsideCounter;
+        private int _chainMax;
         private int _direction;
+        private float _outsideCounter;
         private bool _followMode;
+        private float _attackPlayerCooldown;
 
         public ObjBowWow() : base("bowwow") { }
 
@@ -86,9 +87,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _body = new BodyComponent(EntityPosition, -7, -10, 14, 10, 16)
             {
                 IgnoreHoles = true,
-                MoveCollision = OnCollision,
                 Gravity = -0.175f,
-                CollisionTypes = Values.CollisionTypes.Normal | Values.CollisionTypes.NPCWall,
+                CollisionTypes = Values.CollisionTypes.None,
                 FieldRectangle = map.GetField(posX, posY)
             };
 
@@ -102,8 +102,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             stateIdle.Trigger.Add(new AiTriggerRandomTime(EndIdle, 500, 1500));
             var stateWalking = new AiState(UpdateWalking) { Init = InitWalking };
             stateWalking.Trigger.Add(new AiTriggerRandomTime(EndWalking, 500, 1000));
-            stateWalking.Trigger.Add(_changeDirectionSwitch = new AiTriggerSwitch(250));
             var stateAttack = new AiState(UpdateAttack);
+            var stateAttackPlayer = new AiState(UpdateAttackPlayer); 
             var stateTreasure = new AiState(UpdateTreasure);
 
             _aiComponent = new AiComponent();
@@ -111,6 +111,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _aiComponent.States.Add("idle", stateIdle);
             _aiComponent.States.Add("walking", stateWalking);
             _aiComponent.States.Add("attack", stateAttack);
+            _aiComponent.States.Add("attackPlayer", stateAttackPlayer);
             _aiComponent.States.Add("treasure", stateTreasure);
 
             if (Game1.RandomNumber.Next(0, 100) < 50)
@@ -173,14 +174,19 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private void SetFollowMode(bool follow)
         {
             _followMode = follow;
-            _body.CollisionTypes = follow ? Values.CollisionTypes.None : (Values.CollisionTypes.Normal | Values.CollisionTypes.NPCWall);
             _hitComponent.IsActive = !follow;
             _pushComponent.IsActive = !follow;
 
             if (follow)
             {
+                _body.FieldRectangle = Rectangle.Empty;
                 MapManager.ObjLink.SetBowWowFollower(this);
                 Map.Objects.RegisterAlwaysAnimateObject(this);
+                _chainMax = 46;
+            }
+            else
+            {
+                _chainMax = 40;
             }
         }
 
@@ -200,6 +206,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void UpdateIdle()
         {
+            if (_attackPlayerCooldown > 0)
+                _attackPlayerCooldown -= Game1.DeltaTime;
+
             UpdatePosition();
         }
 
@@ -216,18 +225,25 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                         direction.Normalize();
                     _body.VelocityTarget = direction * 1.5f;
 
-                    // update the animation
                     _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
                     _animator.Play("walk_" + _direction);
 
                     _aiComponent.ChangeState("treasure");
                     return;
                 }
+
+                if (Game1.RandomNumber.Next(0, 100) < 35)
+                    _aiComponent.ChangeState("walking");
+                else
+                    ToAttack();
             }
-            if (!_followMode || Game1.RandomNumber.Next(0, 100) < 35)
-                _aiComponent.ChangeState("walking");
             else
-                ToAttack();
+            {
+                if (Game1.RandomNumber.Next(0, 100) < 65 || _attackPlayerCooldown > 0)
+                    _aiComponent.ChangeState("walking");
+                else
+                    ToAttackPlayer();
+            }
         }
 
         private void InitWalking()
@@ -269,6 +285,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void UpdateWalking()
         {
+            if (_attackPlayerCooldown > 0)
+                _attackPlayerCooldown -= Game1.DeltaTime;
+
             if (_body.IsGrounded)
                 _body.Velocity.Z = 1.25f;
 
@@ -277,19 +296,65 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void EndWalking()
         {
-            if (!_followMode || Game1.RandomNumber.Next(0, 100) < 35)
-                _aiComponent.ChangeState("walking");
+            if (_followMode)
+            {
+                if (Game1.RandomNumber.Next(0, 100) < 35)
+                    ToIdle();
+                else
+                    ToAttack();
+            }
             else
-                ToAttack();
+            {
+                if (Game1.RandomNumber.Next(0, 100) < 65 || _attackPlayerCooldown > 0)
+                    ToIdle();
+                else
+                    ToAttackPlayer();
+            }
+        }
 
-            ToIdle();
+        private void ToAttackPlayer()
+        {
+            _attackPlayerCooldown = 3000;
+            var playerPos = new Vector2(MapManager.ObjLink.EntityPosition.X, MapManager.ObjLink.EntityPosition.Y - 8);
+            var direction = playerPos - new Vector2(EntityPosition.X, EntityPosition.Y - 8);
+            if (direction == Vector2.Zero)
+            {
+                ToIdle();
+                return;
+            }
+
+            direction.Normalize();
+
+            _body.VelocityTarget = direction * 4;
+
+            // Launch into the air
+            _body.Velocity.Z = 2f;
+            _body.IsGrounded = false;
+
+            _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
+            _animator.Play("walk_" + _direction);
+            _aiComponent.ChangeState("attackPlayer");
+        }
+
+        private void UpdateAttackPlayer()
+        {
+            // Wait until he's back on the ground after the jump
+            if (_body.IsGrounded && _body.Velocity.Z == 0 && _body.Position.Z <= 0)
+            {
+                _body.VelocityTarget = Vector2.Zero;
+                ToIdle();
+                return;
+            }
+
+            UpdatePosition();
         }
 
         private void ToAttack()
         {
-            // Refresh Bow Wow's field rectangle.
-            _body.FieldRectangle = Map.GetField(MapManager.ObjLink.CenterPosition.Position);
-
+            if (!_followMode)
+            {
+                _body.FieldRectangle = Map.GetField(MapManager.ObjLink.CenterPosition.Position);
+            }
             // Reset the target each attack.
             _enemyTarget = null;
 
@@ -444,27 +509,25 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_followMode)
                 _origin = MapManager.ObjLink.Position - new Vector2(0, 4);
 
-            // limit the position
             var distance = (EntityPosition.Position +
                 new Vector2(_body.VelocityTarget.X + _body.Velocity.X, _body.VelocityTarget.Y + _body.Velocity.Y) * Game1.TimeMultiplier - new Vector2(0, 4)) - _origin;
             var dist = distance.Length();
-            if (dist > 46)
+
+            if (dist > _chainMax)
             {
-                // chain pull
                 var dir = distance;
                 dir.Normalize();
-                var newPosition = _origin + dir * 46 + new Vector2(0, 4);
+                var newPosition = _origin + dir * _chainMax + new Vector2(0, 4);
 
                 var direction = newPosition - EntityPosition.Position;
                 if (direction.Length() > 0)
                     direction.Normalize();
 
-                var mult = 0.125f + Math.Clamp((dist - 46) / 4, 0, 4);
+                var mult = 0.125f + Math.Clamp((dist - _chainMax) / 4, 0, 4);
                 _chainPull = direction * mult;
 
                 if (_followMode)
                 {
-                    // are we moving outside of the range?
                     if (dist < (distance + _body.VelocityTarget).Length())
                         _body.VelocityTarget = AnimationHelper.MoveToTarget(_body.VelocityTarget, Vector2.Zero, Game1.TimeMultiplier);
 
@@ -481,11 +544,10 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             else
             {
                 _outsideCounter = 350;
+                _chainPull = Vector2.Zero;
             }
-
             _body.AdditionalMovementVT = _chainPull;
             _chainPull *= (float)Math.Pow(0.75f, Game1.TimeMultiplier);
-
             UpdateChain();
         }
 
@@ -504,31 +566,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             startPosition.Z = MathHelper.Clamp(startPosition.Z, 0, 12);
 
             _chain.UpdateChain(startPosition, goalPosition);
-        }
-
-        private void OnCollision(Values.BodyCollision moveCollision)
-        {
-            // rotate after wall collision
-            // top collision
-            if ((moveCollision & Values.BodyCollision.Horizontal) != 0)
-            {
-                if (!_changeDirectionSwitch.State)
-                    return;
-                _changeDirectionSwitch.Reset();
-
-                _body.VelocityTarget.X = -_body.VelocityTarget.X * 0.5f;
-            }
-            // vertical collision
-            else if ((moveCollision & Values.BodyCollision.Vertical) != 0)
-            {
-                _body.VelocityTarget.Y = -_body.VelocityTarget.Y * 0.5f;
-            }
-
-            if ((moveCollision & (Values.BodyCollision.Vertical | Values.BodyCollision.Horizontal)) != 0)
-            {
-                _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
-                _animator.Play("walk_" + _direction);
-            }
         }
     }
 }
