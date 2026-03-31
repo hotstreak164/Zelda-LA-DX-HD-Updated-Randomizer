@@ -39,6 +39,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             for (var i = 0; i < ChainCount - 1; i++)
             {
                 _objChains[i] = new ObjSprite(map, (int)startPosition.X, (int)startPosition.Y, "bowwow chain", Vector2.Zero, Values.LayerPlayer, null);
+                _objChains[i].Sprite.Color = new Color(255, 255, 255) * 0.55f;
                 map.Objects.SpawnObject(_objChains[i]);
             }
         }
