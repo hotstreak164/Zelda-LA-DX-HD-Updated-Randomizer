@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using ProjectZ.Base;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
@@ -42,18 +41,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private float _idleLungeTimer;
         private float _idleBobTimer;
-
-        private static readonly Vector2[] _lightBobDirections = new Vector2[]
-        {
-            new( 0.50f, -1.25f),
-            new( 1.00f, -1.00f),
-            new( 1.25f,  0.50f),
-            new( 1.00f,  1.00f),
-            new(-0.50f,  1.25f),
-            new(-1.00f,  1.00f),
-            new(-1.25f, -0.50f),
-            new(-1.00f, -1.00f),
-        };
 
         public ObjBowWow() : base("bowwow") { }
 
@@ -105,9 +92,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             {
                 IgnoreHoles = true,
                 Gravity = -0.175f,
-                CollisionTypes = Values.CollisionTypes.None,
-                FieldRectangle = map.GetField(posX, posY),
-                MoveCollision = OnCollision
+                MoveCollision = OnCollision,
+                CollisionTypes = Values.CollisionTypes.NPCWall,
+                FieldRectangle = map.GetField(posX, posY)
             };
 
             _animator = AnimatorSaveLoad.LoadAnimator("NPCs/BowWow");
@@ -122,9 +109,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             stateWalking.Trigger.Add(new AiTriggerRandomTime(EndWalking, 500, 1000));
             stateWalking.Trigger.Add(_changeDirectionSwitch = new AiTriggerSwitch(250));
             var stateAttack = new AiState(UpdateAttack);
-            var stateAttackPlayer = new AiState(UpdateAttackPlayer);
-            var stateLightBob = new AiState(UpdateLightBob);    // new
-            var stateRecovering = new AiState(UpdateRecovering); // new
+            var stateAttackPlayer = new AiState(UpdateAttackPlayer); 
             var stateTreasure = new AiState(UpdateTreasure);
 
             _aiComponent = new AiComponent();
@@ -133,8 +118,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _aiComponent.States.Add("walking", stateWalking);
             _aiComponent.States.Add("attack", stateAttack);
             _aiComponent.States.Add("attackPlayer", stateAttackPlayer);
-            _aiComponent.States.Add("lightBob", stateLightBob);    // new
-            _aiComponent.States.Add("recovering", stateRecovering); // new
             _aiComponent.States.Add("treasure", stateTreasure);
 
             if (Game1.RandomNumber.Next(0, 100) < 50)
@@ -202,6 +185,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             if (follow)
             {
+                _body.CollisionTypes = Values.CollisionTypes.None;
                 _body.FieldRectangle = Rectangle.Empty;
                 MapManager.ObjLink.SetBowWowFollower(this);
                 Map.Objects.RegisterAlwaysAnimateObject(this);
@@ -209,6 +193,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             }
             else
             {
+                _body.CollisionTypes = Values.CollisionTypes.NPCWall;
                 _chainMax = 40;
             }
         }
@@ -216,13 +201,14 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private void ToIdle()
         {
             _aiComponent.ChangeState("idle");
-            _body.VelocityTarget = Vector2.Zero;
+            _body.VelocityTarget.X = 0;
+            _body.VelocityTarget.Y = 0;
+
+            // Original private countdown 1: random 32-95 frames at 60fps
+            _idleBobTimer = Game1.RandomNumber.Next(530, 1580);
 
             if (!_followMode)
-            {
-                _idleLungeTimer = 400f;
-                _idleBobTimer = Game1.RandomNumber.Next(150, 400);
-            }
+                _outsideCounter = Game1.RandomNumber.Next(80, 200);
         }
 
         private void UpdateIAttack()
@@ -235,26 +221,41 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_attackPlayerCooldown > 0)
                 _attackPlayerCooldown -= Game1.DeltaTime;
 
+            // Short timer fires a tiny bob in a random direction, replicating
+            // the original's "state 1 light bounce" that ran constantly during idle.
+            _idleBobTimer -= Game1.DeltaTime;
+            if (_idleBobTimer <= 0)
+            {
+                _idleBobTimer = Game1.RandomNumber.Next(530, 1580);
+
+                // Pick one of the 8 directions from the original's speed table.
+                // Values are scaled down from GB units to match this engine's scale.
+                var dirs = new Vector2[]
+                {
+                    new( 0.25f, -0.75f),
+                    new( 0.50f, -0.50f),
+                    new( 0.75f,  0.25f),
+                    new( 0.50f,  0.50f),
+                    new(-0.25f,  0.75f),
+                    new(-0.50f,  0.50f),
+                    new(-0.75f, -0.25f),
+                    new(-0.50f, -0.50f),
+                };
+
+                var dir = dirs[Game1.RandomNumber.Next(0, 8)];
+                _body.VelocityTarget = dir;
+                _body.Velocity.Z = 1.0f; // small bob, not a full lunge jump
+                _body.IsGrounded = false;
+
+                _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
+                _animator.Play("walk_" + _direction);
+            }
+
             if (!_followMode)
             {
-                // Both timers tick simultaneously, matching original state 0 behavior.
-                // Lunge timer is fixed; bob timer is random and may interrupt it first.
-                _idleLungeTimer -= Game1.DeltaTime;
-                _idleBobTimer -= Game1.DeltaTime;
-
-                if (_idleLungeTimer <= 0)
-                {
-                    ToAttackPlayer();
-                    return;
-                }
-
-                if (_idleBobTimer <= 0)
-                {
-                    ToLightBob();
-                    return;
-                }
-
-                UpdatePosition();
+                _outsideCounter -= Game1.DeltaTime;
+                if (_outsideCounter <= 0)
+                    EndIdle();
                 return;
             }
 
@@ -263,95 +264,36 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void EndIdle()
         {
-            // Non-follow idle is driven by UpdateIdle's dual timers, not this trigger.
-            if (!_followMode)
-                return;
-
-            _treasurePosition = GetTreasurePosition();
-
-            if (_treasurePosition != Vector2.Zero)
+            if (_followMode)
             {
-                var direction = _treasurePosition - EntityPosition.Position;
-                if (direction != Vector2.Zero)
-                    direction.Normalize();
-                _body.VelocityTarget = direction * 1.5f;
+                _treasurePosition = GetTreasurePosition();
 
-                _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
-                _animator.Play("walk_" + _direction);
+                if (_treasurePosition != Vector2.Zero)
+                {
+                    var direction = _treasurePosition - EntityPosition.Position;
+                    if (direction != Vector2.Zero)
+                        direction.Normalize();
+                    _body.VelocityTarget = direction * 1.5f;
 
-                _aiComponent.ChangeState("treasure");
-                return;
-            }
+                    _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
+                    _animator.Play("walk_" + _direction);
 
-            if (Game1.RandomNumber.Next(0, 100) < 35)
-                _aiComponent.ChangeState("walking");
-            else
-                ToAttack();
-        }
+                    _aiComponent.ChangeState("treasure");
+                    return;
+                }
 
-        private void ToLightBob()
-        {
-            // Pick one of the 8 directions from the original's hardcoded speed table
-            var dir = _lightBobDirections[Game1.RandomNumber.Next(0, 8)];
-            _body.VelocityTarget = dir;
-
-            // Small Z launch — original used $10 (16 units), scaled to this engine
-            _body.Velocity.Z = 1.0f;
-            _body.IsGrounded = false;
-
-            _direction = AnimationHelper.GetDirection(_body.VelocityTarget);
-            _animator.Play("walk_" + _direction);
-
-            // Original state 1 duration: ~$20 = 32 frames ≈ 533ms, then directly lunges
-            _idleBobTimer = 533f;
-            _aiComponent.ChangeState("lightBob");
-        }
-
-        private void UpdateLightBob()
-        {
-            if (_attackPlayerCooldown > 0)
-                _attackPlayerCooldown -= Game1.DeltaTime;
-
-            _idleBobTimer -= Game1.DeltaTime;
-
-            if (_idleBobTimer <= 0)
-            {
-                // Respect the cooldown even coming out of a light bob.
-                if (_attackPlayerCooldown > 0)
-                    ToIdle();
-                else
-                    ToAttackPlayer();
-                return;
-            }
-
-            UpdatePosition();
-        }
-
-        private void ToRecovering()
-        {
-            // Very brief sit after landing — just a beat, not a full pause.
-            _idleBobTimer = Game1.RandomNumber.Next(100, 200);
-            _aiComponent.ChangeState("recovering");
-            _body.VelocityTarget = Vector2.Zero;
-        }
-
-        private void UpdateRecovering()
-        {
-            if (_attackPlayerCooldown > 0)
-                _attackPlayerCooldown -= Game1.DeltaTime;
-
-            _idleBobTimer -= Game1.DeltaTime;
-
-            if (_idleBobTimer <= 0)
-            {
-                if (!_followMode)
+                if (Game1.RandomNumber.Next(0, 100) < 35)
                     _aiComponent.ChangeState("walking");
                 else
-                    ToIdle();
-                return;
+                    ToAttack();
             }
-
-            UpdatePosition();
+            else
+            {
+                if (Game1.RandomNumber.Next(0, 100) < 65 || _attackPlayerCooldown > 0)
+                    _aiComponent.ChangeState("walking");
+                else
+                    ToAttackPlayer();
+            }
         }
 
         private void InitWalking()
@@ -397,7 +339,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _attackPlayerCooldown -= Game1.DeltaTime;
 
             if (_body.IsGrounded)
-                _body.Velocity.Z = 1.25f;
+                _body.Velocity.Z = 1.50f;
 
             UpdatePosition();
         }
@@ -413,36 +355,29 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             }
             else
             {
-                if (Game1.RandomNumber.Next(0, 100) < 40)
-                    ToAttackPlayer();
-                else
+                if (Game1.RandomNumber.Next(0, 100) < 65 || _attackPlayerCooldown > 0)
                     ToIdle();
+                else
+                    ToAttackPlayer();
             }
         }
 
         private void ToAttackPlayer()
         {
+            _attackPlayerCooldown = 3000;
             var playerPos = new Vector2(MapManager.ObjLink.EntityPosition.X, MapManager.ObjLink.EntityPosition.Y - 8);
-            var toPlayer = playerPos - new Vector2(EntityPosition.X, EntityPosition.Y - 8);
-
-            // Only lunge if the player is within chain range + a small buffer.
-            // If out of range, just walk instead — no point lunging at someone you can't reach.
-            if (toPlayer.Length() > _chainMax + 3)
-            {
-                _aiComponent.ChangeState("walking");
-                return;
-            }
-
-            _attackPlayerCooldown = 3500;
-
-            if (toPlayer == Vector2.Zero)
+            var direction = playerPos - new Vector2(EntityPosition.X, EntityPosition.Y - 8);
+            if (direction == Vector2.Zero)
             {
                 ToIdle();
                 return;
             }
 
-            toPlayer.Normalize();
-            _body.VelocityTarget = toPlayer * 4;
+            direction.Normalize();
+
+            _body.VelocityTarget = direction * 4;
+
+            // Launch into the air
             _body.Velocity.Z = 2f;
             _body.IsGrounded = false;
 
@@ -453,13 +388,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void UpdateAttackPlayer()
         {
-            if (_attackPlayerCooldown > 0)
-                _attackPlayerCooldown -= Game1.DeltaTime;
-
+            // Wait until he's back on the ground after the jump
             if (_body.IsGrounded && _body.Velocity.Z == 0 && _body.Position.Z <= 0)
             {
                 _body.VelocityTarget = Vector2.Zero;
-                ToRecovering();
+                ToIdle();
                 return;
             }
 
@@ -659,6 +592,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 }
                 else
                 {
+                    // Hard clamp: compute actual current overshoot and snap position back to
+                    // the chain boundary. Also kill all outward XY velocity so there is no
+                    // rubber-band correction visible on the next frame.
                     var actualDistance = (EntityPosition.Position - new Vector2(0, 4)) - _origin;
                     var actualDist = actualDistance.Length();
                     if (actualDist > _chainMax)
@@ -668,12 +604,14 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                             _origin.X + clampDir.X * _chainMax,
                             _origin.Y + clampDir.Y * _chainMax + 4));
 
+                        // Kill XY velocity but preserve Z so a jump arc completes normally.
                         _body.VelocityTarget = Vector2.Zero;
                         _body.Velocity = new Vector3(0, 0, _body.Velocity.Z);
                         _chainPull = Vector2.Zero;
 
-                        if (_aiComponent.CurrentStateId == "attackPlayer" || _aiComponent.CurrentStateId == "lightBob")
-                            ToRecovering();
+                        // If he was mid-lunge, end the attack cleanly.
+                        if (_aiComponent.CurrentStateId == "attackPlayer")
+                            ToIdle();
                     }
                 }
             }
@@ -690,6 +628,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void UpdateChain()
         {
+            // update the chain
             var directionOffset = AnimationHelper.DirectionOffset[_direction] * new Vector2(6, 3);
             _currentDirectionOffset = Vector2.Lerp(_currentDirectionOffset, directionOffset, Game1.TimeMultiplier * 0.25f);
 
@@ -703,9 +642,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             _chain.UpdateChain(startPosition, goalPosition);
         }
-
+        
         private void OnCollision(Values.BodyCollision moveCollision)
         {
+            // rotate after wall collision
+            // top collision
             if ((moveCollision & Values.BodyCollision.Horizontal) != 0)
             {
                 if (!_changeDirectionSwitch.State)
@@ -714,7 +655,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
                 _body.VelocityTarget.X = -_body.VelocityTarget.X * 0.5f;
             }
-
+            // vertical collision
             else if ((moveCollision & Values.BodyCollision.Vertical) != 0)
             {
                 _body.VelocityTarget.Y = -_body.VelocityTarget.Y * 0.5f;
