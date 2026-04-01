@@ -811,19 +811,19 @@ namespace ProjectZ.InGame.Overlay.Sequences
         private bool NextCredits()
         {
             _creditsContentIndex++;
-            var newContent = Game1.LanguageManager.GetString("credits_" + _creditsHeaderIndex + "_" + _creditsContentIndex, null);
+            var newContent = Game1.LanguageManager.GetString("credits_" + _creditsHeaderIndex + "_" + _creditsContentIndex, null, true);
 
             if (newContent == null)
             {
                 _creditsHeaderIndex++;
-                var newHeader = Game1.LanguageManager.GetString("credits_" + _creditsHeaderIndex, null);
+                var newHeader = Game1.LanguageManager.GetString("credits_" + _creditsHeaderIndex, null, true);
 
                 if (newHeader != null)
                 {
                     _creditsHeader = newHeader;
 
                     _creditsContentIndex = 0;
-                    _creditsContent = Game1.LanguageManager.GetString("credits_" + _creditsHeaderIndex + "_" + _creditsContentIndex, null);
+                    _creditsContent = Game1.LanguageManager.GetString("credits_" + _creditsHeaderIndex + "_" + _creditsContentIndex, null, true);
                 }
                 // finished credits?
                 else
