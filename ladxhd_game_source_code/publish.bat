@@ -48,11 +48,11 @@ if %errorlevel% neq 0 ( echo Linux restore failed! & pause & exit /b 1 )
 
 echo Publishing Linux x64...
 wsl bash -c "%WSL_PREFIX% publish ProjectZ.Linux/ProjectZ.Linux.csproj -c Release -f net8.0 -r linux-x64 --no-restore -p:PublishProfile=FolderProfile_Linux"
-if %errorlevel% neq 0 ( echo Linux x64 build failed! & pause & exit /b 1 )
+if %errorlevel% neq 0 ( echo Linux x86_64 build failed! & pause & exit /b 1 )
 
 echo Publishing Linux Arm64...
 wsl bash -c "%WSL_PREFIX% publish ProjectZ.Linux/ProjectZ.Linux.csproj -c Release -f net8.0 -r linux-arm64 --no-restore -p:PublishProfile=FolderProfile_Linux_Arm"
-if %errorlevel% neq 0 ( echo Linux arm64 build failed! & pause & exit /b 1 )
+if %errorlevel% neq 0 ( echo Linux Arm64 build failed! & pause & exit /b 1 )
 
 echo Restoring MacOS packages in WSL...
 wsl bash -c "%WSL_PREFIX% restore ProjectZ.MacOS/ProjectZ.MacOS.csproj"
@@ -60,11 +60,11 @@ if %errorlevel% neq 0 ( echo MacOS restore failed! & pause & exit /b 1 )
 
 echo Publishing MacOS arm64...
 wsl bash -c "%WSL_PREFIX% publish ProjectZ.MacOS/ProjectZ.MacOS.csproj -c Release -f net8.0 -r osx-arm64 --no-restore -p:PublishProfile=FolderProfile_MacOS"
-if %errorlevel% neq 0 ( echo MacOS arm64 build failed! & pause & exit /b 1 )
+if %errorlevel% neq 0 ( echo MacOS Arm64 build failed! & pause & exit /b 1 )
 
 echo Publishing MacOS x64...
 wsl bash -c "%WSL_PREFIX% publish ProjectZ.MacOS/ProjectZ.MacOS.csproj -c Release -f net8.0 -r osx-x64 --no-restore -p:PublishProfile=FolderProfile_MacOS_x64"
-if %errorlevel% neq 0 ( echo MacOS x64 build failed! & pause & exit /b 1 )
+if %errorlevel% neq 0 ( echo MacOS x86_64 build failed! & pause & exit /b 1 )
 
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 :: Clean up unnecessary files

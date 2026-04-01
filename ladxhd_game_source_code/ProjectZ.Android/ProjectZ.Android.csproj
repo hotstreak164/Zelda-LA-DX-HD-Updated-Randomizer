@@ -5,8 +5,8 @@
     <AssemblyName>ProjectZ.Android</AssemblyName>
     <RootNamespace>ProjectZ.Android</RootNamespace>
     <ApplicationId>com.projectz.game</ApplicationId>
-    <ApplicationVersion>171</ApplicationVersion>
-    <ApplicationDisplayVersion>1.7.1</ApplicationDisplayVersion>
+    <ApplicationVersion>172</ApplicationVersion>
+    <ApplicationDisplayVersion>1.7.2</ApplicationDisplayVersion>
     <TargetFramework>net8.0-android</TargetFramework>
     <RuntimeIdentifiers>android-x86;android-x64;android-arm;android-arm64</RuntimeIdentifiers>
     <SupportedOSPlatformVersion>24.0</SupportedOSPlatformVersion>

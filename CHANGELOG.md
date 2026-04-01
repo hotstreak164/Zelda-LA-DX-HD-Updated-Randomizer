@@ -1,5 +1,13 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.7.2**
+### The "I Wish I Didn't Have to Make this Update" Update
+  * Chinese dialog fixes + implement placeholder tags around the script (credit @uplush).
+  * Leaves spawned from grass textures are now semi-transparent to match the original game.
+  * Add support for LAHDMods to adjust both the transparency of BowWow chain and leaf textures.
+  * Fix a crash during the ending sequence that happened just before the credits appeared.
+  * Fix Bow Wow forcing a redraw of Layer 0 textures which was deforming grass textures when nearby.
+
 ## **v1.7.1**
 ### The "WOOF! DIG! RUFF!" Update
   * Remove BowWow collision, update AI to be more like the original game, and make chain transparent.

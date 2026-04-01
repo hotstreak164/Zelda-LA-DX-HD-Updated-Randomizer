@@ -53,7 +53,7 @@
 # CONFIGURATION
 #========================================================================================================================================
 
-$GameVersion = "1.7.1"
+$GameVersion = "1.7.2"
 $OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
 $SevenZipExe = "C:\Program Files\7-Zip\7z.exe"
 
