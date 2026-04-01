@@ -1,5 +1,16 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.7.1**
+### The "WOOF! DIG! RUFF!" Update
+  * Remove BowWow collision, update AI to be more like the original game, and make chain transparent.
+  * When the UI is hidden with the ~ key, don't hide the textbox or the the dialog choice boxes.
+  * Add controller support for Android devices where it is not properly detected like GameMT E5 Ultra.
+  * Fix BowWow temporarily getting stuck and the chain refused to pull him when he is a follower.
+  * Fix MacOS builds which were compiled incorrectly with Linux dependencies (credit @aitorciki).
+  * Fix hiding the UI when "Disable Blur" is enabled. Note that disable blur breaks rounded corners.
+  * Fix window scaling/stuttering issues for some Windows users. Only affects the DirectX build.
+  * Fix some dialog for the man at the Hen House in the German translation (credit @mrmercy82).
+
 ## **v1.7.0**
 ### The "Reaching New Heights" Update
   * MacOS versions of the game are now available using the patcher. Big thanks to @aitorciki.

@@ -17,7 +17,7 @@ The game can be patched to port to Windows (DX11), Windows (OpenGL), Android, an
 - As of v1.6.0, just about every small detail from the original game has been restored and/or replicated.
 - As of v1.7.0, it's been ported to multiple platforms and every single known bug since v1.0.0 has been fixed.
 
-## Patching v1.0.0 (or v1.1.4+) to v1.7.0.
+## Patching v1.0.0 (or v1.1.4+) to v1.7.1.
 
 To download the latest update, there is a patcher on the [Releases](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/releases) page.<br>
 If you wish to build the game yourself, see **Personal Build / Publishing**.
@@ -61,7 +61,7 @@ All software is Windows only aside from the game which has been ported to Androi
 - **ladxhd_game_source_code**: Source code for The Legend of Zelda: Link's Awakening DX HD.
 - **ladxhd_migrate_source_code**: Source code for the migration tool which can apply/create assets patches.
 - **ladxhd_modmaker_source_code**: Source code for the modmaker which can create mod installers.
-- **ladxhd_patcher_source_code**: Source code for the patcher to update the game to v1.7.0.
+- **ladxhd_patcher_source_code**: Source code for the patcher to update the game to v1.7.1.
 - **LADXHD_Migrater.exe**: This is the migration tool used to apply or create patches to the assets.
 - **Unblock-All-Files.ps1**: This script can be used to unblock all files automatically for Visual Studio.
 

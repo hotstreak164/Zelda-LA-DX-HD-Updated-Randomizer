@@ -38,8 +38,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private float _outsideCounter;
         private bool _followMode;
         private float _attackPlayerCooldown;
-
-        private float _idleLungeTimer;
         private float _idleBobTimer;
 
         public ObjBowWow() : base("bowwow") { }
