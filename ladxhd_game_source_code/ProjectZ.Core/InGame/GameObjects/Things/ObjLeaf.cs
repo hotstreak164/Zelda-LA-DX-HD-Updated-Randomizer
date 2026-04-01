@@ -24,7 +24,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private readonly int _despawnTime = 250;
 
-        public ObjLeaf(Map.Map map, int posX, int posY, float posZ, Vector2 velocity) : base(map)
+        public ObjLeaf(Map.Map map, int posX, int posY, float posZ, bool grass, Vector2 velocity) : base(map)
         {
             _velocity = velocity;
 
@@ -56,7 +56,11 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             var sourceRectangle = Resources.SourceRectangle("leaf");
             _sprite = new CSprite(Resources.SprObjects, EntityPosition, sourceRectangle, new Vector2(0, -6));
-            _sprite.Color = Color.White * 0.8f;
+
+            if (grass)
+                _sprite.Color = Color.White * 0.55f;
+            else
+                _sprite.Color = Color.White * 0.90f;
 
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerPlayer));

@@ -313,7 +313,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             for (var i = 0; i < offsets.Length; i++)
             {
                 var posZ = EntityPosition.Z + 5 - Game1.RandomNumber.Next(0, 40) / 10f;
-                var newLeaf = new ObjLeaf(Map, (int)EntityPosition.X + offsets[i].X, (int)EntityPosition.Y + offsets[i].Y, posZ, direction);
+                var newLeaf = new ObjLeaf(Map, (int)EntityPosition.X + offsets[i].X, (int)EntityPosition.Y + offsets[i].Y, posZ, _setGrassField, direction);
                 Map.Objects.SpawnObject(newLeaf);
             }
         }
