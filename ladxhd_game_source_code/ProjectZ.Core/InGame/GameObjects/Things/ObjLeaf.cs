@@ -25,16 +25,8 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private readonly int _despawnTime = 250;
 
-        private float bush_leaf_alpha = 0.90f;
-        private float grass_leaf_alpha = 0.55f;
-
-        public ObjLeaf(Map.Map map, int posX, int posY, float posZ, bool grass, Vector2 velocity) : base(map)
+        public ObjLeaf(Map.Map map, int posX, int posY, float posZ, bool isGrass, Vector2 velocity, float bushAlpha, float grassAlpha) : base(map)
         {
-            string modFile = Path.Combine(Values.PathLAHDMods, "ObjLeaf.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
-
             _velocity = velocity;
 
             _objTimer = (int)(Game1.RandomNumber.Next(0, 250) * velocity.X);
@@ -66,10 +58,10 @@ namespace ProjectZ.InGame.GameObjects.Things
             var sourceRectangle = Resources.SourceRectangle("leaf");
             _sprite = new CSprite(Resources.SprObjects, EntityPosition, sourceRectangle, new Vector2(0, -6));
 
-            if (grass)
-                _sprite.Color = Color.White * grass_leaf_alpha;
+            if (isGrass)
+                _sprite.Color = Color.White * grassAlpha;
             else
-                _sprite.Color = Color.White * bush_leaf_alpha;
+                _sprite.Color = Color.White * bushAlpha;
 
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerPlayer));

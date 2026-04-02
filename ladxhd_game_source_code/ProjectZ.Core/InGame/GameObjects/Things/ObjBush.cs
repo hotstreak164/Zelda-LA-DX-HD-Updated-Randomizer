@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using ProjectZ.Base;
 using ProjectZ.InGame.GameObjects.Base;
@@ -36,9 +37,18 @@ namespace ProjectZ.InGame.GameObjects.Things
         public bool NoRespawn;
         public bool _isThrown;
 
+        private bool fall_to_ground = false;
+        private float bush_leaf_alpha = 0.90f;
+        private float grass_leaf_alpha = 0.50f;
+
         public ObjBush(Map.Map map, int posX, int posY, string spawnItem, string spriteId,
             bool hasCollider, bool drawShadow, bool setGrassField, int drawLayer, string pickupKey) : base(map, spriteId)
         {
+            string modFile = Path.Combine(Values.PathLAHDMods, "ObjBush.lahdmod");
+
+            if (File.Exists(modFile))
+                ModFile.Parse(modFile, this);
+
             var sprite = Resources.GetSprite(spriteId);
 
             EntityPosition = new CPosition(posX + 8, posY + 8, 0);
@@ -290,32 +300,50 @@ namespace ProjectZ.InGame.GameObjects.Things
             }
         }
 
+        public bool ClassicLeaves = true;
+
         public void DestroyBush(Vector2 direction)
         {
-            if (IsDead)
-                return;
+            if (IsDead) return;
             IsDead = true;
-
-            // sound effect
+ 
             Game1.GameManager.PlaySoundEffect("D378-05-05");
-
+ 
             if (!NoRespawn)
                 Map.Objects.SpawnObject(new ObjBushRespawner(Map, (int)_respawnPosition.X - 8, (int)_respawnPosition.Y - 8, _spawnItem, _spriteId, _hasCollider, _drawShadow, _setGrassField, _drawLayer, _pickupKey));
-
-            // delete this object
+ 
             Map.Objects.DeleteObjects.Add(this);
-
-            // reset FieldStates
             Map.RemoveFieldState(_fieldPosX, _fieldPosY, MapStates.FieldStates.Grass);
+ 
+            var classic = !fall_to_ground;
+            var bushAlpha = bush_leaf_alpha;
+            var grassAlpha = grass_leaf_alpha;
 
-            // spawn the leafs
-            var offsets = new[] { new Point(-7, -1), new Point(1, -1), new Point(-7, 7), new Point(1, 7) };
-            for (var i = 0; i < offsets.Length; i++)
+            // Leaves spread out like the original game.
+            if (classic)
             {
-                var posZ = EntityPosition.Z + 5 - Game1.RandomNumber.Next(0, 40) / 10f;
-                var newLeaf = new ObjLeaf(Map, (int)EntityPosition.X + offsets[i].X, (int)EntityPosition.Y + offsets[i].Y, posZ, _setGrassField, direction);
-                Map.Objects.SpawnObject(newLeaf);
+                bool isSwamp = DetermineSwampVariant();
+                for (int i = 0; i < 4; i++)
+                {
+                    Map.Objects.SpawnObject(new ObjLeafClassic(Map, (int)EntityPosition.X - 8, (int)EntityPosition.Y - 8, _setGrassField, isSwamp, i, bushAlpha, grassAlpha));
+                }
             }
+            // Leaves fall to the ground slowly.
+            else
+            {    
+                var offsets = new[] { new Point(-7, -1), new Point(1, -1), new Point(-7, 7), new Point(1, 7) };
+                for (var i = 0; i < offsets.Length; i++)
+                {
+                    var posZ = EntityPosition.Z + 5 - Game1.RandomNumber.Next(0, 40) / 10f;
+                    var newLeaf = new ObjLeaf(Map, (int)EntityPosition.X + offsets[i].X, (int)EntityPosition.Y + offsets[i].Y, posZ, _setGrassField, direction, bushAlpha, grassAlpha);
+                    Map.Objects.SpawnObject(newLeaf);
+                }
+            }
+        }
+ 
+        private bool DetermineSwampVariant()
+        {
+            return false;
         }
     }
 }
