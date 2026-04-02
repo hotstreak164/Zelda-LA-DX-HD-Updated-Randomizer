@@ -178,7 +178,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             for (var i = 0; i < 3; i++)
                 spriteBatch.Draw(_spriteChain.Texture, new Vector2(handPosition.X - 2, handPosition.Y - 2 - MapManager.ObjLink.EntityPosition.Z) +
                                                        new Vector2(direction.X, direction.Y) * ((i + 0.75f) / 4f) +
-                                                       new Vector2(0, -direction.Z * ((i + 0.75f) / 4f)), _spriteChain.SourceRectangle, Color.White);
+                                                       new Vector2(0, -direction.Z * ((i + 0.75f) / 4f)), _spriteChain.SourceRectangle, Color.White * 0.50f);
 
             // draw the hook
             spriteBatch.Draw(_spriteHook.Texture, new Vector2(_hookshotPosition.X - 7,
