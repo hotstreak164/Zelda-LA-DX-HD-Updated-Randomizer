@@ -162,7 +162,9 @@ namespace ProjectZ.InGame.Screens
 
         private int _oceanFrameIndex;
 
-        private float _oceanShoreCounter = 2000;
+        private bool _oceanShorePlay;
+        private float _oceanShoreLimit;
+        private float _oceanShoreCounter = 3600;
 
         private int _screenWidth = 160;
         private int _screenHeight = 144;
@@ -362,8 +364,7 @@ namespace ProjectZ.InGame.Screens
                 Game1.GbsPlayer.Play();
             }
 
-            if (Game1.FinishedLoading &&
-                (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton) || ControlHandler.ButtonPressed(CButtons.Start)))
+            if (Game1.FinishedLoading && (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton) || ControlHandler.ButtonPressed(CButtons.Start)))
             {
                 if (_currentState == States.StrandLogo)
                 {
@@ -382,6 +383,9 @@ namespace ProjectZ.InGame.Screens
                     _currentState = States.StrandPanning;
                     _linkPosition = new Vector2(-1000,-1000);
                     _marinPosition = new Vector2(-1000,-1000);
+                    _oceanShorePlay = false;
+                    _oceanShoreLimit = 0;
+                    _oceanShoreCounter = 3600;
                 }
             }
             if (!Game1.FinishedLoading)
@@ -535,6 +539,9 @@ namespace ProjectZ.InGame.Screens
 
             if (_currentState == States.StrandFading)
             {
+                if (!_oceanShorePlay)
+                    _oceanShorePlay = true;
+
                 _strandFadeCount -= Game1.DeltaTime;
 
                 if (_strandFadeCount < StrandFadeTime)
@@ -575,6 +582,8 @@ namespace ProjectZ.InGame.Screens
             }
             else if (_currentState == States.StrandPanning)
             {
+                _oceanShorePlay = false;
+
                 if (!MoveCamera(0.0014f))
                 {
                     _logoCounter += Game1.DeltaTime;
@@ -600,13 +609,18 @@ namespace ProjectZ.InGame.Screens
                     _ligthPosition = _lightPositions[_lightIndex];
                 }
             }
-            else
+
+            if (_oceanShorePlay)
             {
                 _oceanShoreCounter -= Game1.DeltaTime;
                 if (_oceanShoreCounter <= 0)
                 {
-                    _oceanShoreCounter += 3500;
-                    Game1.GameManager.PlaySoundEffect("D378-15-0F");
+                    _oceanShoreCounter += 2650;
+                    if (_oceanShoreLimit <= 9)
+                    {
+                        Game1.GameManager.PlaySoundEffect("D378-15-0F");
+                        _oceanShoreLimit++;
+                    }
                 }
             }
 
