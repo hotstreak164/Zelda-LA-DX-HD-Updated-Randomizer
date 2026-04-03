@@ -4735,6 +4735,29 @@ namespace ProjectZ.InGame.GameObjects
 
         private void UseToadstool()
         {
+            var findWitch = new List<GameObject>();
+            var boxSize = 14;
+            var interactionBox = new Box(
+                EntityPosition.X + _walkDirection[Direction].X * (BodyRectangle.Width / 2 + boxSize / 2) - boxSize / 2,
+                BodyRectangle.Center.Y + _walkDirection[Direction].Y * (BodyRectangle.Height / 2 + boxSize / 2) - boxSize / 2, 0,
+                boxSize, boxSize, 16);
+
+            Map.Objects.GetComponentList(findWitch, (int)interactionBox.X, (int)interactionBox.Y,
+                (int)interactionBox.Width, (int)interactionBox.Height, InteractComponent.Mask);
+
+            foreach (var obj in findWitch)
+            {
+                if (obj is ObjPerson theWitch && theWitch.PersonID == "witch")
+                {
+                    var dotWitch = theWitch.EntityPosition.Position - EntityPosition.Position;
+                    if (Vector2.Dot(dotWitch, _walkDirection[Direction]) < 0.7f)
+                        continue;
+
+                    theWitch.ForceInteract();
+                    return;
+                }
+            }
+
             if (CurrentState != State.PickingUp)
             {
                 CurrentState = State.ShowToadstool;

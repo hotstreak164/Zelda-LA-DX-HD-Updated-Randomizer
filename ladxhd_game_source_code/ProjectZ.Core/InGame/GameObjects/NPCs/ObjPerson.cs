@@ -26,6 +26,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private Vector2 _startPosition;
         private Vector2 _endPosition;
         
+        public string PersonID => _personId;
+
         public ObjPerson() : base("person") { }
 
         public ObjPerson(Map.Map map, int posX, int posY, string personId, Rectangle bodyRectangle, Vector2 offset, string animationName) : base(map)
@@ -126,6 +128,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         {
             Game1.GameManager.StartDialogPath(_personId);
             return true;
+        }
+
+        public void ForceInteract()
+        {
+            Interact();
         }
 
         private void KeyChanged()
