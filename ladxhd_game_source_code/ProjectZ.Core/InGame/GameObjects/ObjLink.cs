@@ -4473,11 +4473,12 @@ namespace ProjectZ.InGame.GameObjects
         
         private void HoldShield()
         {
-            if (CurrentState != State.Idle &&
+            if ((CurrentState != State.Idle &&
                 CurrentState != State.Pushing &&
                 CurrentState != State.Attacking &&
                 CurrentState != State.Rafting &&
-                CurrentState != State.Charging)
+                CurrentState != State.Charging) ||
+                _bootsRunning)
                 return;
 
             if (!_wasBlocking & !_blockButton)
@@ -5609,7 +5610,7 @@ namespace ProjectZ.InGame.GameObjects
         private void UpdatePegasusBoots()
         {
             _bootsWasRunning = _bootsRunning;
-            if (CurrentState != State.Idle || _isClimbing || Map.Is2dMap && Direction % 2 != 0)
+            if ((CurrentState != State.Blocking && CurrentState != State.Idle) || _isClimbing || Map.Is2dMap && Direction % 2 != 0)
             {
                 _bootsHolding = false;
                 _bootsRunning = false;
