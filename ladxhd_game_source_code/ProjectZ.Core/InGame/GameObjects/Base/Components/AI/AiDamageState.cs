@@ -527,26 +527,18 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             Game1.GameManager.PieceOfPowerCount++;
             Game1.GameManager.KillCount++;
 
-            // Check to see if a powerup is currently active.
+            // Check for powerup active and get the kill counts.
             bool powerupActive = Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.GuardianAcornIsActive;
+            int acorn_killcount = Game1.GameManager.GuardianAcornCount;
+            int pop_killcount = Game1.GameManager.PieceOfPowerCount;
 
-            // Piece of Power Conditions:
-            // Set up now to make things easier later. It's a 25% chance to spawn between 40-44 enemies killed with a guaranteed spawn at 45.
-            int count = Game1.GameManager.PieceOfPowerCount;
-            int pop_threshold = 0;
-
-            // If the count is 45 or higher then trigger the threshold.
-            if (count >= 45)
-                pop_threshold = count;
-
-            // If a dice roll of 25% lands between 40 and 44, track the threshold.
-            else if (count >= 40 && Random.Shared.NextDouble() < 0.25)
-                pop_threshold = count;
-            
-            // Guardian Acorn Conditions:
-            // Kill 12 enemies without getting hit. Easy enough.
-            int acorn_threshold = Game1.GameManager.GuardianAcornCount;
-
+            // The number of enemies that need to be killed for a Piece of Power spawn fluctuates depending on max hearts.
+            int pop_threshold = Game1.GameManager.MaxHearts switch
+            {
+                <= 6  => 30,
+                <= 10 => 35,
+                _     => 40
+            };
             // Heart or Rupee Conditions:
             // From what I can tell from the disassembly, it uses a lookup table and the values can fluctuate from
             // monster to monster. So here, let's just do 35% to spawn an item then a 50/50 split for heart or rupee.
@@ -566,9 +558,9 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
 
             // Spawn: Guardian Acorn.
             // A simpler check since it's a static 12 kills. 
-            if (acorn_threshold >= 12)
+            if (acorn_killcount >= 12)
             {
-                Game1.GameManager.GuardianAcornCount -= acorn_threshold;
+                Game1.GameManager.GuardianAcornCount = 0;
                 if (!powerupActive)
                 {
                     var objItem = new ObjItem(_gameObject.Map, 0, 0, "j", null, "guardianAcorn", null, true);
@@ -580,9 +572,9 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             
             // Spawn: Piece of Power:
             // When the threshold was met, subtract the triggering value and spawn a piece of power.
-            else if (pop_threshold > 0)
+            else if (pop_killcount >= pop_threshold)
             {
-                Game1.GameManager.PieceOfPowerCount -= pop_threshold;
+                Game1.GameManager.PieceOfPowerCount = 0;
                 if (!powerupActive)
                 {
                     var objItem = new ObjItem(_gameObject.Map, 0, 0, "j", null, "pieceOfPower", null, true);

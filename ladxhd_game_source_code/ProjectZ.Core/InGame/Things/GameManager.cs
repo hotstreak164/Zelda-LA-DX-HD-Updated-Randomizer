@@ -882,7 +882,6 @@ namespace ProjectZ.InGame.Things
                 if (PieceOfPowerDamageCount >= 3)
                 {
                     StopPieceOfPower();
-                    PieceOfPowerCount = 0;
                 }
             }
         }
