@@ -399,7 +399,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void ToAttack()
         {
-            if (!_followMode)
+            // Update the field rectangle when Bow Wow is a follower.
+            if (_followMode)
             {
                 _body.FieldRectangle = Map.GetField(MapManager.ObjLink.CenterPosition.Position);
             }
