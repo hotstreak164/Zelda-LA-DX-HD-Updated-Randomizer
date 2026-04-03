@@ -437,20 +437,11 @@ namespace ProjectZ.InGame.Map
             _collidingObjects.Clear();
             _collidingObjectsSet.Clear();
 
-            // Classic Camera: Only update objects within the current field.
-            if (Camera.ClassicMode)
-            {
-                _gameObjectPool.GetComponentList(_collidingObjects, UpdateField.X, UpdateField.Y, UpdateField.Width, UpdateField.Height, ObjectCollisionComponent.Mask);
-                FilterObjectsInField(_collidingObjects, ActualField);
-                _collidingObjectsSet.UnionWith(_collidingObjects);
-            }
-            // Normal Camera: Update objects that are within the player's body rectangle.
-            else
-            {
-                _gameObjectPool.GetComponentList(_collidingObjects, (int)Link.BodyRectangle.X, (int)Link.BodyRectangle.Y,
-                    (int)Link.BodyRectangle.Width, (int)Link.BodyRectangle.Height, ObjectCollisionComponent.Mask);
-                _collidingObjectsSet.UnionWith(_collidingObjects);
-            }
+            // Update objects that are within the player's body rectangle.
+            _gameObjectPool.GetComponentList(_collidingObjects, (int)Link.BodyRectangle.X, (int)Link.BodyRectangle.Y,
+                (int)Link.BodyRectangle.Width, (int)Link.BodyRectangle.Height, ObjectCollisionComponent.Mask);
+            _collidingObjectsSet.UnionWith(_collidingObjects);
+
             // Always include certain objects that are flagged as "always animate".
             for (int i = 0; i < AlwaysAnimateObjectsTemp.Count; i++)
             {
