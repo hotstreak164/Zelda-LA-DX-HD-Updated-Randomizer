@@ -85,6 +85,14 @@ namespace LADXHD_Patcher
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+        private static void ShowWarning(string title, string message, int width, int height, int titleSize, int titleHeight, int bodySize)
+        {
+            if (_silentMode)
+                Console.WriteLine("WARNING: " + message);
+            else
+                Forms.OkayDialog.Display(title, width, height, titleSize, titleHeight, bodySize, message);
+        }
+
         private static void ResetProgress()
         {
             // Reset the variables.
@@ -104,12 +112,14 @@ namespace LADXHD_Patcher
             // Get the percentage of progress.
             int progress = (int)(_fileCount * 100.0 / _totalCount);
 
-            // Update the progress bar with the value.
-            if (_fileCount % 10 == 0 || _fileCount == _totalCount)
-                Forms.MainDialog.UpdateProgressBar(progress);
+            // Update the progress bar and process UI events (GUI mode only).
+            if (!_silentMode)
+            {
+                if (_fileCount % 10 == 0 || _fileCount == _totalCount)
+                    Forms.MainDialog.UpdateProgressBar(progress);
 
-            // Call do events to update the progress bar.
-            Application.DoEvents();
+                Application.DoEvents();
+            }
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -141,9 +151,7 @@ namespace LADXHD_Patcher
             // If the dungeon 3 map file was not able to be patched, output an error message.
             else
             {
-                string title = "Patching \"dungeon3.map\" Failed";
-                string message = "Unable to locate or patch the correct map file for dungeon 3. The patch may succeed but this dungeon will crash the game!";
-                Forms.OkayDialog.Display(title, 260, 40, 34, 16, 10, message);
+                ShowWarning("Patching \"dungeon3.map\" Failed", "Unable to locate or patch the correct map file for dungeon 3. The patch may succeed but this dungeon will crash the game!", 260, 40, 34, 16, 10);
             }
         }
 
@@ -619,8 +627,7 @@ namespace LADXHD_Patcher
             // If it fails, show an error message.
             catch
             {
-                string message = "The game was patched successfully, but the patcher failed to delete the \"temp\" folder. Please report this as an issue on the Github repo!";
-                Forms.OkayDialog.Display("Patching Complete", 260, 40, 28, 10, 10, message);
+                ShowWarning("Patching Complete", "The game was patched successfully, but the patcher failed to delete the \"temp\" folder. Please report this as an issue on the Github repo!", 260, 40, 28, 10, 10);
             }
         }
 
