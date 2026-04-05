@@ -102,7 +102,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 };
                 var collisionBox = new CBox(EntityPosition, -8, -7, 0, 16, 14, 16, true);
                 AddComponent(BodyComponent.Index, _body);
-                AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(collisionBox, Values.CollisionTypes.Normal | Values.CollisionTypes.ThrowWeaponIgnore));
+                AddComponent(CollisionComponent.Index, _collisionComponent = new BoxCollisionComponent(collisionBox, Values.CollisionTypes.Normal | Values.CollisionTypes.ThrowWeaponIgnore | Values.CollisionTypes.Bush));
                 AddComponent(CarriableComponent.Index, new CarriableComponent( new CRectangle(EntityPosition, new Rectangle(-8, -6, 16, 14)), CarryInit, CarryUpdate, CarryThrow));
                 AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             }

@@ -30,7 +30,8 @@ namespace ProjectZ.InGame.Things
             NonWater          = 1 << 19,
             Field             = 1 << 20,
             Passageway        = 1 << 21,
-            Instrument        = 1 << 22
+            Instrument        = 1 << 22,
+            Bush              = 1 << 23
         }
 
         [Flags]

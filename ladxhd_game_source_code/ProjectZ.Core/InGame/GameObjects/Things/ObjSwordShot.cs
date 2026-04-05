@@ -90,6 +90,9 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(BodyComponent.Index, _body);
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerPlayer, EntityPosition));
             AddComponent(LightDrawComponent.Index, new LightDrawComponent(DrawLight));
+
+            if (GameSettings.SwBeamShrubs)
+                _body.CollisionTypesIgnore = Values.CollisionTypes.Bush;
         }
 
         public override void Reset()
