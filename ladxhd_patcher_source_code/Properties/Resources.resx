@@ -198,4 +198,16 @@
     <value>..\Resources\macos_x86_files.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>ZIP Archive</comment>
   </data>
+  <data name="Icon.icns" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon.icns;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ICNS File</comment>
+  </data>
+  <data name="Info.plist.template" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Info.plist.template;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>macOS app bundle Info.plist template</comment>
+  </data>
+  <data name="finalize_macos.sh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\finalize_macos.sh;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>macOS finalization script: chmod, codesign, app bundle creation</comment>
+  </data>
 </root>

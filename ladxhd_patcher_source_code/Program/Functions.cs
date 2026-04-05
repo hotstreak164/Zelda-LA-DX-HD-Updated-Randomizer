@@ -328,6 +328,27 @@ namespace LADXHD_Patcher
             RunUnixFinalizeScript("finalize_linux.sh");
         }
 
+        private static void RunMacOSFinalizeScript()
+        {
+            // Write Icon.icns and the rendered Info.plist to TempFolder so the script can copy
+            // them into the bundle without needing access to managed resources.
+            string executableName = Path.GetFileNameWithoutExtension(Config.ZeldaEXE);
+            string arch           = Config.SelectedPlatform == Platform.MacOS_x86 ? "x86_64" : "arm64";
+
+            File.WriteAllBytes(Path.Combine(Config.TempFolder, "Icon.icns"),
+                               (byte[])resources["Icon.icns"]);
+
+            string template = System.Text.Encoding.UTF8.GetString((byte[])resources["Info.plist.template"]);
+            string plist = template
+                .Replace("{EXECUTABLE}", executableName)
+                .Replace("{VERSION}",    Config.Version)
+                .Replace("{ARCH}",       arch);
+            File.WriteAllText(Path.Combine(Config.TempFolder, "Info.plist"), plist,
+                              new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+
+            RunUnixFinalizeScript("finalize_macos.sh");
+        }
+
         private static void PostPatchingFunctions()
         {
             // Because of a mistake I made not keeping "dungeon3_1.map" around, it now needs a special fix.
@@ -360,6 +381,10 @@ namespace LADXHD_Patcher
             {
                 ZipFunctions.ExtractMacOSFiles();
                 CreateModFolders();
+                // macOS needs a signed and executable binary, and an app bundle as a convenience.
+                // Only run when patching is happening directly on a macOS host (via Wine).
+                if (HostEnvironment.IsMacOS)
+                    RunMacOSFinalizeScript();
             }
             // Everything else just create Mod folders.
             else
