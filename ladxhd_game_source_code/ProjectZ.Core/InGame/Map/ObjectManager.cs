@@ -284,7 +284,7 @@ namespace ProjectZ.InGame.Map
             UpdateGameObjects();
             _systemAi.Update(freezePersistTypes);
             UpdateKeyListeners();
-            _systemBody.Update(0, 1, freezePersistTypes);
+            _systemBody.Update(freezePersistTypes);
             UpdatePlayerCollision();
             UpdateDamageFields();
             UpdateDeleteObjects();

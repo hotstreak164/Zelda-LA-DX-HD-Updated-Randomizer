@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
             _objectManager = objectManager;
         }
 
-        public void Update(int threadIndex, int threadCount, Type[] freezePersistTypes = null)
+        public void Update(Type[] freezePersistTypes = null)
         {
             if (Game1.TimeMultiplier <= 0) { return; }
 
