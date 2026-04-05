@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using LADXHD_Migrater;
 using static LADXHD_Patcher.Config;
@@ -266,6 +268,87 @@ namespace LADXHD_Patcher
             apkSigned.MovePath(apkFinalize, true);
         }
 
+        // Converts a Wine Windows path (e.g. "Z:\Users\foo\bar") to a native Unix path ("/Users/foo/bar").
+        // Strips the leading drive letter and colon (always a single letter under Wine/Windows) via regex.
+        private static string ToUnixPath(string windowsPath)
+        {
+            return Regex.Replace(windowsPath, @"^[A-Za-z]:", "").Replace('\\', '/');
+        }
+
+        // Writes a finalization script to TempFolder and fires it via /bin/sh, then polls for the
+        // sentinel file the script writes on success. Shared by the Linux and macOS paths.
+        // Wine's WaitForExit() is unreliable for native processes, so we use fire-and-forget
+        // plus a sentinel file written by the script as its very last step.
+        private static void RunUnixFinalizeScript(string scriptResource)
+        {
+            if (!HostEnvironment.IsWine)
+                return;
+
+            string scriptContent  = System.Text.Encoding.UTF8.GetString((byte[])resources[scriptResource]);
+            string scriptWinPath  = Path.Combine(Config.TempFolder, "finalize.sh");
+            File.WriteAllText(scriptWinPath, scriptContent,
+                              new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+
+            string scriptNativePath = ToUnixPath(scriptWinPath);
+            string baseFolder       = ToUnixPath(Config.BaseFolder);
+            string executableName   = Path.GetFileNameWithoutExtension(Config.ZeldaEXE);
+            string sentinelWinPath  = Path.Combine(Config.TempFolder, "finalize.done");
+
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName        = "/bin/sh",
+                    Arguments       = $"\"{scriptNativePath}\" \"{baseFolder}\" \"{executableName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow  = true,
+                };
+                Process.Start(psi);
+            }
+            catch
+            {
+                return;
+            }
+
+            // Poll for the sentinel file written by the script on successful completion.
+            // This is the synchronisation mechanism — without it the patcher exits before the
+            // script finishes chmod, codesign, and the app bundle copy.
+            const int interval =   500; // ms between checks
+            const int timeout  = 60000; // ms — generous to allow for cp -rp of large game data
+            int elapsed = 0;
+            while (!File.Exists(sentinelWinPath) && elapsed < timeout)
+            {
+                System.Threading.Thread.Sleep(interval);
+                elapsed += interval;
+            }
+        }
+
+        private static void RunLinuxFinalizeScript()
+        {
+            RunUnixFinalizeScript("finalize_linux.sh");
+        }
+
+        private static void RunMacOSFinalizeScript()
+        {
+            // Write Icon.icns and the rendered Info.plist to TempFolder so the script can copy
+            // them into the bundle without needing access to managed resources.
+            string executableName = Path.GetFileNameWithoutExtension(Config.ZeldaEXE);
+            string arch           = Config.SelectedPlatform == Platform.MacOS_x86 ? "x86_64" : "arm64";
+
+            File.WriteAllBytes(Path.Combine(Config.TempFolder, "Icon.icns"),
+                               (byte[])resources["Icon.icns"]);
+
+            string template = System.Text.Encoding.UTF8.GetString((byte[])resources["Info.plist.template"]);
+            string plist = template
+                .Replace("{EXECUTABLE}", executableName)
+                .Replace("{VERSION}",    Config.Version)
+                .Replace("{ARCH}",       arch);
+            File.WriteAllText(Path.Combine(Config.TempFolder, "Info.plist"), plist,
+                              new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+
+            RunUnixFinalizeScript("finalize_macos.sh");
+        }
+
         private static void PostPatchingFunctions()
         {
             // Because of a mistake I made not keeping "dungeon3_1.map" around, it now needs a special fix.
@@ -286,10 +369,22 @@ namespace LADXHD_Patcher
                 ZipFunctions.ExtractAndroidIcons(); 
                 GenerateAPKFile();
             }
+            else if (Config.SelectedPlatform == Platform.Linux_x86 || Config.SelectedPlatform == Platform.Linux_Arm64)
+            {
+                CreateModFolders();
+                // Linux needs the executable bit set on the game binary.
+                // Only run when patching is happening directly on a Linux host (via Wine).
+                if (HostEnvironment.IsLinux)
+                    RunLinuxFinalizeScript();
+            }
             else if (Config.SelectedPlatform == Platform.MacOS_x86 || Config.SelectedPlatform == Platform.MacOS_Arm64)
             {
                 ZipFunctions.ExtractMacOSFiles();
                 CreateModFolders();
+                // macOS needs a signed and executable binary, and an app bundle as a convenience.
+                // Only run when patching is happening directly on a macOS host (via Wine).
+                if (HostEnvironment.IsMacOS)
+                    RunMacOSFinalizeScript();
             }
             // Everything else just create Mod folders.
             else

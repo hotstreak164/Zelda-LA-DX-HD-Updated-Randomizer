@@ -78,50 +78,14 @@ namespace LADXHD_Patcher
 
             if (silentMode)
             {
-                // Parse --platform argument (only meaningful in silent mode)
-                bool platformParseError = false;
-                Platform? platformArg = ParsePlatformArg(args, out platformParseError);
-                if (platformParseError)
+                if (!TryParseTargetArgs(args, out Platform platform, out GraphicsAPI graphics))
                 {
-                    Console.WriteLine("ERROR: Invalid --platform value. Valid values: windows, android, linux-x86, linux-arm64, macos-x86, macos-arm64");
                     FreeConsole();
                     return 3;
                 }
+                Config.SelectedPlatform = platform;
+                Config.SelectedGraphics = graphics;
 
-                // Parse --graphics argument (only meaningful in silent mode)
-                bool graphicsParseError = false;
-                GraphicsAPI? graphicsArg = ParseGraphicsArg(args, out graphicsParseError);
-                if (graphicsParseError)
-                {
-                    Console.WriteLine("ERROR: Invalid --graphics value. Valid values: directx, opengl");
-                    FreeConsole();
-                    return 3;
-                }
-
-                // Apply platform (default: Windows)
-                Config.SelectedPlatform = platformArg ?? Platform.Windows;
-
-                // Apply graphics: default is DirectX for Windows, OpenGL for all other platforms
-                if (graphicsArg.HasValue)
-                {
-                    // Validate: DirectX is only supported on Windows
-                    if (graphicsArg.Value == GraphicsAPI.DirectX && Config.SelectedPlatform != Platform.Windows)
-                    {
-                        Console.WriteLine("ERROR: --graphics directx is only supported on Windows. Use --graphics opengl for other platforms.");
-                        FreeConsole();
-                        return 3;
-                    }
-                    Config.SelectedGraphics = graphicsArg.Value;
-                }
-                else
-                {
-                    // Default graphics based on platform (matches GUI initial state)
-                    Config.SelectedGraphics = (Config.SelectedPlatform == Platform.Windows)
-                        ? GraphicsAPI.DirectX
-                        : GraphicsAPI.OpenGL;
-                }
-
-                // Run in silent mode without GUI
                 int result = Functions.StartPatchingSilent();
                 FreeConsole();
                 return result;
@@ -134,6 +98,57 @@ namespace LADXHD_Patcher
                 Forms.MainDialog.ShowDialog();
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Parses and validates the --platform and --graphics arguments.
+        /// Returns true on success and sets the out parameters to the resolved values.
+        /// Returns false if an argument is invalid; an error message is already printed.
+        /// </summary>
+        private static bool TryParseTargetArgs(string[] args, out Platform platform, out GraphicsAPI graphics)
+        {
+            platform = Platform.Windows;
+            graphics = GraphicsAPI.DirectX;
+
+            // Parse --platform
+            bool platformParseError = false;
+            Platform? platformArg = ParsePlatformArg(args, out platformParseError);
+            if (platformParseError)
+            {
+                Console.WriteLine("ERROR: Invalid --platform value. Valid values: windows, android, linux-x86, linux-arm64, macos-x86, macos-arm64");
+                return false;
+            }
+
+            // Parse --graphics
+            bool graphicsParseError = false;
+            GraphicsAPI? graphicsArg = ParseGraphicsArg(args, out graphicsParseError);
+            if (graphicsParseError)
+            {
+                Console.WriteLine("ERROR: Invalid --graphics value. Valid values: directx, opengl");
+                return false;
+            }
+
+            // Apply platform (default: Windows)
+            platform = platformArg ?? Platform.Windows;
+
+            // Apply graphics: default is DirectX for Windows, OpenGL for all other platforms
+            if (graphicsArg.HasValue)
+            {
+                // Validate: DirectX is only supported on Windows
+                if (graphicsArg.Value == GraphicsAPI.DirectX && platform != Platform.Windows)
+                {
+                    Console.WriteLine("ERROR: --graphics directx is only supported on Windows. Use --graphics opengl for other platforms.");
+                    return false;
+                }
+                graphics = graphicsArg.Value;
+            }
+            else
+            {
+                // Default graphics based on platform (matches GUI initial state)
+                graphics = (platform == Platform.Windows) ? GraphicsAPI.DirectX : GraphicsAPI.OpenGL;
+            }
+
+            return true;
         }
 
         /// <summary>

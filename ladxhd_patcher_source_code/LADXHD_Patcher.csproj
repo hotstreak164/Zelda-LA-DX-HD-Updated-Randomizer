@@ -81,6 +81,7 @@
     <Compile Include="Program\Config.cs" />
     <Compile Include="Program\Forms.cs" />
     <Compile Include="Program\Functions.cs" />
+    <Compile Include="Program\HostEnvironment.cs" />
     <Compile Include="Program\XDelta3.cs" />
     <Compile Include="Program\ZipFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
