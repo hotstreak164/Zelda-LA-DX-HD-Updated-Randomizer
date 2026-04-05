@@ -567,7 +567,16 @@ namespace ProjectZ
                              $"\ntime scale:    {DebugTimeScale}" +
                              $"\ntime:          {TotalGameTime}";
 
-                DebugText += "\nHistory Enabled: " + GameManager.SaveManager.HistoryEnabled + "\n";
+                DebugText += "\nHistory Enabled: " + GameManager.SaveManager.HistoryEnabled;
+
+                if (MapManager.ObjLink != null)
+                {
+                    var pos = MapManager.ObjLink.EntityPosition;
+
+                    DebugText += "\nPosition X: " + pos.X;
+                    DebugText += "\nPosition Y: " + pos.Y;
+                    DebugText += "\nPosition Z: " + pos.Z;
+                }
             }
             base.Update(gameTime);
         }
