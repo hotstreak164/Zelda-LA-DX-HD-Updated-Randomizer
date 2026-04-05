@@ -1,0 +1,783 @@
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Game: Advanced Settings]
+// Various options to modify the base game in some way.
+
+//: Game1
+// Forces "Editor Mode" giving access to the map editor and developer/debugging option. Usually accessed via command line option "editor" but can be enabled here too.
+// Default: false
+editor_mode = false
+
+//: Game1
+// Modifies the maximum scaling value available in-game. Game automatically adds +1 for the "Auto-Detect" option (so value of 50 is actually 51).
+// Default: 20
+max_game_scale = 20
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Game: Textbox Overlay]
+// Modifies the scaling size of texboxes.
+
+//: TextboxOverlay
+// The scaling value used for textboxes. Use a value of "0" to use game default. This value should probably not exceed 6-10 on screens even up to 3840x2160 resolution.
+// Default: 0
+textbox_scale = 0
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Game: HUD Overlay]
+// Can enable/disable HUD elements, force a specific scaling size, and manually adjust positions of the HUD overlay. It may take a lot of manual tweaking and reloading the game to get everything exactly as you want it.
+
+//: HUDOverlay
+// Item Equipment HUD: Show/Hide with true/false or set scale and offsets. Negative values are valid. Use "0" for game default.
+// Defaults: true / 0 / 0 / 0
+custom_items_show = true
+custom_items_scale = 0
+custom_items_offsetx = 0
+custom_items_offsety = 0
+
+//: HUDOverlay
+// Current Hearts HUD: Show/Hide with true/false or set scale and offsets. Negative values are valid. Use "0" for game default.
+// Defaults: true / 0 / 0 / 0
+custom_heart_show = true
+custom_heart_scale = 0
+custom_heart_offsetx = 0
+custom_heart_offsety = 0
+
+//: HUDOverlay
+// Current Rupees HUD: Show/Hide with true/false or set scale and offsets. Negative values are valid. Use "0" for game default.
+// Defaults: true / 0 / 0 / 0
+custom_rupee_show = true
+custom_rupee_scale = 0
+custom_rupee_offsetx = 0
+custom_rupee_offsety = 0
+
+//: HUDOverlay
+// Current Keys HUD: Show/Hide with true/false or set scale and offsets. Negative values are valid. Use "0" for game default.
+// Defaults: true / 0 / 0 / 0
+custom_keys_show = true
+custom_keys_scale = 0
+custom_keys_offsetx = 0
+custom_keys_offsety = 0
+
+//: HUDOverlay
+// Save Game Icon: Show/Hide with true/false or set scale and offsets. Use "0" for game default.
+// Defaults: true / 0
+custom_sicon_show = true
+custom_sicon_scale = 0
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Camera: Advanced Settings]
+// Modifies the transitioning speed of the Classic Camera when recentering. Slower values such as 0.50 more closely mimic the way the original Game Boy camera pans to a new screen.
+
+//: Camera
+// Percentage Based: 1.00 = 100% / 0.75 = 75% / 0.50 = 50% / etc.
+// Default: 1.00
+classic_transition_speed = 1.00
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Player: Link]
+// Modifies various properties for Link.
+
+//: ObjLink
+// Enables sword beam on level 1 sword and/or always shoot sword beams no matter current heart count.
+// Default: false / false
+swordbeam_level1 = false
+swordbeam_always = false
+
+//: ObjLink
+// The time in milliseconds it takes to charge the sword for a spin slash; 500ms = 1/2 of a second.
+// Default: 500
+sword_charge_time = 500
+
+//: ObjLink
+// The time in milliseconds it takes to charge the boots before running; 500ms = 1/2 of a second.
+// Default: 500
+boots_charge_time = 500
+
+//: ObjLink
+// Jump acceleration applied when jumping with Roc's Feather. Small changes have significant impact.
+// Default: 2.35
+feather_velocity = 2.35
+
+//: ObjLink
+// Light source around Link (like the lamp from The Legend of Zelda: A Link to the Past). Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: false / 255 / 255 / 255 / 0.70 / 46
+light_source = false
+light_red = 255
+light_grn = 255
+light_blu = 255
+light_bright = 0.70
+light_size = 46
+
+//: ObjLink
+// Damage Shader: Set's the threshold for the darkest pixels (mark0) and the lightest pixels (mark1). If the threshold meets mark0, then "color1" is returned. If it fails and meets the threshold of mark1, then "color2" is returned. If there are any pixels lighter than that, then "color3" is returned. Note that this is used for ALL flashing effects.
+// Defaults: 0.100 / 0.725
+dmg_shader_mark0 = 0.100
+dmg_shader_mark1 = 0.725
+
+//: ObjLink
+// Damage Shader: Sets the darkest color used by the damage shader.
+// Defaults: 255 / 181 / 49
+dmg_shader_color1_red = 255
+dmg_shader_color1_grn = 181
+dmg_shader_color1_blu = 49
+
+//: ObjLink
+// Damage Shader: Sets the middle-range color used by the damage shader.
+// Defaults: 222 / 0 / 0
+dmg_shader_color2_red = 222
+dmg_shader_color2_grn = 0
+dmg_shader_color2_blu = 0
+
+//: ObjLink
+// Damage Shader: Sets the brightest color used by the damage shader.
+// Defaults: 0 / 0 / 0
+dmg_shader_color3_red = 0
+dmg_shader_color3_grn = 0
+dmg_shader_color3_blu = 0
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Items: Sword Shot]
+// Modifies properties of the Level 2 sword shot/beam.
+
+//: ObjSwordShot
+// Base damage override of the sword beam. If set to "0" inherits the damage from sword level.
+// Default: 2
+swordbeam_damage = 0
+
+//: ObjSwordShot
+// The length of time that the sword beam persists. Overrides value set in "ObjLink.lahdmod".
+// Default: 600
+swordbeam_duration = 600
+
+//: ObjSwordShot
+// The speed at which the sword beam travels. Value is a float so decimals work here (ex: 4.55).
+// Default: 4.00
+swordbeam_speed = 4.00
+
+//: ObjSwordShot
+// Fires the sword beam into a 2D space.
+// Default: false
+swordbeam_cast2d = false
+
+//: ObjSwordShot
+// Emits light. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 255 / 255 / 1.00 / 22
+light_source = true
+light_red = 255
+light_grn = 255
+light_blu = 255
+light_bright = 1.00
+light_size = 22
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Items: Arrows]
+// Modifies properties and lighting of Magic Rod shots. More properties for Magic Rod can be found in "ObjLink.lahdmod".
+
+//: ObjArrow
+// Base damage override of arrows. Damage is shared between arrows and bomb arrows.
+// Default: 2
+arrows_damage = 2
+
+//: ObjArrow
+// The distance arrows travel before falling or bomb arrow detonates. A tile is 16 pixels; default 112 = 7 tiles of distance.
+// Default: 112
+arrows_distance = 112
+
+//: ObjArrow
+// The speed at which arrows travel. Value is a float so decimals work here (ex: 4.55).
+// Default: 3.00
+arrows_speed = 3.00
+
+//: ObjArrow
+// Shoots arrows into a 2D space.
+// Default: false
+arrows_cast2d = false
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Items: Bombs]
+// Modifies properties of bombs. Changes properties for both player bombs or enemy bombs.
+
+//: ObjBomb
+// The time in milliseconds it takes for a bomb to explode. This only affects bombs placed by Link.
+// Default: 1500
+fuse_timer = 1500
+
+//: ObjBomb
+// Arrows can always pick up bombs as long as it's before they explode.
+// Default: false
+arrow_pickup = false
+
+//: ObjBomb
+// Makes items knock back bombs. Fire Rod, Hookshot, Magic Powder, etc. interact with bombs knocking them back.
+// Default: false
+item_interact = false
+
+//: ObjBomb
+// Interact with enemy bombs. Makes above items also interact with enemy bombs. 
+// Requires the option from "Modifiers > Extra Sword Interactions > Ricochet Items" for sword interactions.
+// Default: false
+enemy_interact = false
+
+//: ObjBomb
+// Detonates bombs when hitting them with the Fire Rod or Magic Powder.
+// Default: false
+fire_detonates = false
+
+//: ObjBomb
+// Emits when bomb explodes. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 255 / 255 / 1.00 / 160 / 0.60
+light_source = true
+light_red = 255
+light_grn = 255
+light_blu = 255
+light_bright = 1.00
+light_size = 160
+light_fade = 0.60
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Items: Fairies]
+// Modifies properties of the fairy.
+
+//: ObjDungeonFairy
+// Allows collecting a fairy by swinging the sword at it.
+// Default: false
+sword_collect = false
+
+//: ObjDungeonFairy
+// The number of hearts healed when grabbing a fairy.
+// Default: 6
+hearts_healed = 6
+
+//: ObjDungeonFairy
+// Emits light from the fairy. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 220 / 220 / 255 / 0.60 / 32
+light_source = true
+light_red = 220
+light_grn = 220
+light_blu = 255
+light_bright = 0.60
+light_size = 32
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Items: Magic Powder]
+// Modifies properties of Magic Powder.
+
+//: ObjPowder
+// Base damage of Magic Powder.
+// Default: 2
+powder_damage = 2
+
+//: ObjPowder
+// The speed at which powder falls to the ground. Affects when powder hits a target and how long it persists. Lower values make it fall slower.
+// Default: 5.00
+powder_gravity = 5.00
+
+//: ObjPowder
+// Emits light. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 160 / 160 / 255 / 0.625 / 24
+light_source = true
+light_red = 160
+light_grn = 160
+light_blu = 255
+light_bright = 0.625
+light_size = 24
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Items: Magic Rod]
+// Modifies properties and lighting of Magic Rod shots. More properties for Magic Rod can be found in "ObjLink.lahdmod".
+
+//: ObjMagicRodShot
+// Base damage override of the Magic Rod shot.
+// Default: 2
+magicrod_damage = 2
+
+//: ObjMagicRodShot
+// The length of time the Magic Rod shot persists before fading out.
+// Default: 600
+magicrod_duration = 600
+
+//: ObjMagicRodShot
+// The speed at which the Magic Rod shot travels. Value is a float so decimals work here (ex: 4.55).
+// Default: 3.00
+magicrod_speed = 3.00
+
+//: ObjMagicRodShot
+// Cast Magic Rod shots into a 2D space.
+// Default: false
+magicrod_cast2d = false
+
+//: ObjMagicRodShot
+// Magic Rod Missile: Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 220 / 160 / 0.80 / 42
+light_source = true
+light_red = 255
+light_grn = 220
+light_blu = 160
+light_bright = 0.80
+light_size = 42
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Effects: Burning Effect]
+// Configures the lighting for the burning effect when setting enemies on fire or when casting the Magic Rod.
+
+//: ObjBurningEffect
+// Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 220 / 160 / 0.80 / 120 / 0.35
+light_source = true
+light_red = 255
+light_grn = 220
+light_blu = 160
+light_bright = 0.80
+light_size = 120
+light_fade = 0.35
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Effects: Sparking Effect]
+// Configures the lighting effects for the sparking effect when poking the sword and other actions.
+
+//: ObjSparkingEffect
+// Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 255 / 200 / 0.80 / 26 / 0.15
+light_source = true
+light_red = 255
+light_grn = 255
+light_blu = 200
+light_bright = 0.80
+light_size = 26
+light_fade = 0.15
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Effects: Enemy Death Explosion]
+// Configures the lighting for death effect when killing enemies and they explode into stars.
+
+//: ObjDeathExplodeEffect
+// Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 240 / 235 / 0.75 / 42 / 0.33
+light_source = true
+light_red = 255
+light_grn = 240
+light_blu = 235
+light_bright = 0.75
+light_size = 42
+light_fade = 0.33
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Objects: Bushes & Grass]
+// Modifies the transparency of leaves when cutting bushes and grass.
+
+//: ObjBush
+// When the bush is cut, the leaves slowly fall to the ground. When disabled, behaves like original game.
+// Default: false
+fall_to_ground = false
+
+//: ObjBush
+// Bush leaf transparency when chopped with the sword. Use a value between 0.00 and 1.00.
+// Default: 0.90
+bush_leaf_alpha = 0.90
+
+//: ObjBush
+// Grass leaf transparency when chopped with the sword. Use a value between 0.00 and 1.00.
+// Default: 0.50
+grass_leaf_alpha = 0.50
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Objects: BowWow's Chain]
+// Modifies the transparency of BowWow's chain.
+
+//: ObjChain
+// Transparency of the chain. Use a value between 0.00 and 1.00.
+// Default: 0.55
+chain_alpha = 0.55
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Objects: Crystals]
+// Modifies the two types of crystals. The first is the "smashable" crystal formation that can be broken by swinging the sword at it. The second kind is the "weird object" that requires running through with boots. They can have one of two light sources. Both kinds of crystals can have either light source. It depends on what light source was assigned to them in the map editor. This can't be changed here, only the colors.
+
+//: ObjCrystal
+// Shared between crystals. Sets if is a light emitter and the size of the light.
+// Defaults: true / 80
+light_source = true
+light_size = 80
+
+//: ObjCrystal
+// Light source 1. Unfortunately shared between both crystals, and uses what is assigned in the map file. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: 240 / 100 / 255 / 1.00
+light_red_1 = 240
+light_grn_1 = 100
+light_blu_1 = 255
+light_bright_1 = 1.00
+
+//: ObjCrystal
+// Light source 2. Unfortunately shared between both crystals, and uses what is assigned in the map file. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: 255 / 255 / 255 / 0.25
+light_red_2 = 255
+light_grn_2 = 255
+light_blu_2 = 255
+light_bright_2 = 0.25
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Objects: Dungeon Teleporter]
+// Modifies various properties for the dungeon teleporter.
+
+//: ObjDungeonTeleporter
+// Enables or disables teleporters. If set to false, teleporter will not spawn after mid-boss is defeated.
+// Default: true
+enabled = true
+
+//: ObjDungeonTeleporter
+// How close to the teleporter's center you must be to start teleportation.
+// Default: 4.25
+teleport_range = 4.25
+
+//: ObjDungeonTeleporter
+// Light source surrounding the object. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 175 / 175 / 1.00 / 64
+light_source = true
+light_red = 255
+light_grn = 175
+light_blu = 175
+light_bright = 1.00
+light_size = 64
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Objects: Lamps]
+// Modifies properties of the lamps that are usually always lit but sometimes need to be lit with magic powder.
+
+//: ObjLamp
+// Determines how long the lamp stays lit after sprinkling it with magic powder in milliseconds (9000ms = 9 seconds). Enter a value of 0 to keep the lamp lit indefinitely (until leaving the map).
+// Default: 9000
+powder_time = 9000
+
+//: ObjLamp
+// Light source around the lamp. Brightness in this case serves as a "max brightness" when manually lit. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 200 / 200 / 1.00 / 160
+light_source = true
+light_red = 255
+light_grn = 200
+light_blu = 200
+light_bright = 1.00
+light_size = 160
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Objects: Light Sources A]
+// Modifies properties of various light sources that are not tied directly to an object.
+
+//: ObjLight
+// Enables or disable various light sources around the map.
+// Default: true
+light_source = true
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Objects: Light Sources B]
+// Modifies properties of various light sources that are not tied directly to an object.
+
+//: ObjLightSprite
+// Enables or disable various light sources around the map.
+// Default: true
+light_source = true
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Enemy: Antifairy]
+// Modifies lighting of the enemy "AntiFairy". Useful for graphics mods.
+
+//: EnemyAntiFairy
+// Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 255 / 255 / 0.5 / 50
+light_source = true
+light_red = 255
+light_grn = 255
+light_blu = 255
+light_bright = 0.5
+light_size = 50
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Enemy: Flame Fountain]
+// Modifies properties of the flame fountain. Useful for graphics mods.
+
+//: EnemyFlameFountain
+// Enables or disables the sprite shader to make the fire "blink" orange.
+// Default: true
+sprite_shader = true
+
+//: EnemyFlameFountain
+// Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 200 / 200 / 0.75 / 64
+light_source = true
+light_red = 255
+light_grn = 200
+light_blu = 200
+light_bright = 0.35
+light_size = 32
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Enemy: Giant Bubble]
+// Modifies lighting of the enemy "Giant Bubble".
+
+//: EnemyGiantBubble
+// Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 255 / 255 / 0.5 / 64
+light_source = true
+light_red = 255
+light_grn = 255
+light_blu = 255
+light_bright = 0.50
+light_size = 64
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Enemy: Podoboo]
+// Modifies lighting of the enemy "Podoboo".
+
+//: EnemyPodoboo
+// Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 200 / 200 / 0.75 / 64
+light_source = true
+light_red = 255
+light_grn = 200
+light_blu = 200
+light_bright = 0.75
+light_size = 64
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Enemy: Spark]
+// Modifies lighting of the enemy "Spark".
+
+//: EnemySpark
+// Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
+// Defaults: true / 255 / 255 / 255 / 0.5 / 50
+light_source = true
+light_red = 255
+light_grn = 255
+light_blu = 255
+light_bright = 0.25
+light_size = 64
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Enemy: Lives]
+// Configures the number of "lives" of all enemies in the game. Lives are in essence the number of "Hit Points" the enemies have. The level 1 sword deals 1 damage. The level 2 sword deals 2 damage. Piece of Power, Sword Spin, and Red Tunic multiply damage by (x2). Max possible damage is 16. Level 2 sword (2) * Red Tunic (x2) * Piece of Power (x2) * Sword Spin (x2) = 16 damage.
+
+//: ObjLives
+// The values here are "base lives", and are cumulative with the option "Extra Enemy HP". So if you set "Extra Enemy HP" to "2", it will
+// add 2 more hit points to all the values that are set here. This file lets you fine tune lives, while Extra Enemy HP is a global setting.
+AnglerFry        = 1
+AntiFairy        = 1
+AntiKirby        = 8
+ArmMimic         = 2
+Armos            = 2
+Beetle           = 1
+Bloober          = 1
+Bomber           = 2
+Bombite          = 1
+BombiteGreen     = 1
+BonePutter       = 1
+BonePutterWing   = 3
+BooBuddy         = 4
+BuzzBlob         = 4
+CamoGoblin       = 1
+CheepCheep       = 1
+Crab             = 2
+Crow             = 2
+Darknut          = 2
+DarknutSpear     = 2
+Fish             = 1
+FlyingTile       = 1
+Gel              = 1
+Ghini            = 8
+GhiniGiant       = 8
+Gibdo            = 6
+Goomba           = 1
+GopongaFlower    = 4
+GopongaGiant     = 4
+GreenZol         = 1
+HardhatBeetle    = 1
+IronMask         = 2
+Karakoro         = 2
+Keese            = 1
+Leever           = 2
+LikeLike         = 2
+MadBomber        = 4
+MaskMimic        = 2
+MiniMoldorm      = 2
+Moblin           = 2
+MoblinSword      = 2
+MoblinPig        = 2
+MoblinPigSword   = 2
+Octorok          = 1
+OctorokWinged    = 1
+Pairodd          = 2
+Peahat           = 1
+Pincer           = 2
+PiranhaPlant     = 1
+Pokey            = 4
+PokeyPart        = 1
+PolsVoice        = 4
+Raven            = 2
+RedZol           = 1
+RiverZora        = 1
+Rope             = 1
+SeaUrchin        = 1
+ShroudedStalfos  = 2
+SpikedBeetle     = 2
+SpinyBeetle      = 1
+StalfosGreen     = 2
+StalfosKnight    = 2
+StalfosOrange    = 2
+Star             = 1
+Tektite          = 2
+Vacuum           = 1
+Vire             = 3
+WaterTektite     = 1
+Wizzrobe         = 4
+Zombie           = 1
+ArmosKnight      = 12
+BaCSoldier       = 8
+Blaino           = 8
+CueBall          = 8
+DesertLanmola    = 8
+DodongoSnake     = 3
+GiantBuzzBlob    = 6
+Ghoma            = 12
+GrimCreeperFly   = 1
+Hinox            = 8
+KingMoblin       = 8
+MStalfos         = 6
+MStalfosMid      = 4
+RollingBones     = 8
+Smasher          = 8
+StoneHinox       = 8
+TurtleRock       = 16
+AnglerFish       = 10
+EvilEagle        = 12
+Facade           = 5
+F_GiantZol       = 3
+F_Agahnim        = 4
+F_Moldorm        = 16
+F_Ganon          = 12
+F_DethI          = 16
+Genie            = 8
+GenieBottle      = 3
+HardHitBeetle    = 1
+HotHead          = 20
+Moldorm          = 4
+SlimeEel         = 8
+SlimeEye         = 2
+SlimeEyeHalf     = 4
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Graphics: Tunic Colors]
+// Modifies Link's tunic colors. Colors set here colorize the "white" pixels in "..\Data\Map Objects\link_cloak.png". The purpose of this lahdmod is to be used with a Graphics mod.
+
+//: ItemDrawHelper
+// Green Tunic
+// Defaults: 16 / 173 / 66
+tunic_grn_r = 16
+tunic_grn_g = 173
+tunic_grn_b = 66
+
+//: ItemDrawHelper
+// Blue Tunic
+// Defaults: 24 / 132 / 255
+tunic_blu_r = 24
+tunic_blu_g = 132
+tunic_blu_b = 255
+
+//: ItemDrawHelper
+// Red Tunic
+// Defaults: 255 / 8 / 41
+tunic_red_r = 255
+tunic_red_g = 8
+tunic_red_b = 41
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Graphics: Island Ocean Color]
+// Set's the color of the ocean at the bottom of the Overworld below the gradient found in "..\Data\Map Objects\objects.png". The purpose of this lahdmod is to be used with a Graphics mod.
+
+//: ObjIslandBackground
+// Ocean Color
+// Defaults: 66 / 89 / 255
+ocean_color_red = 66
+ocean_color_grn = 89
+ocean_color_blu = 255
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Graphics: IntroScreen]
+// Configures various colors during the Intro sequence used in the sky and ocean. The purpose of these options is to be used with a Graphics mod.
+
+//: IntroScreen
+// Intro Raft Scene: The color of the sky at the top of the screen during the raft scene.
+// Defaults: 24 / 56 / 40
+intro_sky_red = 24
+intro_sky_grn = 56
+intro_sky_blu = 40
+
+//: IntroScreen
+// Intro Raft Scene: The color of the center part of the ocean during the raft scene.
+// Defaults: 0 / 32 / 168
+intro_ocean_red = 0
+intro_ocean_grn = 32
+intro_ocean_blu = 168
+
+//: IntroScreen
+// Intro Raft Scene: The color of the center part of the ocean when lightning starts during the raft scene.
+// Defaults: 32 / 32 / 168
+intro_ocean_lightning1_red = 32
+intro_ocean_lightning1_grn = 32
+intro_ocean_lightning1_blu = 168
+
+//: IntroScreen
+// Intro Raft Scene: The color of the center part of the ocean when lightning is brightest during the raft scene.
+// Defaults: 96 / 96 / 232
+intro_ocean_lightning2_red = 96
+intro_ocean_lightning2_grn = 96
+intro_ocean_lightning2_blu = 232
+
+//: IntroScreen
+// Intro Raft Scene: The color of the bottom part of the ocean during the raft scene.
+// Defaults: 16 / 0 / 104
+intro_ocean_bottom_red = 16
+intro_ocean_bottom_grn = 0
+intro_ocean_bottom_blu = 104
+
+//: IntroScreen
+// Intro Island Scene: The color of the ocean when Marin finds Link on the beach.
+// Defaults: 104 / 96 / 248
+intro_ocean_island_red = 104
+intro_ocean_island_grn = 96
+intro_ocean_island_blu = 248
+
+//: IntroScreen
+// Title Screen: The color of the sky when showing the egg and title screen.
+// Defaults: 248 / 248 / 248
+title_screen_sky_red = 248
+title_screen_sky_grn = 248
+title_screen_sky_blu = 248
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

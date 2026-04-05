@@ -1,0 +1,445 @@
+<UserControl	
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="768"
+	Width="550"
+	Height="768"
+	MinWidth="550"
+	MinHeight="768"
+	x:Class="LADXHD_Launcher.SettingsView">
+
+	<Canvas>
+		<Image Source="avares://Launcher/Resources/background.png"
+			   Stretch="Fill" Width="550" Height="768" />
+
+        <!-- Back Button -->
+        <Button Canvas.Left="30" Canvas.Top="710" Width="86" Height="34"
+                Click="BackButton_Click">
+            <Image Source="avares://Launcher/Resources/button_back.png"
+                   Stretch="None" />
+        </Button>
+
+        <!-- Save Button -->
+        <Button Canvas.Left="238" Canvas.Top="710" Width="74" Height="36"
+                Click="SaveButton_Click">
+            <Image Source="avares://Launcher/Resources/button_save.png"
+                   Stretch="None" />
+        </Button>
+
+        <!-- Exit Button -->
+        <Button Canvas.Left="445" Canvas.Top="710" Width="75" Height="34"
+                Click="ExitButton_Click">
+            <Image Source="avares://Launcher/Resources/button_exit.png"
+                   Stretch="None" />
+        </Button>
+
+		<Border Canvas.Left="10" Canvas.Top="10"
+                Width="530" Height="680"
+				Background="#DF000000"
+				BorderBrush="#FF000000"
+				BorderThickness="1"
+                CornerRadius="12">
+
+		<!-- Settings Panel -->
+		<ScrollViewer Margin="10,10,2,10">
+			<StackPanel Spacing="10" Margin="12,2,22,10">
+
+				<!-- Video Settings -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Video Settings" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="108">
+
+							<!-- Game Scale -->
+							<NumericUpDown x:Name="n_GameScale" Canvas.Left="0" Canvas.Top="0" Value="0" Minimum="-3" Maximum="21" Increment="1" Width="120" />
+							<TextBlock Canvas.Left="126" Canvas.Top="7" Text="Game Scale" Foreground="White"
+									   ToolTip.Tip="Determines the size of a &quot;game pixel&quot; relative to the Game Boy resolution. For example, a scale of 10 means that the resolution of a game pixel is 10x10 screen pixels. Below 1x is a percentage of an original pixel."/>
+
+							<!-- UI Scale -->
+							<NumericUpDown x:Name="n_UiScale" Canvas.Left="232" Canvas.Top="0"  Value="0" Minimum="0" Maximum="11" Increment="1" Width="120" />
+							<TextBlock Canvas.Left="358" Canvas.Top="7"  Text="UI Scale" Foreground="White"
+									   ToolTip.Tip="This is how large the UI appears. The scaling value is arbitrary and does not correlate with the original games. Just choose whichever scale you prefer."/>
+
+							<!-- Vertical Sync -->
+							<CheckBox x:Name="x_VerticalSync" Canvas.Left="0" Canvas.Top="36" Content="Vertical Sync" Foreground="White"
+									   ToolTip.Tip="This locks the framerate to your current screen refresh rate. If disabled then framerate will be as high as possible."/>
+
+							<!-- Disable UI Blur -->
+							<CheckBox x:Name="x_OpaqueHudBg" Canvas.Left="232" Canvas.Top="36" Content="Disable UI Blur" Foreground="White"
+									   ToolTip.Tip="Disables all UI blur effects and uses solid backgrounds instead. This can improve performance on lower-end devices."/>
+
+							<!-- Screen Modes -->
+							<ComboBox x:Name="c_ScreenMode" Canvas.Left="0" Canvas.Top="74" SelectedIndex="0" Width="120">
+								<ComboBoxItem Content="Window" />
+								<ComboBoxItem Content="Borderless" />
+								<ComboBoxItem Content="Exclusive" />
+							</ComboBox>
+							<TextBlock Canvas.Left="126" Canvas.Top="81" Text="Screen Mode" Foreground="White" VerticalAlignment="Center"
+									   ToolTip.Tip="Sets the current screen mode: Window, Borderless Fullscreen, and Exclusive Fullscreen. It is recommended to use Borderless unless you absolutely need Exclusive for some specific purpose, such as compatibility with external software. Alt + Enter can quickly toggle between Window and Borderless Fullscreen."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+	
+				<!-- Graphics Settings -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Graphics Settings" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="144">
+
+							<!-- Dynamic Shadows -->
+							<CheckBox x:Name="x_EnableShadows" Canvas.Left="0" Canvas.Top="0" Content="Dynamic Shadows" Foreground="White"
+									   ToolTip.Tip="When enabled, shadows are dynamically generated around all sprites using their shape as a reference. When disabled, sprite shadows are instead used but only for Link, enemies, and NPCs that are in the air."/>
+
+							<!-- Fog Effects -->
+							<CheckBox x:Name="x_FogEffects" Canvas.Left="232" Canvas.Top="0" Content="Fog Effects" Foreground="White"
+									   ToolTip.Tip="Disables the fog effect used in the Mysterious Woods, which is the forest just above Mabe Village."/>
+
+							<!-- Lighting -->
+							<CheckBox x:Name="x_GlobalLights" Canvas.Left="0" Canvas.Top="36" Content="Global Lighting" Foreground="White"
+									   ToolTip.Tip="Enables global lighting that is applied across maps. This lighting is used to darken the environment and enhances lighting effects cast by objects."/>
+							<CheckBox x:Name="x_ObjectLights" Canvas.Left="232" Canvas.Top="36" Content="Object Lighting" Foreground="White"
+									   ToolTip.Tip="Enables lighting effects cast by objects. While object lighting does not require global lighting it has almost no effect without it."/>
+
+							<!-- Screen Shake -->
+							<CheckBox x:Name="x_ScreenShake" Canvas.Left="0" Canvas.Top="72" Content="Screen Shake Effects" Foreground="White"
+									   ToolTip.Tip="Enables or disables original screen shake effects. This includes smashing into things with Pegasus Boots, getting electrocuted, dungeon entrances opening up, bosses shaking the screen, and more."/>
+							<CheckBox x:Name="x_ExScreenShake" Canvas.Left="232" Canvas.Top="72" Content="Extra Screen Shake Effects" Foreground="White"
+									   ToolTip.Tip="Enables or disables extra screen shake effects that were not in the original game. This includes when Link takes damage, when bombs explode, new environment effects, and new boss and enemy effects."/>
+
+							<!-- Sequence Scale Amplifier -->
+							<NumericUpDown x:Name="n_SeqScaleAmplify" Canvas.Left="0" Canvas.Top="110" Value="0" Minimum="0" Maximum="3" Increment="1" Width="120"/>
+							<TextBlock Canvas.Left="126" Canvas.Top="117"  Text="Sequence Scale Amplifier" Foreground="White"
+									   ToolTip.Tip="Added to UI Scale specifically for in-game sequences. So if UI Scale is 3, and this is set to 2, sequence scale will be 5. This includes photo sequences, pictures, and in-game cutscenes. The max safe value is usually +2. Too high of a value can not guarantee that it will not exceed the bounds of the screen."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+
+				<!-- Audio Settings -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Audio Settings" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="102">
+
+							<!-- Music Volume -->
+							<NumericUpDown x:Name="n_MusicVolume" Canvas.Left="0" Canvas.Top="0" Value="0" Minimum="0" Maximum="100" Increment="1" Width="120" />
+							<TextBlock Canvas.Left="126" Canvas.Top="7" Text="Music Volume" Foreground="White"
+									   ToolTip.Tip="The volume of the game's music. "/>
+
+							<!-- Sound Effects -->
+							<NumericUpDown x:Name="n_EffectVolume" Canvas.Left="232" Canvas.Top="0" Value="0" Minimum="0" Maximum="100" Increment="1" Width="120" />
+							<TextBlock Canvas.Left="358" Canvas.Top="7" Text="Effect Volume" Foreground="White"
+									   ToolTip.Tip="The volume of the game's sound effects."/>
+
+							<!-- Classic Music Cues -->
+							<CheckBox x:Name="x_ClassicMusic" Canvas.Left="0" Canvas.Top="36" Content="Classic Music Cues" Foreground="White"
+									   ToolTip.Tip="Determines when music changes on the overworld. Disabled (modern) closely respects the tilemap while enabled (classic) respects the original game. The difference between enabled &amp; disabled is subtle. Use east Mabe Village as a test."/>
+
+							<!-- Mute Inactive Window  -->
+							<CheckBox x:Name="x_MuteInactive" Canvas.Left="232" Canvas.Top="36" Content="Mute Inactive Window" Foreground="White"
+									   ToolTip.Tip="Mutes all audio and sound effects when the game window is not the currently focused window."/>
+
+							<!-- Low Hearts Alarm -->
+							<CheckBox x:Name="x_HeartBeep" Canvas.Left="0" Canvas.Top="72" Content="Low Hearts Alarm" Foreground="White"
+									   ToolTip.Tip="Disables the periodic beeping sound effect when hearts fall below a certain threshold."/>
+
+							<!-- No Powerup Music -->
+							<CheckBox x:Name="x_MutePowerups" Canvas.Left="232" Canvas.Top="72" Content="No Powerup Music" Foreground="White"
+									   ToolTip.Tip="When picking up a Guardian Acorn or Piece of Power, this option disables the music that plays."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+
+				<!-- Control Settings -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Control Settings" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="138">
+
+							<!-- Analog Dead Zone -->
+							<NumericUpDown x:Name="n_DeadZone" Canvas.Left="0" Canvas.Top="0"  Value="0"  Minimum="0" Maximum="1.00" Increment="0.01" FormatString="0.00" Width="120" />
+							<TextBlock Canvas.Left="126" Canvas.Top="7" Text="Dead Zone" Foreground="White" 
+									   ToolTip.Tip="The percentage of range that the joystick is pressed before it responds to input. Unless you have a Dead Zone set in other software, it is recommended not to reduce it lower than 10% as it may cause your joystick to float. Higher values than default can be useful for controllers that have &quot;drifting&quot; issues."/>
+
+							<!-- Gamepad Buttons -->
+							<ComboBox x:Name="c_Controller" Canvas.Left="232" Canvas.Top="0" SelectedIndex="0" Width="120">
+								<ComboBoxItem Content="XBox" />
+								<ComboBoxItem Content="Playstation" />
+								<ComboBoxItem Content="Nintendo" />
+							</ComboBox>
+							<TextBlock Canvas.Left="358" Canvas.Top="7" Text="Gamepad Type" Foreground="White" VerticalAlignment="Center" 
+									   ToolTip.Tip="Chooses the type of controller to display button prompts for. Supports XBox, Playstation, and Nintendo style controllers."/>
+
+							<!-- Triggers Scale Game -->
+							<CheckBox x:Name="x_TriggersScale" Canvas.Left="0" Canvas.Top="36" Content="Triggers Scale Game" Foreground="White" 
+									   ToolTip.Tip="Enables changing the current Game Scale with the two top-front controller buttons (LB/RB, L1/R1, L/R). If the option &quot;Six Inventory Buttons&quot; is enabled, the two top-back buttons/triggers (LT/RT, L2,R2, or ZL,ZR) will instead change the Game Scale."/>
+
+							<!-- Six Inventory Buttons -->
+							<CheckBox x:Name="x_SixButtons" Canvas.Left="232" Canvas.Top="36" Content="Six Inventory Buttons" Foreground="White" 
+									   ToolTip.Tip="Enables six controller buttons that can be used for inventory items instead of four. This makes it so items can be equipped on the two top-front buttons (LB/RB, L1/R1, L/R) and moves the game scale adjustments to the two top-back buttons/triggers (LT/RT, L2/R2, ZL/ZR)."/>
+
+							<!-- Classic Movement -->
+							<CheckBox x:Name="x_OldMovement" Canvas.Left="0" Canvas.Top="72" Content="Classic Movement" Foreground="White" 
+									   ToolTip.Tip="This option mimics the way movement works in the original games by giving Link the ability to walk backwards. Combine with &quot;Digital Analog&quot; to fully replicate how movement works in the original game."/>
+
+							<!-- Digital Analog -->
+							<CheckBox x:Name="x_DigitalAnalog" Canvas.Left="232" Canvas.Top="72" Content="Digital Analog" Foreground="White" 
+									   ToolTip.Tip="Removes the analog stick range and makes it move Link in eight directions along 45 degree angles (Up, Down, Left, Right, and Diagonals). This will make controlling Link feel more like the original game as if it were played in an emulator."/>
+
+							<!-- Swap Confirm & Cancel -->
+							<CheckBox x:Name="x_SwapButtons" Canvas.Left="0" Canvas.Top="108" Content="Swap Confirm &amp; Cancel" Foreground="White" 
+									   ToolTip.Tip="Swaps the confirm and cancel buttons used in menus and dialogs."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+
+				<!-- Game Settings -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Game Settings" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="138">
+
+							<!-- Language -->
+							<ComboBox x:Name="c_CurrentLanguage" Canvas.Left="0" Canvas.Top="0" SelectedIndex="0" Width="120">
+								<ComboBoxItem Content="English" />
+								<ComboBoxItem Content="Chinese" />
+								<ComboBoxItem Content="French" />
+								<ComboBoxItem Content="German" />
+								<ComboBoxItem Content="Indonesia" />
+								<ComboBoxItem Content="Italian" />
+								<ComboBoxItem Content="Portugeuse" />
+								<ComboBoxItem Content="Russian" />
+								<ComboBoxItem Content="Spanish" />
+							</ComboBox>
+							<TextBlock Canvas.Left="126" Canvas.Top="7" Text="Language" Foreground="White" VerticalAlignment="Center" 
+									   ToolTip.Tip="Changes the current language."/>
+
+							<!-- Language Script -->
+							<ComboBox x:Name="c_CurrentSubLanguage" Canvas.Left="232"  Canvas.Top="0" SelectedIndex="0" Width="120">
+								<ComboBoxItem Content="Original" />
+								<ComboBoxItem Content="Remake" />
+								<ComboBoxItem Content="Alternative" />
+							</ComboBox>
+							<TextBlock Canvas.Left="358" Canvas.Top="7" Text="Script" Foreground="White" VerticalAlignment="Center" 
+									   ToolTip.Tip="Contains subtle variations in NPC dialogs. Currently only supported in few languages. Community efforts to expand this option and the scripts would be appreciated."/>
+
+							<!-- Classic Sword -->
+							<CheckBox x:Name="x_ClassicSword" Canvas.Left="0" Canvas.Top="36" Content="Classic Sword" Foreground="White" 
+									   ToolTip.Tip="This option makes the sword act more like the original game where it can only chop a single terrain object at a time (bushes, grass, etc)."/>
+
+							<!-- Select Last Save -->
+							<CheckBox x:Name="x_StoreSavePos" Canvas.Left="232" Canvas.Top="36" Content="Select Last Save" Foreground="White" 
+									   ToolTip.Tip="Stores the last save file that was selected and auto-selects it upon loading the main menu. The auto-selection is not instantaneous due to limitations in the menu design."/>
+
+							<!-- Autosave -->
+							<CheckBox x:Name="x_Autosave" Canvas.Left="0" Canvas.Top="72" Content="Autosave" Foreground="White"
+									   ToolTip.Tip="Automatically saves the game whenever a screen transition takes place (except in dungeons). If disabled, don't forget to manually save! "/>
+
+							<!-- Item Slots on Right -->
+							<CheckBox x:Name="x_ItemsOnRight" Canvas.Left="232" Canvas.Top="72" Content="Item Slots on Right" Foreground="White"
+									   ToolTip.Tip="Displays the equipped item icons HUD on the right side of the screen instead of the left."/>
+
+							<!-- Epilepsy Safe -->
+							<CheckBox x:Name="x_EpilepsySafe" Canvas.Left="0" Canvas.Top="108" Content="Epilepsy Safe" Foreground="White"
+									   ToolTip.Tip="Disables flashing effects seen when upgrading item maximums or when hitting Buzz Blobs. Also disables other flickering effects on enemies such as Sparks and Antifairies."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+
+				<!-- Redux Settings -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Redux Settings" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="144">
+
+							<!-- Variable Width Font -->
+							<CheckBox x:Name="x_VarWidthFont" Canvas.Left="0" Canvas.Top="0" Content="Variable Width Font" Foreground="White"
+									   ToolTip.Tip="Replaces the default game font with a variable width font made by &quot;toruzz&quot;."/>
+
+							<!-- Disable Helper Message -->
+							<CheckBox x:Name="x_NoHelperText" Canvas.Left="232" Canvas.Top="0" Content="Disable Helper Message" Foreground="White"
+									   ToolTip.Tip="Disables most dialogs when touching objects that require a missing item and also disables most item pickup and open chest dialogs."/>
+
+							<!-- Enable Dialog Skip -->
+							<CheckBox x:Name="x_DialogSkip" Canvas.Left="0" Canvas.Top="36" Content="Enable Dialog Skip" Foreground="White"
+									   ToolTip.Tip="Enables skipping dialog boxes with the &quot;Start&quot; button which rapidly scrolls through the text and auto-closes the dialog window. Question dialogs are only skipped up to the point where user input is required."/>
+
+							<!-- Disable Censorship -->
+							<CheckBox x:Name="x_Uncensored" Canvas.Left="232" Canvas.Top="36" Content="Disable Censorship" Foreground="White"
+									   ToolTip.Tip="Removes censorship seen in the North American release and some others. Restores original Hippo sprites and the Mermaid's trade item and dialog."/>
+
+							<!-- Nothing is Missable -->
+							<CheckBox x:Name="x_Unmissables" Canvas.Left="0" Canvas.Top="72" Content="Nothing is Missable" Foreground="White"
+									   ToolTip.Tip="Seashell mansion always gives the 5 and 10 shells, Kanalet Castle gate can be reopened, Bow Wow, Marin, and the rooster can be followers again after Level 8, shopkeeper offers name buyback if item was stolen, and always show the secret ending."/>
+
+							<!-- Colored Photographs -->
+							<CheckBox x:Name="x_PhotosColor" Canvas.Left="232" Canvas.Top="72" Content="Colored Photographs" Foreground="White"
+									   ToolTip.Tip="By default photographs use sepia colors like the original DX version. This option instead uses colored photographs by &quot;drestrada&quot;."/>
+
+							<!-- Map Teleport -->
+							<ComboBox x:Name="c_MapTeleport" Canvas.Left="0" Canvas.Top="108" SelectedIndex="0" Width="120">
+								<ComboBoxItem Content="Disabled" />
+								<ComboBoxItem Content="Map Only" />
+								<ComboBoxItem Content="Manbo Only" />
+								<ComboBoxItem Content="Map + Manbo" />
+							</ComboBox>
+							<TextBlock Canvas.Left="126" Canvas.Top="115" Text="Map Teleport" Foreground="White" VerticalAlignment="Center"
+									   ToolTip.Tip="This option allows teleporting to a dungeon that has been cleared via the map or when playing Manbo's song (or both)."/>
+
+							<!-- No Animal Damage -->
+							<CheckBox x:Name="x_NoAnimalDamage" Canvas.Left="232" Canvas.Top="108" Content="No Animal Damage" Foreground="White"
+									   ToolTip.Tip="Makes it so cuccos and mutts found around Mabe Village can not be attacked. This option completely disables their hitboxes."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+
+				<!-- Camera Settings -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Camera Settings" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="176">
+
+							<!-- Modern Camera -->
+							<CheckBox x:Name="x_ModernCamera" Canvas.Left="0" Canvas.Top="0" Content="Modern Camera      =====>" Foreground="White" IsCheckedChanged="ModernCamera_Changed"
+									   ToolTip.Tip="The camera is centered on Link and can be zoomed in and out using top controller buttons or by setting the &quot;Game Scale&quot; under Graphics options. The camera can also be panned around with the right analog stick if &quot;Camera Lock&quot; is disabled."/>
+							<CheckBox x:Name="x_ModernOverworld" Canvas.Left="232" Canvas.Top="0"   Content="Overworld Only" Foreground="White"
+									   ToolTip.Tip="The &quot;modern camera&quot; is used only when on the Overworld map, and the &quot;classic camera&quot; is used everywhere else including inside houses, shops, caves, and dungeons. The camera's are automatically switched on map transitions."/>
+
+							<!-- Classic Camera -->
+							<CheckBox x:Name="x_ClassicCamera" Canvas.Left="0" Canvas.Top="36" Content="Classic Camera       =====>" Foreground="White" IsCheckedChanged="ClassicCamera_Changed"
+									   ToolTip.Tip="Replicates the &quot;scrolling screen&quot; effect of the original game. Camera is locked to the current &quot;field&quot; and will scroll to the next field when Link crosses the screen's edge. This mode is expected to be used with the border as objects are only animated in the original screen space of 160x128."/>
+							<CheckBox x:Name="x_ClassicDungeon" Canvas.Left="232" Canvas.Top="36" Content="Dungeons Only" Foreground="White"
+									   ToolTip.Tip="The &quot;modern camera&quot; is used when on the overworld or when inside caves and houses. The &quot;classic camera&quot; is automatically switched to when entering a dungeon, and switches back to the standard camera when exiting the dungeon."/>
+
+							<!-- Classic Border -->
+							<ComboBox x:Name="c_ClassicBorder" Canvas.Left="0" Canvas.Top="72" SelectedIndex="0" Width="120">
+								<ComboBoxItem Content="None" />
+								<ComboBoxItem Content="Black" />
+								<ComboBoxItem Content="Super Game Boy" />
+							</ComboBox>
+							<TextBlock Canvas.Left="126" Canvas.Top="79" Text="Classic Border" Foreground="White" VerticalAlignment="Center"
+									   ToolTip.Tip="When classic camera is enabled, this places a border around the current field and hides objects that are not animated. The border can be a basic black border or the Super Game Boy border. This somewhat mimics the aspect ratio of the original Game Boy, minus the 16 HUD pixels."/>
+
+							<!-- Border Alpha -->
+							<NumericUpDown  x:Name="n_ClassicAlpha" Canvas.Left="232" Canvas.Top="72"  Value="0" Minimum="0" Maximum="1.00" Increment="0.01" FormatString="0.00" Width="120"/>
+							<TextBlock Canvas.Left="358" Canvas.Top="79" Text="Border Alpha" Foreground="White"
+									   ToolTip.Tip="Determines the alpha of the classic camera border. Can be used to show some of the surrounding game field without cutting it off completely."/>
+
+							<!-- Classic Scale Lock -->
+							<CheckBox x:Name="x_ClassicScaling" Canvas.Left="0" Canvas.Top="108" Content="Classic Scale Lock" Foreground="White"
+									   ToolTip.Tip="Disabling this option allows manually scaling the &quot;Classic Camera&quot; via the Game Scale instead of automatically fitting the viewport to the nearest integer upscale resolution. This option has the potential to &quot;break&quot; the viewport if it's set too large or too small."/>
+
+							<!-- Camera Lock -->
+							<CheckBox x:Name="x_CameraLock" Canvas.Left="232" Canvas.Top="108" Content="Camera Lock" Foreground="White"
+									   ToolTip.Tip="Locks the modern camera in place. When this option is disabled, the right analog stick can pan the camera around. Has no effect with classic camera."/>
+
+							<!-- Smooth Camera -->
+							<CheckBox x:Name="x_SmoothCamera" Canvas.Left="0" Canvas.Top="144" Content="Smooth Camera" Foreground="White"
+									   ToolTip.Tip="Whenever the camera changes targets, this adds a smooth panning effect. When disabled, the camera will snap into place. Affects both cameras, but classic camera benefits the most."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+
+				<!-- Modifier Settings -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Modifiers" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="140">
+
+							<!-- Extra Enemy HP -->
+							<NumericUpDown x:Name="n_EnemyBonusHP" Canvas.Left="0" Canvas.Top="0" Value="0" Minimum="0" Maximum="100" Increment="1" Width="120" />
+							<TextBlock Canvas.Left="126" Canvas.Top="7" Text="Enemy HP+" Foreground="White"
+									   ToolTip.Tip="Adds additional Hit Points to all enemies globally. For example, if adding 3 HP to enemy health, then an enemy with 1 HP would have 4 HP and a boss with 8 HP would have 11 HP."/>
+
+							<!-- Move Speed Multiplier -->
+							<NumericUpDown x:Name="n_MoveSpeedAdded" Canvas.Left="232" Canvas.Top="0" Value="0" Minimum="0" Maximum="1.00" Increment="0.01" FormatString="0.00" Width="120" />
+							<TextBlock Canvas.Left="358" Canvas.Top="7" Text="Move Speed (x)" Foreground="White"
+									   ToolTip.Tip="Increases movement speed by a percentage, up to 100% movement speed. Affects all forms of movement: walking, climbing, swimming, etc."/>
+
+							<!-- Damage Taken Multiplier -->
+							<NumericUpDown x:Name="n_DamageFactor" Canvas.Left="0" Canvas.Top="36" Value="0" Minimum="0" Maximum="100" Increment="1" Width="120" />
+							<TextBlock Canvas.Left="126" Canvas.Top="43" Text="Dmg Taken (x)" Foreground="White"
+									   ToolTip.Tip="Multiplies the amount of damage taken from all sources. For example, if set to 4 and an attack would deal a half heart, it would instead deal 2 full hearts of damage."/>
+
+							<!-- Damage Cooldown Multiplier -->
+							<NumericUpDown x:Name="n_DmgCooldown" Canvas.Left="232" Canvas.Top="36" Value="0" Minimum="0" Maximum="100" Increment="1" Width="120" />
+							<TextBlock Canvas.Left="358" Canvas.Top="43" Text="Dmg Time (x)" Foreground="White"
+									   ToolTip.Tip="Default value is 16x (1056ms). This is the damage cooldown factor multiplied by the damage blink time of 66ms which results in the amount of time that Link is invincible for after taking a hit."/>
+
+							<!-- No Heart Drops -->
+							<CheckBox x:Name="x_NoHeartDrops" Canvas.Left="0" Canvas.Top="72" Content="No Heart Drops" Foreground="White"
+									   ToolTip.Tip="Completely disables heart drops from all sources. The only way to heal is to find a fairy, visit a Great Fairy, or to buy the medicine from Crazy Tracy."/>
+
+							<!-- No Damage Launch -->
+							<CheckBox x:Name="x_NoDamageLaunch" Canvas.Left="232" Canvas.Top="72" Content="No Damage Launch" Foreground="White"
+									   ToolTip.Tip="Disables the launching effect when attacking enemies while under the effect of a Piece of Power or when wearing the Red Tunic from the Color Dungeon."/>
+
+							<!-- Mirros Shield Reflects -->
+							<CheckBox x:Name="x_MirrorReflects" Canvas.Left="0" Canvas.Top="108" Content="Mirror Shield Reflects" Foreground="White"
+									   ToolTip.Tip="Gives the Mirror Shield the ability to reflect projectiles back at enemies. Reflected projectiles travel faster and can even damage other enemies that are hit."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+
+				<!-- Sword Modifiers -->
+				<StackPanel Spacing="4">
+					<TextBlock Text="Sword Modifiers" Foreground="White" FontWeight="Bold" Margin="2,0,0,0" />
+					<Border BorderBrush="#88FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10">
+						<Canvas Height="176">
+
+							<!-- Collect Item Drops -->
+							<CheckBox x:Name="x_SwGrabNormal" Canvas.Left="0" Canvas.Top="0" Content="Collect Item Drops" Foreground="White"
+									   ToolTip.Tip="Toggles the ability to collect items with the sword that are dropped by enemies such as Rupees, Hearts, Guardian Acorn, and Piece of Power. Requires a map reload to take effect."/>
+
+							<!-- Collect Static Items -->
+							<CheckBox x:Name="x_SwGrabWorldItem" Canvas.Left="232" Canvas.Top="0" Content="Collect Static Items" Foreground="White"
+									   ToolTip.Tip="Allows collecting static items with the sword that are found in the world. These items include Heart Containers, Instruments, Golden Leaves, Dungeon Entrance Keys, and similar items. Requires a map reload to take effect."/>
+
+							<!-- Collect Fairies -->
+							<CheckBox x:Name="x_SwGrabFairy" Canvas.Left="0" Canvas.Top="36" Content="Collect Fairies" Foreground="White"
+									   ToolTip.Tip=" Enables the ability to collect fairies with the sword."/>
+
+							<!-- Collect Small Keys -->
+							<CheckBox x:Name="x_SwGrabSmallKey" Canvas.Left="232" Canvas.Top="36" Content="Collect Small Keys" Foreground="White"
+									   ToolTip.Tip="Enables the ability to collect small dungeon keys with the sword. Requires a map reload to take effect."/>
+
+							<!-- Ricochet Boomerange -->
+							<CheckBox x:Name="x_SwBoomerang" Canvas.Left="0" Canvas.Top="72" Content="Richochet Boomerang" Foreground="White"
+									   ToolTip.Tip="When the boomerang is thrown, the sword can be used to smack it and reset its flight. This works with any type of sword attack."/>
+
+							<!-- Knockback Bombs -->
+							<CheckBox x:Name="x_SwSmackBombs" Canvas.Left="232" Canvas.Top="72"  Content="Knockback Bombs" Foreground="White"
+									   ToolTip.Tip="Bombs that the player sets down on the ground can be whacked with the sword to reposition them."/>
+
+							<!-- Slice Enemy Projectiles -->
+							<CheckBox x:Name="x_SwMissileBlock" Canvas.Left="0" Canvas.Top="108" Content="Slice Enemy Projectiles" Foreground="White"
+									   ToolTip.Tip="Allows cutting down projectiles with the sword when timed perfectly. For example, moblin spears or octorok shots."/>
+
+							<!-- L2 Smashes Pots & Bushes -->
+							<CheckBox x:Name="x_SwBreakPots" Canvas.Left="232" Canvas.Top="108" Content="L2 Smashes Pots &amp; Bushes" Foreground="White"
+									   ToolTip.Tip="Makes it possible for the level 2 sword and sword beam to break both pots and skulls."/>
+
+							<!-- L2 Beam Cuts Grass & Bushes -->
+							<CheckBox x:Name="x_SwBeamShrubs" Canvas.Left="0" Canvas.Top="144" Content="L2 Beam Cuts Grass &amp; Bushes" Foreground="White"
+									   ToolTip.Tip="Makes it possible for the level 2 sword beam to cut both grass and bushes. Requires higher than 60 FPS via a high refresh rate screen or disabling VSync to cut through multiple bushes."/>
+
+						</Canvas>
+					</Border>
+				</StackPanel>
+
+			</StackPanel>
+		</ScrollViewer>
+		</Border>
+	</Canvas>
+</UserControl>
+
+
