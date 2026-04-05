@@ -22,10 +22,20 @@ namespace LADXHD_Launcher
 
         public static void Initialize()
         {
-            BaseFolder  = AppContext.BaseDirectory;
-            AppPath     = Path.Combine(BaseFolder, "LADXHD_Launcher.exe");
-            TempFolder  = Path.Combine(BaseFolder, "~temp");
-            ZeldaEXE    = Path.Combine(BaseFolder, "Link's Awakening DX HD.exe");
+            BaseFolder = AppContext.BaseDirectory;
+            TempFolder = Path.Combine(BaseFolder, "~temp");
+
+            #if WINDOWS
+                AppPath  = Path.Combine(BaseFolder, "LADXHD_Launcher.exe");
+                ZeldaEXE = Path.Combine(BaseFolder, "Link's Awakening DX HD.exe");
+            #elif LINUX
+                AppPath  = Path.Combine(BaseFolder, "LADXHD_Launcher");
+                ZeldaEXE = Path.Combine(BaseFolder, "Link's Awakening DX HD");
+            #elif MACOS
+                AppPath  = Path.Combine(BaseFolder, "LADXHD_Launcher");
+                ZeldaEXE = Path.Combine(BaseFolder, "Link's Awakening DX HD.app");
+            #endif
+
             CreateDefaultFiles();
         }
 
