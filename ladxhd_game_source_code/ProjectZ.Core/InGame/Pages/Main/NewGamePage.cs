@@ -7,6 +7,8 @@ using ProjectZ.Base;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
 using ProjectZ.InGame.Things;
+using ProjectZ.InGame.Map;
+using ProjectZ.InGame.SaveLoad;
 
 namespace ProjectZ.InGame.Pages
 {
@@ -118,7 +120,7 @@ namespace ProjectZ.InGame.Pages
             // Create the "Back" and "Start" buttons.
             _bottomLayout = new InterfaceListLayout { Size = new Point(260, 34), HorizontalMode = true, Selectable = true };
             _bottomLayout.AddElement(new InterfaceButton(new Point(110, 20), new Point(1, 0), "new_game_menu_back", OnClickBackButton));
-            _bottomLayout.AddElement(_startGameButton = new InterfaceButton(new Point(110, 20), new Point(1, 0), "new_game_menu_start_game", OnClickNewGameButton));
+            _bottomLayout.AddElement(_startGameButton = new InterfaceButton(new Point(110, 20), new Point(1, 0), "new_game_menu_create_file", OnClickNewGameButton));
             _bottomLayout.Select(InterfaceElement.Directions.Right, false);
             _bottomLayout.Deselect(false);
             _newGameLayout.AddElement(_bottomLayout);
@@ -335,6 +337,7 @@ namespace ProjectZ.InGame.Pages
 
         private void OnClickNewGameButton(InterfaceElement element)
         {
+            // A name must be entered.
             if (_strNameInput.Length <= 0)
             {
                 _showTooltip = true;
@@ -342,26 +345,31 @@ namespace ProjectZ.InGame.Pages
                 _oneFrameBlock = true;
                 return;
             }
+            // Get the entered name as all lowercase to compare.
             string name = _strNameInput.ToLower();
 
+            // If entering a secret name play music.
             if (name == "totaka" || name == "totakeke" || name == "moyse")
             {
                 Game1.GameManager.SetMusic(59, 2);
-                Game1.UiPageManager.PopPage(SkipSound:true);
             }
             else if (name == "zelda" || name == "塞尔达")
             {
                 Game1.GameManager.SetMusic(95, 2);
-                Game1.UiPageManager.PopPage(SkipSound: true);
             }
-            else
-            {
-                // Change to game screen, create new save file, set predefined game settings, and close the UI.
-                Game1.ScreenManager.ChangeScreen(Values.ScreenNameGame);
-                Game1.GameManager.StartNewGame(_selectedSaveSlot, _strNameInput);
-                Game1.GameManager.SetGameTypeSettings();
-                Game1.UiPageManager.PopAllPages(PageManager.TransitionAnimation.TopToBottom, PageManager.TransitionAnimation.TopToBottom);
-            }
+            // Initialize a new save file: SaveSlot, SaveName, Equipment, SaveManager, etc.
+            Game1.GameManager.CreateNewSaveFile(_selectedSaveSlot, _strNameInput);
+            Game1.GameManager.SetGameTypeSettings();
+
+            // The map is not written during "StartNewGame" so write it now. Normally this is done
+            // when a new game is started and saved. But since we are not starting a new game...
+            var link = MapManager.ObjLink;
+            link.SaveMap = "house1.map";
+            link.SavePosition = new Vector2(link.PosX, link.PosY);
+
+            // Write both save files (saveGame# and save#) and return to file select.
+            SaveGameSaveLoad.SaveGame(Game1.GameManager, false);
+            Game1.UiPageManager.PopPage(SkipSound: true);
         }
 
         private void OnClickBackButton(InterfaceElement element)

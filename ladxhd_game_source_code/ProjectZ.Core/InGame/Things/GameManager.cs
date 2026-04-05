@@ -1677,7 +1677,7 @@ namespace ProjectZ.InGame.Things
             Game1.ScaleChanged = true;
         }
 
-        public void StartNewGame(int slot, string slotName)
+        public void CreateNewSaveFile(int slot, string slotName)
         {
             ResetStuff();
 
@@ -1753,24 +1753,6 @@ namespace ProjectZ.InGame.Things
 
             // randomize the directions of the egg
             SaveManager.SetString("eggDirections", Game1.RandomNumber.Next(0, 4).ToString());
-
-            // create empty map
-            MapManager.CurrentMap = Map.Map.CreateEmptyMap();
-
-            Link.Map = MapManager.CurrentMap;
-            Link.MapTransitionStart = Link.EntityPosition.Position;
-            Link.MapTransitionEnd = Link.EntityPosition.Position;
-            Link.EntityPosition.Z = 0;
-            Link.TransitionOutWalking = false;
-            Link.TransitionInWalking = false;
-            Link.BlackScreenOverride = true;
-            Link.InitGame();
-            MapManager.Camera.ForceUpdate(MapManager.GetCameraTargetLink());
-
-            // load the map
-            Link.SetNextMapPosition(new Vector2(Link.PosX, Link.PosY));
-            ((MapTransitionSystem)GameSystems[typeof(MapTransitionSystem)]).LoadMapFromFile("house1.map", true, true, Values.MapFirstTransitionColor, false);
-            ((MapTransitionSystem)GameSystems[typeof(MapTransitionSystem)]).AdditionalBlackScreenDelay = Values.GameSaveBlackScreen;
         }
 
         public void LoadSaveFile(int slot)

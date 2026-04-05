@@ -304,6 +304,9 @@ namespace ProjectZ.InGame.Pages
 
         public override void OnReturn(Dictionary<string, object> intent)
         {
+            // Reload from disk so newly created saves are picked up.
+            SaveStateManager.LoadSaveData();
+
             UpdateUi();
 
             base.OnReturn(intent);
