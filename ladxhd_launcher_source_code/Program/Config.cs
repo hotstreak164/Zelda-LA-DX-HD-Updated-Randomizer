@@ -40,7 +40,10 @@ namespace LADXHD_Launcher
                 targetDir = BaseFolder;
             else
                 targetDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Zelda_LA");
-            
+
+            // Ensure the target directory exists before writing into it
+            Directory.CreateDirectory(targetDir);
+
             // Set the path to the files.
             string settingsPath = Path.Combine(targetDir, "settings");
             string advancedPath = Path.Combine(targetDir, "advanced");
