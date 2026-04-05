@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.GameObjects.Base.Pools;
 using ProjectZ.InGame.Map;
+using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.GameObjects.Base.Systems
 {
@@ -25,7 +26,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
             _objectListSet.Clear();
 
             // Classic Camera: Only update objects within the current field.
-            if (Camera.ClassicMode)
+            if (Camera.ClassicMode && GameSettings.ClassicBorder != 0)
             {
                 Pool.GetComponentList(_objectList, ObjectManager.UpdateField.X, ObjectManager.UpdateField.Y, ObjectManager.UpdateField.Width, ObjectManager.UpdateField.Height, BaseAnimationComponent.Mask);
                 ObjectManager.FilterObjectsInField(_objectList, ObjectManager.ActualField);
