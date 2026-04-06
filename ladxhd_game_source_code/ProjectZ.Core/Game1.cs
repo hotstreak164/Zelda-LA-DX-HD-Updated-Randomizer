@@ -1,6 +1,5 @@
 ﻿﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using GBSPlayer;
 using Microsoft.Xna.Framework;
@@ -20,24 +19,6 @@ namespace ProjectZ
 {
     public class Game1 : Game
     {
-    #if WINDOWS
-        private const string SDL_LIB = "SDL2.dll";
-    #elif OSX
-        private const string SDL_LIB = "libSDL2-2.0.0";
-    #else
-        private const string SDL_LIB = "libSDL2-2.0.so.0";
-    #endif
-
-        // Used to load an icon into the window for OpenGL.
-        [DllImport(SDL_LIB, CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr SDL_LoadBMP_RW(IntPtr src, int freesrc);
-        [DllImport(SDL_LIB, CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr SDL_RWFromFile(string file, string mode);
-        [DllImport(SDL_LIB, CallingConvention = CallingConvention.Cdecl)]
-        static extern void SDL_SetWindowIcon(IntPtr window, IntPtr surface);
-        [DllImport(SDL_LIB, CallingConvention = CallingConvention.Cdecl)]
-        static extern void SDL_FreeSurface(IntPtr surface);
-
         public static Game1 Instance;
         public static GraphicsDeviceManager Graphics;
         public static SpriteBatch SpriteBatch;
@@ -266,14 +247,6 @@ namespace ProjectZ
                 _windowForm = form;
                 _lastWindowBounds = form.Bounds; // capture starting window size as the restore target
             }
-        #endif
-
-            // OpenGL requires a workaround using SDL to set the icon.
-        #if DESKTOPGL
-            var path = Path.Combine("Data", "Icon", "Icon.bmp");
-            var surface = SDL_LoadBMP_RW(SDL_RWFromFile(path, "rb"), 1);
-            SDL_SetWindowIcon(Window.Handle, surface);
-            SDL_FreeSurface(surface);
         #endif
 
             // Store an instance so it can be referenced.

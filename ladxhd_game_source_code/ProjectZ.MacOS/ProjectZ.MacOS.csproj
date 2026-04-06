@@ -38,6 +38,14 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
   </ItemGroup>
 
+  <!-- Embed Icon.bmp so MonoGame's SdlGameWindow can set the window icon from the entry assembly,
+       independently of the working directory at launch time. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\ProjectZ.Core\Data\Icon\Icon.bmp">
+      <LogicalName>Icon.bmp</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <!-- Include ProjectZ.Core which is the game data. -->
   <ItemGroup>
     <ProjectReference Include="..\ProjectZ.Core\ProjectZ.Core.csproj" />
