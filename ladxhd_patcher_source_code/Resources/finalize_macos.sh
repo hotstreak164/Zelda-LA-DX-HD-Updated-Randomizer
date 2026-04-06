@@ -74,7 +74,7 @@ if [ -f "$BASE/Launcher" ]; then
     done
 
     # Write a launcher-specific Info.plist derived from the game bundle's rendered plist.
-    # Substitutes CFBundleExecutable + CFBundleName (both use the game name) with "Launcher",
+    # Substitutes CFBundleExecutable (the game name) with "Launcher",
     # and changes CFBundleIdentifier from com.projectz.game to com.projectz.launcher.
     sed -e "s|<string>${NAME}</string>|<string>Launcher</string>|g" \
         -e "s|com\.projectz\.game|com.projectz.launcher|g" \
