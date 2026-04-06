@@ -1,9 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Launcher</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <!-- Detect target OS from RuntimeIdentifier or host. -->
+  <PropertyGroup>
+    <TargetRID Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier.Split('-')[0])</TargetRID>
+    <TargetOS Condition="'$(TargetRID)' == 'win' or ('$(TargetRID)' == '' and $([MSBuild]::IsOSPlatform('Windows')))">win</TargetOS>
+    <TargetOS Condition="'$(TargetRID)' == 'linux' or ('$(TargetRID)' == '' and $([MSBuild]::IsOSPlatform('Linux')))">linux</TargetOS>
+    <TargetOS Condition="'$(TargetRID)' == 'osx' or ('$(TargetRID)' == '' and $([MSBuild]::IsOSPlatform('OSX')))">osx</TargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,10 +23,10 @@
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.Windows.Extensions" Version="8.0.0" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
+    <PackageReference Include="System.Windows.Extensions" Version="8.0.0" Condition="'$(TargetOS)' == 'win'"/>
   </ItemGroup>
-  
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+
+  <PropertyGroup Condition="'$(TargetOS)' == 'win'">
     <OutputType>WinExe</OutputType>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
@@ -26,16 +34,16 @@
     <TargetFramework>net8.0-windows</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+  <PropertyGroup Condition="'$(TargetOS)' == 'linux'">
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+  <PropertyGroup Condition="'$(TargetOS)' == 'osx'">
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <AvaloniaResource Include="Resources\**" />
   </ItemGroup>
@@ -67,5 +75,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <Target Name="DebugPlatformConstants" BeforeTargets="BeforeBuild">
+    <Message Importance="High" Text="Target OS: $(TargetOS)" />
+    <Message Importance="High" Text="Constants: $(DefineConstants)" />
+  </Target>
 
 </Project>
