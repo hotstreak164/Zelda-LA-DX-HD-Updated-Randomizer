@@ -363,36 +363,29 @@ namespace LADXHD_Patcher
             // After migration, some map files are not needed.
             CleanUp.RemoveJunkMapFiles();
 
+            CreateModFolders();
+
             // Extract the launcher for the patched version (needs to happen before finalization scripts).
             ZipFunctions.ExtractLauncher(Config.SelectedPlatform);
 
             // Finish up. Android needs the controller buttons and to be made into an APK.
             if (Config.SelectedPlatform == Platform.Android)
             {
-                ZipFunctions.ExtractAndroidIcons(); 
+                ZipFunctions.ExtractAndroidIcons();
                 GenerateAPKFile();
             }
             else if (Config.SelectedPlatform == Platform.Linux_x86 || Config.SelectedPlatform == Platform.Linux_Arm64)
             {
-                CreateModFolders();
-                // Linux needs the executable bit set on the game binary.
-                // Only run when patching is happening directly on a Linux host (via Wine).
+                // Finalization steps are platform-specific and should only run when patching on that platform.
                 if (HostEnvironment.IsLinux)
                     RunLinuxFinalizeScript();
             }
             else if (Config.SelectedPlatform == Platform.MacOS_x86 || Config.SelectedPlatform == Platform.MacOS_Arm64)
             {
                 ZipFunctions.ExtractMacOSFiles();
-                CreateModFolders();
-                // macOS needs a signed and executable binary, and an app bundle as a convenience.
-                // Only run when patching is happening directly on a macOS host (via Wine).
+                // Finalization steps are platform-specific and should only run when patching on that platform.
                 if (HostEnvironment.IsMacOS)
                     RunMacOSFinalizeScript();
-            }
-            // Everything else just create Mod folders.
-            else
-            {
-                CreateModFolders();
             }
         }
 
