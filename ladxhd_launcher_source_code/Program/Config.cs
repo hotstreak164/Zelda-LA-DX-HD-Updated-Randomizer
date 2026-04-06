@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -33,7 +33,7 @@ namespace LADXHD_Launcher
                 ZeldaEXE = Path.Combine(BaseFolder, "Link's Awakening DX HD");
             #elif MACOS
                 AppPath  = Path.Combine(BaseFolder, "LADXHD_Launcher");
-                ZeldaEXE = Path.Combine(BaseFolder, "Link's Awakening DX HD.app");
+                ZeldaEXE = Path.Combine(BaseFolder, "Link's Awakening DX HD");
             #endif
 
             CreateDefaultFiles();
