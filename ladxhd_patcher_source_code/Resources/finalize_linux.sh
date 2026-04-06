@@ -8,7 +8,13 @@
 
 set -e
 
-chmod +x "$1/$2"
+BASE="$1"
+NAME="$2"
+
+chmod +x "$BASE/$NAME"
+
+# Make the Launcher executable if it's found in the game dir.
+[ -f "$BASE/Launcher" ] && chmod +x "$BASE/Launcher"
 
 # Signal completion to the patcher (which cannot reliably wait on Wine-spawned processes).
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

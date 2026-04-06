@@ -363,6 +363,9 @@ namespace LADXHD_Patcher
             // After migration, some map files are not needed.
             CleanUp.RemoveJunkMapFiles();
 
+            // Extract the launcher for the patched version (needs to happen before finalization scripts).
+            ZipFunctions.ExtractLauncher(Config.SelectedPlatform);
+
             // Finish up. Android needs the controller buttons and to be made into an APK.
             if (Config.SelectedPlatform == Platform.Android)
             {
@@ -391,8 +394,6 @@ namespace LADXHD_Patcher
             {
                 CreateModFolders();
             }
-            // Extract the launcher for the patched version.
-            ZipFunctions.ExtractLauncher(Config.SelectedPlatform);
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
