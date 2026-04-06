@@ -44,6 +44,14 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
   </ItemGroup>
 
+  <!-- Embed Icon.bmp so MonoGame's SdlGameWindow can set the window icon from the entry assembly,
+       independently of the working directory at launch time. OpenGL (SDL) only; DirectX uses ApplicationIcon. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <EmbeddedResource Include="..\ProjectZ.Core\Data\Icon\Icon.bmp">
+      <LogicalName>Icon.bmp</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <!-- Both projects require the MonoGame Content Builder to build content. -->
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
