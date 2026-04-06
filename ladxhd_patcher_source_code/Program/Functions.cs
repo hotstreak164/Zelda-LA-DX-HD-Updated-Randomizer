@@ -391,6 +391,8 @@ namespace LADXHD_Patcher
             {
                 CreateModFolders();
             }
+            // Extract the launcher for the patched version.
+            ZipFunctions.ExtractLauncher(Config.SelectedPlatform);
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

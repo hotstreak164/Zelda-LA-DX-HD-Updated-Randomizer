@@ -210,4 +210,24 @@
     <value>..\Resources\finalize_macos.sh;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>macOS finalization script: chmod, codesign, app bundle creation</comment>
   </data>
+  <data name="launcher_linux_arm64.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\launcher_linux_arm64.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
+  <data name="launcher_linux_x86.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\launcher_linux_x86.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
+  <data name="launcher_macos_arm64.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\launcher_macos_arm64.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
+  <data name="launcher_macos_x86.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\launcher_macos_x86.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
+  <data name="launcher_windows.zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\launcher_windows.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>ZIP Archive</comment>
+  </data>
 </root>

@@ -111,12 +111,42 @@ namespace LADXHD_Patcher {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] finalize_linux_sh {
+            get {
+                object obj = ResourceManager.GetObject("finalize_linux.sh", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] finalize_macos_sh {
+            get {
+                object obj = ResourceManager.GetObject("finalize_macos.sh", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Icon_bmp {
             get {
                 object obj = ResourceManager.GetObject("Icon.bmp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Icon_icns {
+            get {
+                object obj = ResourceManager.GetObject("Icon.icns", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -131,12 +161,72 @@ namespace LADXHD_Patcher {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Info_plist_template {
+            get {
+                object obj = ResourceManager.GetObject("Info.plist.template", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap la {
             get {
                 object obj = ResourceManager.GetObject("la", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] launcher_linux_arm64_zip {
+            get {
+                object obj = ResourceManager.GetObject("launcher_linux_arm64.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] launcher_linux_x86_zip {
+            get {
+                object obj = ResourceManager.GetObject("launcher_linux_x86.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] launcher_macos_arm64_zip {
+            get {
+                object obj = ResourceManager.GetObject("launcher_macos_arm64.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] launcher_macos_x86_zip {
+            get {
+                object obj = ResourceManager.GetObject("launcher_macos_x86.zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] launcher_windows_zip {
+            get {
+                object obj = ResourceManager.GetObject("launcher_windows.zip", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

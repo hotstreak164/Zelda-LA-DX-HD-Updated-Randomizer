@@ -4,7 +4,7 @@ using LADXHD_Migrater;
 
 namespace LADXHD_Patcher
 {
-    internal class Config
+    public class Config
     {
         public const string Version = "1.7.2";
 

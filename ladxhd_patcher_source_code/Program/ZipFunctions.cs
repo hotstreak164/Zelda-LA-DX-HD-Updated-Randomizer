@@ -37,6 +37,9 @@ namespace LADXHD_Patcher
             return "patches_win_dx.zip";
         }
 
+        // TODO: This blob of repeat unzip functions is unnecessary. This should be
+        // consolidated into a single "unzip" function with parameters.
+
         public static void ExtractPatches()
         {
             // Get the patches file we need.
@@ -71,20 +74,6 @@ namespace LADXHD_Patcher
             File.WriteAllBytes(apkPath, (byte[])resources["android_base.apk"]);
         }
 
-        public static void UpdateApkAssets(string apkPath, string stageRoot)
-        {
-            RunFinishProcess(new ProcessStartInfo
-            {
-                FileName = Config.SevenZip,
-                Arguments = $"a -tzip \"{apkPath}\" \"assets\\Content\\*\" \"assets\\Data\\*\" -r -mx=9 -mm=Deflate",
-                WorkingDirectory = stageRoot,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            });
-        }
-
         public static void ExtractAndroidTools()
         {
             // Set the path to extract android tools.
@@ -106,6 +95,63 @@ namespace LADXHD_Patcher
             File.WriteAllBytes(sevenZipPath, (byte[])resources["7zip.zip"]);
             ZipFile.ExtractToDirectory(sevenZipPath, Config.TempFolder);
             sevenZipPath.RemovePath();
+        }
+
+        public static void ExtractMacOSFiles()
+        {
+            // The files are different depending on MacOS CPU.
+            string zipName = Config.SelectedPlatform == Platform.MacOS_x86
+                ? "macos_x86_files.zip" 
+                : "macos_arm64_files.zip";
+
+            // Set the patches and zipfile paths.
+            string zipFilePath = Path.Combine(Config.TempFolder, zipName);
+
+            // Write the zipfile, extract it, then delete it.
+            File.WriteAllBytes(zipFilePath, (byte[])resources[zipName]);
+            ZipFile.ExtractToDirectory(zipFilePath, Config.BaseFolder);
+            zipFilePath.RemovePath();
+        }
+
+        public static void ExtractLauncher(Platform selectedPlatform)
+        {
+            // Platform determines which launcher to extract.
+            string zipName = "";
+            switch (selectedPlatform)
+            {
+                // Just exit if it's Android. No launcher for it.
+                case Platform.Android:      { return; }
+
+                // Each has its own type of launcher.
+                case Platform.Linux_x86:    { zipName = "launcher_linux_x86.zip"; break; }
+                case Platform.Linux_Arm64:  { zipName = "launcher_linux_arm64.zip"; break; }
+                case Platform.MacOS_x86:    { zipName = "launcher_macos_x86.zip"; break; }
+                case Platform.MacOS_Arm64:  { zipName = "launcher_macos_arm64.zip"; break; }
+
+                // Default to Windows.
+                default:                    { zipName = "launcher_windows.zip"; break; }
+            }
+            // Create the path to the zip file.
+            string zipFilePath = Path.Combine(Config.TempFolder, zipName);
+
+            // Write the zipfile, extract it, then delete it.
+            File.WriteAllBytes(zipFilePath, (byte[])resources[zipName]);
+            ZipFile.ExtractToDirectory(zipFilePath, Config.BaseFolder);
+            zipFilePath.RemovePath();
+        }
+
+        public static void UpdateApkAssets(string apkPath, string stageRoot)
+        {
+            RunFinishProcess(new ProcessStartInfo
+            {
+                FileName = Config.SevenZip,
+                Arguments = $"a -tzip \"{apkPath}\" \"assets\\Content\\*\" \"assets\\Data\\*\" -r -mx=9 -mm=Deflate",
+                WorkingDirectory = stageRoot,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            });
         }
 
         private static void RunFinishProcess(ProcessStartInfo startInfo)
@@ -178,22 +224,6 @@ namespace LADXHD_Patcher
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
-        }
-
-        public static void ExtractMacOSFiles()
-        {
-            // The files are different depending on MacOS CPU.
-            string zipName = Config.SelectedPlatform == Platform.MacOS_x86
-                ? "macos_x86_files.zip" 
-                : "macos_arm64_files.zip";
-
-            // Set the patches and zipfile paths.
-            string zipFilePath = Path.Combine(Config.TempFolder, zipName);
-
-            // Write the zipfile, extract it, then delete it.
-            File.WriteAllBytes(zipFilePath, (byte[])resources[zipName]);
-            ZipFile.ExtractToDirectory(zipFilePath, Config.BaseFolder);
-            zipFilePath.RemovePath();
         }
     }
 }
