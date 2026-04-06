@@ -25,7 +25,6 @@ public partial class HomeView : UserControl
 
     private string GetGameDirectory()
     {
-        // for now return the directory the launcher is running from
         return AppContext.BaseDirectory;
     }
 

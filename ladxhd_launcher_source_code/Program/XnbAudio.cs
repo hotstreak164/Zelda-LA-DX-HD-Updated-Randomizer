@@ -1,7 +1,13 @@
 ﻿using System;
 using System.IO;
 using LADXHD_Launcher;
-using NAudio.Wave;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+#if WINDOWS
+using System.Media;
+#endif
 
 public static class XnbAudio
 {
@@ -15,56 +21,49 @@ public static class XnbAudio
     public static bool Enabled { get; set; } = true;
     public static bool SuppressSound { get; set; } = false;
 
-    public static WaveStream LoadFromXnb(string xnbPath)
+    private static readonly Dictionary<string, string> _wavCache = new();
+
+    public static byte[] LoadWavFromXnb(string xnbPath)
     {
         byte[] data = File.ReadAllBytes(xnbPath);
         using var reader = new BinaryReader(new MemoryStream(data));
 
-        // Skip XNB header (3 magic + platform + version + flags + filesize)
         reader.BaseStream.Seek(10, SeekOrigin.Begin);
-
-        // Skip type reader count (7-bit encoded)
         Read7BitInt(reader);
-
-        // Skip type reader name (length-prefixed string)
         int nameLen = reader.ReadByte();
         reader.BaseStream.Seek(nameLen, SeekOrigin.Current);
-
-        // Skip type reader version
         reader.ReadInt32();
-
-        // Skip shared resource count
+        Read7BitInt(reader);
         Read7BitInt(reader);
 
-        // Skip type index
-        Read7BitInt(reader);
+        int   formatSize     = reader.ReadInt32();
+        short formatTag      = reader.ReadInt16();
+        short channels       = reader.ReadInt16();
+        int   sampleRate     = reader.ReadInt32();
+        int   avgBytesPerSec = reader.ReadInt32();
+        short blockAlign     = reader.ReadInt16();
+        short bitsPerSample  = reader.ReadInt16();
 
-        // Read SoundEffect format
-        int formatSize        = reader.ReadInt32();
-        short formatTag       = reader.ReadInt16();
-        short channels        = reader.ReadInt16();
-        int   sampleRate      = reader.ReadInt32();
-        int   avgBytesPerSec  = reader.ReadInt32();
-        short blockAlign      = reader.ReadInt16();
-        short bitsPerSample   = reader.ReadInt16();
         if (formatSize > 16)
             reader.BaseStream.Seek(formatSize - 16, SeekOrigin.Current);
 
-        // Read PCM data
-        int dataSize  = reader.ReadInt32();
-        byte[] pcmData = reader.ReadBytes(dataSize);
+        int    dataSize = reader.ReadInt32();
+        byte[] pcmData  = reader.ReadBytes(dataSize);
 
-        // Wrap in WAV
-        var waveFormat = new WaveFormat(sampleRate, bitsPerSample, channels);
-        var ms = new MemoryStream();
-        using (var writer = new WaveFileWriter(ms, waveFormat))
-        {
-            writer.Write(pcmData, 0, pcmData.Length);
-            writer.Flush();
-        }
-        // Create a new stream from the buffer since WaveFileWriter closes the original
-        var ms2 = new MemoryStream(ms.ToArray());
-        return new WaveFileReader(ms2);
+        using var ms = new MemoryStream();
+        using var w  = new BinaryWriter(ms);
+
+        w.Write("RIFF"u8); w.Write(36 + pcmData.Length);
+        w.Write("WAVE"u8);
+        w.Write("fmt "u8); w.Write(16); w.Write((short)1);
+        w.Write(channels); w.Write(sampleRate);
+        w.Write(sampleRate * channels * (bitsPerSample / 8));
+        w.Write(blockAlign); w.Write(bitsPerSample);
+        w.Write("data"u8); w.Write(pcmData.Length);
+        w.Write(pcmData);
+        w.Flush();
+
+        return ms.ToArray();
     }
 
     private static int Read7BitInt(BinaryReader reader)
@@ -80,27 +79,48 @@ public static class XnbAudio
         return result;
     }
 
+    private static string? Which(string name)
+    {
+        try
+        {
+            var p = Process.Start(new ProcessStartInfo("which", name)
+            {
+                CreateNoWindow        = true,
+                RedirectStandardOutput = true
+            });
+            string? result = p?.StandardOutput.ReadLine();
+            p?.WaitForExit();
+            return string.IsNullOrWhiteSpace(result) ? null : result;
+        }
+        catch { return null; }
+    }
+
     public static void PlayXnbSound(string xnbPath)
     {
         if (!Enabled || SuppressSound || !File.Exists(xnbPath)) return;
+        if (!_wavCache.TryGetValue(xnbPath, out string tmpPath)) return;
         try
         {
-            var stream = LoadFromXnb(xnbPath);
-            var output = new WaveOutEvent();
-            output.Init(stream);
-            output.PlaybackStopped += (s, e) =>
+
+        #if WINDOWS
+            using var sp = new System.Media.SoundPlayer(tmpPath);
+            sp.Play();
+        #elif LINUX
+            string[] players = { "paplay", "aplay", "ffplay" };
+            foreach (var player in players)
             {
-                output.Dispose();
-                stream.Dispose();
-            };
-            output.Volume = 0.5f;
-            output.Play();
+                if (Which(player) == null) continue;
+                Process.Start(new ProcessStartInfo(player, $"\"{tmpPath}\"")
+                    { CreateNoWindow = true });
+                break;
+            }
+        #elif MACOS
+            Process.Start(new ProcessStartInfo("afplay", $"\"{tmpPath}\"") 
+                { CreateNoWindow = true });
+        #endif
+
         }
-        catch (Exception ex) 
-        { 
-            System.Diagnostics.Debug.WriteLine(ex.Message);
-            System.Diagnostics.Debug.WriteLine(ex.StackTrace);
-        }
+        catch (Exception ex) { Debug.WriteLine(ex.Message); }
     }
 
     public static void Initialize()
@@ -111,5 +131,20 @@ public static class XnbAudio
         SoundClose  = Path.Combine(Config.BaseFolder, "Content", "SoundEffects", "D360-18-12.xnb");
         SoundClick  = Path.Combine(Config.BaseFolder, "Content", "SoundEffects", "D360-10-0A.xnb");
         SoundSelect = Path.Combine(Config.BaseFolder, "Content", "SoundEffects", "D360-19-13.xnb");
+
+        Task.Run(() =>
+        {
+            foreach (var path in new[] { SoundSave, SoundXSave, SoundOpen, SoundClose, SoundClick, SoundSelect })
+            {
+                try
+                {
+                    if (!File.Exists(path)) continue;
+                    string tmpPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".wav");
+                    File.WriteAllBytes(tmpPath, LoadWavFromXnb(path));
+                    _wavCache[path] = tmpPath;
+                }
+                catch (Exception ex) { Debug.WriteLine(ex.Message); }
+            }
+        });
     }
 }

@@ -15,7 +15,7 @@
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="NAudio" Version="2.3.0" />
+    <PackageReference Include="System.Windows.Extensions" Version="8.0.0" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
   </ItemGroup>
   
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
@@ -23,6 +23,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
     <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+    <TargetFramework>net8.0-windows</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
