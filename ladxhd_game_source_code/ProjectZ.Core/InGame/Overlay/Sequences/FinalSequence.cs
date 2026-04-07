@@ -765,6 +765,9 @@ namespace ProjectZ.InGame.Overlay.Sequences
 
         private void ExitToIntro()
         {
+            // An offset was applied during the final stairs.
+            MapManager.Camera.StopOffset();
+
             // Clear the save state and disable history as we don't want to save "final" stuff.
             SaveGameSaveLoad.ClearSaveState();
             Game1.GameManager.SaveManager.RevertHistory();
