@@ -111,21 +111,23 @@ namespace LADXHD_Migrater
 
             // Set up the path to the Icon.
             string iconPath = Path.Combine(Config.Update_Data, "Icon").CreatePath();
-            string iconFile = Path.Combine(iconPath, "Icon.ico");
 
-            // Write the files to the "Content\Fonts" folder.
+            // Write the icon to the "Data\Icon" folder.
+            string iconFile = Path.Combine(iconPath, "Icon.ico");
             File.WriteAllBytes(iconFile, (byte[])resources["Icon.ico"]);
 
-            // Set up the path to the bitmap Icon.
-            string iconBmpPath = Path.Combine(Config.Update_Data, "Icon").CreatePath();
-            string iconBmpFile = Path.Combine(iconBmpPath, "Icon.bmp");
-
             // Write the bitmap icon to the "Data\Icon" folder.
+            string iconBmpFile = Path.Combine(iconPath, "Icon.bmp");
             using (var ms = new MemoryStream())
             {
                 ((Bitmap)resources["Icon.bmp"]).Save(ms, ImageFormat.Bmp);
                 File.WriteAllBytes(iconBmpFile, ms.ToArray());
             }
+
+            // Write the png icon to the the "Data\Icon" folder.
+            string iconPngFile = Path.Combine(iconPath, "Icon.png");
+            File.WriteAllBytes(iconPngFile, (byte[])resources["Icon.png"]);
+
             // Extract the Android buttons to the data path.
             string extractPath = Path.Combine(Config.Update_Data, "Buttons").CreatePath();
 
