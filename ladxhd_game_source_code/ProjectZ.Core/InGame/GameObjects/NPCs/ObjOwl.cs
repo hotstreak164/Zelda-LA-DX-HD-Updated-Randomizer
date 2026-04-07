@@ -222,9 +222,13 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (Link.IsFlying())
                 Link.ReleaseCarriedObject();
 
-            // Play stand, set Link to idle, and set his jump position to zero.
-            Link.Animation.Play("stand_" + Link.Direction);
-            Link.CurrentState = ObjLink.State.Idle;
+            //  Play Link's stand animation and force Link into Idle state unless it's the ending.
+            if (Link.CurrentState != ObjLink.State.FinalStand)
+            {
+                Link.Animation.Play("stand_" + Link.Direction);
+                Link.CurrentState = ObjLink.State.Idle;
+            }
+            // Force Link jump position to zero.
             Link.EntityPosition.Z = 0;
 
             // Freeze the game as the owl enters the map.

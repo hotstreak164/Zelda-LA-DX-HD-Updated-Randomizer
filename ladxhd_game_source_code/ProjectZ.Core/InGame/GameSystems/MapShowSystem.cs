@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.GameObjects.Enemies;
 using ProjectZ.InGame.Map;
+using ProjectZ.InGame.Pages;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
 
@@ -38,6 +39,7 @@ namespace ProjectZ.InGame.GameSystems
             _targetIndex = 0;
             _finished = false;
             _isActive = false;
+            Camera.LockCamera = false;
         }
 
         public override void Update()
@@ -58,7 +60,6 @@ namespace ProjectZ.InGame.GameSystems
                 {
                     _counter -= Game1.DeltaTime;
                 }
-
                 return;
             }
 
@@ -67,6 +68,7 @@ namespace ProjectZ.InGame.GameSystems
             if (_finished && _counter < ChangeTargetTime - FadeTime - FadeLock)
             {
                 _isActive = false;
+                Camera.LockCamera = false;
                 return;
             }
 
@@ -83,7 +85,8 @@ namespace ProjectZ.InGame.GameSystems
                 else
                 {
                     _finished = true;
-                    
+                    Camera.LockCamera = false;
+
                     // switch back to the ending map
                     var oldMap = Game1.GameManager.MapManager.CurrentMap;
                     Game1.GameManager.MapManager.CurrentMap = Game1.GameManager.MapManager.NextMap;
@@ -122,6 +125,8 @@ namespace ProjectZ.InGame.GameSystems
             _init = false;
             _counter = FadeLock + FadeTime;
 
+            Camera.LockCamera = true;
+
             // used to spawn different npcs on the overworld
             Game1.GameManager.SaveManager.SetString("final_show", "1");
             Game1.GameManager.SaveManager.SetString("marin_state", "1");
@@ -145,7 +150,6 @@ namespace ProjectZ.InGame.GameSystems
             // Completely disable them from being able to do anything.
             foreach (EnemyRaven raven in ravenList)
                 raven.IsActive = false;
-
             _finishedLoading = true;
         }
 

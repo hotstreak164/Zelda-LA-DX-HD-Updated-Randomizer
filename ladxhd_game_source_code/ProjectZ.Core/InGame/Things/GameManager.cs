@@ -1319,7 +1319,6 @@ namespace ProjectZ.InGame.Things
             MapManager.NextMap.DungeonCastle = true;
             MapManager.NextMap.LocationName = dungeonName;
             MapManager.NextMap.LocationFullName = dungeonName;
-            System.Diagnostics.Debug.WriteLine(MapManager.NextMap.DungeonCastle);
         }
 
         public void SetNoFollowersMap()

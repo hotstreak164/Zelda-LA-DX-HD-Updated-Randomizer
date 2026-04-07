@@ -776,30 +776,10 @@ namespace ProjectZ.InGame.Overlay.Sequences
             Game1.GameManager.SaveManager.RemoveString("spawn_final_stairs");
             Game1.GameManager.SaveManager.RemoveString("final_boss_death");
 
-            // Restore camera setting to what they were before the stairs sequence.
-            GameSettings.ClassicCamera = Game1.StoredClassicCamera;
-            GameSettings.ModernOverworld = Game1.StoredModernOverworld;
-            GameSettings.ClassicDungeon = Game1.StoredClassicDungeon;
-
-            // Set the "stored" values back to false.
-            Game1.StoredCameraSet = false;
-            Game1.StoredClassicCamera = false;
-            Game1.StoredModernOverworld = false;
-            Game1.StoredClassicDungeon = false;
-
-            // Signal a scale change, change the screen, and close the overlay.
-            Game1.ScaleChanged = true;
+            // Change the screen, and close the overlay.
             Game1.ScreenManager.ChangeScreen(Values.ScreenNameIntro);
             Game1.GameManager.InGameOverlay.CloseOverlay();
 
-            // Apply the camera settings to the Camera Settings page.
-            if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(CameraSettingsPage), out var camPage))
-            {
-                var CameraSettingsPage = (CameraSettingsPage)camPage;
-                CameraSettingsPage.SetCameraMode(GameSettings.ClassicCamera);
-                CameraSettingsPage.SetModernOverworld(GameSettings.ModernOverworld);
-                CameraSettingsPage.SetClassicDungeon(GameSettings.ClassicDungeon);
-            }
             // Set the save file's cleared state and save.
             Game1.GameManager.GameCleared = true;
             SaveGameSaveLoad.SaveGame(Game1.GameManager, true);

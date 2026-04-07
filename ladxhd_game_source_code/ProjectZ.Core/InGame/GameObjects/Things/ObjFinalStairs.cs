@@ -65,11 +65,15 @@ namespace ProjectZ.InGame.GameObjects.Things
                 }
             }
 
-            // collision with the player?
+            // Link walks into the final stairs.
             if (!_collided && MapManager.ObjLink._body.BodyBox.Box.Contains(_collisionBox.Box))
             {
                 _collided = true;
+
+                // Hide the shield from this point on.
+                MapManager.ObjLink.CarryShield = false;
                 Game1.GameManager.StartDialogPath("final_stairs");
+                MapManager.ObjLink.Animation.Play("walk_0");
                 MapManager.ObjLink.SetPosition(new Vector2(EntityPosition.X + 8, EntityPosition.Y + 12));
             }
         }

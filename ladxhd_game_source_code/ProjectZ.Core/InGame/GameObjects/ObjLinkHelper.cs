@@ -239,7 +239,7 @@ namespace ProjectZ.InGame.GameObjects
             _bootsRunning = false;
             _bootsCounter = 0;
 
-            CurrentState = State.Idle;
+            ReturnToIdle();
 
             Game1.GameManager.UseShockEffect = true;
 
@@ -316,6 +316,9 @@ namespace ProjectZ.InGame.GameObjects
         // Return to idle or to rafting if that was the player was rafting before
         private void ReturnToIdle()
         {
+            if (CurrentState == State.FinalStand)
+                return;
+
             if (_isRafting)
                 CurrentState = State.Rafting;
             else

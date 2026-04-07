@@ -42,7 +42,7 @@ namespace ProjectZ.InGame.Map
                     Game1.GameManager.GetMatrix;
             }
         }
-
+        public static bool  LockCamera;
         public static bool  SnapCamera;
         public static float SnapCameraTimer;
 
@@ -119,6 +119,12 @@ namespace ProjectZ.InGame.Map
 
         public void Center(Vector2 position, bool moveX, bool moveY)
         {
+            // When LockCamera is set (e.g. MapShowSystem), do not let Center() override
+            // the position that was set via ForceUpdate(). This fixes Classic Camera mode
+            // which would otherwise recompute the target from ObjLink's field every frame.
+            if (LockCamera)
+                return;
+
             // If SnapCamera was enabled and a timer started.
             if (SnapCameraTimer > 0)
                 SnapCameraTimer -= Game1.DeltaTime;

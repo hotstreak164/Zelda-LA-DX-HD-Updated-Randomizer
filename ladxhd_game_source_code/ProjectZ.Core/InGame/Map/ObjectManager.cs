@@ -375,7 +375,7 @@ namespace ProjectZ.InGame.Map
             _updateGameObjectsSet.Clear();
 
             // Classic Camera: Only update objects within the current field.
-            if (Camera.ClassicMode && GameSettings.ClassicBorder != 0)
+            if (Camera.ClassicMode && !Camera.LockCamera && GameSettings.ClassicBorder != 0)
             {
                 _gameObjectPool.GetComponentList(_updateGameObjects, UpdateField.X, UpdateField.Y, UpdateField.Width, UpdateField.Height, UpdateComponent.Mask);
                 FilterObjectsInField(_updateGameObjects, ActualField);

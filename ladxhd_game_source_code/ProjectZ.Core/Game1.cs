@@ -123,12 +123,6 @@ namespace ProjectZ
 
         // True when in-game after selecting save file. False at main menu and intro.
         public static bool InProgress;
-        
-        // Stores classic cam setting for ending.
-        public static bool StoredCameraSet = false;
-        public static bool StoredClassicCamera = false;
-        public static bool StoredModernOverworld = false;
-        public static bool StoredClassicDungeon = false;
 
         public static bool FinishedLoading => _finishedLoading;
 

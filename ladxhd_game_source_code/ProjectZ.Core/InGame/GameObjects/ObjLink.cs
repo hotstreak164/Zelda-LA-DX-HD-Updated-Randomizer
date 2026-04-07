@@ -46,7 +46,7 @@ namespace ProjectZ.InGame.GameObjects
             CloakShow0, CloakShow1,
             Intro, BedTransition,
             Sequence, FinalInstruments,
-            Frozen
+            Frozen, FinalStand
         }
         public State CurrentState;
 
@@ -1558,6 +1558,7 @@ namespace ProjectZ.InGame.GameObjects
             if (!string.IsNullOrEmpty(linkFinalStairStand))
             {
                 _forceWalking = false;
+                CurrentState = State.FinalStand;
                 Game1.GameManager.SaveManager.RemoveString("finalstairstand");
             }
 
@@ -2811,6 +2812,12 @@ namespace ProjectZ.InGame.GameObjects
 
                 return;
             }
+            // A backup path for when the above fails. If walking is forced, walking should happen.
+            if (_forceWalking)
+            {
+                Animation.Play((CarryShield ? "walkb" : "walk") + shieldString + animDirection);
+                return;
+            }
             // When the rotation from a vacuum ends, the body and weapon animators need to be resynced.
             if ((IsChargingState() || _bootsRunning) && _wasRotating)
             {
@@ -2824,7 +2831,9 @@ namespace ProjectZ.InGame.GameObjects
             Animation.SpeedMultiplier = 1.0f;
 
             // Play animation based on Link's current state and other factors.
-            if ((CurrentState == State.Idle && !_isWalking && _body.IsGrounded) ||
+            if (CurrentState == State.FinalStand)
+                Animation.Play("final_stand");
+            else if ((CurrentState == State.Idle && !_isWalking && _body.IsGrounded) ||
                 (CurrentState == State.Charging && !_isWalking) ||
                 (CurrentState == State.Rafting && !_isWalking) ||
                 CurrentState == State.Teleporting ||
@@ -6483,31 +6492,6 @@ namespace ProjectZ.InGame.GameObjects
 
         public void UpdateMapTransitionIn(float state)
         {
-            // Kind of a hacky solution: "ObjFinalBackground" object sets "IsFinalMap" via "Game1.GameManager.SetFinalMap();".
-            if (Map.IsFinalMap && !Game1.StoredCameraSet)
-            {
-                // Store the camera settings. They are restored after the ending is finished.
-                Game1.StoredClassicCamera = GameSettings.ClassicCamera;
-                Game1.StoredModernOverworld = GameSettings.ModernOverworld;
-                Game1.StoredClassicDungeon = GameSettings.ClassicDungeon;
-
-                // Update current camera settings for the ending sequence.
-                GameSettings.ClassicCamera = false;
-                GameSettings.ModernOverworld = false;
-                GameSettings.ClassicDungeon = false;
-
-                // Apply the camera settings to the Camera Settings page.
-                if (Game1.UiPageManager.InsideElement.TryGetValue(typeof(CameraSettingsPage), out var camPage))
-                {
-                    var CameraSettingsPage = (CameraSettingsPage)camPage;
-                    CameraSettingsPage.SetCameraMode(GameSettings.ClassicCamera);
-                    CameraSettingsPage.SetModernOverworld(GameSettings.ModernOverworld);
-                    CameraSettingsPage.SetClassicDungeon(GameSettings.ClassicDungeon);
-                }
-                // Signal a scale change and don't let this code block run again.
-                Game1.ScaleChanged = true;
-                Game1.StoredCameraSet = true;
-            }
             // Check if the transition state is "state 0".
             if (state == 0)
             {
