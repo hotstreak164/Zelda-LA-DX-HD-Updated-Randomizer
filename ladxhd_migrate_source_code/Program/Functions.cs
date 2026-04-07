@@ -118,11 +118,7 @@ namespace LADXHD_Migrater
 
             // Write the bitmap icon to the "Data\Icon" folder.
             string iconBmpFile = Path.Combine(iconPath, "Icon.bmp");
-            using (var ms = new MemoryStream())
-            {
-                ((Bitmap)resources["Icon.bmp"]).Save(ms, ImageFormat.Bmp);
-                File.WriteAllBytes(iconBmpFile, ms.ToArray());
-            }
+            File.WriteAllBytes(iconBmpFile, (byte[])resources["Icon.bmp"]);
 
             // Write the png icon to the the "Data\Icon" folder.
             string iconPngFile = Path.Combine(iconPath, "Icon.png");
