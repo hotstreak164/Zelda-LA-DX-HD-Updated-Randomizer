@@ -231,7 +231,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _moveDirection = AnimationHelper.GetDirection(direction);
 
             // Assemble the list of conditions to check if the stone should move.
-            bool linkNotPushing = !Link.WasPushing;                                            // Link was pushing the stone last frame update.
+            bool linkNotPushing = !Link.WasPushing && !Link.IsCarrying();                      // Link was pushing the stone last frame update.
             bool dirNotMatching = _moveDirection != Link.Direction;                            // Direction of Link matches direction of push.
             bool stateIsNotIdle = _aiComponent.CurrentStateId != "idle";                       // Current state of stone must be "Idle".
             bool pushTypeImpact = type == PushableComponent.PushType.Impact;                   // Push type must not be "Impact" type.
