@@ -284,10 +284,12 @@ namespace LADXHD_Patcher
             if (!HostEnvironment.IsWine)
                 return;
 
-            string scriptContent  = System.Text.Encoding.UTF8.GetString((byte[])resources[scriptResource]);
-            string scriptWinPath  = Path.Combine(Config.TempFolder, "finalize.sh");
-            File.WriteAllText(scriptWinPath, scriptContent,
-                              new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+            // Write the script bytes verbatim so Unix line endings (LF) are preserved.
+            // File.WriteAllText on Windows would convert \n → \r\n via StreamWriter,
+            // which breaks /bin/sh execution of the extracted script.
+            byte[] scriptBytes   = (byte[])resources[scriptResource];
+            string scriptWinPath = Path.Combine(Config.TempFolder, "finalize.sh");
+            File.WriteAllBytes(scriptWinPath, scriptBytes);
 
             string scriptNativePath = ToUnixPath(scriptWinPath);
             string baseFolder       = ToUnixPath(Config.BaseFolder);
