@@ -176,10 +176,24 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (_mainGhini)
                 KillOtherGhinies();
 
-            // A 25% chance to spawn a fairy.
-            if (Game1.RandomNumber.Next(0, 4) == 1)
-                Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, (int)EntityPosition.Z));
+            // 60% chance overall to spawn something.
+            // 20% chance each for fairy, bomb, or arrow.
+            var itemDropChance = Game1.RandomNumber.Next(0, 5);
 
+            if (itemDropChance == 0)
+            {
+                Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, (int)EntityPosition.Z));
+                _damageState.SpawnItems = false;
+            }
+            else if (itemDropChance == 1)
+            {
+                _damageState.SpawnItem = "bomb_1";
+            }
+            else if (itemDropChance == 2)
+            {
+                _damageState.SpawnItem = "arrow_1";
+            }
+            // If item wasn't hit here, rupee or heart may hit in BaseOnDeath.
             _damageState.BaseOnDeath(pieceOfPower);
         }
 
