@@ -284,10 +284,11 @@ namespace LADXHD_Patcher
             if (!HostEnvironment.IsWine)
                 return;
 
-            // Write the script bytes verbatim so Unix line endings (LF) are preserved.
-            // File.WriteAllText on Windows would convert \n → \r\n via StreamWriter,
-            // which breaks /bin/sh execution of the extracted script.
+            // Normalize line endings to LF in case the embedded resource contains CRLFs
+            // then write raw bytes so File.WriteAllText's StreamWriter cannot convert \n → \r\n.
             byte[] scriptBytes   = (byte[])resources[scriptResource];
+            string scriptContent = System.Text.Encoding.UTF8.GetString(scriptBytes).Replace("\r\n", "\n");
+            scriptBytes          = System.Text.Encoding.UTF8.GetBytes(scriptContent);
             string scriptWinPath = Path.Combine(Config.TempFolder, "finalize.sh");
             File.WriteAllBytes(scriptWinPath, scriptBytes);
 
