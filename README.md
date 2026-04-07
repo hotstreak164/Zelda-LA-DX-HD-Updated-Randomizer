@@ -15,9 +15,13 @@ The game can be patched to port to Windows (DX11), Windows (OpenGL), Android, an
 - As of v1.4.0, the gravy train never stopped and much work has been done to make this port more accurate.
 - As of v1.5.0, it has evolved into something I never dreamed of. Hundreds of issues fixed with tons of features.
 - As of v1.6.0, just about every small detail from the original game has been restored and/or replicated.
-- As of v1.7.0, it's been ported to multiple platforms and every single known bug since v1.0.0 has been fixed.
+- As of v1.7.0, it's been ported to multiple platforms and every single (known) bug since v1.0.0 has been fixed.
 
-## Patching v1.0.0 (or v1.1.4+) to v1.7.2.
+## Building / Contributing
+
+I have compiled all this information into a wiki page here: [Building / Contributing](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/wiki/Building-&-Contributing).
+
+## Patching v1.0.0 (or v1.1.4+) to v1.7.3.
 
 To download the latest update, there is a patcher on the [Releases](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/releases) page.<br>
 If you wish to build the game yourself, see **Personal Build / Publishing**.
@@ -30,7 +34,7 @@ If you wish to build the game yourself, see **Personal Build / Publishing**.
 - Press the "Patch" button. It will take a bit to finish.
 - When it is done, the patcher can be deleted.
 
-### Silent Mode (Automated Patching)
+### Silent Mode: Command Line Patching
 
 The patcher supports silent mode for automated installations and scripts:
 
@@ -61,84 +65,11 @@ All software is Windows only aside from the game which has been ported to Androi
 - **ladxhd_game_source_code**: Source code for The Legend of Zelda: Link's Awakening DX HD.
 - **ladxhd_migrate_source_code**: Source code for the migration tool which can apply/create assets patches.
 - **ladxhd_modmaker_source_code**: Source code for the modmaker which can create mod installers.
-- **ladxhd_patcher_source_code**: Source code for the patcher to update the game to v1.7.2.
+- **ladxhd_patcher_source_code**: Source code for the patcher to update the game to v1.7.3.
 - **LADXHD_Migrater.exe**: This is the migration tool used to apply or create patches to the assets.
 - **Unblock-All-Files.ps1**: This script can be used to unblock all files automatically for Visual Studio.
 
 The game is built with the latest version of [MonoGame](https://monogame.net/).
-
-## Updating Source Code Assets
-
-The latest source code can be downloaded from this repository. But, you will need to provide the assets from the original v1.0.0 release. It is very important to follow the instructions carefully as many assets have been updated.
-
-- Notice the folder named **"assets_original"** in the base of this repository .
-- This is where the **"Content"** and **"Data"** folders go from the v1.0.0 release.
-- Note that there is two **Content** folders and you must provide the <ints>correct<ins> one.
-- Copy the **"Data"** folder from the v1.0.0 <ins>game folder</ins> to the **"assets_original"** folder.
-- This is NOT the correct **"Content"** folder. You need the one from the source code.
-- Inside the v1.0.0 game folder is a 7z file **"source.7z"**. Extract this file which is the source code.
-- Copy the **"Content"** folder from the extracted <ins>source code folder</ins> to the **"assets_original"** folder.
-
-You should now have both **Content** and **Data** copied to the **assets_original* folder.
-
-- Open the **"LADXHD_Migrater.exe"** tool that is provided in this repo.
-- Click the button **"Migrate Assets From v1.0.0"** and wait for it to finish.
-- This will create new **"Content"** and **"Data"** folders in the **"ladxhd_game_source_code"** folder.
-- And you are done. From here you can build the game or work on the code.
-- The original **"Content/Data"** folders should be kept in **"assets_original"** for future patches.
-
-Again, make sure you are grabbing the correct Content and Data folders. The "Data" folder should come from the <ins>game folder</ins>, and the "Content" folder should come from the <ins>source.7z file</ins>. The patches in **"assets_patches"** never need to be interacted with directly, as the migration tool can handle both directions: updating 1.0.0 assets, and creating new patches for asset updates.
-
-## Contributing Prerequisites
-
-If you wish to work on the code in this repository.
-
-- You will need the latest [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
-- Basic knowledge of C# .NET and Visual Studio is required.
-- [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
-    - Make sure to select `.NET desktop development` components in the visual studio installer.
-- The "base" game should remain as close to the original DX version as possible.
-- Modifications are okay in the form of options, but should default to **<ins>false</ins>**.
-- Some exceptions may be okay depending on their intent.
-
-## Contributing Assets
-
-Do not make pull requests providing assets directly. This includes ALL files within the **Content** and **Data** folders. Instead, use the **LADXHD Migrater** tool provided to create xdelta patches. These patches can then be applied to the original assets to update them to the latest versions also using the migration tool.
-
-See the wiki page on [contributing to this project](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/wiki/Contributing-to-this-project) for more information.
-
-## Build Instructions
-
-If you wish to build the code in this repository.
-- Clone or Download this repository: green `Code` Button > `Download ZIP`
-- The game's source code is in **"ladxhd_game_source_code"** folder
-- Follow the steps in **Updating Source Code Assets**
-- Run the PowerShell script "Unblock-All-Files.ps1".
-  - -OR- Go to the folder `ladxhd_game_source_code\.config` you will see `dotnet-tools.json`.
-  - -AND- Right click, go to properties, check `Unblock`.
-- Open ProjectZ.sln
-- Build/run like any normal C# program
-
-## Personal Build / Publishing
-
-To create a personal build, follow the steps below:
-- Download and install [.NET v8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
-- Clone or Download this repository: green `Code` Button > `Download ZIP`
-- Unzip the repository and open up the unzipped folder.
-- Follow the steps in **Updating Source Code Assets**
-- Run the PowerShell script "Unblock-All-Files.ps1".
-  - -OR- Go to the folder `ladxhd_game_source_code\.config` you will see `dotnet-tools.json`.
-  - -AND- Right click, go to properties, check `Unblock`.
-- Run the `ladxhd_game_source_code\publish.bat` script to build all ports of the game.
-- Alternatively, the **"LADXHD_Migrater.exe"** tool can now build a single port game.
-- When done, the build will be in the `Publish` folder.
-
-## Build Troubleshooting
-
-If you experience the error **The command “dotnet tool restore” exited with code 1** then make sure the file **.config\dotnet-tools.json** isn't blocked. 
-
-- To unblock all files in one go, run the included PowerShell script **"Unblock-All-Files.ps1"**.
-- To unblock a single file: Right click, go to Properties, check Unblock, and click OK.
 
 ## About This Fork
 

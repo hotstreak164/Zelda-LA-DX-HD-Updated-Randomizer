@@ -53,17 +53,17 @@
 # CONFIGURATION
 #========================================================================================================================================
 
-$GameVersion = "1.7.2"
-$OldGamePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\original"
+$GameVersion = "1.7.3"
+$OldGamePath = "H:\Projects\Zelda Link's Awakening\original"
 $SevenZipExe = "C:\Program Files\7-Zip\7z.exe"
 
-$WinDXInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_win_dx"
-$WinGLInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_win_gl"
-$DroidInPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_android"
-$Linux86Path = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_linux_x86"
-$LinuxArPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_linux_arm64"
-$MacOS86Path = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_macos_x86"
-$MacOSArPath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD_Stuff\updated_macos_arm64"
+$WinDXInPath = "H:\Projects\Zelda Link's Awakening\updated_win_dx"
+$WinGLInPath = "H:\Projects\Zelda Link's Awakening\updated_win_gl"
+$DroidInPath = "H:\Projects\Zelda Link's Awakening\updated_android"
+$Linux86Path = "H:\Projects\Zelda Link's Awakening\updated_linux_x86"
+$LinuxArPath = "H:\Projects\Zelda Link's Awakening\updated_linux_arm64"
+$MacOS86Path = "H:\Projects\Zelda Link's Awakening\updated_macos_x86"
+$MacOSArPath = "H:\Projects\Zelda Link's Awakening\updated_macos_arm64"
 
 $CreateWinDX = $true
 $CreateWinGL = $true

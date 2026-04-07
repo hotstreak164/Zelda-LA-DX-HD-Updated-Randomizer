@@ -280,6 +280,9 @@ namespace LADXHD_Migrater
             Path.Combine(Config.Game_Source, "ProjectZ.Linux", "obj").RemovePath();
             Path.Combine(Config.Game_Source, "ProjectZ.MacOS", "bin").RemovePath();
             Path.Combine(Config.Game_Source, "ProjectZ.MacOS", "obj").RemovePath();
+            Path.Combine(Config.Launcher_Source, "~Publish").RemovePath();
+            Path.Combine(Config.Launcher_Source, "bin").RemovePath();
+            Path.Combine(Config.Launcher_Source, "obj").RemovePath();
             Path.Combine(Config.Migrate_Source, "bin").RemovePath();
             Path.Combine(Config.Migrate_Source, "obj").RemovePath();
             Path.Combine(Config.Patcher_Source, "bin").RemovePath();

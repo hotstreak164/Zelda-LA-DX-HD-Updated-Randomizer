@@ -11,6 +11,7 @@ namespace LADXHD_Migrater
         public static string Orig_Content;
         public static string Orig_Data;
         public static string Game_Source;
+        public static string Launcher_Source;
         public static string Migrate_Source;
         public static string Patcher_Source;
         public static string ModMaker_Source;
@@ -33,6 +34,7 @@ namespace LADXHD_Migrater
             Orig_Content    = Path.Combine(BaseFolder, "assets_original", "Content");
             Orig_Data       = Path.Combine(BaseFolder, "assets_original", "Data");
             Game_Source     = Path.Combine(BaseFolder, "ladxhd_game_source_code");
+            Launcher_Source = Path.Combine(BaseFolder, "ladxhd_launcher_source_code");
             Migrate_Source  = Path.Combine(BaseFolder, "ladxhd_migrate_source_code");
             Patcher_Source  = Path.Combine(BaseFolder, "ladxhd_patcher_source_code");
             ModMaker_Source = Path.Combine(BaseFolder, "ladxhd_modmaker_source_code");

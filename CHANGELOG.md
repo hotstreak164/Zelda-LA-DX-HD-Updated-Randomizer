@@ -1,5 +1,22 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.7.3**
+### The "Cukeman, We Have a Launcher" Update
+  * A new launcher is now included to configure game settings and settings only found in LAHDMods.
+  * Add transparency to the hookshot chain to match how it appears in the original game.
+  * Pegasus Boots can now be cast while holding out the shield.
+  * When Classic Camera border is hidden, visible objects are animated but their logic isn't updated.
+  * The Sleepy Toadstool can be given to the witch by assigning it to a button and using it.
+  * Level 2 sword beam modifier to cut bushes now slices through all no matter FPS or refresh rate.
+  * When creating a new save, return to the file selection screen which allows entering code names.
+  * The ending now works with Classic Camera and has had several improvements made to the camera.
+  * Fix Piece of Power and Guardian Acorn kill counts and spawn behaviors to match the original game.
+  * Fix the Intro video to play the missing wave sound effects when Marin is walking along the beach.
+  * Fix Bow Wow being able to find and attack monsters while Classic Camera is the active camera.
+  * Fix dialogue crashes due to (…) glyph in French, Spanish, Italian, Portugeuse, and Russian.
+  * Fix setting "second_chance" which allows recruiting followers after dungeon 8 without map reload.
+  * Fix several issues with game, launcher, and patcher builds for Linux and MacOS (credit @aitorciki).
+
 ## **v1.7.2**
 ### The "I Wish I Didn't Have to Make this Update" Update
   * Chinese dialog fixes + implement placeholder tags around the script (credit @uplush).
