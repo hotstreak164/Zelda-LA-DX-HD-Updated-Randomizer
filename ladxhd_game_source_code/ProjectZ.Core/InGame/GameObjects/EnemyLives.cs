@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using ProjectZ.InGame.Things;
+using ProjectZ.InGame.SaveLoad;
 
 namespace ProjectZ.InGame.GameObjects
 {
@@ -136,24 +137,41 @@ namespace ProjectZ.InGame.GameObjects
 
         public static void ParseModFile()
         {
-            // If a mod file exists load the values from it.
+            // Read advanced file first (ObjLives section), lahdmod overrides it.
+            ParseLines(ReadAdvancedSection("EnemyLives"));
+
             string modFile = Path.Combine(Values.PathLAHDMods, "EnemyLives.lahdmod");
+            if (File.Exists(modFile))
+                ParseLines(File.ReadAllLines(modFile));
+        }
 
-            // Check for the old name of the mod as well since this changed.
-            if (!File.Exists(modFile))
+        private static IEnumerable<string> ReadAdvancedSection(string sectionName)
+        {
+            string advancedFile = SaveManager.GetAdvancedFile();
+            if (!File.Exists(advancedFile))
+                yield break;
+
+            bool inSection = false;
+            foreach (string fileLine in File.ReadAllLines(advancedFile))
             {
-                modFile = Path.Combine(Values.PathLAHDMods, "ObjLives.lahdmod");
-
-                if (!File.Exists(modFile))
-                    return;
+                if (fileLine.TrimStart().StartsWith("//: "))
+                {
+                    inSection = fileLine.TrimStart().Substring(4).Trim() == sectionName;
+                    continue;
+                }
+                if (inSection && !string.IsNullOrWhiteSpace(fileLine) && !fileLine.TrimStart().StartsWith("//"))
+                    yield return fileLine;
             }
-            // If a mod file exists replace all enemy lives with the custom values from the lahdmod file.
-            foreach (string line in File.ReadAllLines(modFile))
+        }
+
+        private static void ParseLines(IEnumerable<string> lines)
+        {
+            foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                     continue;
 
-                string[] splitLine = line.Split(new char[]{ '=', '/' });
+                string[] splitLine = line.Split(new char[] { '=', '/' });
                 if (splitLine.Length < 2)
                     continue;
 
@@ -161,11 +179,16 @@ namespace ProjectZ.InGame.GameObjects
                 string varValue = splitLine[1].Trim();
 
                 FieldInfo field = typeof(EnemyLives).GetField(varName, BindingFlags.Public | BindingFlags.Static);
-                object convertedValue = Convert.ChangeType(varValue, field.FieldType, CultureInfo.InvariantCulture);
-                field.SetValue(null, convertedValue);
+                if (field == null) continue;
+
+                try
+                {
+                    object convertedValue = Convert.ChangeType(varValue, field.FieldType, CultureInfo.InvariantCulture);
+                    field.SetValue(null, convertedValue);
+                }
+                catch { }
             }
         }
-
         public static void BackupDefaultHP()
         {
             _defaultValues = new Dictionary<string, int>();

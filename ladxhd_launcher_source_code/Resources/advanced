@@ -581,7 +581,7 @@ light_size = 64
 [Enemy: Lives]
 // Configures the number of "lives" of all enemies in the game. Lives are in essence the number of "Hit Points" the enemies have. The level 1 sword deals 1 damage. The level 2 sword deals 2 damage. Piece of Power, Sword Spin, and Red Tunic multiply damage by (x2). Max possible damage is 16. Level 2 sword (2) * Red Tunic (x2) * Piece of Power (x2) * Sword Spin (x2) = 16 damage.
 
-//: ObjLives
+//: EnemyLives
 // The values here are "base lives", and are cumulative with the option "Extra Enemy HP". So if you set "Extra Enemy HP" to "2", it will
 // add 2 more hit points to all the values that are set here. This file lets you fine tune lives, while Extra Enemy HP is a global setting.
 AnglerFry        = 1

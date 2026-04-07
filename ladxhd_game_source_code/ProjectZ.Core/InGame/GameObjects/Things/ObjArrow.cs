@@ -52,9 +52,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjArrow.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             var spawnPosition = new Vector3(linkPos.X + offsetpos.X, linkPos.Y + offsetpos.Y + (Map.Is2dMap ? -4 : 0), linkPos.Z + (Map.Is2dMap ? 0 : 4));
 

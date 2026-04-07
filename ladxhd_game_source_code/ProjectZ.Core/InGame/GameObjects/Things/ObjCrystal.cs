@@ -37,9 +37,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         public ObjCrystal(Map.Map map, int posX, int posY, string spriteId, int color, bool hardCrystal, string dialogPath) : base(map, spriteId)
         {
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjCrystal.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             var sprite = Resources.GetSprite(spriteId);
 

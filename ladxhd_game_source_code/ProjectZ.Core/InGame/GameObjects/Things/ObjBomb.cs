@@ -62,9 +62,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         public ObjBomb(Map.Map map, float posX, float posY, bool playerBomb, bool floorExplode, int explosionTime = 1500) : base(map)
         {
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjBomb.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             CanReset = true;
             OnReset = Reset;

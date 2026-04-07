@@ -57,12 +57,9 @@ namespace ProjectZ.InGame.GameObjects.Things
         {
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjIslandBackground.lahdmod");
+            ModFile.Parse(modFile, this);
+            _colorOceanBright = new Color(ocean_color_red, ocean_color_grn, ocean_color_blu);
 
-            if (File.Exists(modFile))
-            {
-                ModFile.Parse(modFile, this);
-                _colorOceanBright = new Color(ocean_color_red, ocean_color_grn, ocean_color_blu);
-            }
             _waveSource = Resources.SourceRectangle("water_3");
             _waveSource.Width = 16;
             _topWaveSource = Resources.SourceRectangle("water_12");

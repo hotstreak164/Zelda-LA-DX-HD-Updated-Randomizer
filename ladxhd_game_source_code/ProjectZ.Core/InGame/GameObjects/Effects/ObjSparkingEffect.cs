@@ -18,9 +18,7 @@ namespace ProjectZ.InGame.GameObjects.Effects
         {
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjSparkingEffect.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             ConfigureLight(light_source, light_red, light_grn, light_blu, light_bright, light_size, light_fade);
         }

@@ -55,6 +55,19 @@ namespace ProjectZ.InGame.SaveLoad
         #endif
         }
 
+        public static string GetAdvancedFile()
+        {
+        #if ANDROID
+            return Path.Combine(Values.UserDataRoot, "advanced");
+        #else
+            string portable = Path.Combine(Values.WorkingDirectory, "portable.txt");
+            if (File.Exists(portable))
+                return Path.Combine(Values.WorkingDirectory, "advanced");
+
+            return Path.Combine(Values.AppDataFolder, "Zelda_LA", "advanced");
+        #endif
+        }
+
         struct HistoryFrame
         {
             public string Key;

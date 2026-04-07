@@ -39,9 +39,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "EnemyAntiFairy.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             // not used for the enemy trigger
             Tags = Values.GameObjectTag.Damage;

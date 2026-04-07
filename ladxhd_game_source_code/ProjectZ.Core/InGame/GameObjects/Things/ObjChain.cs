@@ -34,9 +34,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         public ObjChain(Map.Map map, Vector2 startPosition) : base(map)
         {
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjChain.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             // init the chain
             for (var i = 0; i < ChainCount; i++)

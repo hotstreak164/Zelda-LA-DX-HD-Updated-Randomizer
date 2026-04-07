@@ -97,9 +97,7 @@ namespace ProjectZ.InGame.Overlay
         {
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "TextboxOverlay.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             _animator = AnimatorSaveLoad.LoadAnimator("dialog_arrow");
 

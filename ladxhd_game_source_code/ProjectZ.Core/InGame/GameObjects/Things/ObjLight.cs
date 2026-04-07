@@ -20,9 +20,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         public ObjLight(Map.Map map, int posX, int posY, int size, int colorR, int colorG, int colorB, int colorA, int layer) : base(map)
         {
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjLight.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             EntityPosition = new CPosition(posX + 8, posY + 8, 0);
             EntitySize = new Rectangle(-size / 2, -size / 2, size, size);

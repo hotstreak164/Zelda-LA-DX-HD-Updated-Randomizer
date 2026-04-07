@@ -163,9 +163,7 @@ namespace ProjectZ
 
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "Game1.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             // Use max game scale set by lahdmod file or default value set above.
             MaxGameScale = max_game_scale;

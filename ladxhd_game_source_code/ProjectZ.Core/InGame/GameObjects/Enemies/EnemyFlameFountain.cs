@@ -40,9 +40,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "EnemyFlameFountain.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             _light.Shader = sprite_shader;
             _light.Enabled = light_source;

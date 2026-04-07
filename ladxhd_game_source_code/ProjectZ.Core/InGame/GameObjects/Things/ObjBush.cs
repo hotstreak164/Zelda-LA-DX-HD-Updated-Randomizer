@@ -45,9 +45,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             bool hasCollider, bool drawShadow, bool setGrassField, int drawLayer, string pickupKey) : base(map, spriteId)
         {
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjBush.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             var sprite = Resources.GetSprite(spriteId);
 

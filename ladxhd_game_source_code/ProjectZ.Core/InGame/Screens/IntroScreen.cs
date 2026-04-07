@@ -211,9 +211,7 @@ namespace ProjectZ.InGame.Screens
         { 
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "IntroScreen.lahdmod");
-
-            if (File.Exists(modFile))
-                ModFile.Parse(modFile, this);
+            ModFile.Parse(modFile, this);
 
             // Set up the color of the sky during the raft scene.
             _raftSkyColor = new Color(intro_sky_red, intro_sky_grn, intro_sky_blu);

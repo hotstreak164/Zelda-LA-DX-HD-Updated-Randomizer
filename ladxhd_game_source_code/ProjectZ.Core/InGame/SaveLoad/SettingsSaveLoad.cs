@@ -6,6 +6,7 @@ namespace ProjectZ.InGame.SaveLoad
     class SettingsSaveLoad
     {
         private static string SettingsFilePath => SaveManager.GetSettingsFile();
+        private static string AdvancedFilePath => SaveManager.GetAdvancedFile();
 
         public static void LoadSettings()
         {
