@@ -519,13 +519,16 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
                     Game1.GameManager.MapManager.CurrentMap.Objects.RegisterAlwaysAnimateObject(explosionAnimation);
                 }
             }
+            // Normal kill count should always be incremented.
+            Game1.GameManager.KillCount++;
+
+            // If told not to spawn items return now.
             if (!SpawnItems)
                 return;
 
             // Add up the kill counts.
             Game1.GameManager.GuardianAcornCount++;
             Game1.GameManager.PieceOfPowerCount++;
-            Game1.GameManager.KillCount++;
 
             // Check for powerup active and get the kill counts.
             bool powerupActive = Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.GuardianAcornIsActive;
