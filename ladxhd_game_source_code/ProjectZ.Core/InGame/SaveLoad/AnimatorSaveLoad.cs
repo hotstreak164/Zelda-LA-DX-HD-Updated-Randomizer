@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.Things;
@@ -71,6 +72,14 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static Animator LoadAnimator(string animatorId, bool redux = false)
         {
+            var fileName = Path.GetFileName(animatorId) + ".ani";
+
+            // Try to load a custom animation file before the normal one.
+            var modFile = GameFS.EnumerateFiles(Values.PathMods, recursive: true, acceptFile: name => name.Equals(fileName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (modFile != null)
+                return LoadAnimatorFile(modFile, redux);
+
+            // Fall back to the game's normal animation files.
             return LoadAnimatorFile(Path.Combine(Values.PathDataFolder, "Animations", animatorId + ".ani"), redux);
         }
 
