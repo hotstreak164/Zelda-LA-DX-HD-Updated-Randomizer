@@ -67,6 +67,85 @@ namespace ProjectZ.InGame.Map
             MapManager.ObjLink?.Map?.DungeonEgg == true || 
             MapManager.ObjLink?.Map?.DungeonCastle == true));
 
+    //----------------------------------------------------------------------------------------------------------------------
+    //   CAMERA OFFSET
+    //----------------------------------------------------------------------------------------------------------------------
+
+        private Vector2 _offsetTarget;
+        private Vector2 _offsetCurrent;
+        private float _offsetDuration;
+        private float _offsetElapsed;
+        private bool _offsetActive;
+
+        public void StartOffset(Vector2 targetOffset, float duration)
+        {
+            _offsetTarget = targetOffset;
+            _offsetCurrent = Vector2.Zero;
+            _offsetDuration = duration;
+            _offsetElapsed = 0f;
+            _offsetActive = true;
+        }
+
+        public void StopOffset()
+        {
+            _offsetActive = false;
+            _offsetCurrent = Vector2.Zero;
+            _offsetTarget = Vector2.Zero;
+        }
+
+        private void UpdateOffset()
+        {
+            _offsetElapsed += Game1.DeltaTime;
+            var t = MathHelper.Clamp(_offsetElapsed / _offsetDuration, 0f, 1f);
+            t = t * t * (3f - 2f * t);
+            _offsetCurrent = Vector2.Lerp(Vector2.Zero, _offsetTarget, t);
+        }
+
+    //----------------------------------------------------------------------------------------------------------------------
+    //   CAMERA PANNING
+    //----------------------------------------------------------------------------------------------------------------------
+
+        private Vector2 _panFrom;
+        private Vector2 _panTo;
+        private float _panDuration;
+        private float _panElapsed;
+        public bool IsPanning { get; private set; }
+
+        public void StartPan(Vector2 from, Vector2 to, float duration)
+        {
+            _panFrom = from * Scale;
+            _panTo = to * Scale;
+            _panDuration = duration;
+            _panElapsed = 0f;
+            IsPanning = true;
+            LockCamera = true;
+            ForceUpdate(_panFrom);
+        }
+
+        public void StopPan()
+        {
+            IsPanning = false;
+            LockCamera = false;
+        }
+
+        public void UpdatePan()
+        {
+            _panElapsed += Game1.DeltaTime;
+            var t = MathHelper.Clamp(_panElapsed / _panDuration, 0f, 1f);
+            t = t * t * (3f - 2f * t);
+
+            var pos = Vector2.Lerp(_panFrom, _panTo, t);
+            Location = pos;
+            MoveLocation = pos;
+
+            if (_panElapsed >= _panDuration)
+                StopPan();
+        }
+
+    //----------------------------------------------------------------------------------------------------------------------
+    //   LAHDMOD
+    //----------------------------------------------------------------------------------------------------------------------
+
         // Classic Camera transition speed loaded via "lahdmod".
         public float classic_transition_speed = 1.00f;
 
@@ -119,9 +198,11 @@ namespace ProjectZ.InGame.Map
 
         public void Center(Vector2 position, bool moveX, bool moveY)
         {
-            // When LockCamera is set (e.g. MapShowSystem), do not let Center() override
-            // the position that was set via ForceUpdate(). This fixes Classic Camera mode
-            // which would otherwise recompute the target from ObjLink's field every frame.
+            // If the camera is panning (used during the ending).
+            if (IsPanning)
+                UpdatePan();
+
+            // Panning and other things may lock the camera. Do not update during lock.
             if (LockCamera)
                 return;
 
@@ -167,6 +248,13 @@ namespace ProjectZ.InGame.Map
             }
             else
             {
+                // If an offset is applied (used during the ending).
+                if (_offsetActive)
+                    UpdateOffset();
+
+                if (_offsetActive)
+                    position += _offsetCurrent * Scale;
+
                 if (SnapCamera || SnapCameraTimer > 0)
                 {
                     Location = MapManager.GetCameraTargetLink();

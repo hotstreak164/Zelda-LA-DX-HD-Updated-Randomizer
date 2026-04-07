@@ -1,4 +1,6 @@
-﻿using ProjectZ.InGame.GameObjects.Base;
+﻿using Microsoft.Xna.Framework;
+using ProjectZ.InGame.GameObjects.Base;
+using ProjectZ.InGame.Map;
 
 namespace ProjectZ.InGame.GameObjects.Dungeon
 {
@@ -10,6 +12,15 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         {
             if (!string.IsNullOrEmpty(dungeonName))
                 Game1.GameManager.SetDungeonEgg(dungeonName);
+
+            // The camera method applied depends on the currently active camera.
+            if (dungeonName == "final stairs")
+            {
+                if (Camera.ClassicMode)
+                    MapManager.Camera.StartPan(new Vector2(112, 212), new Vector2(112, -16), 8600);
+                else
+                    MapManager.Camera.StartOffset(new Vector2(0, -32), 8600);
+            }
         }
     }
 }

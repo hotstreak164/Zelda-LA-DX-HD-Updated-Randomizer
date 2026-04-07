@@ -22,7 +22,6 @@ using ProjectZ.InGame.GameObjects.NPCs;
 using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.GameSystems;
 using ProjectZ.InGame.Map;
-using ProjectZ.InGame.Pages;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
 
