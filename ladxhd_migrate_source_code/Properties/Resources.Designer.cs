@@ -83,10 +83,10 @@ namespace LADXHD_Migrater.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Icon_bmp {
+        internal static byte[] Icon_bmp {
             get {
                 object obj = ResourceManager.GetObject("Icon.bmp", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((byte[])(obj));
             }
         }
         
@@ -99,7 +99,17 @@ namespace LADXHD_Migrater.Properties {
                 return ((byte[])(obj));
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Icon_png {
+            get {
+                object obj = ResourceManager.GetObject("Icon.png", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
