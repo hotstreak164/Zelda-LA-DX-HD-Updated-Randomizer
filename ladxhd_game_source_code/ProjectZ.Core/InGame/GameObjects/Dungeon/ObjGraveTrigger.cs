@@ -48,7 +48,11 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 // Check if the direction has been set.
                 if (!string.IsNullOrEmpty(strKey) && strKey != "-1")
                 {
-                    // Check if the palyer has a follower with them.
+                    // The player must have have the second instrument.
+                    var theInstrument = Game1.GameManager.GetItem("instrument1");
+                    var hasInstrument = theInstrument != null && theInstrument.Count > 0;
+
+                    // Check if the player has a follower with them.
                     var hasBowWow  = Game1.GameManager.SaveManager.GetString("has_bowWow", "0") == "1";
                     var hasMarin   = Game1.GameManager.SaveManager.GetString("has_marin", "0") == "1";
                     var hasGhost   = Game1.GameManager.SaveManager.GetString("has_ghost", "0") == "1";
@@ -68,7 +72,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                             CurrentState++;
 
                             // If it was the final gravestone that was pushed and the player does not have a follower.
-                            if (CurrentState == 5 && !hasFollower)
+                            if (CurrentState == 5 && !hasFollower && hasInstrument)
                             {
                                 // Spawn the entrance to the Color dungeon.
                                 Game1.GameManager.SaveManager.SetString(_triggerKey, "1");

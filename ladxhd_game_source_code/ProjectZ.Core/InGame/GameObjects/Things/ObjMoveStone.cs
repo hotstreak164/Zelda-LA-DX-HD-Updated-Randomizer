@@ -189,14 +189,18 @@ namespace ProjectZ.InGame.GameObjects.Things
             // Check if it's the grave that opens up the color dungeon.
             if (_type == 1 && _strKey == "ow_grave_4")
             {
-                // Check if the palyer has a follower with them.
+                // The player must have have the second instrument.
+                var theInstrument = Game1.GameManager.GetItem("instrument1");
+                var hasInstrument = theInstrument != null && theInstrument.Count > 0;
+
+                // Check if the player has a follower with them.
                 var hasBowWow  = Game1.GameManager.SaveManager.GetString("has_bowWow", "0") == "1";
                 var hasMarin   = Game1.GameManager.SaveManager.GetString("has_marin", "0") == "1";
                 var hasGhost   = Game1.GameManager.SaveManager.GetString("has_ghost", "0") == "1";
                 var hasRooster = Game1.GameManager.SaveManager.GetString("has_rooster", "0") == "1";
 
                 // The player has a follower with them.
-                if (hasBowWow || hasMarin || hasGhost || hasRooster)
+                if (!hasInstrument || hasBowWow || hasMarin || hasGhost || hasRooster)
                 {
                     // Create a list to find the grave trigger which tracks the stone order.
                     List<GameObject> graveTriggerList = new List<GameObject>();
@@ -232,7 +236,6 @@ namespace ProjectZ.InGame.GameObjects.Things
             bool stateIsNotIdle = _aiComponent.CurrentStateId != "idle";                       // Current state of stone must be "Idle".
             bool pushTypeImpact = type == PushableComponent.PushType.Impact;                   // Push type must not be "Impact" type.
             bool singlePushOnly = _activePushStone != null && _activePushStone != this;        // Only allow a single stone to move at once.
-            bool pushStoneGrave = _type == 1 && Game1.GameManager.StoneGrabberLevel <= 0;      // Gravestones require the power bracelet.
             bool noColorDungeon = BlockColorDungeonEntry();                                    // The gravestone which accesses the color dungeon.
 
             // These conditions are combined into a single condition for readability.
@@ -241,7 +244,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             bool blockDirection = directionExist && directionFails;
 
             // If any of the conditions pass, then fail pushing the stone.
-            if (linkNotPushing || dirNotMatching || stateIsNotIdle || pushTypeImpact || singlePushOnly || pushStoneGrave || noColorDungeon || blockDirection)
+            if (linkNotPushing || dirNotMatching || stateIsNotIdle || pushTypeImpact || singlePushOnly || noColorDungeon || blockDirection)
                 return false;
 
             // Must be the closest stone to Link. Separated out as it's the most expensive check.
