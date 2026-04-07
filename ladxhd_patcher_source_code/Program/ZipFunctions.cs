@@ -134,6 +134,9 @@ namespace LADXHD_Patcher
             // Create the path to the zip file.
             string zipFilePath = Path.Combine(Config.TempFolder, zipName);
 
+            // Remove the launcher if it exists.
+            Config.Launcher.RemovePath();
+
             // Write the zipfile, extract it, then delete it.
             File.WriteAllBytes(zipFilePath, (byte[])resources[zipName]);
             ZipFile.ExtractToDirectory(zipFilePath, Config.BaseFolder);

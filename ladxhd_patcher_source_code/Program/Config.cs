@@ -16,6 +16,7 @@ namespace LADXHD_Patcher
 
         public static string LAHDModPath;
         public static string Graphics;
+        public static string Launcher;
 
         public static string ApkSign;
         public static string ZipAlign;
@@ -38,6 +39,7 @@ namespace LADXHD_Patcher
             BackupPath  = Path.Combine(BaseFolder, "Data", "Backup");
             LAHDModPath = Path.Combine(BaseFolder, "Mods", "LAHDMods");
             Graphics    = Path.Combine(BaseFolder, "Mods", "Graphics");
+            Launcher    = Path.Combine(BaseFolder, "Launcher");
             ApkSign     = Path.Combine(TempFolder, "android", "apksigner.jar");
             ZipAlign    = Path.Combine(TempFolder, "android", "zipalign.exe");
             KeyStore    = Path.Combine(TempFolder, "android", "keystore.jks");
