@@ -41,7 +41,7 @@
   <!-- Embed Icon.bmp so MonoGame's SdlGameWindow can set the window icon from the entry assembly,
        independently of the working directory at launch time. -->
   <ItemGroup>
-    <EmbeddedResource Include="..\ProjectZ.Core\Data\Icon\Icon.bmp">
+    <EmbeddedResource Include="Resources\Icon.bmp">
       <LogicalName>Icon.bmp</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
