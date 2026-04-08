@@ -50,20 +50,20 @@
 
 #>
 #========================================================================================================================================
+# SET BASE PATHS
+#========================================================================================================================================
+Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
+Set-Location ..
+$BaseFolder  = Get-Location
+$GameFolder  = Join-path $BaseFolder ("\ladxhd_game_source_code")
+$PublishPath = Join-path $GameFolder ("\~Publish")
+#========================================================================================================================================
 # CONFIGURATION
 #========================================================================================================================================
 
 $GameVersion = "1.7.3"
 $OldGamePath = "H:\Projects\Zelda Link's Awakening\original"
 $SevenZipExe = "C:\Program Files\7-Zip\7z.exe"
-
-$WinDXInPath = "H:\Projects\Zelda Link's Awakening\updated_win_dx"
-$WinGLInPath = "H:\Projects\Zelda Link's Awakening\updated_win_gl"
-$DroidInPath = "H:\Projects\Zelda Link's Awakening\updated_android"
-$Linux86Path = "H:\Projects\Zelda Link's Awakening\updated_linux_x86"
-$LinuxArPath = "H:\Projects\Zelda Link's Awakening\updated_linux_arm64"
-$MacOS86Path = "H:\Projects\Zelda Link's Awakening\updated_macos_x86"
-$MacOSArPath = "H:\Projects\Zelda Link's Awakening\updated_macos_arm64"
 
 $CreateWinDX = $true
 $CreateWinGL = $true
@@ -73,7 +73,19 @@ $CreateLiArm = $true
 $CreateMcx86 = $true
 $CreateMcArm = $true
 
-$ResourcePath = "C:\Users\Bighead\source\repos\Zelda-LA-DX-HD-Updated\ladxhd_patcher_source_code\Resources"
+#========================================================================================================================================
+# PUBLISHED PATHS
+#========================================================================================================================================
+
+$WinDXInPath = Join-path $PublishPath ("\Windows-DX")
+$WinGLInPath = Join-path $PublishPath ("\Windows-GL")
+$DroidInPath = Join-path $PublishPath ("\Android")
+$Linux86Path = Join-path $PublishPath ("\Linux-x86_64")
+$LinuxArPath = Join-path $PublishPath ("\Linux-Arm64")
+$MacOS86Path = Join-path $PublishPath ("\MacOS-x86_64")
+$MacOSArPath = Join-path $PublishPath ("\MacOS-Arm64")
+
+$ResourcePath = Join-path $BaseFolder "\ladxhd_patcher_source_code\Resources"
 
 #========================================================================================================================================
 # SETUP XDELTA & OUTPUTS
