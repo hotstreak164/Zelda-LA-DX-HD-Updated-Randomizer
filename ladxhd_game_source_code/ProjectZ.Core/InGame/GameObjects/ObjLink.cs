@@ -2838,7 +2838,9 @@ namespace ProjectZ.InGame.GameObjects
                 CurrentState == State.TeleportFall ||
                 CurrentState == State.TeleporterUp ||
                 CurrentState == State.FallRotateEntry)
+            {
                 Animation.Play("stand" + shieldString + animDirection);
+            }
             // The "jump-land" hack plays the "stand" animation briefly.
             else if (_jumpEndTimer > 0 &&
                 !IsAttackingState() &&
@@ -2883,7 +2885,8 @@ namespace ProjectZ.InGame.GameObjects
                 Animation.Play("drown");
 
             // If anything forced walking, disable it now that the animation has played.
-            _isWalking = false;
+            if (!IsTransitioning)
+                _isWalking = false;
         }
 
         private void UpdateDamageShader()
@@ -6185,7 +6188,6 @@ namespace ProjectZ.InGame.GameObjects
         public void FreezePlayer()
         {
             UpdatePlayer = false;
-
             _isWalking = false;
             _bootsRunning = false;
             _bootsHolding = false;
