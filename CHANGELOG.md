@@ -10,12 +10,20 @@
   * Level 2 sword beam modifier to cut bushes now slices through all no matter FPS or refresh rate.
   * When creating a new save, return to the file selection screen which allows entering code names.
   * The ending now works with Classic Camera and has had several improvements made to the camera.
+  * Allow loading custom animation (.ani) files anywhere from within the "Mods" folders.
+  * Remove the Power Bracelet requirement to push gravestones to match the behavior of original game.
+  * Dungeon 2 must be completed and Bow Wow returned before the Color Dungeon entrance will open.
   * Fix Piece of Power and Guardian Acorn kill counts and spawn behaviors to match the original game.
+  * Fix being able to push a pushable object while carrying an object (stones, graves, blocks, etc).
+  * Fix accuracy of kill count. This does not have any use case and can only be viewed in save file.
   * Fix the Intro video to play the missing wave sound effects when Marin is walking along the beach.
+  * Fix "sliding" during some transitions: SeaShell Mansion, Final Stairs - walking animation fixed.
   * Fix Bow Wow being able to find and attack monsters while Classic Camera is the active camera.
+  * Fix missing shell present sprite in Seashell Mansion when "Disable Censorship" was untoggled.
   * Fix dialogue crashes due to (…) glyph in French, Spanish, Italian, Portugeuse, and Russian.
   * Fix setting "second_chance" which allows recruiting followers after dungeon 8 without map reload.
   * Fix several issues with game, launcher, and patcher builds for Linux and MacOS (credit @aitorciki).
+  * Fix enemy Ghini (graveyard ghost) to be able to drop single arrows or bombs when killed. 
 
 ## **v1.7.2**
 ### The "I Wish I Didn't Have to Make this Update" Update
