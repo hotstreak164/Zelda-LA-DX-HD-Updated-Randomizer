@@ -123,8 +123,12 @@
     <comment>ICO File</comment>
   </data>
   <data name="Icon.bmp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icon.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\Icon.bmp;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     <comment>BMP Image</comment>
+  </data>
+  <data name="Icon.png" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>PNG File</comment>
   </data>
   <data name="la" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\la.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

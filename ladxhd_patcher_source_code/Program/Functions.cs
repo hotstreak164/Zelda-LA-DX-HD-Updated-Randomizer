@@ -169,21 +169,19 @@ namespace LADXHD_Patcher
 
             // Set up the path to the Icon.
             string iconPath = Path.Combine(dataPath, "Icon").CreatePath();
-            string iconFile = Path.Combine(iconPath, "Icon.ico");
 
-            // Write the files to the "Content\Fonts" folder.
+            // Write the icon to the "Data\Icon" folder.
+            string iconFile = Path.Combine(iconPath, "Icon.ico");
             File.WriteAllBytes(iconFile, (byte[])resources["Icon.ico"]);
 
-            // Set up the path to the bitmap Icon.
-            string iconBmpPath = Path.Combine(dataPath, "Icon").CreatePath();
-            string iconBmpFile = Path.Combine(iconBmpPath, "Icon.bmp");
-
             // Write the bitmap icon to the "Data\Icon" folder.
-            using (var ms = new MemoryStream())
-            {
-                ((Bitmap)resources["Icon.bmp"]).Save(ms, ImageFormat.Bmp);
-                File.WriteAllBytes(iconBmpFile, ms.ToArray());
-            }
+            string iconBmpFile = Path.Combine(iconPath, "Icon.bmp");
+            File.WriteAllBytes(iconBmpFile, (byte[])resources["Icon.bmp"]);
+
+            // Write the png icon to the the "Data\Icon" folder.
+            string iconPngFile = Path.Combine(iconPath, "Icon.png");
+            File.WriteAllBytes(iconPngFile, (byte[])resources["Icon.png"]);
+
             // If it's the Windows OpenGL build then it needs SDL2.dll.
             if (Config.SelectedPlatform == Platform.Windows && Config.SelectedGraphics == GraphicsAPI.OpenGL)
             {
