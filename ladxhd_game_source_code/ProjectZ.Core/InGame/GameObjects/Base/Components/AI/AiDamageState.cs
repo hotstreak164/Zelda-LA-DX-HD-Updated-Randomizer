@@ -569,7 +569,6 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
                     var objItem = new ObjItem(_gameObject.Map, 0, 0, "j", null, "guardianAcorn", null, true);
                     objItem.EntityPosition.Set(new Vector3(bodyCenter.X, bodyCenter.Y, _body.Position.Z));
                     _gameObject.Map.Objects.SpawnObject(objItem);
-                    objItem.SpriteShadow = new ObjSpriteShadow(_gameObject.Map, objItem, Values.LayerPlayer, "sprshadowm");
                 }
             }
             
@@ -583,7 +582,6 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
                     var objItem = new ObjItem(_gameObject.Map, 0, 0, "j", null, "pieceOfPower", null, true);
                     objItem.EntityPosition.Set(new Vector3(bodyCenter.X, bodyCenter.Y, _body.Position.Z));
                     _gameObject.Map.Objects.SpawnObject(objItem);
-                    objItem.SpriteShadow = new ObjSpriteShadow(_gameObject.Map, objItem, Values.LayerPlayer, "sprshadowm");
                 }
             }
             
@@ -594,11 +592,6 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
                 var objItem = new ObjItem(_gameObject.Map, 0, 0, "j", null, strObject, null, true);
                 objItem.EntityPosition.Set(new Vector3(bodyCenter.X, bodyCenter.Y, _body.Position.Z));
                 _gameObject.Map.Objects.SpawnObject(objItem);
-
-                if (strObject == "heart")
-                    objItem.SpriteShadow = new ObjSpriteShadow(_gameObject.Map, objItem, Values.LayerPlayer, "sprshadows");
-                else
-                    objItem.SpriteShadow = new ObjSpriteShadow(_gameObject.Map, objItem, Values.LayerPlayer, "sprshadowm");
             }
         }
     }

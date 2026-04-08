@@ -56,7 +56,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private bool _despawn;
 
         private string[] _shadowListSmall  = { "heart", "arrow_1" };
-        private string[] _shadowListMedium = { "ruby", "bomb_1", "pieceOfPower", "guardianAcorn" };
+        private string[] _shadowListMedium = { "ruby", "bomb_1", "pieceOfPower", "guardianAcorn", "powderTrendy", "heart_1", "ruby30", "shield0" };
 
         public ObjSpriteShadow SpriteShadow;
 
@@ -176,10 +176,16 @@ namespace ProjectZ.InGame.GameObjects.Things
                 _bodyDrawComponent.Layer = Values.LayerBottom;
 
             // Create the sprite shadows.
-            if (_shadowListSmall.Contains(itemName))
+            if (strType == "d" || strType == "w")
+                SpriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
+            else if (_shadowListSmall.Contains(itemName))
                 SpriteShadow = new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadows");
-            if (_shadowListMedium.Contains(itemName))
+            else if (_shadowListMedium.Contains(itemName))
                 SpriteShadow = new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
+
+            // If a shadow was created, always animate it.
+            if (SpriteShadow != null)
+                Map.Objects.RegisterAlwaysAnimateObject(SpriteShadow);
         }
 
         public override void Init()
@@ -242,10 +248,9 @@ namespace ProjectZ.InGame.GameObjects.Things
                 {
                     IsJumping = true;
                     EntityPosition.Z = 60;
-
                     _body.IsGrounded = false;
                     _body.RestAdditionalMovement = true;
-                    SpriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
+
                 }
                 // Flying Item
                 else if (strType == "w")
@@ -254,7 +259,6 @@ namespace ProjectZ.InGame.GameObjects.Things
                     EntityPosition.Z = 10;
                     Collectable = true;
                     _isFlying = true;
-                    SpriteShadow = new ObjSpriteShadow(Map, this, Values.LayerPlayer, "sprshadowm");
                 }
                 // Underwater Item
                 else if (strType == "s")
@@ -325,6 +329,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                         Map.Objects.SpawnObject(fallAnimation);
 
                         Map.Objects.DeleteObjects.Add(this);
+                        RemoveSpriteShadow();
                     }
                 }
                 else
@@ -363,7 +368,10 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // remove the object
             if (_despawnCount > _despawnTime)
+            {
                 Map.Objects.DeleteObjects.Add(this);
+                RemoveSpriteShadow();
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -451,6 +459,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             Map.Objects.SpawnObject(fallAnimation);
 
             Map.Objects.DeleteObjects.Add(this);
+            RemoveSpriteShadow();
         }
 
         private void OnCollision(GameObject gameObject)
@@ -460,6 +469,12 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (Math.Abs(EntityPosition.Z - MapManager.ObjLink.EntityPosition.Z) < 8 &&
                 (!_isSwimming || MapManager.ObjLink.IsDiving()))
                 Collect();
+        }
+
+        private void RemoveSpriteShadow()
+        {
+            if (SpriteShadow != null)
+                Map.Objects.DeleteObjects.Add(SpriteShadow);
         }
 
         private void Collect()
@@ -495,7 +510,10 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // do not fade away the item if it the player shows it
             if (_item.ShowAnimation != 0)
+            {
                 Map.Objects.DeleteObjects.Add(this);
+                RemoveSpriteShadow();
+            }
             else
                 ToFading();
 

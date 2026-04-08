@@ -78,9 +78,9 @@ namespace ProjectZ.InGame.GameObjects.Things
             Map.Objects.RegisterAlwaysAnimateObject(this);
         }
 
-        private void AddAnimateAndShadowsToObjects()
+        private void AddAlwaysAnimateToObjects()
         {
-            // Get all objects with the "Utility" game tag.
+            // Get all objects with the "Item" and "Utility" game tags.
             var objectList = new List<GameObject>();
             Map.Objects.GetGameObjectsWithTag(objectList, Values.GameObjectTag.Item | Values.GameObjectTag.Utility,
                 _fieldRectangle.X, _fieldRectangle.Y, _fieldRectangle.Width, _fieldRectangle.Height);
@@ -91,10 +91,6 @@ namespace ProjectZ.InGame.GameObjects.Things
                 // Always animate both the items and roll bands.
                 if (obj is ObjItem or ObjRollBand)
                     Map.Objects.RegisterAlwaysAnimateObject(obj);
-
-                // Add sprite shadows to the items.
-                if (obj is ObjItem)
-                    new ObjSpriteShadow(Map, obj, Values.LayerPlayer, "sprshadowm");
             }
         }
 
@@ -103,7 +99,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // Always animate items and roll bands and add shadows to items.
             if (!_alwaysAnimate)
             {
-                AddAnimateAndShadowsToObjects();
+                AddAlwaysAnimateToObjects();
                 _alwaysAnimate = true;
             }
             _blinkCount = (_blinkCount + Game1.DeltaTime) % 500;

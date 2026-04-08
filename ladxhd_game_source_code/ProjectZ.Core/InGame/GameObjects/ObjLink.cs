@@ -2918,11 +2918,13 @@ namespace ProjectZ.InGame.GameObjects
             if (_spriteShadow != null && _spriteShadow.Map != Map)
             {
                 // Remove the old sprite shadow.
-                Map.Objects.RemoveObject(_spriteShadow);
+                if (_spriteShadow.Map != null)
+                    _spriteShadow.Map.Objects.RemoveObject(_spriteShadow);
 
-                // Spawn the shadow.
+                // Repawn the shadow.
                 Map.Objects.SpawnObject(_spriteShadow);
                 Map.Objects.RegisterAlwaysAnimateObject(_spriteShadow);
+                _spriteShadow.Map = Map;
             }
         }
 
