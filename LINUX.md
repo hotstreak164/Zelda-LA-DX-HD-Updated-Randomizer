@@ -1,6 +1,82 @@
-# 🐧 Running on Linux with Proton
+# 🐧 Patching, building and emulating on Linux
 
-## ⚡ Quick Start (Recommended)
+## Using the Windows patcher
+
+The patcher available on the [Releases](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/releases) page can be run with [Wine](https://www.winehq.org/).
+
+> [!Note]
+> No extra Wine setup should be required, but depending on the Wine distribution you are using you might need to install [wine-mono](https://github.com/wine-mono/wine-mono/releases/latest) using their .msi if the patcher fails to start.
+
+When [running the patcher](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated?tab=readme-ov-file#patching-v100-or-v114-to-v173) choose `Linux` as the platform, and `OpenGL` as the target. The patcher should take care of making the resulting binaries executable:
+
+```
+⚙️ "Link's Awakening DX HD"        # game binary
+⚙️ Launcher                        # launcher binary
+```
+
+> [!Note]
+> launcher and game binaries need to be kept in the same directory for the launcher to work correctly.
+
+If the patcher fails to perform these steps and the resulting files aren't executable, you can fix them manually:
+
+```bash
+$ chmod +x "Link's Awakening DX HD"
+$ chmod +x Launcher
+```
+
+You are good to go!
+
+## Building from source
+
+### Requirements
+* [dotnet8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (`$ dotnet --list-sdks` should return a `8.0.*` version).
+* [Wine](https://www.winehq.org/) (required to compile MonoGame effects/shaders).
+
+### Setup
+* [Setup MonoGame effects compilation](https://docs.monogame.net/articles/getting_started/1_setting_up_your_os_for_development_macos.html?tabs=android#setup-wine-for-effect-compilation):
+```bash
+$ wget -qO- https://monogame.net/downloads/net9_mgfxc_wine_setup.sh | bash
+```
+* Update game assets following the [README instructions](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated?tab=readme-ov-file#updating-source-code-assets).
+
+### Building
+From the `ladxhd_game_source_code` directory, build the Linux project specifying your hardware architecture:
+```bash
+# x64
+$ dotnet publish ProjectZ.Linux/ProjectZ.Linux.csproj -c Release -f net8.0 -r linux-x64 -p:PublishProfile=FolderProfile_Linux
+
+# arm64
+$ dotnet publish ProjectZ.Linux/ProjectZ.Linux.csproj -c Release -f net8.0 -r linux-arm64 -p:PublishProfile=FolderProfile_Linux_Arm
+```
+
+The resulting ready-to-run binaries will be available in `ladxhd_game_source_code/~Publish/Linux-x86_64` or `ladxhd_game_source_code/~Publish/Linux-Arm64`
+
+## Integrating with desktop environments (Gnome / KDE)
+
+For the game to appear in application launchers / docks / application switchers, a `.desktop` entry needs to be created. Here is a template of a working one, just change the paths to match your setup:
+
+```
+[Desktop Entry]
+Type=Application
+Name=Link's Awakening DX HD
+Exec="/path/to/Links Awakening DX HD/Link's Awakening DX HD"
+Icon=/path/to/Links Awakening DX HD/Data/Icon/Icon.png
+Terminal=false
+StartupWMClass=Link's Awakening DX HD
+Categories=Game;
+```
+
+> [!WARNING]
+> Only the `Exec` entry requires quoting if the path contains spaces! `Icon` might not work if quoted.
+
+Save this file as `~/.local/share/applications/links-awakening-dx-hd.desktop` and the game should now show up in the usual spots in your desktop environment.
+
+## Running on Linux with Proton
+
+> [!WARNING]
+> The game has moved to .NET 8 from .NET 6 since this guide was written, it is uncertain if this approach is still functional with the current version.
+
+### ⚡ Quick Start (Recommended)
 
 Use the automated installer for a hassle-free setup:
 
@@ -8,11 +84,11 @@ Use the automated installer for a hassle-free setup:
 
 ---
 
-## 🔧 Manual Setup
+### 🔧 Manual Setup
 
 If you prefer to set things up yourself, follow these steps:
 
-### 1. Install Protontricks
+#### 1. Install Protontricks
 
 Follow the [official installation guide](https://github.com/Matoking/protontricks?tab=readme-ov-file#installation).
 
@@ -27,32 +103,32 @@ source ~/.bashrc
 
 </details>
 
-### 2. Extract the Game
+#### 2. Extract the Game
 
 Extract your game archive to a location of your choice:
 ```
 ~/Games/LADXHD/
 ```
 
-### 3. Add to Steam
+#### 3. Add to Steam
 
 1. Open Steam → **Games** → **Add a Non-Steam Game to My Library**
 2. Browse to and select `Link's Awakening DX HD.exe`
 
-### 4. Configure Proton
+#### 4. Configure Proton
 
 1. Right-click the game in your Steam Library → **Properties**
 2. Go to **Compatibility** tab
 3. Check **Force the use of a specific Steam Play compatibility tool**
 4. Select **Proton Experimental** (or your preferred version)
 
-### 5. Create the Wine Prefix
+#### 5. Create the Wine Prefix
 
 1. Launch the game from Steam
 2. You'll see an error about missing .NET - click **No** to close it
 3. Close the game
 
-### 6. Install .NET Runtime
+#### 6. Install .NET Runtime
 
 Run this command to install the required .NET Desktop Runtime:
 
@@ -60,7 +136,7 @@ Run this command to install the required .NET Desktop Runtime:
 protontricks $(protontricks -l | grep -oE "Link's Awakening.*\(([0-9]+)\)" | grep -oE "[0-9]+") -q dotnetdesktop6
 ```
 
-### 7. Apply the HD Patch
+#### 7. Apply the HD Patch
 
 Navigate to your game folder and run the patcher:
 
@@ -93,13 +169,13 @@ protontricks-launch --appid $(protontricks -l | grep -oE "Link's Awakening.*\(([
 
 </details>
 
-### 8. Play! 🎮
+#### 8. Play! 🎮
 
 Launch the game through Steam and enjoy!
 
 ---
 
-## ⚠️ Known Issues
+### ⚠️ Known Issues
 
 | Issue | Workaround |
 |-------|------------|
@@ -107,7 +183,7 @@ Launch the game through Steam and enjoy!
 
 ---
 
-## 💾 Save Data Location
+### 💾 Save Data Location
 
 Your saves and settings are stored in the Wine prefix:
 
