@@ -202,16 +202,21 @@ namespace ProjectZ.Editor
                 if (_tileSelectionScreen.SelectedTiles != null)
                 {
                     for (int z = 0; z < TileMap.ArrayTileMap.GetLength(2); z++)
+                    {
                         for (var y = 0; y < TileMap.ArrayTileMap.GetLength(1); y++)
+                        {
                             for (var x = 0; x < TileMap.ArrayTileMap.GetLength(0); x++)
                             {
-                                if (TileMap.ArrayTileMap[x, y, z] >= 0 &&
-                                    TileMap.ArrayTileMap[x, y, z] == _tileSelectionScreen.SelectedTiles[0, 0])
+                                var checkA = TileMap.ArrayTileMap[x, y, z] >= 0;
+                                var checkB = TileMap.ArrayTileMap[x, y, z] == _tileSelectionScreen.SelectedTiles[0, 0];
+
+                                if (checkA && checkB)
                                     TileMap.ArrayTileMap[x, y, z] = -1;
                             }
+                        }
+                    }
                 }
             }
-
             if (_removedTile && CutCorners())
                 Update(gameTime);
         }
@@ -227,17 +232,24 @@ namespace ProjectZ.Editor
             if (TileMap.ArrayTileMap == null)
                 return;
 
-            // draw the visible layers of the map
+            // Draw the visible layers of the map.
             for (var z = 0; z < TileMap.ArrayTileMap.GetLength(2); z++)
+            {
                 if (LayerVisibility[z])
                     DrawLayer(spriteBatch, z);
+            }
 
-            // draw the cursor
-            // only draw the cursor when the update function was called
+            // Draw the cursor.
             if (drawCursor)
-                spriteBatch.Draw(Resources.SprWhite,
-                    new Rectangle(Selection.X * Values.TileSize, Selection.Y * Values.TileSize,
-                        Values.TileSize, Values.TileSize), Color.Red * 0.75f);
+            {
+                var cRectX = Selection.X * Values.TileSize;
+                var cRectY = Selection.Y * Values.TileSize;
+                var cRectW = Values.TileSize;
+                var cRectH = Values.TileSize;
+                var cursorRect = new Rectangle(cRectX, cRectY, cRectW, cRectH);
+
+                spriteBatch.Draw(Resources.SprWhite, cursorRect, Color.Red * 0.75f);
+            }
 
             // draw the selection
             if (MultiSelect)
@@ -247,28 +259,37 @@ namespace ProjectZ.Editor
                 var top = Math.Min(SelectionStart.Y, SelectionEnd.Y);
                 var down = Math.Max(SelectionStart.Y, SelectionEnd.Y);
 
-                spriteBatch.Draw(Resources.SprWhite,
-                    new Rectangle(
-                        left * Values.TileSize,
-                        top * Values.TileSize,
-                        (right - left + 1) * Values.TileSize,
-                        (down - top + 1) * Values.TileSize), Color.White * 0.5f);
+                var sRectX = left * Values.TileSize;
+                var sRectY = top * Values.TileSize;
+                var sRectW = (right - left + 1) * Values.TileSize;
+                var sRectH = (down - top + 1) * Values.TileSize;
+                var selectRect = new Rectangle(sRectX, sRectY, sRectW, sRectH);
 
-                // draw the preview
+                spriteBatch.Draw(Resources.SprWhite, selectRect, Color.White * 0.5f);
+
+                // Draw the preview.
                 for (var y = top; y <= down; y++)
+                {
                     for (var x = left; x <= right; x++)
+                    {
                         if (!DrawMode)
                         {
-                            spriteBatch.Draw(Resources.SprWhite, new Rectangle(
-                                    x * Values.TileSize, y * Values.TileSize,
-                                    Values.TileSize, Values.TileSize), Color.Red * 0.5f);
+                            var pRectX = x * Values.TileSize;
+                            var pRectY = y * Values.TileSize;
+                            var pRectW = Values.TileSize;
+                            var pRectH = Values.TileSize;
+                            var previewRect = new Rectangle(pRectX, pRectY, pRectW, pRectH);
+
+                            spriteBatch.Draw(Resources.SprWhite, previewRect, Color.Red * 0.5f);
                         }
+                    }
+                }
             }
         }
 
         private void DrawLayer(SpriteBatch spriteBatch, int layer)
         {
-            // only draw the visible tiles
+            // Only draw the visible tiles.
             var startX = Math.Max(0, (int)(-_camera.Location.X / (_camera.Scale * Values.TileSize)));
             var startY = Math.Max(0, (int)(-_camera.Location.Y / (_camera.Scale * Values.TileSize)));
             var endX = Math.Min(TileMap.ArrayTileMap.GetLength(0),
@@ -276,31 +297,49 @@ namespace ProjectZ.Editor
             var endY = Math.Min(TileMap.ArrayTileMap.GetLength(1),
                 (int)((Game1.WindowHeight - _camera.Location.Y) / (_camera.Scale * Values.TileSize)) + 1);
 
-            // draw the tilemap
+            // Draw the tilemap.
             for (var y = startY; y < endY; y++)
+            {
                 for (var x = startX; x < endX; x++)
+                {
                     if (TileMap.ArrayTileMap[x, y, layer] >= 0)
                     {
                         var tileset = layer + 1 == TileMap.ArrayTileMap.GetLength(2) ? TileMap.SprTilesetBlur : TileMap.SprTileset;
-                        spriteBatch.Draw(tileset,
-                            new Rectangle(x * Values.TileSize, y * Values.TileSize, Values.TileSize, Values.TileSize),
-                            new Rectangle(
-                                TileMap.ArrayTileMap[x, y, layer] % (TileMap.SprTileset.Width / TileMap.TileSize) * TileMap.TileSize,
-                                TileMap.ArrayTileMap[x, y, layer] / (TileMap.SprTileset.Width / TileMap.TileSize) * TileMap.TileSize, TileMap.TileSize, TileMap.TileSize), Color.White);
 
-                        if (MarkSelectedTiles && _tileSelectionScreen.SelectedTiles != null &&
-                            TileMap.ArrayTileMap[x, y, layer] == _tileSelectionScreen.SelectedTiles[0, 0])
-                            spriteBatch.Draw(Resources.SprWhite,
-                                new Rectangle(x * Values.TileSize, y * Values.TileSize,
-                                    Values.TileSize, Values.TileSize), Color.Red * (float)(Math.Sin(Game1.TotalGameTime / 100f) * 0.25f + 0.5f));
+                        // Destination rectangle.
+                        var dRectX = x * Values.TileSize;
+                        var dRectY = y * Values.TileSize;
+                        var dRectW = Values.TileSize;
+                        var dRectH = Values.TileSize;
+                        var destRect = new Rectangle(dRectX, dRectY, dRectW, dRectH);
+
+                        // Source Rectangle.
+                        var sRectX = TileMap.ArrayTileMap[x, y, layer] % TileMap.TileCountX * TileMap.AtlasTileSize + 1;
+                        var sRectY = TileMap.ArrayTileMap[x, y, layer] / TileMap.TileCountX * TileMap.AtlasTileSize + 1;
+                        var sRectW = TileMap.TileSize;
+                        var sRectH = TileMap.TileSize;
+                        var sourceRect = new Rectangle(sRectX, sRectY, sRectW, sRectH);
+
+                        // Draw the tile.
+                        spriteBatch.Draw(tileset, destRect, sourceRect, Color.White);
+
+                        // Draw the selected tile.
+                        var checkA = MarkSelectedTiles;
+                        var checkB = _tileSelectionScreen.SelectedTiles != null;
+                        var checkC = checkB && TileMap.ArrayTileMap[x, y, layer] == _tileSelectionScreen.SelectedTiles[0, 0];
+
+                        if (checkA && checkB && checkC)
+                            spriteBatch.Draw(Resources.SprWhite, destRect, Color.Red * (float)(Math.Sin(Game1.TotalGameTime / 100f) * 0.25f + 0.5f));
                     }
+                }
+            }
         }
 
         public void DrawTop(SpriteBatch spriteBatch)
         {
             // draw the background
-            spriteBatch.Draw(Resources.SprWhite, new Rectangle(
-                    0, Game1.WindowHeight - _toolBarWidth, _toolBarWidth, _toolBarWidth), Color.White * 0.25f);
+            var bgRect = new Rectangle(0, Game1.WindowHeight - _toolBarWidth, _toolBarWidth, _toolBarWidth);
+            spriteBatch.Draw(Resources.SprWhite, bgRect, Color.White * 0.25f);
 
             if (_tileSelectionScreen.SelectedTiles == null)
                 return;
@@ -315,16 +354,30 @@ namespace ProjectZ.Editor
             var posY = width / 2 - (_tileSelectionScreen.SelectedTiles.GetLength(1) * tileHeight) / 2;
 
             for (var y = 0; y < _tileSelectionScreen.SelectedTiles.GetLength(1); y++)
+            {
                 for (var x = 0; x < _tileSelectionScreen.SelectedTiles.GetLength(0); x++)
                 {
                     var tileset = _currentLayer + 1 == TileMap.ArrayTileMap.GetLength(2) ? TileMap.SprTilesetBlur : TileMap.SprTileset;
                     if (_tileSelectionScreen.SelectedTiles[x, y] >= 0)
-                        spriteBatch.Draw(tileset, new Rectangle(
-                            5 + posX + x * tileWidth, Game1.WindowHeight - _toolBarWidth + posY + 5 + y * tileHeight, tileWidth, tileHeight), new Rectangle(
-                                               _tileSelectionScreen.SelectedTiles[x, y] % (TileMap.SprTileset.Width / Values.TileSize) * Values.TileSize,
-                                               _tileSelectionScreen.SelectedTiles[x, y] / (TileMap.SprTileset.Width / Values.TileSize) * Values.TileSize,
-                                               Values.TileSize, Values.TileSize), Color.White);
+                    {
+                        // Destination rectangle.
+                        var dRectX = 5 + posX + x * tileWidth;
+                        var dRectY = Game1.WindowHeight - _toolBarWidth + posY + 5 + y * tileHeight;
+                        var dRectW = tileWidth;
+                        var dRectH = tileHeight;
+                        var destRect = new Rectangle(dRectX, dRectY, dRectW, dRectH);
+
+                        // Source Rectangle.
+                        var sRectX = _tileSelectionScreen.SelectedTiles[x, y] % TileMap.TileCountX * TileMap.AtlasTileSize + 1;
+                        var sRectY = _tileSelectionScreen.SelectedTiles[x, y] / TileMap.TileCountX * TileMap.AtlasTileSize + 1;
+                        var sRectW = TileMap.TileSize;
+                        var sRectH = TileMap.TileSize;
+                        var sourceRect = new Rectangle(sRectX, sRectY, sRectW, sRectH);
+
+                        spriteBatch.Draw(tileset, destRect, sourceRect, Color.White);
+                    }
                 }
+            }
         }
 
         private void ResizeMap()
@@ -409,15 +462,22 @@ namespace ProjectZ.Editor
             var toSelection = _tileSelectionScreen.SelectedTiles[0, 0];
 
             for (var z = 0; z < TileMap.ArrayTileMap.GetLength(2); z++)
+            {
                 for (var y = 0; y < TileMap.ArrayTileMap.GetLength(1); y++)
+                {
                     for (var x = 0; x < TileMap.ArrayTileMap.GetLength(0); x++)
+                    {
                         if (TileMap.ArrayTileMap[x, y, z] == _replaceSelections)
                             TileMap.ArrayTileMap[x, y, z] = toSelection;
+                    }
+                }
+            }
         }
 
         private void CreateBlurMap()
         {
             for (var y = 0; y < TileMap.ArrayTileMap.GetLength(1); y++)
+            {
                 for (var x = 0; x < TileMap.ArrayTileMap.GetLength(0); x++)
                 {
                     if (TileMap.ArrayTileMap[x, y, 0] == -1 && (
@@ -427,11 +487,13 @@ namespace ProjectZ.Editor
                         TileMap.ArrayTileMap[x, y, TileMap.ArrayTileMap.GetLength(2) - 1] = 0;
                     }
                 }
+            }
         }
 
         private void CreateBlurMapSides()
         {
             for (var y = 0; y < TileMap.ArrayTileMap.GetLength(1); y++)
+            {
                 for (var x = 0; x < TileMap.ArrayTileMap.GetLength(0); x++)
                 {
                     if (TileMap.ArrayTileMap[x, y, 0] == -1)
@@ -446,6 +508,7 @@ namespace ProjectZ.Editor
                     if (TileNotEmpty(x - 1, y, 0) && TileNotEmpty(x, y - 1, 0) && !TileNotEmpty(x + 1, y, 0) && !TileNotEmpty(x, y + 1, 0))
                         TileMap.ArrayTileMap[x, y, TileMap.ArrayTileMap.GetLength(2) - 1] = 2;
                 }
+            }
         }
 
         private bool TileNotEmpty(int x, int y, int z)
@@ -468,10 +531,12 @@ namespace ProjectZ.Editor
             _tileSelectionScreen.SelectedTiles = new int[right - left + 1, down - top + 1];
 
             for (var y = top; y <= down; y++)
+            {
                 for (var x = left; x <= right; x++)
                 {
                     _tileSelectionScreen.SelectedTiles[x - left, y - top] = GetSelection(new Point(x, y));
                 }
+            }
         }
 
         private void FillMultiSelection()
@@ -485,6 +550,7 @@ namespace ProjectZ.Editor
             var down = Math.Max(SelectionStart.Y, SelectionEnd.Y);
 
             for (var y = top; y <= down; y++)
+            {
                 for (var x = left; x <= right; x++)
                 {
                     var index = DrawMode ? _tileSelectionScreen.SelectedTiles[
@@ -497,6 +563,7 @@ namespace ProjectZ.Editor
 
                     DrawTileAt(x, y, _currentLayer, index);
                 }
+            }
         }
 
         private void DrawTileAt(int x, int y, int z, int index)
@@ -612,12 +679,14 @@ namespace ProjectZ.Editor
                 ((UiImage)ui).SprImage = null;
                 return;
             }
-
             ((UiImage)ui).SprImage = TileMap.SprTileset;
-            ((UiImage)ui).SourceRectangle =
-                new Rectangle(
-                    _replaceSelections % (TileMap.SprTileset.Width / Values.TileSize) * Values.TileSize,
-                    _replaceSelections / (TileMap.SprTileset.Width / Values.TileSize) * Values.TileSize, Values.TileSize, Values.TileSize);
+
+            var rectx = _replaceSelections % TileMap.TileCountX * TileMap.AtlasTileSize + 1;
+            var recty = _replaceSelections / TileMap.TileCountX * TileMap.AtlasTileSize + 1;
+            var rectw = TileMap.TileSize;
+            var recth = TileMap.TileSize;
+
+            ((UiImage)ui).SourceRectangle = new Rectangle(rectx, recty, rectw, recth);
         }
 
         public void OffsetTileMap(int offsetX, int offsetY)

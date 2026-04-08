@@ -71,8 +71,8 @@ namespace ProjectZ.Editor
                 (int)(_tileMap.SprTileset.Height * _camera.Scale))))
             {
                 _currentSelection =
-                    (mousePosition.X - _camera.Location.X) / (int)(_tileMap.TileSize * _camera.Scale) % _tileMap.TileCountX +
-                    (mousePosition.Y - _camera.Location.Y) / (int)(_tileMap.TileSize * _camera.Scale) * _tileMap.TileCountX;
+                    (mousePosition.X - _camera.Location.X) / (int)(_tileMap.AtlasTileSize * _camera.Scale) % _tileMap.TileCountX +
+                    (mousePosition.Y - _camera.Location.Y) / (int)(_tileMap.AtlasTileSize * _camera.Scale) * _tileMap.TileCountX;
 
                 _selectionEnd = _currentSelection;
             }
@@ -125,9 +125,9 @@ namespace ProjectZ.Editor
             // draw the current selection
             if (_currentSelection >= 0)
                 spriteBatch.Draw(Resources.SprWhite, new Rectangle(
-                    _currentSelection % _tileMap.TileCountX * _tileMap.TileSize,
-                    _currentSelection / _tileMap.TileCountX * _tileMap.TileSize,
-                    _tileMap.TileSize, _tileMap.TileSize), Color.White * 0.5f);
+                    _currentSelection % _tileMap.TileCountX * _tileMap.AtlasTileSize,
+                    _currentSelection / _tileMap.TileCountX * _tileMap.AtlasTileSize,
+                    _tileMap.AtlasTileSize, _tileMap.AtlasTileSize), Color.White * 0.5f);
 
             // draw the selection
             if (SelectedTiles != null)
@@ -137,19 +137,19 @@ namespace ProjectZ.Editor
                     {
                         if (SelectedTiles[x, y] >= 0)
                             spriteBatch.Draw(Resources.SprWhite, new Rectangle(
-                                (SelectedTiles[x, y] % _tileMap.TileCountX) * _tileMap.TileSize,
-                                (SelectedTiles[x, y] / _tileMap.TileCountX) * _tileMap.TileSize,
-                                _tileMap.TileSize, _tileMap.TileSize), Color.Red * 0.5f);
+                                (SelectedTiles[x, y] % _tileMap.TileCountX) * _tileMap.AtlasTileSize,
+                                (SelectedTiles[x, y] / _tileMap.TileCountX) * _tileMap.AtlasTileSize,
+                                _tileMap.AtlasTileSize, _tileMap.AtlasTileSize), Color.Red * 0.5f);
                     }
             }
 
             if (_selecting)
             {
                 spriteBatch.Draw(Resources.SprWhite, new Rectangle(
-                    Math.Min(_selectionStart % _tileMap.TileCountX, _selectionEnd % _tileMap.TileCountX) * _tileMap.TileSize,
-                    Math.Min(_selectionStart / _tileMap.TileCountX, _selectionEnd / _tileMap.TileCountX) * _tileMap.TileSize,
-                    (Math.Abs(_selectionStart % _tileMap.TileCountX - _selectionEnd % _tileMap.TileCountX) + 1) * _tileMap.TileSize,
-                    (Math.Abs(_selectionStart / _tileMap.TileCountX - _selectionEnd / _tileMap.TileCountX) + 1) * _tileMap.TileSize), Color.PaleVioletRed * 0.5f);
+                    Math.Min(_selectionStart % _tileMap.TileCountX, _selectionEnd % _tileMap.TileCountX) * _tileMap.AtlasTileSize,
+                    Math.Min(_selectionStart / _tileMap.TileCountX, _selectionEnd / _tileMap.TileCountX) * _tileMap.AtlasTileSize,
+                    (Math.Abs(_selectionStart % _tileMap.TileCountX - _selectionEnd % _tileMap.TileCountX) + 1) * _tileMap.AtlasTileSize,
+                    (Math.Abs(_selectionStart / _tileMap.TileCountX - _selectionEnd / _tileMap.TileCountX) + 1) * _tileMap.AtlasTileSize), Color.PaleVioletRed * 0.5f);
             }
 
             spriteBatch.End();

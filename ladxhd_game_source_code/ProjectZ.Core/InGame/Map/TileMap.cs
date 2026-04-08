@@ -14,6 +14,7 @@ namespace ProjectZ.InGame.Map
         public int[,,] ArrayTileMap;
 
         public int TileSize;
+        public int AtlasTileSize;
         public int TileCountX;
         public int TileCountY;
 
@@ -25,10 +26,12 @@ namespace ProjectZ.InGame.Map
             SprTilesetBlur = Resources.SprBlurTileset;
 
             TileSize = tileSize;
+            AtlasTileSize = tileSize + 2;
 
-            // calculate how many tiles are horizontally and vertically
-            TileCountX = SprTileset.Width / TileSize;
-            TileCountY = SprTileset.Height / TileSize;
+            // Calculate how many tiles are horizontally and vertically
+            // using "AtlasTileSize" so tile index lookups are correct.
+            TileCountX = SprTileset.Width / AtlasTileSize;
+            TileCountY = SprTileset.Height / AtlasTileSize;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -45,7 +48,6 @@ namespace ProjectZ.InGame.Map
             spriteBatch.End();
         }
 
-        // TODO_End: this could be optimized like in MonoGame.Extended
         public void DrawTileLayer(SpriteBatch spriteBatch, Texture2D tileset, int layer, int padding = 0)
         {
             var halfWidth = Game1.RenderWidth / 2;
@@ -59,19 +61,26 @@ namespace ProjectZ.InGame.Map
             var endX = Math.Min(ArrayTileMap.GetLength(0), (int)((camera.X + halfWidth) / (camera.Scale * tileSize)) + 1 + padding);
             var endY = Math.Min(ArrayTileMap.GetLength(1), (int)((camera.Y + halfHeight) / (camera.Scale * tileSize)) + 1 + padding);
 
+            // Use "AtlasTileSize" for source rectangle stride, +1 to skip the extrusion border.
+            int tilesPerRow = tileset.Width / AtlasTileSize;
+
             for (var y = startY; y < endY; y++)
                 for (var x = startX; x < endX; x++)
                 {
                     if (ArrayTileMap[x, y, layer] >= 0)
+                    {
+                        int tileIndex = ArrayTileMap[x, y, layer];
+                        int srcX = (tileIndex % tilesPerRow) * AtlasTileSize + 1;
+                        int srcY = (tileIndex / tilesPerRow) * AtlasTileSize + 1;
+
                         spriteBatch.Draw(tileset,
                             new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize),
-                            new Rectangle((ArrayTileMap[x, y, layer] % (tileset.Width / TileSize)) * TileSize,
-                                ArrayTileMap[x, y, layer] / (tileset.Width / TileSize) * TileSize, TileSize, TileSize),
+                            new Rectangle(srcX, srcY, tileSize, tileSize),
                             Color.White);
+                    }
                 }
         }
 
-        // this should probably be at a different location
         public void DrawBlurLayer(SpriteBatch spriteBatch)
         {
             if (ArrayTileMap == null)
