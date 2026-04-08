@@ -70,7 +70,8 @@ namespace LADXHD_Launcher
         {
             File.WriteAllLines(LauncherConfig, new[]
             {
-                $"SoundEnabled={XnbAudio.Enabled}"
+                $"SoundEnabled={XnbAudio.Enabled}",
+                $"WindowHeight={App.MainWindowInstance?.Height ?? 768}"
             });
         }
 
@@ -89,6 +90,10 @@ namespace LADXHD_Launcher
                 {
                     case "SoundEnabled":
                         XnbAudio.Enabled = value.Equals("True", StringComparison.OrdinalIgnoreCase);
+                        break;
+                    case "WindowHeight":
+                        if (double.TryParse(value, out double h))
+                            App.SavedWindowHeight = h;
                         break;
                 }
             }

@@ -8,66 +8,54 @@
         Width="550"
         Height="768"
         MinWidth="550"
-        MinHeight="768"
-        CanResize="False"
+        MinHeight="400"
+        MaxHeight="768"
         WindowStartupLocation="CenterScreen"
         Icon="avares://Launcher/Resources/icon.ico">
-
-	<Panel>
-		<Image Source="avares://Launcher/Resources/background.png"
-			   Stretch="Fill" />
-
-		<ContentControl x:Name="PageContent" />
-
-		<Image x:Name="LoadingNotification"
-			   Source="avares://Launcher/Resources/load_message.png"
-			   Stretch="None"
-			   Opacity="0"
-			   IsHitTestVisible="False"
-			   HorizontalAlignment="Center"
-			   VerticalAlignment="Center" />
-
-		<!-- Save notification overlay -->
-		<Image x:Name="SavedNotification"
-			   Source="avares://Launcher/Resources/saved_message.png"
-			   Stretch="None"
-			   Opacity="0"
-			   IsHitTestVisible="False"
-			   HorizontalAlignment="Center"
-			   VerticalAlignment="Center" />
-	</Panel>
-
-	<Window.Styles>
-
-		<!-- Button Style -->
-		<Style Selector="Button">
-			<Setter Property="FontFamily" Value="Arial" />
-			<Setter Property="FontSize" Value="16" />
-			<Setter Property="FontWeight" Value="Bold" />
-			<Setter Property="Foreground" Value="White" />
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="Padding" Value="0" />
-		</Style>
-		<Style Selector="Button:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="Transparent" />
-		</Style>
-		<Style Selector="Button:pressed /template/ ContentPresenter">
-			<Setter Property="Background" Value="Transparent" />
-		</Style>
-
-		<!-- CheckBox Style -->
-		<Style Selector="CheckBox">
-			<Setter Property="Foreground" Value="White" />
-			<Setter Property="FontFamily" Value="Arial" />
-			<Setter Property="FontSize" Value="14" />
-		</Style>
-		<Style Selector="CheckBox /template/ Border#NormalRectangle">
-			<Setter Property="BorderBrush" Value="White" />
-		</Style>
-
-	</Window.Styles>
-
-
+    <Panel>
+        <Image Source="avares://Launcher/Resources/background.png"
+               Stretch="Fill" />
+        <ContentControl x:Name="PageContent" />
+        <Image x:Name="LoadingNotification"
+               Source="avares://Launcher/Resources/load_message.png"
+               Stretch="None"
+               Opacity="0"
+               IsHitTestVisible="False"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
+        <Image x:Name="SavedNotification"
+               Source="avares://Launcher/Resources/saved_message.png"
+               Stretch="None"
+               Opacity="0"
+               IsHitTestVisible="False"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
+    </Panel>
+    <Window.Styles>
+        <!-- Button Style -->
+        <Style Selector="Button">
+            <Setter Property="FontFamily" Value="Arial" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="Button:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <!-- CheckBox Style -->
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontFamily" Value="Arial" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style Selector="CheckBox /template/ Border#NormalRectangle">
+            <Setter Property="BorderBrush" Value="White" />
+        </Style>
+    </Window.Styles>
 </Window>
-

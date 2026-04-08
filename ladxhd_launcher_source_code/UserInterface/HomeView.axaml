@@ -4,41 +4,56 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="768"
              x:Class="LADXHD_Launcher.HomeView">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="54" />
+        </Grid.RowDefinitions>
 
-    <Canvas>
-		<!-- Sound Toggle Button -->
-		<Button Canvas.Left="500" Canvas.Top="10" Width="40" Height="30"
-				Click="SoundToggle_Click"
-				Background="Transparent" BorderThickness="0" Padding="0">
-			<Image x:Name="SoundButtonImage"
-				   Source="avares://Launcher/Resources/sound_on.png"
-				   Stretch="Fill" />
-		</Button>
+        <!-- Background spans both rows -->
+		<Viewbox Grid.Row="0" Grid.RowSpan="2"
+				 Stretch="UniformToFill"
+				 VerticalAlignment="Top"
+				 HorizontalAlignment="Center">
+			<Image Source="avares://Launcher/Resources/background.png"
+				   Width="550"
+				   Height="768" />
+		</Viewbox>
 
-        <!-- Play Button -->
-        <Button Canvas.Left="30" Canvas.Top="710" Width="80" Height="34"
-                Click="PlayButton_Click">
-            <Image Source="avares://Launcher/Resources/button_play.png"
-                   Stretch="None" />
-        </Button>
-        <!-- Settings Button -->
-        <Button Canvas.Left="144" Canvas.Top="710" Width="145" Height="36"
-                Click="SettingsButton_Click">
-            <Image Source="avares://Launcher/Resources/button_settings.png"
-                   Stretch="None" />
-        </Button>
-        <!-- Mods Button -->
-        <Button Canvas.Left="323" Canvas.Top="710" Width="88" Height="35"
-                Click="ModsButton_Click">
-            <Image Source="avares://Launcher/Resources/button_mods.png"
-                   Stretch="None" />
-        </Button>
-        <!-- Exit Button -->
-        <Button Canvas.Left="445" Canvas.Top="710" Width="75" Height="34"
-                Click="ExitButton_Click">
-            <Image Source="avares://Launcher/Resources/button_exit.png"
-                   Stretch="None" />
-        </Button>
-    </Canvas>
+        <!-- Sound Toggle Button in content row -->
+        <Canvas Grid.Row="0">
+            <Button Canvas.Left="500" Canvas.Top="10" Width="40" Height="30"
+                    Click="SoundToggle_Click"
+                    Background="Transparent" BorderThickness="0" Padding="0">
+                <Image x:Name="SoundButtonImage"
+                       Source="avares://Launcher/Resources/sound_on.png"
+                       Stretch="Fill" />
+            </Button>
+        </Canvas>
 
+        <!-- Button bar pinned to bottom row -->
+        <Canvas Grid.Row="1">
+            <Button Canvas.Left="30" Canvas.Top="10" Width="80" Height="34"
+                    Click="PlayButton_Click">
+                <Image Source="avares://Launcher/Resources/button_play.png"
+                       Stretch="None" />
+            </Button>
+            <Button Canvas.Left="144" Canvas.Top="10" Width="145" Height="36"
+                    Click="SettingsButton_Click">
+                <Image Source="avares://Launcher/Resources/button_settings.png"
+                       Stretch="None" />
+            </Button>
+            <Button Canvas.Left="323" Canvas.Top="10" Width="88" Height="35"
+                    Click="ModsButton_Click">
+                <Image Source="avares://Launcher/Resources/button_mods.png"
+                       Stretch="None" />
+            </Button>
+            <Button Canvas.Left="445" Canvas.Top="10" Width="75" Height="34"
+                    Click="ExitButton_Click">
+                <Image Source="avares://Launcher/Resources/button_exit.png"
+                       Stretch="None" />
+            </Button>
+        </Canvas>
+
+    </Grid>
 </UserControl>

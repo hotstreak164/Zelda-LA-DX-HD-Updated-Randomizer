@@ -28,18 +28,24 @@ public partial class MainWindow : Window
         Config.Initialize();
         Config.LoadLauncherConfig();
         XnbAudio.Initialize();
+
+        Height = Math.Clamp(App.SavedWindowHeight, 400, 768);
+
         CheckBox.IsCheckedChangedEvent.AddClassHandler<CheckBox>(
             (cb, e) => XnbAudio.PlayXnbSound(XnbAudio.SoundClick));
         ComboBox.SelectionChangedEvent.AddClassHandler<ComboBox>(
             (cb, e) => XnbAudio.PlayXnbSound(XnbAudio.SoundSelect));
         NumericUpDown.ValueChangedEvent.AddClassHandler<NumericUpDown>(
             (cb, e) => XnbAudio.PlayXnbSound(XnbAudio.SoundClick));
+
         XnbAudio.SuppressSound = true;
         _homeView = new HomeView(this);
         _settingsView = new SettingsView(this);
         _modsView = new ModsView(this);
         PageContent.Content = _homeView;
         XnbAudio.SuppressSound = false;
+
+        this.SizeChanged += (s, e) => Config.SaveLauncherConfig();
     }
 
     public void ShowLoadingMessage()
