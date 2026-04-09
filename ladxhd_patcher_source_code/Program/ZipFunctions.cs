@@ -117,6 +117,8 @@ namespace LADXHD_Patcher
         {
             // Platform determines which launcher to extract.
             string zipName = "";
+            bool isMacOS = false;
+
             switch (selectedPlatform)
             {
                 // Just exit if it's Android. No launcher for it.
@@ -125,8 +127,8 @@ namespace LADXHD_Patcher
                 // Each has its own type of launcher.
                 case Platform.Linux_x86:    { zipName = "launcher_linux_x86.zip"; break; }
                 case Platform.Linux_Arm64:  { zipName = "launcher_linux_arm64.zip"; break; }
-                case Platform.MacOS_x86:    { zipName = "launcher_macos_x86.zip"; break; }
-                case Platform.MacOS_Arm64:  { zipName = "launcher_macos_arm64.zip"; break; }
+                case Platform.MacOS_x86:    { zipName = "launcher_macos_x86.zip"; isMacOS = true; break; }
+                case Platform.MacOS_Arm64:  { zipName = "launcher_macos_arm64.zip"; isMacOS = true; break; }
 
                 // Default to Windows.
                 default:                    { zipName = "launcher_windows.zip"; break; }
@@ -136,7 +138,15 @@ namespace LADXHD_Patcher
 
             // Remove the launcher if it exists.
             Config.Launcher.RemovePath();
+            Config.WLauncher.RemovePath();
 
+            // MacOS may have additional files included with the launcher.
+            if (isMacOS)
+            {
+                Path.Combine(Config.BaseFolder + "\\libAvaloniaNative.dylib").RemovePath();
+                Path.Combine(Config.BaseFolder + "\\libHarfBuzzSharp.dylib").RemovePath();
+                Path.Combine(Config.BaseFolder + "\\libSkiaSharp.dylib").RemovePath();
+            }
             // Write the zipfile, extract it, then delete it.
             File.WriteAllBytes(zipFilePath, (byte[])resources[zipName]);
             ZipFile.ExtractToDirectory(zipFilePath, Config.BaseFolder);
