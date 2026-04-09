@@ -48,7 +48,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 IgnoresZ = true,
                 MoveCollision = OnCollision,
-                CollisionTypesIgnore = Values.CollisionTypes.ThrowWeaponIgnore,
+                CollisionTypesIgnore = Values.CollisionTypes.ThrowWeaponIgnore | Values.CollisionTypes.Switch,
                 IgnoreInsideCollision = false,
             };
             var sprite = new CSprite(EntityPosition);

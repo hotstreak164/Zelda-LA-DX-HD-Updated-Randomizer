@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -78,6 +79,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 CollisionTypes = Values.CollisionTypes.Normal |
                                  Values.CollisionTypes.Field |
                                  Values.CollisionTypes.Instrument,
+                CollisionTypesIgnore = Values.CollisionTypes.Switch,
                 MoveCollision = OnCollision,
                 IgnoreHoles = true,
                 IgnoresZ = true,
@@ -90,7 +92,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(LightDrawComponent.Index, new LightDrawComponent(DrawLight));
 
             if (GameSettings.SwBeamShrubs)
-                _body.CollisionTypesIgnore = Values.CollisionTypes.Bush;
+                _body.CollisionTypesIgnore = Values.CollisionTypes.Bush | Values.CollisionTypes.Switch;
         }
 
         public override void Reset()

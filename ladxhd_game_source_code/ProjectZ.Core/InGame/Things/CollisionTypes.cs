@@ -31,7 +31,8 @@ namespace ProjectZ.InGame.Things
             Field             = 1 << 20,
             Passageway        = 1 << 21,
             Instrument        = 1 << 22,
-            Bush              = 1 << 23
+            Bush              = 1 << 23,
+            Switch            = 1 << 24
         }
 
         [Flags]

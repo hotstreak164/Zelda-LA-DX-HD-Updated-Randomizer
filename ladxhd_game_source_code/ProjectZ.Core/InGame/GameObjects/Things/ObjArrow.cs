@@ -80,7 +80,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                                  Values.CollisionTypes.Field |
                                  Values.CollisionTypes.Instrument,
 
-                CollisionTypesIgnore = Values.CollisionTypes.ThrowWeaponIgnore,
+                CollisionTypesIgnore = Values.CollisionTypes.ThrowWeaponIgnore | Values.CollisionTypes.Switch,
                 MoveCollision = OnCollision,
                 VelocityTarget = AnimationHelper.DirectionOffset[direction] * (Game1.GameManager.PieceOfPowerIsActive ? arrows_speed + 1 : arrows_speed),
                 Bounciness = 0.35f,

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using ProjectZ.InGame.GameObjects.Base;
-using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
+using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.GameObjects.Dungeon
@@ -20,17 +20,18 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         public ObjDungeonSwitch(Map.Map map, int posX, int posY, string key) : base(map)
         {
             EntityPosition = new CPosition(posX, posY + 16, 0);
-            EntitySize = new Rectangle(0, -16, 16, 17);
+            EntitySize = new Rectangle(0, -16, 16, 16);
 
             _key = key;
 
-            var hittableBox = new CBox(posX, posY, 0, 16, 16, 16);
-            var collisionBox = new CBox(posX + 1, posY + 5, 0, 14, 11, 16);
+            var hittableBox  = new CBox(posX, posY, 0, 16, 16, 16);
+            var collisionBox = new CBox(posX + 1, posY + 4, 0, 14, 12, 16);
+
             _sprite = new CSprite("dungeon_switch", EntityPosition, new Vector2(0, -16));
 
             if (!string.IsNullOrEmpty(_key))
                 AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
-            AddComponent(CollisionComponent.Index, new BoxCollisionComponent(collisionBox, Values.CollisionTypes.Normal));
+            AddComponent(CollisionComponent.Index, new BoxCollisionComponent(collisionBox, Values.CollisionTypes.Normal | Values.CollisionTypes.Switch));
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerPlayer));
         }

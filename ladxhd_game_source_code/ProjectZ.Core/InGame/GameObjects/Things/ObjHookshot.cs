@@ -56,6 +56,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 CollisionTypes = Values.CollisionTypes.Normal |
                                  Values.CollisionTypes.Field |
                                  Values.CollisionTypes.Instrument,
+                CollisionTypesIgnore = Values.CollisionTypes.Switch,
                 IgnoresZ = true,
                 IgnoreHoles = true,
                 IgnoreInsideCollision = false,
