@@ -61,7 +61,7 @@ $PublishPath = Join-path $GameFolder ("\~Publish")
 # CONFIGURATION
 #========================================================================================================================================
 
-$GameVersion = "1.7.3"
+$GameVersion = "1.7.4"
 $OldGamePath = "H:\Projects\Zelda Link's Awakening\original"
 $SevenZipExe = "C:\Program Files\7-Zip\7z.exe"
 

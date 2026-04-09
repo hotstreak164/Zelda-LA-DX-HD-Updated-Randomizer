@@ -1,5 +1,16 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.7.4**
+### The "Android Mali GPUs Fix" Update
+  * Allow resizing the launcher vertically for smaller screens like the one for the Steam Deck.
+  * Implement HD lighting effects for Mamu sequence when "Global Lighting" is enabled.
+  * Recolor "red Link" to green on "link0.png" to make it easier to create a custom "link_cloak.png".
+  * Add a higher quality icon to the Launcher on both MacOS and Linux (credit @aitorciki).
+  * Give dungeon switches unique collision that is ignored by all projectiles. No more missed hits ever.
+  * Fix pixel bleeding on the bottom of tiles that appears on Android devices with Mali GPUs.
+  * Fix duplicated sprite shadow when picking up some items like "Guardian Acorn" or "Piece of Power".
+  * Fix areas in level 8 dungeon map where collision could be breached by items (north stairs, west wall).
+
 ## **v1.7.3**
 ### The "Cukeman, We Have a Launcher" Update
   * A new launcher is now included to configure game settings and settings only found in LAHDMods.
