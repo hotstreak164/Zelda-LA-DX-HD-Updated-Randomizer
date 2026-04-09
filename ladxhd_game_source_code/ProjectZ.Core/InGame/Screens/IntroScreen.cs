@@ -91,10 +91,10 @@ namespace ProjectZ.InGame.Screens
         private float _thunderCount = 250;
         private float _thunderTransition;
 
+        private readonly Rectangle _oceanRectangle  = new Rectangle(0, 144, 32, 32);
         private readonly Rectangle _ocean0Rectangle = new Rectangle(0, 288, 32, 16);
-        private readonly Rectangle _ocean1Rectangle = new Rectangle(0, 304, 32, 16);
-        private readonly Rectangle _ocean2Rectangle = new Rectangle(0, 320, 32, 16);
-        private readonly Rectangle _oceanRectangle = new Rectangle(0, 144, 32, 32);
+        private readonly Rectangle _ocean1Rectangle = new Rectangle(0, 306, 32, 16);
+        private readonly Rectangle _ocean2Rectangle = new Rectangle(0, 324, 32, 16);
 
         private DictAtlasEntry _spriteOceanBoat;
 
@@ -122,14 +122,14 @@ namespace ProjectZ.InGame.Screens
         private float _dxFadeInAlpha;
 
         private readonly Rectangle _treesRectangle = new Rectangle(0, 320, 32, 46);
-        private readonly Rectangle _sandRectangle = new Rectangle(0, 364, 32, 16);
-        private readonly Rectangle _waveRectangle = new Rectangle(0, 0, 32, 24);
+        private readonly Rectangle _sandRectangle  = new Rectangle(0, 364, 32, 16);
+        private readonly Rectangle _waveRectangle  = new Rectangle(0, 0, 32, 24);
 
         private Vector2 _logoPosition;
         private float _logoState;
         private float _logoCounter;
 
-        private Vector2 _ligthPosition;
+        private Vector2 _lightPosition;
         private Vector2[] _lightPositions =
         {
             new Vector2(7, 0),
@@ -604,7 +604,7 @@ namespace ProjectZ.InGame.Screens
                 {
                     _lightAnimation.Play("idle");
                     _lightIndex = (_lightIndex + Game1.RandomNumber.Next(1, _lightPositions.Length)) % _lightPositions.Length;
-                    _ligthPosition = _lightPositions[_lightIndex];
+                    _lightPosition = _lightPositions[_lightIndex];
                 }
             }
 
@@ -769,7 +769,7 @@ namespace ProjectZ.InGame.Screens
 
             spriteBatch.End();
 
-            // draw the loading animation
+            // Draw the loading animation.
             if (_loadingTransparency > 0)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, Game1.GetMatrix);
@@ -784,10 +784,11 @@ namespace ProjectZ.InGame.Screens
             if (_currentState != States.OceanCamera && _currentState != States.OceanPicture && _currentState != States.OceanThunder)
                 return;
 
-            var screenLeft = (int)Math.Floor(_cameraCenter.X) - (int)Math.Ceiling(Game1.WindowWidth / (double)_scale / 2.0);
-            var screenRight = (int)Math.Ceiling(_cameraCenter.X) + (int)Math.Ceiling(Game1.WindowWidth / (double)_scale / 2.0);
-            var screenTop = (int)Math.Floor(_cameraCenter.Y) - (int)Math.Ceiling(Game1.WindowHeight / (double)_scale / 2.0);
+            var screenLeft   = (int)Math.Floor(_cameraCenter.X) - (int)Math.Ceiling(Game1.WindowWidth / (double)_scale / 2.0);
+            var screenRight  = (int)Math.Ceiling(_cameraCenter.X) + (int)Math.Ceiling(Game1.WindowWidth / (double)_scale / 2.0);
+            var screenTop    = (int)Math.Floor(_cameraCenter.Y) - (int)Math.Ceiling(Game1.WindowHeight / (double)_scale / 2.0);
             var screenBottom = (int)Math.Ceiling(_cameraCenter.Y) + (int)Math.Ceiling(Game1.WindowHeight / (double)_scale / 2.0);
+
             var width = screenRight - screenLeft + 2;
             var height = screenBottom - screenTop + 2;
             var cloudOffset = _cameraCenter.X * 0.05f;
@@ -797,50 +798,116 @@ namespace ProjectZ.InGame.Screens
                 // draw the dark cloud
                 spriteBatch.Draw(Resources.SprWhite, new Rectangle(screenLeft, screenTop, width, -screenTop), _raftSkyColor);
 
-                // draw the clouds
-                spriteBatch.Draw(_sprOcean,
-                    new Rectangle(screenLeft, 0, width, _oceanCloudRectangle.Height),
-                    new Rectangle(_oceanCloudRectangle.X + screenLeft - (int)cloudOffset,
-                        _oceanCloudRectangle.Y + _thunderIndex * (_oceanCloudRectangle.Height + 16), width,
-                        _oceanCloudRectangle.Height),
-                    Color.White, 0, new Vector2(1 - cloudOffset % 1, 0), SpriteEffects.None, 0);
+                //---------------------------------------------------
+                // Clouds - Destination Rectangle
+                var cloudDestRectX = screenLeft;
+                var cloudDestRectY = 0;
+                var cloudDestRectW = width;
+                var cloudDestRectH = _oceanCloudRectangle.Height;
+                var cloudDestRectangle = new Rectangle(cloudDestRectX, cloudDestRectY, cloudDestRectW, cloudDestRectH);
 
-                // draw the dark sky
-                spriteBatch.Draw(Resources.SprWhite, new Rectangle(screenLeft, _oceanCloudRectangle.Height, width, 64), _raftOceanColor[_thunderIndex]);
+                // Clouds - Source Rectangle
+                var cloudSourceRectX = _oceanCloudRectangle.X + screenLeft - (int)cloudOffset;
+                var cloudSourceRectY = _oceanCloudRectangle.Y + _thunderIndex * (_oceanCloudRectangle.Height + 16);
+                var cloudSourceRectW = width;
+                var cloudSourceRectH = _oceanCloudRectangle.Height;
+                var cloudSourceRectangle = new Rectangle(cloudSourceRectX, cloudSourceRectY, cloudSourceRectW, cloudSourceRectH);
 
-                // draw the ocean top
-                var oceanAnimationOffset = _thunderIndex * 64;
-                spriteBatch.Draw(_sprOcean,
-                    new Rectangle(screenLeft, (int)_oceanPosition0.Y, width, _ocean0Rectangle.Height),
-                    new Rectangle(_ocean0Rectangle.X + screenLeft - (int)_oceanPosition0.X,
-                        _ocean0Rectangle.Y + oceanAnimationOffset, width, _ocean0Rectangle.Height),
-                    Color.White, 0, new Vector2(1 - _oceanPosition0.X % 1, 0), SpriteEffects.None, 0);
+                // Draw the Clouds.
+                spriteBatch.Draw(_sprOcean, cloudDestRectangle, cloudSourceRectangle, Color.White, 0, new Vector2(1 - cloudOffset % 1, 0), SpriteEffects.None, 0);
 
-                // draw the ocean middle
-                spriteBatch.Draw(_sprOcean,
-                    new Rectangle(screenLeft, (int)_oceanPosition1.Y, width, _ocean1Rectangle.Height),
-                    new Rectangle(_ocean1Rectangle.X + screenLeft - (int)_oceanPosition1.X,
-                        _ocean1Rectangle.Y + oceanAnimationOffset, width, _ocean1Rectangle.Height),
-                    Color.White, 0, new Vector2(1 - _oceanPosition1.X % 1, 0), SpriteEffects.None, 0);
+                //---------------------------------------------------
+                // Dark Sky - Source Rectangle
+                var darkSkyRectX = screenLeft;
+                var darkSkyRectY = _oceanCloudRectangle.Height;
+                var darkSkyRectW = width;
+                var darkSkyRectH = 64;
+                var darkSkyRectangle = new Rectangle(darkSkyRectX, darkSkyRectY, darkSkyRectW, darkSkyRectH);
 
-                // draw the boat
+                // Draw the Dark Sky.
+                spriteBatch.Draw(Resources.SprWhite, darkSkyRectangle, _raftOceanColor[_thunderIndex]);
+
+                // The offset coordinates of "ocean.png". 
+                var oceanAnimationOffset = _thunderIndex * 70;
+
+                //---------------------------------------------------
+                // Ocean Top - Destination Rectangle
+                var ocean0DestRectX = screenLeft;
+                var ocean0DestRectY = (int)_oceanPosition0.Y;
+                var ocean0DestRectW = width;
+                var ocean0DestRectH = _ocean0Rectangle.Height;
+                var ocean0DestRectangle = new Rectangle(ocean0DestRectX, ocean0DestRectY, ocean0DestRectW, ocean0DestRectH);
+
+                // Ocean Top - Source Rectangle
+                var ocean0SourceRectX = _ocean0Rectangle.X + screenLeft - (int)_oceanPosition0.X;
+                var ocean0SourceRectY = _ocean0Rectangle.Y + oceanAnimationOffset;
+                var ocean0SourceRectW = width;
+                var ocean0SourceRectH = _ocean0Rectangle.Height;
+                var ocean0SourceRectangle = new Rectangle(ocean0SourceRectX, ocean0SourceRectY, ocean0SourceRectW, ocean0SourceRectH);
+
+                // Draw the Ocean Top
+                spriteBatch.Draw(_sprOcean, ocean0DestRectangle, ocean0SourceRectangle, Color.White, 0, new Vector2(1 - _oceanPosition0.X % 1, 0), SpriteEffects.None, 0);
+
+                //---------------------------------------------------
+                // Ocean Top-Middle - Destination Rectangle
+                var ocean1DestRectX = screenLeft;
+                var ocean1DestRectY = (int)_oceanPosition1.Y;
+                var ocean1DestRectW = width;
+                var ocean1DestRectH = _ocean1Rectangle.Height;
+                var ocean1DestRectangle = new Rectangle(ocean1DestRectX, ocean1DestRectY, ocean1DestRectW, ocean1DestRectH);
+
+                // Ocean Top-Middle - Source Rectangle
+                var ocean1SourceRectX = _ocean1Rectangle.X + screenLeft - (int)_oceanPosition1.X;
+                var ocean1SourceRectY = _ocean1Rectangle.Y + oceanAnimationOffset;
+                var ocean1SourceRectW = width;
+                var ocean1SourceRectH = _ocean1Rectangle.Height;
+                var ocean1SourceRectangle = new Rectangle(ocean1SourceRectX, ocean1SourceRectY, ocean1SourceRectW, ocean1SourceRectH);
+
+                // Draw the Ocean Top-Middle.
+                spriteBatch.Draw(_sprOcean, ocean1DestRectangle, ocean1SourceRectangle, Color.White, 0, new Vector2(1 - _oceanPosition1.X % 1, 0), SpriteEffects.None, 0);
+
+                //---------------------------------------------------
+                // Draw Link and the raft.
                 DrawHelper.DrawNormalized(spriteBatch, _spriteOceanBoat, _oceanBoatPosition, Color.White);
 
-                // draw the ocean middle
-                spriteBatch.Draw(_sprOcean,
-                    new Rectangle(screenLeft, (int)_oceanPosition2.Y, width, _ocean2Rectangle.Height),
-                    new Rectangle(_ocean2Rectangle.X + screenLeft - (int)_oceanPosition2.X,
-                        _ocean2Rectangle.Y + oceanAnimationOffset, width, _ocean2Rectangle.Height),
-                    Color.White, 0, new Vector2(1 - _oceanPosition2.X % 1, 0), SpriteEffects.None, 0);
+                //---------------------------------------------------
+                // Ocean Bottom-Middle - Destination Rectangle
+                var ocean2DestRectX = screenLeft;
+                var ocean2DestRectY = (int)_oceanPosition2.Y;
+                var ocean2DestRectW = width;
+                var ocean2DestRectH = _ocean2Rectangle.Height;
+                var ocean2DestRectangle = new Rectangle(ocean2DestRectX, ocean2DestRectY, ocean2DestRectW, ocean2DestRectH);
 
-                // draw the ocean
-                spriteBatch.Draw(_sprOcean,
-                    new Rectangle(screenLeft, (int)_oceanPosition3.Y + 16, width, _oceanRectangle.Height),
-                    new Rectangle(_oceanRectangle.X + screenLeft - (int)_oceanPosition3.X,
-                        _oceanRectangle.Y + _thunderIndex * (_oceanRectangle.Height + 16), width, _oceanRectangle.Height),
-                    Color.White, 0, new Vector2(1 - _oceanPosition3.X % 1, 0), SpriteEffects.None, 0);
+                // Ocean Bottom-Middle - Source Rectangle
+                var ocean2SourceRectX = _ocean2Rectangle.X + screenLeft - (int)_oceanPosition2.X;
+                var ocean2SourceRectY = _ocean2Rectangle.Y + oceanAnimationOffset;
+                var ocean2SourceRectW = width;
+                var ocean2SourceRectH = _ocean2Rectangle.Height;
+                var ocean2SourceRectangle = new Rectangle(ocean2SourceRectX, ocean2SourceRectY, ocean2SourceRectW, ocean2SourceRectH);
 
-                // draw the dark ocean
+                // Draw the Ocean Bottom-Middle
+                spriteBatch.Draw(_sprOcean, ocean2DestRectangle, ocean2SourceRectangle, Color.White, 0, new Vector2(1 - _oceanPosition2.X % 1, 0), SpriteEffects.None, 0);
+
+                //---------------------------------------------------
+                // Ocean Bottom-Middle - Destination Rectangle
+                var ocean3DestRectX = screenLeft;
+                var ocean3DestRectY = (int)_oceanPosition3.Y + 16;
+                var ocean3DestRectW = width;
+                var ocean3DestRectH = _oceanRectangle.Height;
+                var ocean3DestRectangle = new Rectangle(ocean3DestRectX, ocean3DestRectY, ocean3DestRectW, ocean3DestRectH);
+
+                // Ocean Bottom-Middle - Source Rectangle
+                var ocean3SourceRectX = _oceanRectangle.X + screenLeft - (int)_oceanPosition3.X;
+                var ocean3SourceRectY = _oceanRectangle.Y + _thunderIndex * (_oceanRectangle.Height + 16);
+                var ocean3SourceRectW = width;
+                var ocean3SourceRectH = _oceanRectangle.Height;
+                var ocean3SourceRectangle = new Rectangle(ocean3SourceRectX, ocean3SourceRectY, ocean3SourceRectW, ocean3SourceRectH);
+
+                // Draw the Ocean Bottom.
+                spriteBatch.Draw(_sprOcean, ocean3DestRectangle, ocean3SourceRectangle, Color.White, 0, new Vector2(1 - _oceanPosition3.X % 1, 0), SpriteEffects.None, 0);
+
+                //---------------------------------------------------
+                // Draw the Dark Ocean.
                 spriteBatch.Draw(Resources.SprWhite,
                     new Rectangle(screenLeft, (int)_oceanPosition3.Y + 48, width,
                         screenBottom - ((int)_oceanPosition3.Y + 48)), _raftLowerColor);
@@ -1013,7 +1080,7 @@ namespace ProjectZ.InGame.Screens
                     }
                 }
             }
-            var lightPosition = _logoPosition + _ligthPosition;
+            var lightPosition = _logoPosition + _lightPosition;
 
             // draw the light around the logo
             if (_lightAnimation.IsPlaying)
