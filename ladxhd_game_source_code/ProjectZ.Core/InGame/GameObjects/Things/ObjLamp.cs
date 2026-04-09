@@ -174,6 +174,11 @@ namespace ProjectZ.InGame.GameObjects.Things
             _lampState = AnimationHelper.MoveToTarget(_lampState, _lampKeyState ? light_bright : 0, 0.1f * Game1.TimeMultiplier);
         }
 
+        public void SetBrightness(float bright)
+        {
+            _lampState = bright;
+        }
+
         private void UpdateKeyLamp()
         {
             _lampState = AnimationHelper.MoveToTarget(_lampState, _lampKeyState ? light_bright : 0, 0.075f * Game1.TimeMultiplier);

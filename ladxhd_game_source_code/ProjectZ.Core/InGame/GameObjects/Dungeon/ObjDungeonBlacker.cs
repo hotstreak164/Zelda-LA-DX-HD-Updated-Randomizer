@@ -8,6 +8,8 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
 {
     internal class ObjDungeonBlacker : GameObject
     {
+        private Color _baseColor;
+
         public ObjDungeonBlacker() : base("editor dungeon blacker")
         {
             EditorColor = Color.DarkRed * 0.75f;
@@ -17,6 +19,8 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         {
             // Check for the existence of "ObjDungeonBlacker.lahdmod" in folder "Data\Mods".
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjDungeonBlacker.lahdmod");
+
+            Tags = Values.GameObjectTag.Utility;
 
             // If the file exists attempt to load in custom values.
             if (File.Exists(modFile))
@@ -34,7 +38,13 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             }
             map.UseLight = true;
             map.LightColor = new Color(colorR, colorG, colorB) * (colorA / 255f);
+            _baseColor = map.LightColor;
             IsDead = true;
+        }
+
+        public void SetBrightness(float bright)
+        {
+            Map.LightColor = _baseColor * bright;
         }
 
         private string[] ParseModFile(string modFile, string mapName)

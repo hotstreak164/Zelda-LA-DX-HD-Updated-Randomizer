@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
+using ProjectZ.InGame.GameObjects.Dungeon;
+using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
@@ -17,13 +20,16 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private readonly ObjPersonNew _leftFrog;
         private readonly ObjPersonNew _rightFrog;
+        private ObjDungeonBlacker _blacker;
+        private List<ObjLamp> _lamps = new List<ObjLamp>();
+        private List<ObjLight> _spotLights = new List<ObjLight>();
 
         private Rectangle _interactRectangle;
         private bool _wasColliding;
 
         private readonly string _saveKey;
         private bool _drawDarkness;
-        private float _lightOpacity;
+        private float _darkOpacity;
         private bool _fadingOut;
 
         struct AnimationKeyframe
@@ -104,8 +110,6 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private int _songIndex;
         private bool _isPlaying;
         private bool _startedPlaying;
-        private float _flickerTimer;
-        private bool _flickerVisible;
 
         public ObjMamu() : base("mamu") { }
 
@@ -144,12 +148,32 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             AddComponent(DrawShadowComponent.Index, new DrawShadowCSpriteComponent(sprite));
             AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(OnKeyChange));
 
+            // Create the two frogs.
             _leftFrog = new ObjPersonNew(map, posX - 32, posY + 42, null, "singing frog", null, "idle", new Rectangle(0, 0, 14, 12));
             map.Objects.SpawnObject(_leftFrog);
 
             _rightFrog = new ObjPersonNew(map, posX + 48, posY + 42, null, "singing frog", null, "idle", new Rectangle(0, 0, 14, 12));
             map.Objects.SpawnObject(_rightFrog);
 
+            // Create a "dungeon blacker" object to control lighting.
+            _blacker = new ObjDungeonBlacker(Map, 0, 0, 255, 230, 200, 125) { IsDead = false };
+            Map.Objects.SpawnObject(_blacker);
+
+            // Get the lamps that are already on the game field.
+            var gameObjects = new List<GameObject>();
+            Map.Objects.GetGameObjectsWithTag(gameObjects, Values.GameObjectTag.Lamp, (int)EntityPosition.X - 64, (int)EntityPosition.Y - 64, 256, 256);
+            foreach (var obj in gameObjects)
+            {
+                if (obj is ObjLamp lamp) 
+                    _lamps.Add(lamp);
+            }
+            // Spawn spotlights on the frogs that are initially off.
+            _spotLights.Add(new ObjLight(map, posX + 8, posY + 8, 54, 255, 255, 255, 0, Values.LayerPlayer));
+            _spotLights.Add(new ObjLight(map, posX - 32, posY + 42, 36, 255, 255, 255, 0, Values.LayerPlayer));
+            _spotLights.Add(new ObjLight(map, posX + 48, posY + 42, 36, 255, 255, 255, 0, Values.LayerPlayer));
+
+            foreach (var spotLight in _spotLights)
+                Map.Objects.SpawnObject(spotLight);
         }
 
         private bool OnInteract()
@@ -199,11 +223,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 if (_startDelay <= 0)
                 {
                     _startDelay = 0;
-                    _lightOpacity = 1f;
+                    _darkOpacity = 1f;
                     StartSong();
                 }
                 // Fade in darkness layer over 2.5 seconds.
-                _lightOpacity = 1f - (_startDelay / 2500f);
+                _darkOpacity = 1f - (_startDelay / 2500f);
 
                 MapManager.ObjLink.FreezePlayer();
                 Game1.GameManager.InGameOverlay.DisableInventoryToggle = true;
@@ -212,14 +236,29 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             // Fade out darkness layer over 1.5 seconds.
             if (_fadingOut)
             {
-                _lightOpacity -= Game1.DeltaTime / 1500f;
-                if (_lightOpacity <= 0)
+                _darkOpacity -= Game1.DeltaTime / 1500f;
+                if (_darkOpacity <= 0)
                 {
-                    _lightOpacity = 0;
+                    _darkOpacity = 0;
                     _fadingOut = false;
                 }
             }
+            // Apply lighting effects when "GlobalLights" is enabled.
+            if (GameSettings.GlobalLights && _darkOpacity > 0)
+            {
+                // Fade out/fade in the brightness of the lamps.
+                var lightOpacityA = 1f - (_darkOpacity * 0.90f);
+                foreach (var lamp in _lamps)
+                    lamp.SetBrightness(lightOpacityA);
 
+                // Fade out/fade in the "dungeon blacker" object.
+                var lightOpacityB = 1f - (_darkOpacity * 0.40f);
+                _blacker.SetBrightness(lightOpacityB);
+
+                // Fade in/fade out the spotlights.
+                foreach (var spotLight in _spotLights)
+                    spotLight.SetBrightness(_darkOpacity);
+            }
             // Return early if not playing the song.
             if (!_isPlaying)
                 return;
@@ -256,10 +295,14 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             // Draw Mamu's body sprite.
             _bodyDrawComponent.Draw(spriteBatch);
 
-            // Draw the darkness layer.
-            if (_drawDarkness || _lightOpacity > 0)
+            // We only do the sprite mask if global lighting is disabled.
+            if (GameSettings.GlobalLights)
+                return;
+
+            // Draw the darkness texture from the original game.
+            if (_drawDarkness || _darkOpacity > 0)
             {
-                var color = Color.White * (_drawDarkness ? 1f : _lightOpacity);
+                var color = Color.White * (_drawDarkness ? 1f : _darkOpacity);
                 spriteBatch.Draw(Resources.SprMamuLight, new Vector2(16, 16), color);
             }
         }

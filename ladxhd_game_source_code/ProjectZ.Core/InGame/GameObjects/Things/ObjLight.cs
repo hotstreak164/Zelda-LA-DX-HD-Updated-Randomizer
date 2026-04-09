@@ -11,7 +11,8 @@ namespace ProjectZ.InGame.GameObjects.Things
     internal class ObjLight : GameObject
     {
         private readonly Rectangle _drawRectangle;
-        private readonly Color _lightColor;
+        private Color _lightColor;
+        private Color _baseColor;
 
         bool light_source = true;
 
@@ -27,8 +28,14 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             _drawRectangle = new Rectangle(posX + 8 - size / 2, posY + 8 - size / 2, size, size);
             _lightColor = new Color(colorR, colorG, colorB) * (colorA / 255f);
+            _baseColor = new Color(colorR, colorG, colorB);
 
             AddComponent(LightDrawComponent.Index, new LightDrawComponent(DrawLight) { Layer = layer });
+        }
+
+        public void SetBrightness(float bright)
+        {
+            _lightColor = _baseColor * bright;
         }
 
         public void DrawLight(SpriteBatch spriteBatch)
