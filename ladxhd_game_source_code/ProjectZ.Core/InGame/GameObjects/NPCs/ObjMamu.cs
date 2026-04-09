@@ -168,9 +168,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                     _lamps.Add(lamp);
             }
             // Spawn spotlights on the frogs that are initially off.
-            _spotLights.Add(new ObjLight(map, posX + 8, posY + 8, 54, 255, 255, 255, 0, Values.LayerPlayer));
-            _spotLights.Add(new ObjLight(map, posX - 32, posY + 42, 36, 255, 255, 255, 0, Values.LayerPlayer));
-            _spotLights.Add(new ObjLight(map, posX + 48, posY + 42, 36, 255, 255, 255, 0, Values.LayerPlayer));
+            _spotLights.Add(new ObjLight(map, posX + 8, posY + 6, 54, 255, 255, 240, 0, Values.LayerPlayer));
+            _spotLights.Add(new ObjLight(map, posX - 32, posY + 40, 36, 255, 255, 240, 0, Values.LayerPlayer));
+            _spotLights.Add(new ObjLight(map, posX + 48, posY + 40, 36, 255, 255, 240, 0, Values.LayerPlayer));
 
             foreach (var spotLight in _spotLights)
                 Map.Objects.SpawnObject(spotLight);
@@ -247,12 +247,12 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (GameSettings.GlobalLights && _darkOpacity > 0)
             {
                 // Fade out/fade in the brightness of the lamps.
-                var lightOpacityA = 1f - (_darkOpacity * 0.90f);
+                var lightOpacityA = 1f - (_darkOpacity * 0.95f);
                 foreach (var lamp in _lamps)
                     lamp.SetBrightness(lightOpacityA);
 
                 // Fade out/fade in the "dungeon blacker" object.
-                var lightOpacityB = 1f - (_darkOpacity * 0.40f);
+                var lightOpacityB = 1f - (_darkOpacity * 0.45f);
                 _blacker.SetBrightness(lightOpacityB);
 
                 // Fade in/fade out the spotlights.
