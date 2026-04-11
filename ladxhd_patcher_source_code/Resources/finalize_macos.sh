@@ -18,9 +18,14 @@ BUNDLE_TMP="$SCRIPT_DIR/$NAME.app"
 # Clean slate: remove any leftover temp bundle from a previous failed run.
 rm -rf "$BUNDLE_TMP"
 
-# Set executable bit and ad-hoc codesign the standalone binary.
+# Set executable bit on the standalone binary.
 chmod +x "$BASE/$NAME"
+
+# Ad-hoc codesign executable files (binary and dylibs).
 codesign --sign - --force "$BASE/$NAME"
+for dylib in libopenal.dylib libSDL2-2.0.0.dylib; do
+    [ -f "$BASE/$dylib" ] && codesign --sign - --force "$BASE/$dylib"
+done
 
 # Create bundle directory structure inside TempFolder.
 # The bundle is only moved into BASE once all steps succeed , so a failure
@@ -50,6 +55,9 @@ cp "$SCRIPT_DIR/Info.plist" "$BUNDLE_TMP/Contents/Info.plist"
 # Create a Content symlink so MonoGame finds assets via both search paths.
 ln -sf "../MacOS/Content" "$BUNDLE_TMP/Contents/Resources/Content"
 
+# Codesign the app bundle.
+codesign --sign - --force --deep "$BUNDLE_TMP"
+
 # Atomically move the completed bundle into BASE, replacing any stale copy.
 rm -rf "$BUNDLE"
 mv "$BUNDLE_TMP" "$BUNDLE"
@@ -58,7 +66,11 @@ mv "$BUNDLE_TMP" "$BUNDLE"
 # The Launcher app bundle includes the game to allow launching it easily.
 if [ -f "$BASE/Launcher" ]; then
     chmod +x "$BASE/Launcher"
+
     codesign --sign - --force "$BASE/Launcher"
+    for dylib in libAvaloniaNative.dylib libHarfBuzzSharp.dylib libSkiaSharp.dylib; do
+        [ -f "$BASE/$dylib" ] && codesign --sign - --force "$BASE/$dylib"
+    done
 
     LAUNCHER_BUNDLE="$BASE/${NAME} Launcher.app"
     LAUNCHER_TMP="$SCRIPT_DIR/${NAME} Launcher.app"
@@ -79,6 +91,9 @@ if [ -f "$BASE/Launcher" ]; then
     sed -e "s|<string>${NAME}</string>|<string>Launcher</string>|g" \
         -e "s|com\.projectz\.game|com.projectz.launcher|g" \
         "$BUNDLE/Contents/Info.plist" >"$LAUNCHER_TMP/Contents/Info.plist"
+
+    # Codesign the app bundle.
+    codesign --sign - --force --deep "$LAUNCHER_TMP"
 
     # Atomically move the completed launcher bundle into BASE, replacing any stale copy.
     rm -rf "$LAUNCHER_BUNDLE"

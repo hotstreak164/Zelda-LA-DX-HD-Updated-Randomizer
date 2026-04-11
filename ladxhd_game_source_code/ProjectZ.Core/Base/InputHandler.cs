@@ -357,15 +357,21 @@ namespace ProjectZ.Base
 
         public static Point MousePosition()
         {
-            // correct macOS (and potentially others?) notch offset when in fullscreen
-            int offY = Game1.FullScreen ? Game1.Graphics.PreferredBackBufferHeight - Game1.WindowHeight : 0;
+            // Correct for the OS safe-area offset in fullscreen (e.g. macOS notch).
+            // Use the adapter's actual display height rather than PreferredBackBufferHeight,
+            // which can be stale after ToggleFullscreen and would produce a wrong offset.
+            // On displays with no safe area (Windows, Linux, non-notch Macs) this is 0.
+            int offY = Game1.FullScreen ? Game1.Graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Height - Game1.WindowHeight : 0;
             return new Point(_mouseState.X, _mouseState.Y - offY);
         }
 
         public static Point LastMousePosition()
         {
-            // correct macOS (and potentially others?) notch offset when in fullscreen
-            int offY = Game1.FullScreen ? Game1.Graphics.PreferredBackBufferHeight - Game1.WindowHeight : 0;
+            // Correct for the OS safe-area offset in fullscreen (e.g. macOS notch).
+            // Use the adapter's actual display height rather than PreferredBackBufferHeight,
+            // which can be stale after ToggleFullscreen and would produce a wrong offset.
+            // On displays with no safe area (Windows, Linux, non-notch Macs) this is 0.
+            int offY = Game1.FullScreen ? Game1.Graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Height - Game1.WindowHeight : 0;
             return new Point(_lastMouseState.X, _lastMouseState.Y - offY);
         }
 
