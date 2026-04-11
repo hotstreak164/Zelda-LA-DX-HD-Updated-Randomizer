@@ -46,6 +46,12 @@ public partial class MainWindow : Window
         XnbAudio.SuppressSound = false;
 
         this.SizeChanged += (s, e) => Config.SaveLauncherConfig();
+
+        this.PropertyChanged += (s, e) =>
+        {
+            if (e.Property == WindowStateProperty && WindowState == WindowState.Maximized)
+                WindowState = WindowState.Normal;
+        };
     }
 
     public void ShowLoadingMessage()
