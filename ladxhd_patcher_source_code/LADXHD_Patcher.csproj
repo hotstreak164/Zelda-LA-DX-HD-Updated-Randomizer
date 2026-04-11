@@ -83,7 +83,7 @@
     <Compile Include="Program\Functions.cs" />
     <Compile Include="Program\HostEnvironment.cs" />
     <Compile Include="Program\XDelta3.cs" />
-    <Compile Include="Program\ZipFunctions.cs" />
+    <Compile Include="Program\Utilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

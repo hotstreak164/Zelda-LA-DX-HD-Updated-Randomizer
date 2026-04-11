@@ -12,6 +12,9 @@ namespace LADXHD_Migrater
 
         public static void Init()
         {
+            // Just in case, try to remove a temp folder if it somehow exists.
+            Config.TempFolder.RemovePath();
+
             // Junk minimap data files in Data\Dungeon that are no longer needed.
             miniMapData.Add("three_1.txt");
             miniMapData.Add("three_2.txt");

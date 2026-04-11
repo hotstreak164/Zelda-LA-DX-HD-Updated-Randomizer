@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
@@ -126,9 +124,54 @@ namespace LADXHD_Patcher
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        POST PATCHING CODE : STUFF THAT IS DONE AFTER PATCHING HAS FINISHED.
+        POST PATCHING CODE : GENERATE ANDROID APK
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        private static void GenerateAPKFile()
+        {
+            // Paths to the temporary and final APK files.
+            string androidPath = Path.Combine(Config.TempFolder, "android").CreatePath();
+            string stageRoot   = Path.Combine(androidPath, "com.zelda.ladxhd");
+            string apkUnsigned = Path.Combine(androidPath, "unsigned.apk");
+            string apkAligned  = Path.Combine(androidPath, "aligned.apk");
+            string apkSigned   = Path.Combine(androidPath, "signed.apk");
+            string apkFinalize = Path.Combine(Config.BaseFolder, "zelda.ladxhd.apk");
+
+            // Clean up any previous APK files.
+            apkUnsigned.RemovePath();
+            apkAligned.RemovePath();
+            apkSigned.RemovePath();
+            apkFinalize.RemovePath();
+
+            // Extract tools and the stripped base APK.
+            Utilities.ExtractResourcesZip("android_tools.zip", androidPath);;
+            Utilities.ExtractResourcesZip("7zip.zip", Config.TempFolder);;
+
+            // Write the base APK from resources.
+            File.WriteAllBytes(apkUnsigned, (byte[])resources["android_base.apk"]);
+
+            // Inject only Content/Data into the base APK, then align/sign/verify.
+            Utilities.RunProcess(Config.SevenZip, stageRoot, $"a -tzip \"{apkUnsigned}\" \"assets\\Content\\*\" \"assets\\Data\\*\" -r -mx=9 -mm=Deflate");
+            Utilities.RunProcess(Config.ZipAlign, stageRoot, $"-P 16 -f -v 4 \"{apkUnsigned}\" \"{apkAligned}\"");
+            Utilities.RunProcess(Config.JavaExe,  stageRoot, $"-jar \"{Config.ApkSign}\" sign --ks \"{Config.KeyStore}\" --ks-key-alias zelda-la --ks-pass pass:zeldala --out \"{apkSigned}\" \"{apkAligned}\"");
+            Utilities.RunProcess(Config.ZipAlign, stageRoot, $"-c -P 16 -v 4 \"{apkSigned}\"");
+            Utilities.RunProcess(Config.JavaExe,  stageRoot, $"-jar \"{Config.ApkSign}\" verify -v \"{apkSigned}\"");
+
+            // Remove the temporary APK files we no longer need.
+            apkUnsigned.RemovePath();
+            apkAligned.RemovePath();
+
+            // Move the final APK to the root folder.
+            apkSigned.MovePath(apkFinalize, true);
+        }
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        POST PATCHING CODE : DUNGEON 3 FIX
+       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
         private static void Dungeon3PatchFix()
         {
             // I fucked up. After the dungeon name change the file "dungeon3_1.map" no longer exists.
@@ -157,114 +200,11 @@ namespace LADXHD_Patcher
             }
         }
 
-        private static void CopyNewFiles()
-        {
-            string dataPath;
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-            // Set the path to "Data" based on platform selected.
-            if (Config.SelectedPlatform == Platform.Android)
-                dataPath = Path.Combine(Config.TempFolder, "android", "com.zelda.ladxhd", "assets", "Data");
-            else
-                dataPath = Path.Combine(Config.BaseFolder, "Data");
-
-            // Set up the path to the Icon.
-            string iconPath = Path.Combine(dataPath, "Icon").CreatePath();
-
-            // Write the icon to the "Data\Icon" folder.
-            string iconFile = Path.Combine(iconPath, "Icon.ico");
-            File.WriteAllBytes(iconFile, (byte[])resources["Icon.ico"]);
-
-            // Write the bitmap icon to the "Data\Icon" folder.
-            string iconBmpFile = Path.Combine(iconPath, "Icon.bmp");
-            File.WriteAllBytes(iconBmpFile, (byte[])resources["Icon.bmp"]);
-
-            // Write the png icon to the the "Data\Icon" folder.
-            string iconPngFile = Path.Combine(iconPath, "Icon.png");
-            File.WriteAllBytes(iconPngFile, (byte[])resources["Icon.png"]);
-
-            // If it's the Windows OpenGL build then it needs SDL2.dll.
-            if (Config.SelectedPlatform == Platform.Windows && Config.SelectedGraphics == GraphicsAPI.OpenGL)
-            {
-                string SdlPath = Path.Combine(Config.BaseFolder, "SDL2.dll");
-                File.WriteAllBytes(SdlPath, (byte[])resources["SDL2.dll"]);
-            }
-        }
-
-        private static void RemoveBadBackupFiles()
-        {
-            // Because old versions of the patchers saved "new" files, we need to remove them or they will cause problems.
-            string[][] list = { langFiles, langDialog, smallFonts, backGround, lighting, linkImages, npcImages, itemImages, introImage, introAtlas, 
-                                miniMapImg, objectsImg, photograph, uiImages, musicTile, dungeon3M, dungeon3D, bowwowanim, dungeonani };
-
-            string[] remove = list.SelectMany(x => x).ToArray();
-
-            // Loop through the files in the backup folder.
-            foreach (string file in Config.BackupPath.GetFiles("*", true))
-            {
-                // Get the file as a file item which gives us some cool properties to reference.
-                FileItem fileItem = new FileItem(file);
-
-                // If the current array file exists then remove it.
-                if (remove.Contains(fileItem.Name))
-                    fileItem.FullName.RemovePath();
-            }
-        }
-
-        private static void CreateModFolders()
-        {
-            // The path to where Mods used to be located.
-            string previousModPath = Path.Combine(Config.BaseFolder, "Data", "Mods");
-
-            // Create the new mods folders.
-            Config.LAHDModPath.CreatePath(true);
-            Config.Graphics.CreatePath(true);
-
-            // Find the old "Mods" path for lahdmods and exit if it doesn't exist.
-            if (!Directory.Exists(previousModPath))
-                return;
-
-            // Move any lahdmods in the old "Mods" folder to the new location.
-            foreach (string file in Directory.GetFiles(previousModPath, "*", SearchOption.AllDirectories))
-            {
-                FileItem fileItem = new FileItem(file);
-                string newModLoc = Path.Combine(Config.LAHDModPath, fileItem.Name);
-                fileItem.FullName.MovePath(newModLoc, true);
-            }
-        }
-
-        private static void GenerateAPKFile()
-        {
-            // Paths to the temporary and final APK files.
-            string stageRoot   = Path.Combine(Config.TempFolder, "android", "com.zelda.ladxhd");
-            string apkUnsigned = Path.Combine(Config.TempFolder, "android", "unsigned.apk");
-            string apkAligned  = Path.Combine(Config.TempFolder, "aligned.apk");
-            string apkSigned   = Path.Combine(Config.TempFolder, "signed.apk");
-            string apkFinalize = Path.Combine(Config.BaseFolder, "zelda.ladxhd.apk");
-
-            // Clean up any previous APK files.
-            apkUnsigned.RemovePath();
-            apkAligned.RemovePath();
-            apkSigned.RemovePath();
-            apkFinalize.RemovePath();
-
-            // Extract tools and the stripped base APK.
-            ZipFunctions.ExtractAndroidTools();
-            ZipFunctions.ExtractSevenZip();
-            ZipFunctions.ExtractAndroidBaseApk();
-
-            // Inject only Content/Data into the base APK, then align/sign/verify.
-            ZipFunctions.UpdateApkAssets(apkUnsigned, stageRoot);
-            ZipFunctions.ZipAlignAPK(apkUnsigned, apkAligned);
-            ZipFunctions.SignAPK(apkAligned, apkSigned);
-            ZipFunctions.VerifyAPK(apkSigned);
-
-            // Remove the temporary APK files we no longer need.
-            apkUnsigned.RemovePath();
-            apkAligned.RemovePath();
-
-            // Move the final APK to the root folder.
-            apkSigned.MovePath(apkFinalize, true);
-        }
+        POST PATCHING CODE : LINUX / MACOS INITIALIZATION SCRIPTS
+       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         // Converts a Wine Windows path (e.g. "Z:\Users\foo\bar") to a native Unix path ("/Users/foo/bar").
         // Strips the leading drive letter and colon (always a single letter under Wine/Windows) via regex.
@@ -350,6 +290,93 @@ namespace LADXHD_Patcher
             RunUnixFinalizeScript("finalize_macos.sh");
         }
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        POST PATCHING CODE : ADDITIONAL FILE AND FOLDER HANDLING
+       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        private static void CopyNewFiles()
+        {
+            string dataPath;
+
+            // Set the path to "Data" based on platform selected.
+            if (Config.SelectedPlatform == Platform.Android)
+                dataPath = Path.Combine(Config.TempFolder, "android", "com.zelda.ladxhd", "assets", "Data");
+            else
+                dataPath = Path.Combine(Config.BaseFolder, "Data");
+
+            // Set up the path to the Icon.
+            string iconPath = Path.Combine(dataPath, "Icon").CreatePath();
+
+            // Write the icon to the "Data\Icon" folder.
+            string iconFile = Path.Combine(iconPath, "Icon.ico");
+            File.WriteAllBytes(iconFile, (byte[])resources["Icon.ico"]);
+
+            // Write the bitmap icon to the "Data\Icon" folder.
+            string iconBmpFile = Path.Combine(iconPath, "Icon.bmp");
+            File.WriteAllBytes(iconBmpFile, (byte[])resources["Icon.bmp"]);
+
+            // Write the png icon to the the "Data\Icon" folder.
+            string iconPngFile = Path.Combine(iconPath, "Icon.png");
+            File.WriteAllBytes(iconPngFile, (byte[])resources["Icon.png"]);
+
+            // If it's the Windows OpenGL build then it needs SDL2.dll.
+            if (Config.SelectedPlatform == Platform.Windows && Config.SelectedGraphics == GraphicsAPI.OpenGL)
+            {
+                string SdlPath = Path.Combine(Config.BaseFolder, "SDL2.dll");
+                File.WriteAllBytes(SdlPath, (byte[])resources["SDL2.dll"]);
+            }
+        }
+
+        private static void RemoveBadBackupFiles()
+        {
+            // Because old versions of the patchers saved "new" files, we need to remove them or they will cause problems.
+            string[][] list = { langFiles, langDialog, smallFonts, backGround, lighting, linkImages, npcImages, itemImages, introImage, introAtlas, 
+                                miniMapImg, objectsImg, photograph, uiImages, musicTile, dungeon3M, dungeon3D, bowwowanim, dungeonani };
+
+            string[] remove = list.SelectMany(x => x).ToArray();
+
+            // Loop through the files in the backup folder.
+            foreach (string file in Config.BackupPath.GetFiles("*", true))
+            {
+                // Get the file as a file item which gives us some cool properties to reference.
+                FileItem fileItem = new FileItem(file);
+
+                // If the current array file exists then remove it.
+                if (remove.Contains(fileItem.Name))
+                    fileItem.FullName.RemovePath();
+            }
+        }
+
+        private static void CreateModFolders()
+        {
+            // The path to where Mods used to be located.
+            string previousModPath = Path.Combine(Config.BaseFolder, "Data", "Mods");
+
+            // Create the new mods folders.
+            Config.LAHDModPath.CreatePath(true);
+            Config.Graphics.CreatePath(true);
+
+            // Find the old "Mods" path for lahdmods and exit if it doesn't exist.
+            if (!Directory.Exists(previousModPath))
+                return;
+
+            // Move any lahdmods in the old "Mods" folder to the new location.
+            foreach (string file in Directory.GetFiles(previousModPath, "*", SearchOption.AllDirectories))
+            {
+                FileItem fileItem = new FileItem(file);
+                string newModLoc = Path.Combine(Config.LAHDModPath, fileItem.Name);
+                fileItem.FullName.MovePath(newModLoc, true);
+            }
+        }
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        POST PATCHING CODE : MASTER FUNCTION : STUFF THAT IS DONE AFTER PATCHING HAS FINISHED.
+       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
         private static void PostPatchingFunctions()
         {
             // Because of a mistake I made not keeping "dungeon3_1.map" around, it now needs a special fix.
@@ -366,13 +393,15 @@ namespace LADXHD_Patcher
 
             CreateModFolders();
 
-            // Extract the launcher for the patched version (needs to happen before finalization scripts).
-            ZipFunctions.ExtractLauncher(Config.SelectedPlatform);
-
             // Finish up. Android needs the controller buttons and to be made into an APK.
             if (Config.SelectedPlatform == Platform.Android)
             {
-                ZipFunctions.ExtractAndroidIcons();
+                // Extract the android buttons to the game directory in "Data/Buttons".
+                string stageRoot   = Path.Combine(Config.TempFolder, "android", "com.zelda.ladxhd");
+                string buttonsPath = Path.Combine(stageRoot, "assets", "Data", "Buttons").CreatePath();
+                Utilities.ExtractResourcesZip("android_buttons.zip", buttonsPath);
+
+                // Generate the APK file.
                 GenerateAPKFile();
             }
             else if (Config.SelectedPlatform == Platform.Linux_x86 || Config.SelectedPlatform == Platform.Linux_Arm64)
@@ -383,7 +412,14 @@ namespace LADXHD_Patcher
             }
             else if (Config.SelectedPlatform == Platform.MacOS_x86 || Config.SelectedPlatform == Platform.MacOS_Arm64)
             {
-                ZipFunctions.ExtractMacOSFiles();
+                // The files are different depending on MacOS CPU.
+                string zipName = Config.SelectedPlatform == Platform.MacOS_x86
+                    ? "macos_x86_files.zip" 
+                    : "macos_arm64_files.zip";
+
+                // Extract the zip containing the MacOS files.
+                Utilities.ExtractResourcesZip(zipName, Config.TempFolder);
+
                 // Finalization steps are platform-specific and should only run when patching on that platform.
                 if (HostEnvironment.IsMacOS)
                     RunMacOSFinalizeScript();
@@ -604,6 +640,69 @@ namespace LADXHD_Patcher
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        PATCH / LAUNCHER EXTRACTION FUNCTIONS : EXTRACTS PATCHES OR LAUNCHER BASED ON SELECTED PLATFORM AND CREATES THE PATCH FOLDERS.
+       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        private static void ExtractPatches()
+        {
+            // Default to Windows Direct-X patches.
+            string zipName = "patches_win_dx.zip";
+
+            // Get the name of the zip file depending on the selected platform.
+            switch (Config.SelectedPlatform)
+            {
+                case Platform.Android:     { zipName = "patches_android.zip";     break; }
+                case Platform.Linux_x86:   { zipName = "patches_linux_x86.zip";   break; }
+                case Platform.Linux_Arm64: { zipName = "patches_linux_arm64.zip"; break; }
+                case Platform.MacOS_x86:   { zipName = "patches_macos_x86.zip";   break; }
+                case Platform.MacOS_Arm64: { zipName = "patches_macos_arm64.zip"; break; }
+                case Platform.Windows:     { if (Config.SelectedGraphics == GraphicsAPI.OpenGL) { zipName = "patches_win_gl.zip"; } break;  }
+            };
+            // Create the path to extract patches to and extract them.
+            string patchesPath = Path.Combine(Config.TempFolder, "patches").CreatePath();
+            Utilities.ExtractResourcesZip(zipName, patchesPath);
+
+            // Create the path to where patched files will go.
+            Path.Combine(Config.TempFolder, "patchedFiles").CreatePath(true);
+        }
+
+        public static void ExtractLauncher()
+        {
+            // Platform determines which launcher to extract.
+            string zipName = "";
+            bool isMacOS = false;
+
+            switch (Config.SelectedPlatform)
+            {
+                // Just exit if it's Android. No launcher for it.
+                case Platform.Android:      { return; }
+
+                // Each has its own type of launcher.
+                case Platform.Linux_x86:    { zipName = "launcher_linux_x86.zip"; break; }
+                case Platform.Linux_Arm64:  { zipName = "launcher_linux_arm64.zip"; break; }
+                case Platform.MacOS_x86:    { zipName = "launcher_macos_x86.zip"; isMacOS = true; break; }
+                case Platform.MacOS_Arm64:  { zipName = "launcher_macos_arm64.zip"; isMacOS = true; break; }
+
+                // Default to Windows.
+                default:                    { zipName = "launcher_windows.zip"; break; }
+            }
+            // Remove the launcher if it exists.
+            Config.Launcher.RemovePath();
+            Config.WLauncher.RemovePath();
+
+            // MacOS may have additional files included with the launcher.
+            if (isMacOS)
+            {
+                Path.Combine(Config.BaseFolder + "\\libAvaloniaNative.dylib").RemovePath();
+                Path.Combine(Config.BaseFolder + "\\libHarfBuzzSharp.dylib").RemovePath();
+                Path.Combine(Config.BaseFolder + "\\libSkiaSharp.dylib").RemovePath();
+            }
+            // Write the zipfile, extract it, then delete it.
+            Utilities.ExtractResourcesZip(zipName, Config.BaseFolder);
+        }
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
         SETUP / VALIDATION CODE : SET UP WHETHER PATCHING FROM v1.0.0 OR PATCHING FROM BACKUP FILES AND VERIFY IF PATCHING SHOULD TAKE PLACE.
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -747,12 +846,15 @@ namespace LADXHD_Patcher
             Config.TempFolder.CreatePath(true);
 
             // Extract patches.
-            ZipFunctions.ExtractPatches();
+            ExtractPatches();
 
             // Create XDelta executable and patch files.
             XDelta3.Create();
             PatchGameFiles();
             XDelta3.Remove();
+
+            //Extract the launcher.
+            ExtractLauncher();
 
             // Report finished, remove temp path, enable dialog.
             ReportFinished();
@@ -790,13 +892,16 @@ namespace LADXHD_Patcher
 
                 Config.TempFolder.CreatePath(true);
                 Console.WriteLine("Extracting patches...");
-                ZipFunctions.ExtractPatches();
+                ExtractPatches();
 
                 Console.WriteLine("Creating xdelta3...");
                 XDelta3.Create();
 
                 Console.WriteLine("Patching game files...");
                 PatchGameFiles();
+
+                Console.WriteLine("Extracting launcher...");
+                ExtractLauncher();
 
                 Console.WriteLine("Cleaning up...");
                 XDelta3.Remove();
