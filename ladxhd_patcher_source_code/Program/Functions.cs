@@ -428,7 +428,7 @@ namespace LADXHD_Patcher
                     : "macos_arm64_files.zip";
 
                 // Extract the zip containing the MacOS files.
-                Utilities.ExtractResourcesZip(zipName, Config.TempFolder);
+                Utilities.ExtractResourcesZip(zipName, Config.BaseFolder);
             }
         }
 
