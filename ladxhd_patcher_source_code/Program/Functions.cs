@@ -202,7 +202,7 @@ namespace LADXHD_Patcher
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        POST PATCHING CODE : LINUX / MACOS INITIALIZATION SCRIPTS
+        POST PATCHING CODE : LINUX / MACOS FINALIZATION SCRIPTS
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -290,11 +290,27 @@ namespace LADXHD_Patcher
             RunUnixFinalizeScript("finalize_macos.sh");
         }
 
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        private static void HostFinalizationFunctions()
+        {
+            bool isLinux = Config.SelectedPlatform == Platform.Linux_x86 || Config.SelectedPlatform == Platform.Linux_Arm64;
+            bool isMacOS = Config.SelectedPlatform == Platform.MacOS_x86 || Config.SelectedPlatform == Platform.MacOS_Arm64;
+            
+            // Finalization steps are platform-specific and should only run when patching on that platform.
+            if (isLinux && HostEnvironment.IsLinux)
+            {
+                RunLinuxFinalizeScript();
+            }
+            else if (isMacOS && HostEnvironment.IsMacOS)
+            {
+                RunMacOSFinalizeScript();
+            }
+        }
 
-        POST PATCHING CODE : ADDITIONAL FILE AND FOLDER HANDLING
-       
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                POST PATCHING CODE : ADDITIONAL FILE AND FOLDER HANDLING
+
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         private static void CopyNewFiles()
         {
@@ -404,12 +420,6 @@ namespace LADXHD_Patcher
                 // Generate the APK file.
                 GenerateAPKFile();
             }
-            else if (Config.SelectedPlatform == Platform.Linux_x86 || Config.SelectedPlatform == Platform.Linux_Arm64)
-            {
-                // Finalization steps are platform-specific and should only run when patching on that platform.
-                if (HostEnvironment.IsLinux)
-                    RunLinuxFinalizeScript();
-            }
             else if (Config.SelectedPlatform == Platform.MacOS_x86 || Config.SelectedPlatform == Platform.MacOS_Arm64)
             {
                 // The files are different depending on MacOS CPU.
@@ -419,10 +429,6 @@ namespace LADXHD_Patcher
 
                 // Extract the zip containing the MacOS files.
                 Utilities.ExtractResourcesZip(zipName, Config.TempFolder);
-
-                // Finalization steps are platform-specific and should only run when patching on that platform.
-                if (HostEnvironment.IsMacOS)
-                    RunMacOSFinalizeScript();
             }
         }
 
@@ -856,6 +862,9 @@ namespace LADXHD_Patcher
             //Extract the launcher.
             ExtractLauncher();
 
+            // Linux / macOS finalization functions depend on both game and launcher being extracted.
+            HostFinalizationFunctions();
+
             // Report finished, remove temp path, enable dialog.
             ReportFinished();
             TryRemoveTempPath();
@@ -902,6 +911,9 @@ namespace LADXHD_Patcher
 
                 Console.WriteLine("Extracting launcher...");
                 ExtractLauncher();
+
+                Console.WriteLine("Performing platform-specific finalization...");
+                HostFinalizationFunctions();
 
                 Console.WriteLine("Cleaning up...");
                 XDelta3.Remove();
