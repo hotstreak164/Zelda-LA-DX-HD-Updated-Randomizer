@@ -69,10 +69,12 @@ namespace ProjectZ.InGame.Overlay
         private const int SelectionTime = 125;
         private bool _selectionButtonPressed;
 
+        private float _scale => Game1.GameManager.InGameOverlay.Scale;
+
         public InventoryOverlay(int width, int height)
         {
-            _width = width * Game1.UiScale;
-            _height = height * Game1.UiScale;
+            _width = (int)(width * _scale);
+            _height = (int)(height * _scale);
 
             _rubeePosition = new Point(width - ItemDrawHelper.RubeeSize.X - Margin, 10);
 
@@ -271,11 +273,11 @@ namespace ProjectZ.InGame.Overlay
             device.SetRenderTarget(_renderTarget);
             device.Clear(Color.Transparent);
 
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(1f * Game1.UiScale);
+            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(1f * _scale);
             Resources.RoundedCornerEffect.Parameters["radius"].SetValue(3f);
 
             // Draw main background.
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(Game1.UiScale));
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(_scale));
 
             Resources.RoundedCornerEffect.Parameters["width"].SetValue(_background0.Width);
             Resources.RoundedCornerEffect.Parameters["height"].SetValue(_background0.Height);
@@ -288,7 +290,7 @@ namespace ProjectZ.InGame.Overlay
             spriteBatch.End();
 
             // Draw item backgrounds.
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(Game1.UiScale));
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(_scale));
 
             var offset = new Point(_background1.X, _background1.Y);
 
@@ -345,7 +347,7 @@ namespace ProjectZ.InGame.Overlay
             spriteBatch.End();
 
             // Draw icons, hearts, etc.
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(Game1.UiScale));
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(_scale));
 
             var heartOffset = new Point(0, Game1.GameManager.MaxHearts > 7 ? 0 : 4);
             ItemDrawHelper.DrawHearts(spriteBatch, _heartsPosition + heartOffset, 1, Color.White);

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.Base;
 using ProjectZ.Base.UI;
-using ProjectZ.InGame.Overlay.Sequences;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Map;
+using ProjectZ.InGame.Overlay.Sequences;
 using ProjectZ.InGame.Pages;
 using ProjectZ.InGame.Things;
 
@@ -73,7 +74,7 @@ namespace ProjectZ.InGame.Overlay
         private readonly int _fadeTime = 200;
         private const int ChangeTime = 125;
         private int _fadeDir;
-        private int _scale;
+        private float _scale;
         private float _changeCount;
 
         private int _overlayWidth;
@@ -88,6 +89,11 @@ namespace ProjectZ.InGame.Overlay
         private bool _scaleButtonDown;
         private float _scaleButtonTimer;
         private float _scaleButtonPeriod;
+
+        // The scale here is passed to MapOverlay, InventoryOverlay, and DungeonOverlay.
+        public float Scale => _scale;
+
+        public float inventory_scale_override = 0;
 
         public Dictionary<Point, (int Level, Vector2 Teleport)> TeleportMap = new()
         {
@@ -106,6 +112,10 @@ namespace ProjectZ.InGame.Overlay
         public OverlayManager()
         {
             _blurRectangle = (UiRectangle)Game1.UiManager.AddElement(new UiRectangle(Rectangle.Empty, "background", Values.ScreenNameGame, Color.Transparent, Color.Transparent, null), true);
+
+            // If a mod file exists load the values from it.
+            string modFile = Path.Combine(Values.PathLAHDMods, "OverlayManager.lahdmod");
+            ModFile.Parse(modFile, this);
         }
 
         public void Load(ContentManager content)
@@ -420,9 +430,10 @@ namespace ProjectZ.InGame.Overlay
                     int dungeonOffset;
 
                     if (!Game1.GameManager.MapManager.CurrentMap.DungeonMode)
-                        dungeonOffset = (_margin + _dungeonSize.X) * _scale / 2;
+                        dungeonOffset = (int)((_margin + _dungeonSize.X) * _scale / 2);
                     else
-                        dungeonOffset = Math.Clamp((_margin + _dungeonSize.X) * _scale / 2, -16, (Game1.WindowWidth - _overlayWidth) / 2 - 8);
+                        dungeonOffset = (int)(Math.Clamp((_margin + _dungeonSize.X) * _scale / 2, -16, 
+                            Math.Max(-16, (Game1.WindowWidth - _overlayWidth) / 2 - 8)));
 
                     spriteBatch.Draw(_menuRenderTarget2D, new Rectangle(
                         (int)_menuPosition.X + dungeonOffset, (int)(_menuPosition.Y - menuY), _overlayWidth, _overlayHeight), menuColor);
@@ -446,9 +457,9 @@ namespace ProjectZ.InGame.Overlay
                         mapStart = ControlHandler.GetButtonName(ControlHandler.ButtonDictionary[CButtons.Select].Buttons[0]);
 
                     var mapString = mapStart + ": " + Game1.LanguageManager.GetString(_updateInventory ? "overlay_map" : "overlay_inventory", "error");
-                    var mapDrawPos = new Vector2(8 * Game1.UiScale, Game1.WindowHeight - 16 * Game1.UiScale);
+                    var mapDrawPos = new Vector2(8 * _scale, Game1.WindowHeight - 16 * _scale);
 
-                    GameFS.DrawString(spriteBatch, mapString, mapDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
+                    GameFS.DrawString(spriteBatch, mapString, mapDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
 
                     // When navigating the map, get the currently selected map position.
                     var nodeSelected = _mapOverlay.SelectionPosition;
@@ -474,10 +485,10 @@ namespace ProjectZ.InGame.Overlay
                         // Set up the string to display.
                         var teleString = teleStart + ": " + Game1.LanguageManager.GetString("overlay_teleport", "error");
                         var teleTextSize = GameFS.MeasureString(teleString);
-                        var teleDrawPos = new Vector2(Game1.WindowWidth - (teleTextSize.X + 6) * Game1.UiScale, Game1.WindowHeight - 16 * Game1.UiScale);
+                        var teleDrawPos = new Vector2(Game1.WindowWidth - (teleTextSize.X + 6) * _scale, Game1.WindowHeight - 16 * _scale);
 
                         // Draw the teleport button and label.
-                        GameFS.DrawString(spriteBatch, teleString, teleDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
+                        GameFS.DrawString(spriteBatch, teleString, teleDrawPos, Color.White * _fadeAnimationPercentage, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
                     }
                 }
             }
@@ -568,23 +579,31 @@ namespace ProjectZ.InGame.Overlay
 
         private void UpdateOverlayDimensions()
         {
-            // Update the scale to match the UI scale.
-            _scale = Game1.UiScale;
+            // If the user forced a scale via lahdmod use that otherwise use the UI scale.
+            if (inventory_scale_override > 0)
+                _scale = inventory_scale_override;
+            else
+                _scale = Game1.UiScale;
 
             // Recalculate the size of the inventory.
-            _recInventory = new Rectangle(0, 0, _inventorySize.X * _scale, _inventorySize.Y * _scale);
+            _recInventory = new Rectangle(0, 0, (int)(_inventorySize.X * _scale), (int)(_inventorySize.Y * _scale));
 
             // Recalculate the size of the map stuff.
             _recMap = new Rectangle(
-                _recInventory.Right - 6 * _scale - _mapSize.X * _scale,
-                _recInventory.Bottom - 6 * _scale - _mapSize.Y * _scale, _mapSize.X * _scale, _mapSize.Y * _scale);
+                (int)(_recInventory.Right - 6 * _scale - _mapSize.X * _scale),
+                (int)(_recInventory.Bottom - 6 * _scale - _mapSize.Y * _scale), 
+                (int)(_mapSize.X * _scale), 
+                (int)(_mapSize.Y * _scale));
             _recMapCenter = new Rectangle(
-                _recInventory.Width / 2 - _mapSize.X / 2 * _scale,
-                _recInventory.Height / 2 - _mapSize.Y / 2 * _scale, _mapSize.X * _scale, _mapSize.Y * _scale);
+                (int)(_recInventory.Width / 2 - _mapSize.X / 2 * _scale),
+                (int)(_recInventory.Height / 2 - _mapSize.Y / 2 * _scale), 
+                (int)(_mapSize.X * _scale), 
+                (int)(_mapSize.Y * _scale));
             _recDungeon = new Rectangle(
-                _recInventory.Right + _margin * _scale,
-                _recInventory.Bottom - _dungeonSize.Y * _scale,
-                _dungeonSize.X * _scale, _dungeonSize.Y * _scale);
+                (int)(_recInventory.Right + _margin * _scale),
+                (int)(_recInventory.Bottom - _dungeonSize.Y * _scale),
+                (int)(_dungeonSize.X * _scale), 
+                (int)(_dungeonSize.Y * _scale));
         }
 
         private void DrawInventory(SpriteBatch spriteBatch)
@@ -631,11 +650,15 @@ namespace ProjectZ.InGame.Overlay
             _blurRectangle.Rectangle.Width = Game1.WindowWidth;
             _blurRectangle.Rectangle.Height = Game1.WindowHeight;
 
-            _scale = Game1.UiScale;
+            // If the user forced a scale via lahdmod use that otherwise use the UI scale.
+            if (inventory_scale_override > 0)
+                _scale = inventory_scale_override;
+            else
+                _scale = Game1.UiScale;
 
             // Render at actual screen resolution (not native resolution)
-            _overlayWidth = _overlaySize.X * _scale;
-            _overlayHeight = _overlaySize.Y * _scale;
+            _overlayWidth = (int)(_overlaySize.X * _scale);
+            _overlayHeight = (int)(_overlaySize.Y * _scale);
 
             _menuPosition = new Vector2(
                 Game1.WindowWidth / 2 - _overlayWidth / 2, 

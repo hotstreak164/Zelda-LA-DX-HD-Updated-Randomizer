@@ -61,6 +61,8 @@ namespace ProjectZ.InGame.Overlay
         private bool _iconAnimationRunning;
         private bool _fullMap;
 
+        private float _scale => Game1.GameManager.InGameOverlay.Scale;
+
         Animator[] animDungeons = new Animator[8];
         Point[] animPosition = new Point[8];
 
@@ -389,14 +391,14 @@ namespace ProjectZ.InGame.Overlay
                 return;
 
             // Screen-space scale for rounded corners.
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
+            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(_scale);
             Resources.RoundedCornerEffect.Parameters["radius"].SetValue(2f);
             Resources.RoundedCornerEffect.Parameters["width"].SetValue(_width);
             Resources.RoundedCornerEffect.Parameters["height"].SetValue(_height);
 
             // Draw the render target with the shader.
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, Resources.RoundedCornerEffect, matrix);
-            spriteBatch.Draw(_renderTarget, drawPosition.Location.ToVector2(), null, color, 0f, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_renderTarget, drawPosition.Location.ToVector2(), null, color, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0f);
             spriteBatch.End();
 
             // Draw overlay icons.
@@ -416,32 +418,32 @@ namespace ProjectZ.InGame.Overlay
                             continue;
 
                         Vector2 animLocation = new Vector2(
-                            mapRectangle.X + (8 + animPosition[i].X * 8 + 1) * Game1.UiScale, 
-                            mapRectangle.Y + (8 + animPosition[i].Y * 8 + 1) * Game1.UiScale);
-                        animDungeons[i].DrawBasic(spriteBatch, animLocation, color, Game1.UiScale);
+                            mapRectangle.X + (8 + animPosition[i].X * 8 + 1) * _scale, 
+                            mapRectangle.Y + (8 + animPosition[i].Y * 8 + 1) * _scale);
+                        animDungeons[i].DrawBasic(spriteBatch, animLocation, color, _scale);
                     }
                 }
                 // Draw the icon for Manbo's Pond / Crazy Tracy's Health Spa.
                 if (GameSettings.MapTeleport >= 2 && MapManager.ObjLink.ManboTeleport)
                 {
                     Vector2 manboLocation = new Vector2(
-                            mapRectangle.X + (8 + _manboPosition.X * 8 + 1) * Game1.UiScale,
-                            mapRectangle.Y + (8 + _manboPosition.Y * 8 + 1) * Game1.UiScale);
-                    _manboPond.DrawBasic(spriteBatch, manboLocation, color, Game1.UiScale);
+                            mapRectangle.X + (8 + _manboPosition.X * 8 + 1) * _scale,
+                            mapRectangle.Y + (8 + _manboPosition.Y * 8 + 1) * _scale);
+                    _manboPond.DrawBasic(spriteBatch, manboLocation, color, _scale);
                 }
                 // Draw the player icon.
                 var position = new Vector2(
-                    mapRectangle.X + (8 + Game1.GameManager.PlayerMapPosition.Value.X * 8 + 2) * Game1.UiScale,
-                    mapRectangle.Y + (8 + Game1.GameManager.PlayerMapPosition.Value.Y * 8 + 2) * Game1.UiScale);
-                _animationPlayer.DrawBasic(spriteBatch, position, color, Game1.UiScale);
+                    mapRectangle.X + (8 + Game1.GameManager.PlayerMapPosition.Value.X * 8 + 2) * _scale,
+                    mapRectangle.Y + (8 + Game1.GameManager.PlayerMapPosition.Value.Y * 8 + 2) * _scale);
+                _animationPlayer.DrawBasic(spriteBatch, position, color, _scale);
 
                 // Draw the selection icon.
                 if (IsSelected)
                 {
                     position = new Vector2(
-                        mapRectangle.X + (8 + _selectionPosition.X * 8 + 1) * Game1.UiScale,
-                        mapRectangle.Y + (8 + _selectionPosition.Y * 8 + 1) * Game1.UiScale);
-                    _animationSelection.DrawBasic(spriteBatch, position, color, Game1.UiScale);
+                        mapRectangle.X + (8 + _selectionPosition.X * 8 + 1) * _scale,
+                        mapRectangle.Y + (8 + _selectionPosition.Y * 8 + 1) * _scale);
+                    _animationSelection.DrawBasic(spriteBatch, position, color, _scale);
                 }
             }
             spriteBatch.End();

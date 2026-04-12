@@ -36,10 +36,12 @@ namespace ProjectZ.InGame.Overlay
         private int _width;
         private int _height;
 
+        private float _scale => Game1.GameManager.InGameOverlay.Scale;
+
         public DungeonOverlay(int width, int height)
         {
-            _width = width * Game1.UiScale;
-            _height = height * Game1.UiScale;
+            _width = (int)(width * _scale);
+            _height = (int)(height * _scale);
 
             _backgroundTop = new Rectangle(0, 0, width, 20);
             _backgroundBottom = new Rectangle(0, 20 + 2, width, height - 20 - 2);
@@ -122,9 +124,9 @@ namespace ProjectZ.InGame.Overlay
             Game1.Graphics.GraphicsDevice.Clear(Color.Transparent);
 
             // draw the background
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(Game1.UiScale));
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(_scale));
 
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
+            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(_scale);
             Resources.RoundedCornerEffect.Parameters["radius"].SetValue(3f);
 
             Resources.RoundedCornerEffect.Parameters["width"].SetValue(_backgroundTop.Width);
@@ -147,7 +149,7 @@ namespace ProjectZ.InGame.Overlay
                 DrawBackground(spriteBatch, Point.Zero, new Rectangle(_smallKeyPosition.X + _smallKeyPosition.Width / 2, _smallKeyPosition.Bottom - 5, 4, 2), 1);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(Game1.UiScale));
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(_scale));
 
             var offset = new Point(0, 0);
 
