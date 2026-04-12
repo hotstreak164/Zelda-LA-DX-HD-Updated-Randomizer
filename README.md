@@ -34,6 +34,8 @@ If you wish to build the game yourself, see **Personal Build / Publishing**.
 - Press the "Patch" button. It will take a bit to finish.
 - When it is done, the patcher can be deleted.
 
+The patcher can run on Linux and macOS via Wine, and will generate ready to use binaries / apps for these platforms when running on the target operating system. Please check [LINUX.md](LINUX.md) and [MACOS.md](MACOS.md) for detailed instructions.
+
 ### Silent Mode: Command Line Patching
 
 The patcher supports silent mode for automated installations and scripts:
@@ -45,6 +47,8 @@ LADXHD.Patcher.exe --silent
 | Option | Description |
 |--------|-------------|
 | `--silent`, `-s` | Run without GUI prompts |
+| `--platform <value>` | Target platform (default: windows)<br>Values: windows, android, linux-x86, linux-arm64, macos-x86, macos-arm64 |
+| `--graphics <value>` | Target graphics API<br>Default: directx (windows), opengl (all others)<br>Values: directx, opengl |
 | `--help`, `-h` | Show help message |
 
 | Exit Code | Meaning |
@@ -52,6 +56,7 @@ LADXHD.Patcher.exe --silent
 | 0 | Success |
 | 1 | Game executable not found |
 | 2 | Patching failed |
+| 3 | Invalid arguments |
 
 ## About This Repository
 
