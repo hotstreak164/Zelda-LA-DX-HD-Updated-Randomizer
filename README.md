@@ -47,6 +47,8 @@ LADXHD.Patcher.exe --silent
 | Option | Description |
 |--------|-------------|
 | `--silent`, `-s` | Run without GUI prompts |
+| `--platform <value>` | Target platform (default: windows)<br>Values: windows, android, linux-x86, linux-arm64, macos-x86, macos-arm64 |
+| `--graphics <value>` | Target graphics API<br>Default: directx (windows), opengl (all others)<br>Values: directx, opengl |
 | `--help`, `-h` | Show help message |
 
 | Exit Code | Meaning |
@@ -54,6 +56,7 @@ LADXHD.Patcher.exe --silent
 | 0 | Success |
 | 1 | Game executable not found |
 | 2 | Patching failed |
+| 3 | Invalid arguments |
 
 ## About This Repository
 
