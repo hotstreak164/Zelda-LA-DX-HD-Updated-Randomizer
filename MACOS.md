@@ -29,6 +29,9 @@ $ chmod +x "Link's Awakening DX HD"
 # same for the launcher binary
 $ codesign --force --sign - Launcher
 $ chmod +x Launcher
+
+# dynamic libraries should also be signed
+$ codesign --force --sign - *.dylib
 ```
 
 You are good to go!
