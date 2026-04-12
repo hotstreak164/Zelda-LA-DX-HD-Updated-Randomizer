@@ -69,6 +69,15 @@ namespace LADXHD_Patcher
 
             // Add to form
             MainDialog.groupBox_Main.Controls.Add(MainDialog.TextBox_Info);
+
+            // Add a "Success" label.
+            MainDialog.Label_Success = new TransparentLabel();
+            MainDialog.Label_Success.Text = "Patching Successful!";
+            MainDialog.Label_Success.Size = new Size(130, 13);
+            MainDialog.Label_Success.Location = new Point(132, 433);
+            MainDialog.Label_Success.Visible = false;
+            MainDialog.Label_Success.ForeColor = Color.FromName("White");
+            MainDialog.Controls.Add(MainDialog.Label_Success);
         }
     }
 }

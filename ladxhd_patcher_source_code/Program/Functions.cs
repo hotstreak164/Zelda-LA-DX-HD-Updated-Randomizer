@@ -102,6 +102,9 @@ namespace LADXHD_Patcher
 
             // Update the bar to have zero progress.
             Forms.MainDialog.UpdateProgressBar(_patchProgress);
+
+            // Hide the "success" label.
+            Forms.MainDialog.Label_Success.Visible = false;
         }
 
         private static void UpdateProgress()
@@ -118,6 +121,18 @@ namespace LADXHD_Patcher
                 if (_fileCount % 10 == 0 || _fileCount == _totalCount)
                     Forms.MainDialog.UpdateProgressBar(progress);
 
+                Application.DoEvents();
+            }
+        }
+
+        private static void ShowPatchingSuccessLabel()
+        {
+            // When patching is finished show a "Success" message over the progress bar.
+            if (Forms.MainDialog.progressBar.Value >= 100)
+            {
+                Forms.MainDialog.progressBar.SendToBack();
+                Forms.MainDialog.Label_Success.Visible = true;
+                Forms.MainDialog.Label_Success.BringToFront();
                 Application.DoEvents();
             }
         }
@@ -802,6 +817,7 @@ namespace LADXHD_Patcher
                         ? "Creating an APK from v1.0.0 backup files was successful. The game version is set to v"+ Config.Version + "." 
                         : "Creating an APK from original v1.0.0 files was successful. The game version is set to v"+ Config.Version + ".";
                     Forms.OkayDialog.Display(title, 260, 40, 34, 16, 10, message);
+                    ShowPatchingSuccessLabel();
                 }
                 else
                 {
@@ -810,6 +826,7 @@ namespace LADXHD_Patcher
                         ? "Patching the game from v1.0.0 backup files was successful. The game was updated to v"+ Config.Version + "." 
                         : "Patching Link's Awakening DX HD v1.0.0 was successful. The game was updated to v"+ Config.Version + ".";
                     Forms.OkayDialog.Display(title, 260, 40, 34, 16, 10, message);
+                    ShowPatchingSuccessLabel();
                 }
             }
         }

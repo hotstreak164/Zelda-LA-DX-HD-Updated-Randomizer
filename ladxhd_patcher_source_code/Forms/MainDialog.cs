@@ -9,6 +9,7 @@ namespace LADXHD_Patcher
     {
         public AdvRichTextBox TextBox_Info;
         public TransparentLabel TextBox_NoClick;
+        public TransparentLabel Label_Success;
 
         public Form_MainForm()
         {
