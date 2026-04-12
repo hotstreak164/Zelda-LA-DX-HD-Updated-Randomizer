@@ -25,6 +25,7 @@ namespace ProjectZ.InGame.Screens
             {
                 return (Game1.LanguageManager.CurrentLanguageCode) switch
                 {
+                    // Note that "por" and "pte" are both "Portuguese" and share textures.
                     "chn" => _sprIntro_chn,
                     "deu" => _sprIntro_deu,
                     "esp" => _sprIntro_esp,
@@ -32,6 +33,7 @@ namespace ProjectZ.InGame.Screens
                     "ind" => _sprIntro_ind,
                     "ita" => _sprIntro_ita,
                     "por" => _sprIntro_por,
+                    "pte" => _sprIntro_por,
                     "rus" => _sprIntro_rus,
                     _     => _sprIntro_eng
                 };

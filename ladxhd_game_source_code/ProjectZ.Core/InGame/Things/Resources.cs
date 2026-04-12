@@ -107,6 +107,7 @@ namespace ProjectZ.InGame.Things
             {
                 return (Game1.LanguageManager.CurrentLanguageCode) switch
                 {
+                    // Note that "por" and "pte" are both "Portuguese" and share textures.
                     "chn" => SprObjectsChn,
                     "deu" => SprObjectsDeu,
                     "esp" => SprObjectsEsp,
@@ -114,6 +115,7 @@ namespace ProjectZ.InGame.Things
                     "ind" => SprObjectsInd,
                     "ita" => SprObjectsIta,
                     "por" => SprObjectsPor,
+                    "pte" => SprObjectsPor,
                     "rus" => SprObjectsRus,
                     _     => SprObjectsEng
                 };
@@ -127,6 +129,7 @@ namespace ProjectZ.InGame.Things
             {
                 return (Game1.LanguageManager.CurrentLanguageCode) switch
                 {
+                    // Note that "por" and "pte" are both "Portuguese" and share textures.
                     "chn" => SprMiniMapChn,
                     "deu" => SprMiniMapDeu,
                     "esp" => SprMiniMapEsp,
@@ -134,6 +137,7 @@ namespace ProjectZ.InGame.Things
                     "ind" => SprMiniMapInd,
                     "ita" => SprMiniMapIta,
                     "por" => SprMiniMapPor,
+                    "pte" => SprMiniMapPor,
                     "rus" => SprMiniMapRus,
                     _     => SprMiniMapEng
                 };
@@ -148,6 +152,7 @@ namespace ProjectZ.InGame.Things
             {
                 return (Game1.LanguageManager.CurrentLanguageCode, GameSettings.Uncensored) switch
                 {
+                    // Note that "por" and "pte" are both "Portuguese" and share textures.
                     ("chn", false) => SprItemChn,
                     ("deu", false) => SprItemDeu,
                     ("esp", false) => SprItemEsp,
@@ -155,6 +160,7 @@ namespace ProjectZ.InGame.Things
                     ("ind", false) => SprItemInd,
                     ("ita", false) => SprItemIta,
                     ("por", false) => SprItemPor,
+                    ("pte", false) => SprItemPor,
                     ("rus", false) => SprItemRus,
                     (_, false)     => SprItemEng,
 
@@ -165,6 +171,7 @@ namespace ProjectZ.InGame.Things
                     ("ind", true)  => SprItemIndRedux,
                     ("ita", true)  => SprItemItaRedux,
                     ("por", true)  => SprItemPorRedux,
+                    ("pte", true)  => SprItemPorRedux,
                     ("rus", true)  => SprItemRusRedux,
                     (_, true)      => SprItemEngRedux,
                 };
@@ -208,6 +215,7 @@ namespace ProjectZ.InGame.Things
             {
                 switch (parts[i])
                 {
+                    // Note that "por" and "pte" are both "Portuguese" and share textures.
                     case "chn": lang = AtlasLanguage.Chinese; break;
                     case "deu": lang = AtlasLanguage.German; break;
                     case "esp": lang = AtlasLanguage.Spanish; break;
@@ -215,6 +223,7 @@ namespace ProjectZ.InGame.Things
                     case "ind": lang = AtlasLanguage.Indonesian; break;
                     case "ita": lang = AtlasLanguage.Italian; break;
                     case "por": lang = AtlasLanguage.Portuguese; break;
+                    case "pte": lang = AtlasLanguage.Portuguese; break;
                     case "rus": lang = AtlasLanguage.Russian; break;
 
                     case "redux": variant = AtlasVariant.Redux; break;
@@ -543,8 +552,8 @@ namespace ProjectZ.InGame.Things
                 TextureList[textureName] = texture;
             }
         }
-
-        private static readonly HashSet<string> _languageSet = new(StringComparer.OrdinalIgnoreCase) { "chn", "deu", "esp", "fre", "ind", "ita", "por", "rus" };
+        // Note that "por" and "pte" are both "Portuguese" and share textures.
+        private static readonly HashSet<string> _languageSet = new(StringComparer.OrdinalIgnoreCase) { "chn", "deu", "esp", "fre", "ind", "ita", "por", "pte", "rus" };
 
         private static string StripLanguageAndVariantTags(string fileNameWithoutExtension, bool stripRedux)
         {
@@ -653,6 +662,7 @@ namespace ProjectZ.InGame.Things
             string lang = Game1.LanguageManager.CurrentLanguageCode;
 
             // All "search" chains in the switch below should end with "SpriteAtlas" as it will always contains an entry.
+            // Note that "por" and "pte" are both "Portuguese" and share textures.
             var atlases = (lang, variation) switch
             {
                 ("chn", false) => new[] { SpriteAtlasChn, SpriteAtlas },
@@ -662,6 +672,7 @@ namespace ProjectZ.InGame.Things
                 ("ind", false) => new[] { SpriteAtlasInd, SpriteAtlas },
                 ("ita", false) => new[] { SpriteAtlasIta, SpriteAtlas },
                 ("por", false) => new[] { SpriteAtlasPor, SpriteAtlas },
+                ("pte", false) => new[] { SpriteAtlasPor, SpriteAtlas },
                 ("rus", false) => new[] { SpriteAtlasRus, SpriteAtlas },
                 (_, false)     => new[] { SpriteAtlas },
 
@@ -672,6 +683,7 @@ namespace ProjectZ.InGame.Things
                 ("ind", true) => new[] { SpriteAtlasIndRedux, SpriteAtlasInd, SpriteAtlas },
                 ("ita", true) => new[] { SpriteAtlasItaRedux, SpriteAtlasIta, SpriteAtlas },
                 ("por", true) => new[] { SpriteAtlasPorRedux, SpriteAtlasPor, SpriteAtlas },
+                ("pte", true) => new[] { SpriteAtlasPorRedux, SpriteAtlasPor, SpriteAtlas },
                 ("rus", true) => new[] { SpriteAtlasRusRedux, SpriteAtlasRus, SpriteAtlas },
                 (_, true)     => new[] { SpriteAtlasRedux, SpriteAtlas }
             };

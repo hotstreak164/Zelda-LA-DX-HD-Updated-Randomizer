@@ -7,7 +7,7 @@ namespace LADXHD_ModMaker
 {
     internal class Config
     {
-        public const string Version = "1.1.1";
+        public const string Version = "1.1.2";
 
         public static string AppName;
         public static string AppPath;
