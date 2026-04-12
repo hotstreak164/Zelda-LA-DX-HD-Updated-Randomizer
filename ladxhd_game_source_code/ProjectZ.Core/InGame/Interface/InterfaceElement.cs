@@ -127,7 +127,7 @@ namespace ProjectZ.InGame.Interface
                 Resources.RoundedCornerEffect.Parameters["radius"].SetValue(CornerRadius);
                 Resources.RoundedCornerEffect.Parameters["width"].SetValue(Size.X);
                 Resources.RoundedCornerEffect.Parameters["height"].SetValue(Size.Y);
-                Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
+                Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiPageManager.MenuScale);
 
                 // draw the background
                 spriteBatch.Draw(Resources.SprWhite, new Rectangle(

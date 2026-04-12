@@ -205,7 +205,7 @@ namespace ProjectZ.InGame.Interface
         {
             base.Draw(spriteBatch, drawPosition, scale, transparency);
 
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
+            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiPageManager.MenuScale);
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Game1.GetMatrix);

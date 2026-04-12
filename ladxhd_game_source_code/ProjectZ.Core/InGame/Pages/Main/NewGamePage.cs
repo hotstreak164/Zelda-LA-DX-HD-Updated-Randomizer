@@ -377,7 +377,7 @@ namespace ProjectZ.InGame.Pages
             Game1.UiPageManager.PopPage();
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 position, float height, float alpha)
         {
             // Always draw the menu even when not showing tooltips.
             base.Draw(spriteBatch, position, height, alpha);

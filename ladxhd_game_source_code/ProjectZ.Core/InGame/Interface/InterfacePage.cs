@@ -23,7 +23,7 @@ namespace ProjectZ.InGame.Interface
             PageLayout?.Update();
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, Vector2 position, int scale, float transparency)
+        public virtual void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float transparency)
         {
             PageLayout?.Draw(spriteBatch, position, scale, transparency);
         }

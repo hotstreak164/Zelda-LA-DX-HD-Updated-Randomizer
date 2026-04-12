@@ -135,7 +135,7 @@ namespace ProjectZ.InGame.Interface
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 drawPosition, float scale, float transparency)
         {
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
+            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiPageManager.MenuScale);
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Game1.GetMatrix);

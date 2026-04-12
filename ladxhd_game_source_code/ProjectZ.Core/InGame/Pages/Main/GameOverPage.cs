@@ -67,7 +67,7 @@ namespace ProjectZ.InGame.Pages
             Game1.ScreenManager.ChangeScreen(Values.ScreenNameMenu);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 position, int scale, float transparency)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float transparency)
         {
             PageLayout?.Draw(spriteBatch, position, scale, transparency);
         }

@@ -163,7 +163,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
             return ": " + Game1.LanguageManager.GetString("settings_controls_touchmovement_0" + (number + 1).ToString(), "error");
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 position, float height, float alpha)
         {
             // Always draw the menu even when not showing tooltips.
             base.Draw(spriteBatch, position, height, alpha);

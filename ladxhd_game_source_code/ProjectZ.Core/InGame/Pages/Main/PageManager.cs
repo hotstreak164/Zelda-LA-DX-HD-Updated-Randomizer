@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,8 +47,19 @@ namespace ProjectZ.InGame.Pages
         private bool _isTransitioning;
         private bool _showTooltipButton;
 
+        private float _menuScale;
+        public float MenuScale => _menuScale;
+
+        private float menu_scale_override;
+
         public void Load(ContentManager content)
         {
+            System.Diagnostics.Debug.WriteLine("ParseMod");
+
+            // If a mod file exists load the values from it.
+            string modFile = Path.Combine(Values.PathLAHDMods, "PageManager.lahdmod");
+            ModFile.Parse(modFile, this);
+
             // On Android we use a minimum height of 240 instead of 256. To keep the size consistent
             // across all versions of the game only subtract 16 pixels as opposed to 32 pixels.
             _width = Values.MinWidth - 32;
@@ -99,13 +111,35 @@ namespace ProjectZ.InGame.Pages
             }
         }
 
+        public void OnResize(int newWidth, int newHeight)
+        {
+            InterfacePage page = GetCurrentPage();
+            if (page is not null)
+            {
+                page.OnResize(newWidth, newHeight);
+            }
+
+
+
+            // If the value was set override the scaling value.
+            if (menu_scale_override > 0)
+                _menuScale = menu_scale_override;
+            else
+                _menuScale = Game1.UiScale;
+
+            System.Diagnostics.Debug.WriteLine(_menuScale);
+            System.Diagnostics.Debug.WriteLine(Game1.UiScale);
+            System.Diagnostics.Debug.WriteLine(menu_scale_override);
+
+
+            var pageWidth  = (Game1.WindowWidth / 2 - _width * _menuScale / 2) / _menuScale * _menuScale;
+            var pageHeight = (Game1.WindowHeight / 2 - _height * _menuScale / 2) / _menuScale * _menuScale;
+
+            _menuPosition = new Vector2(pageWidth, pageHeight);
+        }
+
         public virtual void Update(GameTime gameTime)
         {
-            // not a good place
-            _menuPosition = new Vector2(
-                (Game1.WindowWidth / 2 - _width * Game1.UiScale / 2) / Game1.UiScale * Game1.UiScale,
-                (Game1.WindowHeight / 2 - _height * Game1.UiScale / 2) / Game1.UiScale * Game1.UiScale);
-
             if (_isTransitioning)
             {
                 _transitionCount += Game1.DeltaTime;
@@ -148,11 +182,11 @@ namespace ProjectZ.InGame.Pages
                     _transitionOutAnimation == TransitionAnimation.TopToBottom ? -_transitionDirection :
                     _transitionOutAnimation == TransitionAnimation.BottomToTop ? _transitionDirection : 0;
                 var transitionOffset = new Vector2(
-                    _width * 0.65f * _transitionState * directionX * Game1.UiScale,
-                    _height * 0.65f * _transitionState * directionY * Game1.UiScale);
+                    _width * 0.65f * _transitionState * directionX * _menuScale,
+                    _height * 0.65f * _transitionState * directionY * _menuScale);
 
                 InsideElement[PageStack[_currentPage]].Draw(spriteBatch,
-                    _menuPosition + transitionOffset, Game1.UiScale, 1 - _transitionState);
+                    _menuPosition + transitionOffset, _menuScale, 1 - _transitionState);
             }
 
             if (!_isTransitioning || PageStack.Count <= _nextPage)
@@ -166,11 +200,11 @@ namespace ProjectZ.InGame.Pages
                 _transitionInAnimation == TransitionAnimation.TopToBottom ? _transitionDirection :
                 _transitionInAnimation == TransitionAnimation.BottomToTop ? -_transitionDirection : 0;
             var transitionOffsetNext = new Vector2(
-                _width * 0.65f * (1 - _transitionState) * directionXNext * Game1.UiScale,
-                _height * 0.65f * (1 - _transitionState) * directionYNext * Game1.UiScale);
+                _width * 0.65f * (1 - _transitionState) * directionXNext * _menuScale,
+                _height * 0.65f * (1 - _transitionState) * directionYNext * _menuScale);
 
             InsideElement[PageStack[_nextPage]].Draw(spriteBatch,
-                _menuPosition + transitionOffsetNext, Game1.UiScale, _transitionState);
+                _menuPosition + transitionOffsetNext, _menuScale, _transitionState);
         }
 
         private void AddPage(InterfacePage element)
@@ -287,15 +321,6 @@ namespace ProjectZ.InGame.Pages
         public void ClearStack()
         {
             PageStack.Clear();
-        }
-
-        public void OnResize(int newWidth, int newHeight)
-        {
-            InterfacePage page = GetCurrentPage();
-            if (page is not null)
-            {
-                page.OnResize(newWidth, newHeight);
-            }
         }
 
     }

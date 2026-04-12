@@ -7,12 +7,15 @@ namespace ProjectZ.InGame.Interface
 {
     public static class PageTooltip
     {
+        // Get the scale set by the menu.
+        static float tooltip_scale => Game1.UiPageManager.MenuScale;
+
         // Sprite font texture.
         private static SpriteFont Font => Resources.GameFont;
 
         // Text padding.
-        static float paddingX = 10f * Game1.UiScale;
-        static float paddingY = 10f * Game1.UiScale;
+        static float paddingX = 10f * tooltip_scale;
+        static float paddingY = 10f * tooltip_scale;
 
         // Textbox scale: relative to menu size.
         static float widthScale  = 0.85f;
@@ -24,22 +27,22 @@ namespace ProjectZ.InGame.Interface
         // Textbox border.
         static Color borderColor = Color.White;
         static float borderAlpha = 0.95f;
-        static int borderThickness = Game1.UiScale == 1 ? 1 : 2 * Game1.UiScale;
+        static int borderThickness = tooltip_scale == 1 ? 1 : (int)(2 * tooltip_scale);
 
         public static void Draw(SpriteBatch spriteBatch, string text)
         {
             // Update these as the scale may change.
-            paddingX = 10f * Game1.UiScale;
-            paddingY = 10f * Game1.UiScale;
+            paddingX = 10f * tooltip_scale;
+            paddingY = 10f * tooltip_scale;
             widthScale  = 0.85f;
-            borderThickness = Game1.UiScale == 1 ? 1 : 2 * Game1.UiScale;
+            borderThickness = tooltip_scale == 1 ? 1 : (int)(2 * tooltip_scale);
 
             // Menu size reference.
-            float menuWidth = (Values.MinWidth - 32) * Game1.UiScale;
+            float menuWidth = (Values.MinWidth - 32) * tooltip_scale;
         #if ANDROID
-            float menuHeight = (Values.MinHeight - 16) * Game1.UiScale;
+            float menuHeight = (Values.MinHeight - 16) * tooltip_scale;
         #else
-            float menuHeight = (Values.MinHeight - 32) * Game1.UiScale;
+            float menuHeight = (Values.MinHeight - 32) * tooltip_scale;
         #endif
             // Menu top-left position.
             float menuX = (Game1.WindowWidth - menuWidth) / 2f;
@@ -50,17 +53,17 @@ namespace ProjectZ.InGame.Interface
 
             // Word-wrap text and apply padding.
             var wrappedLines = WrapText(text, boxWidth - paddingX * 2);
-            float lineHeight = GameFS.LineSpacing * Game1.UiScale;
+            float lineHeight = GameFS.LineSpacing * tooltip_scale;
 
             // Different scales make padding look different.
-            float extraPadding = Game1.UiScale == 1 ? paddingY : paddingY * 2;
+            float extraPadding = tooltip_scale == 1 ? paddingY : paddingY * 2;
             float reduceYPadding = 0;
 
             // If Chinese is selected, we need slightly more spacing between the lines.
             if (Game1.LanguageManager.CurrentLanguageCode == "chn")
             {
                 lineHeight *= 1.25f;
-                reduceYPadding = -(4 * Game1.UiScale);
+                reduceYPadding = -(4 * tooltip_scale);
             }
             // Set the height of the text block.
             float textBlockHeight = wrappedLines.Count * lineHeight;
@@ -91,9 +94,9 @@ namespace ProjectZ.InGame.Interface
 
             foreach (var line in wrappedLines)
             {
-                var lineSize = GameFS.MeasureString(line) * Game1.UiScale;
+                var lineSize = GameFS.MeasureString(line) * tooltip_scale;
                 float lineX = boxRect.X + paddingX + (boxRect.Width - paddingX * 2 - lineSize.X) / 2f; // center horizontally with padding
-                GameFS.DrawString(spriteBatch, line, new Vector2(lineX, startY), Color.White, 0f, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0f);
+                GameFS.DrawString(spriteBatch, line, new Vector2(lineX, startY), Color.White, 0f, Vector2.Zero, tooltip_scale, SpriteEffects.None, 0f);
                 startY += lineHeight;
             }
         }
@@ -112,7 +115,7 @@ namespace ProjectZ.InGame.Interface
                 {
                     // Test what the line would look like if added and measure it.
                     string testLine = currentLine + c;
-                    float lineWidth = GameFS.MeasureString(testLine).X * Game1.UiScale;
+                    float lineWidth = GameFS.MeasureString(testLine).X * tooltip_scale;
 
                     // If the line with the added character is too wide for the textbox
                     // add the line to the list and start a new line.
@@ -141,7 +144,7 @@ namespace ProjectZ.InGame.Interface
                 {
                     // Test what the line would look like if added and measure it.
                     string testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
-                    float lineWidth = GameFS.MeasureString(testLine).X * Game1.UiScale;
+                    float lineWidth = GameFS.MeasureString(testLine).X * tooltip_scale;
 
                     // If the line with the added word is too wide for the textbox
                     // add the line to the list and start a new line.

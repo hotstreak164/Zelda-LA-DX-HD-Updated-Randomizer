@@ -140,7 +140,7 @@ namespace ProjectZ.Core.InGame.Pages
                 _showTooltip = false;
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 position, int height, float alpha)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 position, float height, float alpha)
         {
             // Always draw the menu even when not showing tooltips.
             base.Draw(spriteBatch, position, height, alpha);
