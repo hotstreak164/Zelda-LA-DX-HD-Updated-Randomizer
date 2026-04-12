@@ -61,7 +61,6 @@ namespace ProjectZ.InGame.Overlay
         private int _paddingRight = 12;
         private int _paddingV = 5;
         private int _textboxMargin = 16;
-        private int _uiScale = 4;
         private int _dialogBoxWidth = 200;
         private int _dialogBoxHeight;
         private int _currentState;
@@ -90,8 +89,10 @@ namespace ProjectZ.InGame.Overlay
         public UiRectangle TextboxBackground => _textboxBackground;
         public UiRectangle[] TextboxBackgroundChoice => _textboxBackgroundChoice;
 
+        private float _uiScale = 4;
+
         // Mod File Values 
-        int textbox_scale = 0;
+        float textbox_scale = 0;
 
         public TextboxOverlay()
         {
@@ -154,7 +155,7 @@ namespace ProjectZ.InGame.Overlay
                 _choiceWidth = 0;
                 for (var i = 0; i < _choices.Length; i++)
                 {
-                    var width = ((int)GameFS.MeasureString("" + _choices[i] + "").X + 8) * _uiScale;
+                    var width = (int)((GameFS.MeasureString("" + _choices[i] + "").X + 8) * _uiScale);
                     if (_choiceWidth < width)
                         _choiceWidth = width;
                 }
@@ -172,9 +173,10 @@ namespace ProjectZ.InGame.Overlay
                     _textboxBackgroundChoice[i].BackgroundColor = Color.Lerp(Values.TextboxBackgroundColor, Values.TextboxFontColor, _textboxChoice[i].SelectionPercentage) * 0.85f * _currentOpacity * _textboxChoice[i].Percentage;
                     _textboxBackgroundChoice[i].BlurColor = Values.TextboxBlurColor * _currentOpacity * _textboxChoice[i].Percentage;
                     _textboxBackgroundChoice[i].Rectangle = new Rectangle(
-                        _dialogBoxRectangle.X + _dialogBoxRectangle.Width - _choiceWidth * (_choices.Length - i) - (3 * _uiScale) * (_choices.Length - 1 - i) - padding - _uiScale,
-                        _dialogBoxRectangle.Y + choicePositionY * _uiScale + (int)_textboxOffsetY - padding + (int)(Math.Sin((1 - _textboxChoice[i].Percentage) * Math.PI / 2) * 4 * _uiScale),
-                        _choiceWidth + 2 * padding, (Resources.GameFontHeight + 4) * _uiScale + 2 * padding);
+                        (int)(_dialogBoxRectangle.X + _dialogBoxRectangle.Width - _choiceWidth * (_choices.Length - i) - (3 * _uiScale) * (_choices.Length - 1 - i) - padding - _uiScale),
+                        (int)(_dialogBoxRectangle.Y + choicePositionY * _uiScale + (int)_textboxOffsetY - padding + (int)(Math.Sin((1 - _textboxChoice[i].Percentage) * Math.PI / 2) * 4 * _uiScale)),
+                        _choiceWidth + 2 * padding, 
+                        (int)((Resources.GameFontHeight + 4) * _uiScale + 2 * padding));
 
                 }
             }
@@ -459,14 +461,14 @@ namespace ProjectZ.InGame.Overlay
             _dialogBoxHeight = _letterSize.Y * MaxLines + _paddingV * 2;
 
             _dialogBoxRectangle = new Rectangle(
-                Game1.WindowWidth / 2 - _dialogBoxWidth * _uiScale / 2,
-                Game1.WindowHeight - (_uiScale * _dialogBoxHeight) - _uiScale * _textboxMargin, _dialogBoxWidth * _uiScale, _dialogBoxHeight * _uiScale);
+                (int)(Game1.WindowWidth / 2 - _dialogBoxWidth * _uiScale / 2),
+                (int)(Game1.WindowHeight - (_uiScale * _dialogBoxHeight) - _uiScale * _textboxMargin), (int)(_dialogBoxWidth * _uiScale), (int)(_dialogBoxHeight * _uiScale));
 
             DialogBoxTextBox = new Rectangle(
-                _dialogBoxRectangle.X + _paddingLeft * _uiScale,
-                _dialogBoxRectangle.Y + _paddingV * _uiScale,
-                _dialogBoxRectangle.Width - (_paddingLeft + _paddingRight) * _uiScale,
-                _dialogBoxRectangle.Height - (_paddingV * 2) * _uiScale);
+                (int)(_dialogBoxRectangle.X + _paddingLeft * _uiScale),
+                (int)(_dialogBoxRectangle.Y + _paddingV * _uiScale),
+                (int)(_dialogBoxRectangle.Width - (_paddingLeft + _paddingRight) * _uiScale),
+                (int)(_dialogBoxRectangle.Height - (_paddingV * 2) * _uiScale));
 
             _textboxBackground.Rectangle = _dialogBoxRectangle;
         }

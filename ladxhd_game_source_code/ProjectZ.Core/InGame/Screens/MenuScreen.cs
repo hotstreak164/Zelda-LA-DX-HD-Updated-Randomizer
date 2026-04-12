@@ -17,7 +17,6 @@ namespace ProjectZ.InGame.Screens
         private Texture2D _sprBackground;
         private Rectangle _menuRectangle;
 
-        private int _scale = 3;
         private int _menuWidth;
         private int _menuHeight;
         private int _backgroundWidth;
@@ -27,6 +26,8 @@ namespace ProjectZ.InGame.Screens
         private int _topBar;
         private int _bottomBar;
         private int _posX;
+
+        static float _scale => Game1.UiPageManager.MenuScale;
 
         public MenuScreen(string screenId) : base(screenId) { }
 
@@ -73,26 +74,21 @@ namespace ProjectZ.InGame.Screens
 
         public override void Update(GameTime gameTime)
         {
-            _scale = Game1.UiScale;
-
-            if (_scale <= 0)
-                _scale = 1;
-
-            _backgroundWidth = (int)Math.Ceiling(Game1.WindowWidth / (double)(32 * _scale) + 1) * 32 * _scale;
+            _backgroundWidth = (int)(Math.Ceiling(Game1.WindowWidth / (double)(32 * _scale) + 1) * 32 * _scale);
 
             _menuRectangle = new Rectangle(
-                Game1.WindowWidth / 2 - _menuWidth * _scale / 2,
-                Game1.WindowHeight / 2 - _menuHeight * _scale / 2, _menuWidth * _scale, _menuHeight * _scale);
+                (int)(Game1.WindowWidth / 2 - _menuWidth * _scale / 2),
+                (int)(Game1.WindowHeight / 2 - _menuHeight * _scale / 2), (int)(_menuWidth * _scale), (int)(_menuHeight * _scale));
 
-            _menuRectangle.X = _menuRectangle.X / _scale * _scale;
-            _menuRectangle.Y = _menuRectangle.Y / _scale * _scale;
+            _menuRectangle.X = (int)(_menuRectangle.X / _scale * _scale);
+            _menuRectangle.Y = (int)(_menuRectangle.Y / _scale * _scale);
 
             _topBar = (int)Math.Ceiling((Game1.WindowHeight / 2 - _menuHeight * _scale / 2) / (float)_scale / _sprBackground.Height) * _sprBackground.Height;
             _bottomBar = (int)Math.Ceiling((Game1.WindowHeight / 2 - _menuHeight * _scale / 2) / (float)_scale / _sprBackground.Height) * _sprBackground.Height;
 
-            _posX = (int)Math.Ceiling(_menuRectangle.X / (float)_scale / 32) * 32 - _menuRectangle.X / _scale;
+            _posX = (int)(Math.Ceiling(_menuRectangle.X / (float)_scale / 32) * 32 - _menuRectangle.X / _scale);
 
-            _leftBar = (int)Math.Ceiling((Game1.WindowWidth / 2 - _menuWidth * _scale / 2) / (float)_scale / _sprBackground.Width) * _sprBackground.Width;
+            _leftBar = (int)(Math.Ceiling((Game1.WindowWidth / 2 - _menuWidth * _scale / 2) / (float)_scale / _sprBackground.Width) * _sprBackground.Width);
             _rightBar = _leftBar;
         }
 
@@ -160,20 +156,20 @@ namespace ProjectZ.InGame.Screens
 
             // top
             spriteBatch.Draw(_sprBackground, new Rectangle(
-                    -_posX * _scale, _menuRectangle.Y - _topBar * _scale, _backgroundWidth, _topBar * _scale),
-                new Rectangle(0, 0, _backgroundWidth / _scale, _topBar), Color.White);
+                    (int)(-_posX * _scale), (int)(_menuRectangle.Y - _topBar * _scale), _backgroundWidth, (int)(_topBar * _scale)),
+                new Rectangle(0, 0, (int)(_backgroundWidth / _scale), _topBar), Color.White);
             // bottom
             spriteBatch.Draw(_sprBackground, new Rectangle(
-                    -_posX * _scale, _menuRectangle.Bottom, _backgroundWidth, _bottomBar * _scale),
-                new Rectangle(0, 0, _backgroundWidth / _scale, _bottomBar), Color.White);
+                    (int)(-_posX * _scale), _menuRectangle.Bottom, _backgroundWidth, (int)(_bottomBar * _scale)),
+                new Rectangle(0, 0, (int)(_backgroundWidth / _scale), _bottomBar), Color.White);
 
             // left
             spriteBatch.Draw(_sprBackground, new Rectangle(
-                    _menuRectangle.X - _leftBar * _scale, _menuRectangle.Y, _leftBar * _scale, _menuHeight * _scale),
+                    (int)(_menuRectangle.X - _leftBar * _scale), _menuRectangle.Y, (int)(_leftBar * _scale), (int)(_menuHeight * _scale)),
                 new Rectangle(0, 0, _leftBar, _menuHeight), Color.White);
             // right
             spriteBatch.Draw(_sprBackground, new Rectangle(
-                    _menuRectangle.Right, _menuRectangle.Y, _rightBar * _scale, _menuHeight * _scale),
+                    _menuRectangle.Right, _menuRectangle.Y, (int)(_rightBar * _scale), (int)(_menuHeight * _scale)),
                 new Rectangle(0, 0, _rightBar, _menuHeight), Color.White);
 
             spriteBatch.End();

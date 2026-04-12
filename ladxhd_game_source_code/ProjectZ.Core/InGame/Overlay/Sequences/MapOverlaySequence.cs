@@ -9,6 +9,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
     class MapOverlaySequence : GameSequence
     {
         private MapOverlay _mapOverlay;
+        private float _scale => Game1.GameManager.InGameOverlay.Scale;
 
         public MapOverlaySequence()
         {
@@ -57,8 +58,8 @@ namespace ProjectZ.InGame.Overlay.Sequences
             var height = _sequenceHeight;
 
             _mapOverlay.Draw(spriteBatch, new Rectangle(
-                Game1.WindowWidth / 2 - width * Game1.UiScale / 2,
-                Game1.WindowHeight / 2 - height * Game1.UiScale / 2,
+                (int)(Game1.WindowWidth / 2 - width * _scale / 2),
+                (int)(Game1.WindowHeight / 2 - height * _scale / 2),
                 width, height),
                 Color.White * transparency, Game1.GetMatrix);
 
@@ -74,7 +75,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
 
             var inputHelper = selectStr + ": " + Game1.LanguageManager.GetString("map_overlay_close", "error");
 
-            GameFS.DrawString(spriteBatch, inputHelper, new Vector2(8 * Game1.UiScale, Game1.WindowHeight - 16 * Game1.UiScale), Color.White * transparency, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
+            GameFS.DrawString(spriteBatch, inputHelper, new Vector2(8 * _scale, Game1.WindowHeight - 16 * _scale), Color.White * transparency, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
 
             // When navigating the map, get the currently selected map position.
             var nodeSelected = _mapOverlay.SelectionPosition;
@@ -102,10 +103,10 @@ namespace ProjectZ.InGame.Overlay.Sequences
                 // Set up the string to display.
                 var teleString = teleStart + ": " + Game1.LanguageManager.GetString("overlay_teleport", "error");
                 var teleTextSize = GameFS.MeasureString(teleString);
-                var teleDrawPos = new Vector2(Game1.WindowWidth - (teleTextSize.X + 6) * Game1.UiScale, Game1.WindowHeight - 16 * Game1.UiScale);
+                var teleDrawPos = new Vector2(Game1.WindowWidth - (teleTextSize.X + 6) * _scale, Game1.WindowHeight - 16 * _scale);
 
                 // Draw the teleport button and label.
-                GameFS.DrawString(spriteBatch, teleString, teleDrawPos, Color.White, 0, Vector2.Zero, Game1.UiScale, SpriteEffects.None, 0);
+                GameFS.DrawString(spriteBatch, teleString, teleDrawPos, Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
             }
         }
     }
