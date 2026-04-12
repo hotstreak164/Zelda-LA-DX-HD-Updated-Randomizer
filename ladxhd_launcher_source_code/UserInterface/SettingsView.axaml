@@ -143,13 +143,14 @@
                                 <ComboBox x:Name="c_CurrentLanguage" Canvas.Left="0" Canvas.Top="0" SelectedIndex="0" Width="120">
                                     <ComboBoxItem Content="English" />
                                     <ComboBoxItem Content="Chinese" />
-                                    <ComboBoxItem Content="French" />
                                     <ComboBoxItem Content="German" />
+                                    <ComboBoxItem Content="Spanish" />
+                                    <ComboBoxItem Content="French" />
                                     <ComboBoxItem Content="Indonesia" />
                                     <ComboBoxItem Content="Italian" />
-                                    <ComboBoxItem Content="Portugeuse" />
+                                    <ComboBoxItem Content="Portugeuse (Brazil)" />
+                                    <ComboBoxItem Content="Portugeuse (Portugal)" />
                                     <ComboBoxItem Content="Russian" />
-                                    <ComboBoxItem Content="Spanish" />
                                 </ComboBox>
                                 <TextBlock Canvas.Left="126" Canvas.Top="7" Text="Language" Foreground="White" VerticalAlignment="Center"
                                            ToolTip.Tip="Changes the current language."/>
@@ -249,7 +250,7 @@
                                 <NumericUpDown x:Name="n_MoveSpeedAdded" Canvas.Left="232" Canvas.Top="0" Value="0" Minimum="0" Maximum="1.00" Increment="0.01" FormatString="0.00" Width="120" />
                                 <TextBlock Canvas.Left="358" Canvas.Top="7" Text="Move Speed (x)" Foreground="White"
                                            ToolTip.Tip="Increases movement speed by a percentage, up to 100% movement speed. Affects all forms of movement: walking, climbing, swimming, etc."/>
-                                <NumericUpDown x:Name="n_DamageFactor" Canvas.Left="0" Canvas.Top="36" Value="0" Minimum="0" Maximum="100" Increment="1" Width="120" />
+                                <NumericUpDown x:Name="n_DamageFactor" Canvas.Left="0" Canvas.Top="36" Value="0" Minimum="0.00" Maximum="10.00" Increment="0.25" Width="120" ValueChanged="DamageFactorChanged" />
                                 <TextBlock Canvas.Left="126" Canvas.Top="43" Text="Dmg Taken (x)" Foreground="White"
                                            ToolTip.Tip="Multiplies the amount of damage taken from all sources. For example, if set to 4 and an attack would deal a half heart, it would instead deal 2 full hearts of damage."/>
                                 <NumericUpDown x:Name="n_DmgCooldown" Canvas.Left="232" Canvas.Top="36" Value="0" Minimum="0" Maximum="100" Increment="1" Width="120" />

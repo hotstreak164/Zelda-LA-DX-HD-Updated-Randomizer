@@ -32,6 +32,15 @@ public partial class SettingsView : UserControl
             x_ModernCamera.IsChecked = true;
     }
 
+    private void DamageFactorChanged(object sender, NumericUpDownValueChangedEventArgs e)
+    {
+        // Translate the damage factor to what the game expects.
+        if (n_DamageFactor.Value == null) return;
+        decimal rounded = Math.Round(n_DamageFactor.Value.Value * 4) / 4;
+        if (n_DamageFactor.Value != rounded)
+            n_DamageFactor.Value = rounded;
+    }
+
     public void LoadValues(int maxGameScale = 21)
     {
         // Suppress the sound effects so the checkbox sound doesn't fire a bunch of times.
@@ -110,7 +119,7 @@ public partial class SettingsView : UserControl
         // Modifier Settings
         n_EnemyBonusHP.Value               = (decimal)GameSettings.EnemyBonusHP;
         n_MoveSpeedAdded.Value             = (decimal)GameSettings.MoveSpeedAdded;
-        n_DamageFactor.Value               = (decimal)GameSettings.DamageFactor;
+        n_DamageFactor.Value               = (decimal)GameSettings.DamageFactor / 4;
         n_DmgCooldown.Value                = (decimal)GameSettings.DmgCooldown;
         x_NoHeartDrops.IsChecked           = GameSettings.NoHeartDrops;
         x_NoDamageLaunch.IsChecked         = GameSettings.NoDamageLaunch;
@@ -203,7 +212,7 @@ public partial class SettingsView : UserControl
         // Modifier Settings
         GameSettings.EnemyBonusHP       = (int)(n_EnemyBonusHP.Value ?? 0);
         GameSettings.MoveSpeedAdded     = (float)(n_MoveSpeedAdded.Value ?? 0);
-        GameSettings.DamageFactor       = (int)(n_DamageFactor.Value ?? 0);
+        GameSettings.DamageFactor       = (int)(n_DamageFactor.Value * 4 ?? 0);
         GameSettings.DmgCooldown        = (int)(n_DmgCooldown.Value ?? 0);
         GameSettings.NoHeartDrops       = x_NoHeartDrops.IsChecked == true;
         GameSettings.NoDamageLaunch     = x_NoDamageLaunch.IsChecked == true;
