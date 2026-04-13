@@ -320,6 +320,8 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
                 if (_aiDamageState.CurrentLives <= 0)
                 {
+                    _body.Velocity = Vector3.Zero;
+                    _body.VelocityTarget = Vector2.Zero;
                     _damageField.IsActive = false;
                     _hitComponent.IsActive = false;
                     _pushComponent.IsActive = false;
