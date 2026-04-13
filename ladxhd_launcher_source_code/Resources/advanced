@@ -4,7 +4,7 @@
 // Various options to modify the base game in some way.
 
 //: Game1
-// Forces "Editor Mode" giving access to the map editor and developer/debugging option. Usually accessed via command line option "editor" but can be enabled here too.
+// Forces "Editor Mode" giving access to the map editor and developer/debugging option. Usually accessed via command line option "editor" but can be enabled here too. Press "Escape" in-game to open editor.
 // Default: false
 editor_mode = false
 
@@ -15,13 +15,23 @@ max_game_scale = 20
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-[Game: Textbox Overlay]
-// Modifies the scaling size of texboxes.
+[Game: User Interface]
+// This can force the scaling value of the menus and various UI elements. It is highly recommended to use integers! 
+
+//: PageManager
+// Menu scaling factor. Use a value of "0" to use the game value. Decimal values (like 2.50) are allowed but not recommended.
+// Default: 0.00
+menu_scale_override = 0.00
+
+//: OverlayManager
+// Inventory scaling factor. Use a value of "0" to use the game value. Decimal values (like 2.50) are allowed but not recommended.
+// Default: 0.00
+inventory_scale_override = 0.00
 
 //: TextboxOverlay
-// The scaling value used for textboxes. Use a value of "0" to use game default. This value should probably not exceed 6-10 on screens even up to 3840x2160 resolution.
-// Default: 0
-textbox_scale = 0
+// The scaling value used for textboxes. Use a value of "0" to use game default. This value should probably not exceed 6-10 on screens even up to 3840x2160 resolution. Decimal values (like 2.50) are allowed but not recommended.
+// Default: 0.00
+textbox_scale = 0.00
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +82,7 @@ custom_sicon_scale = 0
 // Modifies the transitioning speed of the Classic Camera when recentering. Slower values such as 0.50 more closely mimic the way the original Game Boy camera pans to a new screen.
 
 //: Camera
-// Percentage Based: 1.00 = 100% / 0.75 = 75% / 0.50 = 50% / etc.
+// The speed at which the screen transitions from one field to another. Percentage Based: 1.00 = 100% / 0.75 = 75% / 0.50 = 50% / etc.
 // Default: 1.00
 classic_transition_speed = 1.00
 
@@ -82,9 +92,13 @@ classic_transition_speed = 1.00
 // Modifies various properties for Link.
 
 //: ObjLink
-// Enables sword beam on level 1 sword and/or always shoot sword beams no matter current heart count.
+// Enables sword beam on level 1 sword. Damage is scaled with current sword. 
 // Default: false / false
 swordbeam_level1 = false
+
+//: ObjLink
+// Always shoot sword beams no matter the current heart count.
+// Default: false / false
 swordbeam_always = false
 
 //: ObjLink
@@ -111,6 +125,11 @@ light_grn = 255
 light_blu = 255
 light_bright = 0.70
 light_size = 46
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Damage Shader]
+// Modifies the colors and behaviors of the damage shader (the flicker when Link or enemies take damage). Also affects Flame Fountain colors and various other flickering effects.
 
 //: ObjLink
 // Damage Shader: Set's the threshold for the darkest pixels (mark0) and the lightest pixels (mark1). If the threshold meets mark0, then "color1" is returned. If it fails and meets the threshold of mark1, then "color2" is returned. If there are any pixels lighter than that, then "color3" is returned. Note that this is used for ALL flashing effects.
@@ -221,7 +240,7 @@ item_interact = false
 
 //: ObjBomb
 // Interact with enemy bombs. Makes above items also interact with enemy bombs. 
-// Requires the option from "Modifiers > Extra Sword Interactions > Ricochet Items" for sword interactions.
+// Requires the option "Knockback Bombs" option to be enabled from "Sword Modifiers" for sword knockback.
 // Default: false
 enemy_interact = false
 
@@ -517,7 +536,7 @@ light_size = 50
 // Modifies properties of the flame fountain. Useful for graphics mods.
 
 //: EnemyFlameFountain
-// Enables or disables the sprite shader to make the fire "blink" orange.
+// Enables or disables the sprite shader to make the fire "blink" orange. Uses values set in "Damage Shader" options.
 // Default: true
 sprite_shader = true
 

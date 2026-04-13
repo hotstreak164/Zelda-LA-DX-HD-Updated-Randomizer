@@ -114,8 +114,10 @@ public static class AdvancedSettings
             { "editor_mode",                    "Editor Mode"                       },
             { "max_game_scale",                 "Maximum Game Scale"                },
 
-            // Game: Textbox Overlay
-            { "textbox_scale",                  "Textbox Scale"                     },
+            // Game: User Interface
+            { "menu_scale_override",            "Menus Scale Override"              },
+            { "inventory_scale_override",       "Inventory Scale Override"          },
+            { "textbox_scale",                  "Textbox Scale Override"            },
 
             // Game: HUD Overlay
             { "custom_items_show",              "Show Equipped Items"               },
@@ -123,15 +125,15 @@ public static class AdvancedSettings
             { "custom_items_offsetx",           "Equipped Items Offset X"           },
             { "custom_items_offsety",           "Equipped Items Offset Y"           },
             { "custom_heart_show",              "Show Hearts"                       },
-            { "custom_heart_scale",             "Hearts Scale"                      },
+            { "custom_heart_scale",             "Hearts Scale Override"             },
             { "custom_heart_offsetx",           "Hearts Offset X"                   },
             { "custom_heart_offsety",           "Hearts Offset Y"                   },
             { "custom_rupee_show",              "Show Rupees"                       },
-            { "custom_rupee_scale",             "Rupees Scale"                      },
+            { "custom_rupee_scale",             "Rupees Scale Override"             },
             { "custom_rupee_offsetx",           "Rupees Offset X"                   },
             { "custom_rupee_offsety",           "Rupees Offset Y"                   },
             { "custom_keys_show",               "Show Small Keys"                   },
-            { "custom_keys_scale",              "Small Keys Scale"                  },
+            { "custom_keys_scale",              "Small Keys Scale Override"         },
             { "custom_keys_offsetx",            "Small Keys Offset X"               },
             { "custom_keys_offsety",            "Small Keys Offset Y"               },
             { "custom_sicon_show",              "Show Save Icon"                    },
