@@ -11,8 +11,10 @@
         MaxWidth="550"
         MinHeight="400"
         MaxHeight="768"
+		CanMaximize="False"
         WindowStartupLocation="CenterScreen"
         Icon="avares://Launcher/Resources/icon.ico">
+
     <Panel>
         <Image Source="avares://Launcher/Resources/background.png"
                Stretch="Fill" />
