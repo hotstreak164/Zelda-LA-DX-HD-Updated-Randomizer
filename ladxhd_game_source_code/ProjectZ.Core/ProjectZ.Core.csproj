@@ -28,6 +28,7 @@
     <PackageReference Include="MonoGame.Extended" Version="5.4.0" />
     <PackageReference Include="NativeFileDialogSharp" Version="0.6.0-alpha"
       Condition="'$(TargetFramework)' != 'net8.0-android'"/>
+    <PackageReference Include="NLayer" Version="1.16.0" />
   </ItemGroup>
 
   <!-- Windows DirectX: Forms is needed only to set the icon.  -->

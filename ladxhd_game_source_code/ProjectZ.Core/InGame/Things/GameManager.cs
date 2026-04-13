@@ -12,6 +12,7 @@ using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Overlay;
 using ProjectZ.InGame.Pages;
 using ProjectZ.InGame.SaveLoad;
+using ProjectZ.Core.InGame.Things;
 
 namespace ProjectZ.InGame.Things
 {
@@ -194,6 +195,9 @@ namespace ProjectZ.InGame.Things
         private int _curEffectVolume = GameSettings.EffectVolume;
         private bool _lastStateSet;
         private bool _muteInactive;
+
+        // The MP3 player allows playing custom music.
+        Mp3MusicPlayer _mp3Player = new Mp3MusicPlayer();
 
         // Quick reference to "ObjLink" in MapManager.
         private ObjLink Link => MapManager.ObjLink;
@@ -996,6 +1000,12 @@ namespace ProjectZ.InGame.Things
                 PlayMusic(startPlaying);
         }
 
+        private string GetModMusicPath(int trackId)
+        {
+            var path = Path.Combine(Values.PathMusicMods, $"{trackId}.mp3");
+            return File.Exists(path) ? path : null;
+        }
+
         public void PlayMusic(bool startPlaying = true)
         {
             for (var i = MusicChannels - 1; i >= 0; i--)
@@ -1003,16 +1013,27 @@ namespace ProjectZ.InGame.Things
                 if (_musicArray[i] >= 0)
                 {
                     var songNumber = (byte)_musicArray[i];
+                    var mp3Path = GetModMusicPath(songNumber);
+
+                    if (mp3Path != null)
+                    {
+                        Game1.GbsPlayer.Stop();
+                        if (startPlaying)
+                        {
+                            _mp3Player.SetVolume(_muteInactive ? 0f : GameSettings.MusicVolume / 100.0f);
+                            _mp3Player.Play(mp3Path, songNumber);
+                        }
+                        return;
+                    }
+                    _mp3Player.Stop();
                     if (Game1.GbsPlayer.CurrentTrack != songNumber)
                         Game1.GbsPlayer.StartTrack(songNumber);
-
                     if (startPlaying)
                         Game1.GbsPlayer.Play();
-
                     return;
                 }
             }
-            // no music is playing?
+            _mp3Player.Stop();
             Game1.GbsPlayer.Stop();
         }
 
@@ -1020,7 +1041,7 @@ namespace ProjectZ.InGame.Things
         {
             if (reset)
                 ResetMusic();
-
+            _mp3Player.Stop();
             Game1.GbsPlayer.Stop();
         }
 
@@ -1071,14 +1092,17 @@ namespace ProjectZ.InGame.Things
             // We don't need this to run every single game tick.
             if (IsActive != _lastStateSet)
             {
-                if (!IsActive & GameSettings.MuteInactive)
+                if (!IsActive && GameSettings.MuteInactive)
                 {
                     Game1.GbsPlayer.SetVolume(0f);
+                    _mp3Player.SetVolume(0f);
                     _muteInactive = true;
                 }
                 else
                 {
-                    Game1.GbsPlayer.SetVolume(GameSettings.MusicVolume / 100.0f);
+                    var vol = GameSettings.MusicVolume / 100.0f;
+                    Game1.GbsPlayer.SetVolume(vol);
+                    _mp3Player.SetVolume(vol);
                     _muteInactive = false;
                 }
             }
@@ -1110,9 +1134,11 @@ namespace ProjectZ.InGame.Things
                 if (soundEffect.Value.Instance.State == SoundState.Stopped)
                     CurrentSoundEffects.Remove(soundEffect.Key);
             }
-
             if (lowerVolume)
+            {
                 Game1.GbsPlayer.SetVolumeMultiplier(0.35f);
+                _mp3Player.SetVolumeMultiplier(0.35f);
+            }
         }
 
         public void PauseSoundEffects()

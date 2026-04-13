@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using static LADXHD_Patcher.Config;
 
 namespace LADXHD_Patcher
 {
@@ -34,7 +33,6 @@ namespace LADXHD_Patcher
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
-                CreateNoWindow = true
             };
 
             // Start a process, report any exceptions, and close out the process.

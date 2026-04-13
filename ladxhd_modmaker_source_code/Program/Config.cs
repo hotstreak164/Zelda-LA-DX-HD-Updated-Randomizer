@@ -7,7 +7,7 @@ namespace LADXHD_ModMaker
 {
     internal class Config
     {
-        public const string Version = "1.1.2";
+        public const string Version = "1.2.0";
 
         public static string AppName;
         public static string AppPath;
@@ -19,15 +19,18 @@ namespace LADXHD_ModMaker
         public static string GamePath;
         public static string DataPath;
         public static string BackupPath;
+
         public static string ModsPath;
-        public static string GraphicsPath;
-        public static string LahdmodPath;
+        public static string LAHDModPath;
+        public static string GraphicsMods;
+        public static string MusicMods;
 
         public static string ImagePath;
         public static string OutputPath;
         public static string TempPath;
         public static string PatchesPath;
-        public static string OutLahdmodPath;
+        public static string OutLAHDModPath;
+        public static string OutMusicMods;
 
         public static bool PatchMode;
 
@@ -53,8 +56,9 @@ namespace LADXHD_ModMaker
             DataPath = Path.Combine(GamePath, "Data");
             BackupPath = Path.Combine(DataPath, "Backup");
             ModsPath = Path.Combine(GamePath, "Mods");
-            GraphicsPath = Path.Combine(ModsPath, "Graphics");
-            LahdmodPath = Path.Combine(ModsPath, "LAHDMods");
+            LAHDModPath = Path.Combine(ModsPath, "LAHDMods");
+            GraphicsMods = Path.Combine(ModsPath, "Graphics");
+            MusicMods = Path.Combine(ModsPath, "Music");
         }
 
         public static void UpdateOutputPaths(string output)
@@ -63,7 +67,8 @@ namespace LADXHD_ModMaker
             OutputPath = Path.Combine(output, "~ModOutput");
             TempPath = Path.Combine(OutputPath, "~temp");
             PatchesPath = Path.Combine(OutputPath, "Graphics");
-            OutLahdmodPath = Path.Combine(OutputPath, "LAHDMods");
+            OutLAHDModPath = Path.Combine(OutputPath, "LAHDMods");
+            OutMusicMods = Path.Combine(OutputPath, "Music");
         }
 
         public static void UpdateOutputPaths_ApplyPatches()
@@ -72,7 +77,8 @@ namespace LADXHD_ModMaker
             OutputPath = Path.Combine(GamePath, "Mods", "Graphics");
             TempPath = Path.Combine(BaseFolder, "~temp");
             PatchesPath = Path.Combine(BaseFolder, "Graphics");
-            OutLahdmodPath = Path.Combine(BaseFolder, "LAHDMods");
+            OutLAHDModPath = Path.Combine(BaseFolder, "LAHDMods");
+            OutMusicMods = Path.Combine(BaseFolder, "Music");
         }
     }
 }

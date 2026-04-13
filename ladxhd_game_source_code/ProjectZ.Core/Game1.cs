@@ -292,6 +292,14 @@ namespace ProjectZ
 
         protected override void LoadContent()
         {
+            // Make sure the mods folders exist. This is done for Android in AndroidActivity.
+        #if !ANDROID
+            Directory.CreateDirectory(Values.PathMods);
+            Directory.CreateDirectory(Values.PathLAHDMods);
+            Directory.CreateDirectory(Values.PathGraphicsMods);
+            Directory.CreateDirectory(Values.PathMusicMods);
+        #endif
+
             // Hook device reset function & create a new SpriteBatch to draw textures.
             GraphicsDevice.DeviceReset += OnDeviceReset;
             SpriteBatch = new SpriteBatch(GraphicsDevice);

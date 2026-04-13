@@ -153,11 +153,11 @@ namespace LADXHD_ModMaker
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        LAHDMODS: COPIES LAHDMODS FROM ONE FOLDER TO ANOTHER.
+        LAHDMODS / MUSIC: COPIES LAHDMODS AND MUSIC FROM ONE FOLDER TO ANOTHER.
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        private static void CopyLahdmodFiles(string sourcePath, string destinationPath)
+        private static void CopyModFiles(string sourcePath, string destinationPath)
         {
             // Create the destination if it doesn't exist.
             destinationPath.CreatePath(false);
@@ -260,7 +260,7 @@ namespace LADXHD_ModMaker
             Config.PatchesPath.CreatePath(true);
 
             // Get all files found in the base folder recursively.
-            var fileCollection = Config.GraphicsPath.GetFiles("*", true);
+            var fileCollection = Config.GraphicsMods.GetFiles("*", true);
 
             // Get a count of how many files there are.
             TotalCount = fileCollection.Count;
@@ -279,7 +279,7 @@ namespace LADXHD_ModMaker
                 string originalName = modFileItem.Name;
 
                 // Use the relative path to the file to get the finalized output path.
-                string relative = modFileItem.DirectoryName.Replace(Config.GraphicsPath,"").TrimStart('\\');
+                string relative = modFileItem.DirectoryName.Replace(Config.GraphicsMods,"").TrimStart('\\');
                 string destination = Path.Combine(Config.PatchesPath, relative).CreatePath();
 
                 // If the file is not an "original" file from v1.0.0 then find the original it was spawned from.
@@ -300,8 +300,9 @@ namespace LADXHD_ModMaker
                 string outputPatch = Path.Combine(destination, modFileItem.Name + ".xdelta");
                 XDelta3.Execute(Operation.Create, originalFileItem.FullName, modFileItem.FullName, outputPatch);
             }
-            // Copy any LAHDMOD files found in the mods folder.
-            CopyLahdmodFiles(Config.LahdmodPath, Config.OutLahdmodPath);
+            // Copy any LAHDMOD or music files found in the mods folder.
+            CopyModFiles(Config.LAHDModPath, Config.OutLAHDModPath);
+            CopyModFiles(Config.MusicMods, Config.OutMusicMods);
 
             // Try to copy over the image file.
             InstallImageFile();
@@ -387,8 +388,9 @@ namespace LADXHD_ModMaker
                 string patchedFile = Path.Combine(destination, patchFileItem.BaseName);
                 XDelta3.Execute(Operation.Apply, fileToPatchItem.FullName, patchFileItem.FullName, patchedFile);
             }
-            // Copy any LAHDMOD files found in the mods folder.
-            CopyLahdmodFiles(Config.OutLahdmodPath, Config.LahdmodPath);
+            // Copy any LAHDMOD or music files found in the mods folder.
+            CopyModFiles(Config.OutLAHDModPath, Config.LAHDModPath);
+            CopyModFiles(Config.OutMusicMods, Config.MusicMods);
 
             // Remove the temporary folder.
             Config.TempPath.RemovePath();

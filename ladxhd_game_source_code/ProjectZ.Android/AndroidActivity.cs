@@ -49,6 +49,7 @@ namespace ProjectZ.Android
             System.IO.Directory.CreateDirectory(Values.PathMods);
             System.IO.Directory.CreateDirectory(Values.PathLAHDMods);
             System.IO.Directory.CreateDirectory(Values.PathGraphicsMods);
+            System.IO.Directory.CreateDirectory(Values.PathMusicMods);
             System.IO.Directory.CreateDirectory(Values.PathSaveFolder);
 
             // Get real display size for proper fullscreen rendering.

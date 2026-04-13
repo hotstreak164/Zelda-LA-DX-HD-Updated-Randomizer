@@ -85,32 +85,6 @@ namespace LADXHD_Patcher
             return null;
         }
 
-        public static void RenamePath(this string Source, string Destination, bool Overwrite = false)
-        {
-            // If the values are null or empty then return false.
-            if (string.IsNullOrWhiteSpace(Source) || string.IsNullOrWhiteSpace(Destination))
-                return;
-
-            // Get whether it's a file or a folder and run the proper rename command.
-            var attributes = File.GetAttributes(Source);
-
-            // If it's a directory (folder).
-            if ((attributes & FileAttributes.Directory) != 0)
-            {
-                // If the destination exists and we wan't to overwrite the contents.
-                if (Overwrite && Destination.TestPath(true))
-                    Destination.RemovePath();
-                else
-                    return;
-
-                // Move the new name to the destination.
-                Directory.Move(Source, Destination);
-            }
-            // Move the file to the new destination.
-            else
-                File.Move(Source, Destination);
-        }
-
         public static void RemovePath(this string inputPath)
         {
             // If the path is empty then it does not exist.
@@ -162,30 +136,36 @@ namespace LADXHD_Patcher
             }
         }
 
-        public static void MovePath(this string SourcePath, string DestinationPath, bool Overwrite)
+        public static void MovePath(this string Source, string Destination, bool Overwrite = false)
         {
-            // If the path is empty then it does not exist.
-            if (SourcePath == null || SourcePath == "")
+            // If the values are null or empty then return false.
+            if (string.IsNullOrWhiteSpace(Source) || string.IsNullOrWhiteSpace(Destination))
                 return;
 
-            // The path exists so let's try to move it.
-            if (SourcePath.TestPath())
+            // Get whether it's a file or a folder and run the proper rename command.
+            var attributes = File.GetAttributes(Source);
+
+            // If it's a directory (folder).
+            if ((attributes & FileAttributes.Directory) != 0)
             {
-                // The destination already exists so either remove it or exit.
-                if (DestinationPath.TestPath())
-                    if (Overwrite)
-                        DestinationPath.RemovePath();
-                    else
-                        return;
-
-                // Move the folder to the new destination.
-                if (File.GetAttributes(SourcePath) == FileAttributes.Directory)
-                    Directory.Move(SourcePath, DestinationPath);
-
-                // Move the file to the new destination.
+                // If the destination exists and we wan't to overwrite the contents.
+                if (Overwrite && Destination.TestPath(true))
+                    Destination.RemovePath();
                 else
-                    File.Move(SourcePath, DestinationPath);
+                    return;
+
+                // Move the new name to the destination.
+                Directory.Move(Source, Destination);
             }
+            // Move the file to the new destination.
+            else
+                File.Move(Source, Destination);
+        }
+
+        public static void RenamePath(this string Source, string Destination, bool Overwrite = false)
+        {
+            // Anything I write here would be identical to move so just call that.
+            Source.MovePath(Destination, Overwrite);
         }
 
         public static void CopyPath(this string SourcePath, string DestinationPath, bool Overwrite)

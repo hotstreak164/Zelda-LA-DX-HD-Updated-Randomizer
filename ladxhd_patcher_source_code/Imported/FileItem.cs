@@ -8,6 +8,7 @@ namespace LADXHD_Patcher
      * does not have the "BaseName" property of a file as readily available as PowerShell's Get-Item. It also over complicates things by
      * needing to distinguish between "FileInfo" and "DirectoryInfo". This class "FileItem" seeks to remedy these issues.
      *---------------------------------------------------------------------------------------------------------------------------------*/
+
     public class FileItem
     {
         public FileAttributes Attributes;
