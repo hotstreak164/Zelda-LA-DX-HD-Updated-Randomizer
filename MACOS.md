@@ -204,7 +204,7 @@ if [ -f "$BASE/Launcher" ]; then
     LAUNCHER_TMP="$TMP_DIR/$NAME Launcher.app"
 
     # Copy the completed game bundle as the foundation (includes all game data, Content, Mods).
-    cp -rp "$BUNDLE" "$LAUNCHER_TMP"
+    cp -Rp "$BUNDLE" "$LAUNCHER_TMP"
 
     # Add the Launcher binary and its Avalonia/Skia dylibs on top.
     cp -p "$BASE/Launcher" "$LAUNCHER_TMP/Contents/MacOS/Launcher"
