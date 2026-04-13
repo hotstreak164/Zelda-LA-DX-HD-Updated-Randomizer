@@ -2,6 +2,22 @@
 cd /d "%~dp0"
 
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+:: Configuration
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+set Copy_to_Resources=true
+set RemovePublishPath=true
+
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+:: Clean Previous Builds
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+if exist "%~dp0~Publish" (
+    echo Cleaning previous builds...
+    rd /s /q "%~dp0~Publish"
+)
+
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 :: Publish all Builds
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -26,9 +42,27 @@ dotnet publish LADXHD_Launcher.csproj -r osx-arm64 /p:PublishProfile=macOS-arm64
 if %errorlevel% neq 0 ( echo MacOS Arm64 build failed! & pause & exit /b 1 )
 
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+:: Package Builds
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+if [%Copy_to_Resources%]==[true] (
+    echo Packaging builds...
+    if [%RemovePublishPath%]==[true] (
+        powershell -ExecutionPolicy Bypass -File "%~dp0zip_resources.ps1" -RemovePublishPath
+    ) else (
+        powershell -ExecutionPolicy Bypass -File "%~dp0zip_resources.ps1"
+    )
+    if %errorlevel% neq 0 ( echo Packaging failed! & pause & exit /b 1 )
+)
+
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 :: Finish
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 echo.
-echo Done! Builds are in the Publish folder. Press a key to close the window.
+if [%Copy_to_Resources%]==[true] (
+    echo Done! Builds were zipped and copied to the patcher "Resources" folder.
+) else (
+    echo Done! Builds can be found in the Publish folder.
+)
 pause >nul

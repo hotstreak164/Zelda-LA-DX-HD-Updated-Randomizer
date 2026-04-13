@@ -52,11 +52,13 @@
 #========================================================================================================================================
 # SET BASE PATHS
 #========================================================================================================================================
+
 Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 Set-Location ..
 $BaseFolder  = Get-Location
 $GameFolder  = Join-path $BaseFolder ("\ladxhd_game_source_code")
 $PublishPath = Join-path $GameFolder ("\~Publish")
+
 #========================================================================================================================================
 # CONFIGURATION
 #========================================================================================================================================
@@ -271,7 +273,7 @@ function PrepareAndroid([string]$GamePath)
 }
 
 #========================================================================================================================================
-# LINUX EXTRA FILES
+# MACOS EXTRA FILES
 #========================================================================================================================================
 
 $MacOSExtraFiles = @(
@@ -385,7 +387,7 @@ function GeneratePatches([bool]$CreatePatches, [string]$GamePath, [string]$Patch
     Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
     Compress-Archive -Path $ZipPath -DestinationPath $ZipFile | Out-Null
 
-	CreateMacOSExtraFilesZip -CreatePatches $CreatePatches -GamePath $GamePath -Platform $Platform
+    CreateMacOSExtraFilesZip -CreatePatches $CreatePatches -GamePath $GamePath -Platform $Platform
 }
 
 if ((VerifyOriginal) -and (VerifyXDelta))
