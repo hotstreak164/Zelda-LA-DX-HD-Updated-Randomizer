@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using LADXHD_Migrater;
 using static LADXHD_Patcher.Config;
@@ -221,20 +220,13 @@ namespace LADXHD_Patcher
        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        // Converts a Wine Windows path (e.g. "Z:\Users\foo\bar") to a native Unix path ("/Users/foo/bar").
-        // Strips the leading drive letter and colon (always a single letter under Wine/Windows) via regex.
-        private static string ToUnixPath(string windowsPath)
-        {
-            return Regex.Replace(windowsPath, @"^[A-Za-z]:", "").Replace('\\', '/');
-        }
-
         // Writes a finalization script to TempFolder and fires it via /bin/sh, then polls for the
         // sentinel file the script writes on success. Shared by the Linux and macOS paths.
         // Wine's WaitForExit() is unreliable for native processes, so we use fire-and-forget
         // plus a sentinel file written by the script as its very last step.
         private static void RunUnixFinalizeScript(string scriptResource)
         {
-            if (!HostEnvironment.IsWine)
+            if (!WineHost.IsWine)
                 return;
 
             // Normalize line endings to LF in case the embedded resource contains CRLFs
@@ -245,8 +237,8 @@ namespace LADXHD_Patcher
             string scriptWinPath = Path.Combine(Config.TempFolder, "finalize.sh");
             File.WriteAllBytes(scriptWinPath, scriptBytes);
 
-            string scriptNativePath = ToUnixPath(scriptWinPath);
-            string baseFolder       = ToUnixPath(Config.BaseFolder);
+            string scriptNativePath = WineHost.ToUnixPath(scriptWinPath);
+            string baseFolder       = WineHost.ToUnixPath(Config.BaseFolder);
             string executableName   = Path.GetFileNameWithoutExtension(Config.ZeldaEXE);
             string sentinelWinPath  = Path.Combine(Config.TempFolder, "finalize.done");
 
@@ -311,11 +303,11 @@ namespace LADXHD_Patcher
             bool isMacOS = Config.SelectedPlatform == Platform.MacOS_x86 || Config.SelectedPlatform == Platform.MacOS_Arm64;
             
             // Finalization steps are platform-specific and should only run when patching on that platform.
-            if (isLinux && HostEnvironment.IsLinux)
+            if (isLinux && WineHost.IsLinux)
             {
                 RunLinuxFinalizeScript();
             }
-            else if (isMacOS && HostEnvironment.IsMacOS)
+            else if (isMacOS && WineHost.IsMacOS)
             {
                 RunMacOSFinalizeScript();
             }
