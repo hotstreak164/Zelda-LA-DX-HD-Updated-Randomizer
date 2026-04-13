@@ -83,29 +83,67 @@ namespace ProjectZ.Core.InGame.Things
                 StreamLoopOgg(path, ct);
         }
 
-        private static double GetLoopPoint(string audioPath)
+        private struct LoopPoints
         {
-            var loopFile = Path.ChangeExtension(audioPath, ".loop");
-            var loopText = File.ReadAllText(loopFile).Trim();
+            public long StartSample;
+            public long EndSample;
+        }
 
-            if (File.Exists(loopFile) && double.TryParse(loopText, NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds))
-                return seconds;
-            return 0.0;
+        private static LoopPoints GetLoopPoints(NVorbis.VorbisReader vorbis, string audioPath)
+        {
+             // Use -1 as default to play to end.
+            long start = 0;
+            long end = -1;
+
+            // Try OGG metadata first
+            var tags = vorbis.Tags;
+            if (tags != null)
+            {
+                if (long.TryParse(tags.GetTagSingle("LOOPSTART"), out long startSample))
+                    start = startSample;
+
+                if (long.TryParse(tags.GetTagSingle("LOOPLENGTH"), out long length))
+                    end = start + length;
+                else if (long.TryParse(tags.GetTagSingle("LOOPEND"), out long endSample))
+                    end = endSample;
+
+                if (start > 0)
+                    return new LoopPoints { StartSample = start, EndSample = end };
+            }
+
+            // Fall back to .loop file
+            var loopFile = Path.ChangeExtension(audioPath, ".loop");
+            if (File.Exists(loopFile))
+            {
+                var lines = File.ReadAllLines(loopFile);
+                if (lines.Length >= 1 && double.TryParse(lines[0].Trim(),
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out double startSeconds))
+                    start = (long)(startSeconds * vorbis.SampleRate);
+
+                if (lines.Length >= 2 && double.TryParse(lines[1].Trim(),
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out double endSeconds))
+                    end = (long)(endSeconds * vorbis.SampleRate);
+            }
+
+            return new LoopPoints { StartSample = start, EndSample = end };
         }
 
         private void StreamLoopOgg(string path, CancellationToken ct)
         {
             try
             {
-                var loopStartSeconds = GetLoopPoint(path);
-
                 using var fs = File.OpenRead(path);
                 using var vorbis = new NVorbis.VorbisReader(fs, closeOnDispose: false);
 
                 int sampleRate = vorbis.SampleRate;
                 int channels = vorbis.Channels;
                 var audioChannels = channels == 1 ? AudioChannels.Mono : AudioChannels.Stereo;
-                long loopStartSample = (long)(loopStartSeconds * sampleRate);
+
+                var loop = GetLoopPoints(vorbis, path);
 
                 lock (_lock)
                 {
@@ -123,18 +161,33 @@ namespace ProjectZ.Core.InGame.Things
                 {
                     while (!ct.IsCancellationRequested && _instance.PendingBufferCount < 3)
                     {
-                        int read = vorbis.ReadSamples(floatBuf, 0, floatBuf.Length);
+                        // If we have a loop end point, check if we're about to pass it
+                        int samplesToRead = floatBuf.Length;
+                        if (loop.EndSample >= 0)
+                        {
+                            long samplesRemaining = loop.EndSample - vorbis.SamplePosition;
+                            if (samplesRemaining <= 0)
+                            {
+                                vorbis.SeekTo(loop.StartSample);
+                                break;
+                            }
+                            samplesToRead = (int)Math.Min(samplesToRead, samplesRemaining * channels);
+                        }
+
+                        int read = vorbis.ReadSamples(floatBuf, 0, samplesToRead);
                         if (read == 0)
                         {
-                            vorbis.SeekTo(loopStartSample);
+                            vorbis.SeekTo(loop.StartSample);
                             break;
                         }
+
                         for (int i = 0; i < read; i++)
                         {
                             short s = (short)MathHelper.Clamp(floatBuf[i] * 32767f, short.MinValue, short.MaxValue);
                             byteBuf[i * 2]     = (byte)(s & 0xFF);
                             byteBuf[i * 2 + 1] = (byte)(s >> 8);
                         }
+
                         lock (_lock)
                             _instance?.SubmitBuffer(byteBuf, 0, read * 2);
                     }
