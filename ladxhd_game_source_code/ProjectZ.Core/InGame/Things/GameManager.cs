@@ -197,7 +197,7 @@ namespace ProjectZ.InGame.Things
         private bool _muteInactive;
 
         // The MP3 player allows playing custom music.
-        Mp3MusicPlayer _mp3Player = new Mp3MusicPlayer();
+        MusicPlayer _musicPlayer = new MusicPlayer();
 
         // Quick reference to "ObjLink" in MapManager.
         private ObjLink Link => MapManager.ObjLink;
@@ -1002,8 +1002,19 @@ namespace ProjectZ.InGame.Things
 
         private string GetModMusicPath(int trackId)
         {
-            var path = Path.Combine(Values.PathMusicMods, $"{trackId}.mp3");
-            return File.Exists(path) ? path : null;
+            // Types of music files to search for.
+            var extensions = new List<string>() { ".ogg", ".mp3" };
+
+            // Try to find a file in each type of extension.
+            foreach (var extension in extensions)
+            {
+                var path = Path.Combine(Values.PathMusicMods, $"{trackId}" + $"{extension}");
+
+                if (File.Exists(path))
+                    return path;
+            }
+            // Return null if no music file was found.
+            return null;
         }
 
         public void PlayMusic(bool startPlaying = true)
@@ -1013,19 +1024,19 @@ namespace ProjectZ.InGame.Things
                 if (_musicArray[i] >= 0)
                 {
                     var songNumber = (byte)_musicArray[i];
-                    var mp3Path = GetModMusicPath(songNumber);
+                    var songPath = GetModMusicPath(songNumber);
 
-                    if (mp3Path != null)
+                    if (!string.IsNullOrEmpty(songPath))
                     {
                         Game1.GbsPlayer.Stop();
                         if (startPlaying)
                         {
-                            _mp3Player.SetVolume(_muteInactive ? 0f : GameSettings.MusicVolume / 100.0f);
-                            _mp3Player.Play(mp3Path, songNumber);
+                            _musicPlayer.SetVolume(_muteInactive ? 0f : GameSettings.MusicVolume / 100.0f);
+                            _musicPlayer.Play(songPath, songNumber);
                         }
                         return;
                     }
-                    _mp3Player.Stop();
+                    _musicPlayer.Stop();
                     if (Game1.GbsPlayer.CurrentTrack != songNumber)
                         Game1.GbsPlayer.StartTrack(songNumber);
                     if (startPlaying)
@@ -1033,7 +1044,7 @@ namespace ProjectZ.InGame.Things
                     return;
                 }
             }
-            _mp3Player.Stop();
+            _musicPlayer.Stop();
             Game1.GbsPlayer.Stop();
         }
 
@@ -1041,7 +1052,7 @@ namespace ProjectZ.InGame.Things
         {
             if (reset)
                 ResetMusic();
-            _mp3Player.Stop();
+            _musicPlayer.Stop();
             Game1.GbsPlayer.Stop();
         }
 
@@ -1095,14 +1106,14 @@ namespace ProjectZ.InGame.Things
                 if (!IsActive && GameSettings.MuteInactive)
                 {
                     Game1.GbsPlayer.SetVolume(0f);
-                    _mp3Player.SetVolume(0f);
+                    _musicPlayer.SetVolume(0f);
                     _muteInactive = true;
                 }
                 else
                 {
                     var vol = GameSettings.MusicVolume / 100.0f;
                     Game1.GbsPlayer.SetVolume(vol);
-                    _mp3Player.SetVolume(vol);
+                    _musicPlayer.SetVolume(vol);
                     _muteInactive = false;
                 }
             }
@@ -1137,7 +1148,7 @@ namespace ProjectZ.InGame.Things
             if (lowerVolume)
             {
                 Game1.GbsPlayer.SetVolumeMultiplier(0.35f);
-                _mp3Player.SetVolumeMultiplier(0.35f);
+                _musicPlayer.SetVolumeMultiplier(0.35f);
             }
         }
 
