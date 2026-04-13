@@ -48,7 +48,6 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             _body = new BodyComponent(EntityPosition, -4, -10, 8, 10, 14)
             {
                 CollisionTypes = Values.CollisionTypes.Normal | Values.CollisionTypes.Field | Values.CollisionTypes.NonWater,
-                CollisionTypesIgnore = Values.CollisionTypes.ThrowIgnore,
                 MoveCollision = Collision,
                 DragAir = 1.0f,
                 Gravity = -0.125f,
@@ -159,6 +158,11 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                     _body.Velocity.Y = -_body.Velocity.Y * 0.45f;
                 }
             }
+            // When ball is in the air, don't collide with low barrier. As it descends, change collision.
+            if (EntityPosition.Z > 4.00f)
+                _body.CollisionTypesIgnore = Values.CollisionTypes.ThrowIgnore;
+            else
+                _body.CollisionTypesIgnore = Values.CollisionTypes.None;
         }
 
         private Values.HitCollision OnHit(GameObject originObject, Vector2 direction, HitType type, int damage, bool pieceOfPower)
