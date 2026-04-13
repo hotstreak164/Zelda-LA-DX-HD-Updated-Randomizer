@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.IO;
+using Microsoft.Xna.Framework;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
@@ -14,8 +15,6 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 {
     class MBossHinox : GameObject
     {
-        private readonly Color[] _colors = new Color[] { new Color(248, 120, 8), new Color(248, 8, 40), new Color(24, 128, 248) };
-
         private readonly Animator _animator;
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
@@ -35,10 +34,35 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private float _runParticleCount;
         private bool _playerInRoom;
 
+        private Color[] _colors;
+
+        int hinox_1_red = 248;
+        int hinox_1_grn = 120;
+        int hinox_1_blu = 8;
+
+        int hinox_2_red = 248;
+        int hinox_2_grn = 8;
+        int hinox_2_blu = 40;
+
+        int hinox_3_red = 24;
+        int hinox_3_grn = 128;
+        int hinox_3_blu = 248;
+
         public MBossHinox() : base("hinox") { }
 
         public MBossHinox(Map.Map map, int posX, int posY, string saveKey, int color) : base(map)
         {
+            // If a mod file exists load the values from it.
+            string modFile = Path.Combine(Values.PathLAHDMods, "MBossHinox.lahdmod");
+            ModFile.Parse(modFile, this);
+
+            _colors = new Color[]
+            {
+                new Color(hinox_1_red, hinox_1_grn, hinox_1_blu), 
+                new Color(hinox_2_red, hinox_2_grn, hinox_2_blu), 
+                new Color(hinox_3_red, hinox_3_grn, hinox_3_blu)
+            };
+
             if (!string.IsNullOrEmpty(saveKey) &&
                 Game1.GameManager.SaveManager.GetString(saveKey) == "1")
             {
