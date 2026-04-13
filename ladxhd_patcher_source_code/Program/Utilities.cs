@@ -13,12 +13,32 @@ namespace LADXHD_Patcher
 
         public static void ExtractResourcesZip(string zipName, string destination)
         {
-            // The zip file is always written to the temp folder.
+            // All zip files are temporarily written to the temp folder.
             string zipFilePath = Path.Combine(Config.TempFolder, zipName);
-
-            // Write the zip file from resources, extract to destination, and remove the zip file.
             File.WriteAllBytes(zipFilePath, (byte[])resources[zipName]);
-            ZipFile.ExtractToDirectory(zipFilePath, destination);
+
+            // Because .NET Framework 4.8 can not ovewrite files with ExtractToDirectory we do it manually.
+            using (ZipArchive archive = ZipFile.OpenRead(zipFilePath))
+            {
+                // Loop through the entires in the archive.
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    // Set the path to the extracted file.
+                    string entryPath = Path.Combine(destination, entry.FullName);
+
+                    // It's a directory entry.
+                    if (string.IsNullOrEmpty(entry.Name))
+                        Directory.CreateDirectory(entryPath);
+
+                    // Ensure the directory exists and extract, overwriting the file if present.
+                    else
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(entryPath));
+                        entry.ExtractToFile(entryPath, overwrite: true);
+                    }
+                }
+            }
+            // Remove the zip file after we are done.
             zipFilePath.RemovePath();
         }
 
