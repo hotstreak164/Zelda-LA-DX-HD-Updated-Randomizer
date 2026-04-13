@@ -146,10 +146,10 @@
                                     <ComboBoxItem Content="German" />
                                     <ComboBoxItem Content="Spanish" />
                                     <ComboBoxItem Content="French" />
-                                    <ComboBoxItem Content="Indonesia" />
+                                    <ComboBoxItem Content="Indonesian" />
                                     <ComboBoxItem Content="Italian" />
-                                    <ComboBoxItem Content="Portugeuse (Brazil)" />
-                                    <ComboBoxItem Content="Portugeuse (Portugal)" />
+                                    <ComboBoxItem Content="Portuguese (Brazil)" />
+                                    <ComboBoxItem Content="Portuguese (Portugal)" />
                                     <ComboBoxItem Content="Russian" />
                                 </ComboBox>
                                 <TextBlock Canvas.Left="126" Canvas.Top="7" Text="Language" Foreground="White" VerticalAlignment="Center"
