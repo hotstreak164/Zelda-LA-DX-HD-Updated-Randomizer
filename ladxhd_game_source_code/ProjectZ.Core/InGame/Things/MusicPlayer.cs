@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 
@@ -9,10 +10,11 @@ namespace ProjectZ.Core.InGame.Things
     public class MusicPlayer
     {
         private DynamicSoundEffectInstance _instance;
-        private Thread _streamThread;
         private CancellationTokenSource _cts;
-        private string _currentPath;
+        private Thread _streamThread;
+
         private int _currentTrack = -1;
+        private string _currentPath;
         private float _volume = 1f;
         private float _volumeMultiplier = 1f;
         private readonly object _lock = new object();
@@ -49,7 +51,6 @@ namespace ProjectZ.Core.InGame.Things
                 _instance?.Dispose();
                 _instance = null;
             }
-
             _currentPath = null;
             _currentTrack = -1;
         }
@@ -80,6 +81,16 @@ namespace ProjectZ.Core.InGame.Things
             var ext = Path.GetExtension(path).ToLowerInvariant();
             if (ext == ".ogg")
                 StreamLoopOgg(path, ct);
+        }
+
+        private static double GetLoopPoint(string audioPath)
+        {
+            var loopFile = Path.ChangeExtension(audioPath, ".loop");
+            var loopText = File.ReadAllText(loopFile).Trim();
+
+            if (File.Exists(loopFile) && double.TryParse(loopText, NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds))
+                return seconds;
+            return 0.0;
         }
 
         private void StreamLoopOgg(string path, CancellationToken ct)
@@ -118,18 +129,15 @@ namespace ProjectZ.Core.InGame.Things
                             vorbis.SeekTo(loopStartSample);
                             break;
                         }
-
                         for (int i = 0; i < read; i++)
                         {
                             short s = (short)MathHelper.Clamp(floatBuf[i] * 32767f, short.MinValue, short.MaxValue);
                             byteBuf[i * 2]     = (byte)(s & 0xFF);
                             byteBuf[i * 2 + 1] = (byte)(s >> 8);
                         }
-
                         lock (_lock)
                             _instance?.SubmitBuffer(byteBuf, 0, read * 2);
                     }
-
                     Thread.Sleep(10);
                 }
             }
@@ -138,18 +146,6 @@ namespace ProjectZ.Core.InGame.Things
             {
                 System.Diagnostics.Debug.WriteLine($"MusicPlayer OGG stream error: {ex.Message}");
             }
-        }
-
-        private static double GetLoopPoint(string audioPath)
-        {
-            var loopFile = Path.ChangeExtension(audioPath, ".loop");
-            if (File.Exists(loopFile) && double.TryParse(
-                File.ReadAllText(loopFile).Trim(),
-                System.Globalization.NumberStyles.Float,
-                System.Globalization.CultureInfo.InvariantCulture,
-                out double seconds))
-                return seconds;
-            return 0.0;
         }
     }
 }

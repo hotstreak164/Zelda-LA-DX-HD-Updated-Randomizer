@@ -1083,7 +1083,6 @@ namespace ProjectZ.InGame.Things
             for (var i = _musicArray.Length - 1; i >= 0; i--)
                 if (_musicArray[i] >= 0)
                     return _musicArray[i];
-
             return -1;
         }
 
@@ -1126,8 +1125,7 @@ namespace ProjectZ.InGame.Things
                 soundEffect.Value.Instance.Volume = CurrentSoundEffects[soundEffect.Key].Volume * _curEffectVolume / 100 * Values.SoundEffectVolumeMult;
                 soundEffect.Value.Instance.IsLooped = false;
 
-                if (soundEffect.Value.EndTime != 0 &&
-                    soundEffect.Value.EndTime < Game1.TotalGameTime)
+                if (soundEffect.Value.EndTime != 0 && soundEffect.Value.EndTime < Game1.TotalGameTime)
                     soundEffect.Value.Instance.Stop();
 
                 // finished playing?
