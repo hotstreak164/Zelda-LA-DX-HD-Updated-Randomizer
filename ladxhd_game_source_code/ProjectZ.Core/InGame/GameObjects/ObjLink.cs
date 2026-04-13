@@ -2251,7 +2251,7 @@ namespace ProjectZ.InGame.GameObjects
             }
         }
 
-        private void CancelRepelVelocities()
+        private void CancelRepelVelocities(bool cancelBodyVelocity)
         {
             // Eliminate all knockback velocities.
             _hitVelocity = Vector2.Zero;
@@ -2260,8 +2260,11 @@ namespace ProjectZ.InGame.GameObjects
             _body.VelocityTarget = Vector2.Zero;
 
             // Also fully eliminate any body velocity.
-            _body.Velocity.X = 0;
-            _body.Velocity.Y = 0;
+            if (cancelBodyVelocity)
+            {
+                _body.Velocity.X = 0;
+                _body.Velocity.Y = 0;
+            }
         }
 
         private void PreventFieldKnockback()
@@ -2283,7 +2286,7 @@ namespace ProjectZ.InGame.GameObjects
                     // Cancel repel velocities. Boots knockback uses a different function so it's possible
                     // to still be knocked back while inside a field barrier if parallel to the field.
                     if (CurrentState != State.BootKnockback)
-                        CancelRepelVelocities();
+                        CancelRepelVelocities(true);
                     else
                         CancelBootsVelocity(i);
                     return;  
@@ -6391,6 +6394,10 @@ namespace ProjectZ.InGame.GameObjects
         {
             // Store that a transition is taking place.
             IsTransitioning = true;
+
+            // Interesting bug: when repelled into a staircase, it's possible to get stuck
+            // in a loop of entering/exiting until the velocity fully decays.
+            CancelRepelVelocities(false);
 
             // Set the previous map and draw Link over everything.
             _previousMap = Map;
