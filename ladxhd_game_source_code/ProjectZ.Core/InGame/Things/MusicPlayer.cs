@@ -80,65 +80,6 @@ namespace ProjectZ.Core.InGame.Things
             var ext = Path.GetExtension(path).ToLowerInvariant();
             if (ext == ".ogg")
                 StreamLoopOgg(path, ct);
-            else
-                StreamLoopMp3(path, ct);
-        }
-
-        private void StreamLoopMp3(string path, CancellationToken ct)
-        {
-            try
-            {
-                var loopStartSeconds = GetLoopPoint(path);
-
-                using var fs = File.OpenRead(path);
-                using var mp3 = new NLayer.MpegFile(fs);
-
-                int sampleRate = mp3.SampleRate;
-                int channels = mp3.Channels;
-                var audioChannels = channels == 1 ? AudioChannels.Mono : AudioChannels.Stereo;
-
-                lock (_lock)
-                {
-                    _instance?.Dispose();
-                    _instance = new DynamicSoundEffectInstance(sampleRate, audioChannels);
-                    _instance.Volume = MathHelper.Clamp(_volume * _volumeMultiplier, 0f, 1f);
-                    _instance.Play();
-                }
-
-                const int samplesPerChunk = 4096;
-                var floatBuf = new float[samplesPerChunk * channels];
-                var byteBuf = new byte[floatBuf.Length * 2];
-
-                while (!ct.IsCancellationRequested)
-                {
-                    while (!ct.IsCancellationRequested && _instance.PendingBufferCount < 3)
-                    {
-                        int read = mp3.ReadSamples(floatBuf, 0, floatBuf.Length);
-                        if (read == 0)
-                        {
-                            mp3.Position = (long)(loopStartSeconds * sampleRate);
-                            break;
-                        }
-
-                        for (int i = 0; i < read; i++)
-                        {
-                            short s = (short)MathHelper.Clamp(floatBuf[i] * 32767f, short.MinValue, short.MaxValue);
-                            byteBuf[i * 2]     = (byte)(s & 0xFF);
-                            byteBuf[i * 2 + 1] = (byte)(s >> 8);
-                        }
-
-                        lock (_lock)
-                            _instance?.SubmitBuffer(byteBuf, 0, read * 2);
-                    }
-
-                    Thread.Sleep(10);
-                }
-            }
-            catch (OperationCanceledException) { }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"MusicPlayer MP3 stream error: {ex.Message}");
-            }
         }
 
         private void StreamLoopOgg(string path, CancellationToken ct)

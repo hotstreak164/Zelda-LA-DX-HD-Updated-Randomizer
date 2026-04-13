@@ -1002,19 +1002,8 @@ namespace ProjectZ.InGame.Things
 
         private string GetModMusicPath(int trackId)
         {
-            // Types of music files to search for.
-            var extensions = new List<string>() { ".ogg", ".mp3" };
-
-            // Try to find a file in each type of extension.
-            foreach (var extension in extensions)
-            {
-                var path = Path.Combine(Values.PathMusicMods, $"{trackId}" + $"{extension}");
-
-                if (File.Exists(path))
-                    return path;
-            }
-            // Return null if no music file was found.
-            return null;
+            var path = Path.Combine(Values.PathMusicMods, $"{trackId}.ogg");
+            return File.Exists(path) ? path : null;
         }
 
         public void PlayMusic(bool startPlaying = true)
