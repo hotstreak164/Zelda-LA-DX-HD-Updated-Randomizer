@@ -91,6 +91,10 @@ namespace LADXHD_Migrater
             if (string.IsNullOrEmpty(inputPath))
                 return;
 
+            // Don't even enter the loop if nothing is there.
+            if (!File.Exists(inputPath) && !Directory.Exists(inputPath))
+                return;
+
             // Set up a loop for retries if a file is still locked when trying to delete it.
             for (int i = 0; i < 10; i++)
             {
@@ -142,6 +146,10 @@ namespace LADXHD_Migrater
             if (string.IsNullOrWhiteSpace(Source) || string.IsNullOrWhiteSpace(Destination))
                 return;
 
+            // Bail early if source doesn't exist.
+            if (!File.Exists(Source) && !Directory.Exists(Source))
+                return;
+
             // Get whether it's a file or a folder and run the proper rename command.
             var attributes = File.GetAttributes(Source);
 
@@ -149,11 +157,11 @@ namespace LADXHD_Migrater
             if ((attributes & FileAttributes.Directory) != 0)
             {
                 // If the destination exists and we want to overwrite the contents.
-                if (Overwrite && Destination.TestPath(true))
+                if (Directory.Exists(Destination))
+                {
+                    if (!Overwrite) return;
                     Destination.RemovePath();
-                else
-                    return;
-
+                }
                 // Move the new name to the destination.
                 Directory.Move(Source, Destination);
             }
@@ -161,7 +169,7 @@ namespace LADXHD_Migrater
             else
             {
                 // If the destination exists and we want to overwrite the contents.
-                if (Destination.TestPath(false))
+                if (File.Exists(Destination))
                 {
                     if (!Overwrite) return;
                     Destination.RemovePath();
