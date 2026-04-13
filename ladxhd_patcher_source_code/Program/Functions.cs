@@ -167,11 +167,11 @@ namespace LADXHD_Patcher
             File.WriteAllBytes(apkUnsigned, (byte[])resources["android_base.apk"]);
 
             // Inject only Content/Data into the base APK, then align/sign/verify.
-            Utilities.RunProcess(Config.SevenZip, stageRoot, $"a -tzip \"{apkUnsigned}\" \"assets\\Content\\*\" \"assets\\Data\\*\" -r -mx=9 -mm=Deflate");
-            Utilities.RunProcess(Config.ZipAlign, stageRoot, $"-P 16 -f -v 4 \"{apkUnsigned}\" \"{apkAligned}\"");
-            Utilities.RunProcess(Config.JavaExe,  stageRoot, $"-jar \"{Config.ApkSign}\" sign --ks \"{Config.KeyStore}\" --ks-key-alias zelda-la --ks-pass pass:zeldala --out \"{apkSigned}\" \"{apkAligned}\"");
-            Utilities.RunProcess(Config.ZipAlign, stageRoot, $"-c -P 16 -v 4 \"{apkSigned}\"");
-            Utilities.RunProcess(Config.JavaExe,  stageRoot, $"-jar \"{Config.ApkSign}\" verify -v \"{apkSigned}\"");
+            Utilities.RunProcess(Config.SevenZip, stageRoot, new List<string> { "a", "-tzip", apkUnsigned, @"assets\Content\*", @"assets\Data\*", "-r", "-mx=9", "-mm=Deflate" });
+            Utilities.RunProcess(Config.ZipAlign, stageRoot, new List<string> { "-P", "16", "-f", "-v", "4", apkUnsigned, apkAligned });
+            Utilities.RunProcess(Config.JavaExe,  stageRoot, new List<string> { "-jar", Config.ApkSign, "sign", "--ks", Config.KeyStore, "--ks-key-alias", "zelda-la", "--ks-pass", "pass:zeldala", "--out", apkSigned, apkAligned });
+            Utilities.RunProcess(Config.ZipAlign, stageRoot, new List<string> { "-c", "-P", "16", "-v", "4", apkSigned });
+            Utilities.RunProcess(Config.JavaExe,  stageRoot, new List<string> { "-jar", Config.ApkSign, "verify", "-v", apkSigned });
 
             // Remove the temporary APK files we no longer need.
             apkUnsigned.RemovePath();

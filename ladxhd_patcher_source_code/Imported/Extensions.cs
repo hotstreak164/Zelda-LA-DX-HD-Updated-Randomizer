@@ -148,7 +148,7 @@ namespace LADXHD_Patcher
             // If it's a directory (folder).
             if ((attributes & FileAttributes.Directory) != 0)
             {
-                // If the destination exists and we wan't to overwrite the contents.
+                // If the destination exists and we want to overwrite the contents.
                 if (Overwrite && Destination.TestPath(true))
                     Destination.RemovePath();
                 else
@@ -159,7 +159,15 @@ namespace LADXHD_Patcher
             }
             // Move the file to the new destination.
             else
+            {
+                // If the destination exists and we want to overwrite the contents.
+                if (Destination.TestPath(false))
+                {
+                    if (!Overwrite) return;
+                    Destination.RemovePath();
+                }
                 File.Move(Source, Destination);
+            }
         }
 
         public static void RenamePath(this string Source, string Destination, bool Overwrite = false)

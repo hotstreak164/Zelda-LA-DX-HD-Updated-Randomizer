@@ -18,66 +18,49 @@ namespace LADXHD_Patcher
             XDelta3.Exe = Path.Combine(Config.TempFolder, "xdelta3.exe");
         }
 
-        public static string GetCreateArguments(string OldFile, string NewFile, string PatchFile)
+        private static string EscapeArg(string arg)
         {
-		    string args = string.Empty;
-		    args = string.Concat(new string[]
-		    {
-			    args,
-			    " -f -s \"",
-			    OldFile,
-			    "\" \"",
-			    NewFile,
-			    "\" \"",
-			    PatchFile,
-			    "\""
-		    });
-            return args;
+            return "\"" + arg.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
         }
 
-        public static string GetApplyArguments(string OldFile, string PatchFile, string NewFile)
+        private static string BuildArguments(IEnumerable<string> args)
         {
-		    string args = string.Empty;
-		    args = string.Concat(new string[]
-		    {
-			    args,
-			    " -d -f -s \"",
-			    OldFile,
-			    "\" \"",
-			    PatchFile,
-			    "\" \"",
-			    NewFile,
-			    "\""
-		    });
-            return args;
+            return string.Join(" ", System.Linq.Enumerable.Select(args, EscapeArg));
         }
 
-        private static void Start()
+        private static void Start(IEnumerable<string> args)
         {
-            Process xDelta = new Process();
-            ProcessStartInfo startInfo = new ProcessStartInfo 
+            ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                WorkingDirectory = Config.BaseFolder,
-                FileName = XDelta3.Exe,
-                Arguments = XDelta3.Args,
-                UseShellExecute = false,
-                CreateNoWindow = true,
+                WorkingDirectory      = Config.BaseFolder,
+                FileName              = XDelta3.Exe,
+                Arguments             = BuildArguments(args),
+                UseShellExecute       = false,
+                CreateNoWindow        = true,
                 RedirectStandardError = true,
-                WindowStyle = ProcessWindowStyle.Normal
+                WindowStyle           = ProcessWindowStyle.Normal
             };
+
+            Process xDelta = new Process();
             xDelta.StartInfo = startInfo;
-            xDelta.Start();
-            xDelta.WaitForExit();
-            xDelta.Dispose();
+            try
+            {
+                xDelta.Start();
+                xDelta.WaitForExit();
+            }
+            finally
+            {
+                xDelta.Dispose();
+            }
         }
 
         public static void Execute(Operation action, string input, string diff, string output, string target = "")
         {
-            if (action == Operation.Apply)
-                XDelta3.Args = XDelta3.GetApplyArguments(input, diff, output);
-            else if (action == Operation.Create)
-                XDelta3.Args = XDelta3.GetCreateArguments(input, diff, output);
-            XDelta3.Start();
+            List<string> args = action == Operation.Apply
+                ? new List<string> { "-d", "-f", "-s", input, diff, output }
+                : new List<string> { "-f", "-s", input, diff, output };
+
+            XDelta3.Start(args);
 
             if (!string.IsNullOrEmpty(target))
                 output.MovePath(target, true);

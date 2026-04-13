@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using LADXHD_Migrater;
 
@@ -35,7 +36,7 @@ namespace LADXHD_Patcher
         public static void Initialize()
         {
             AppPath      = Assembly.GetExecutingAssembly().Location;
-            BaseFolder   = Path.GetDirectoryName(AppPath);
+            BaseFolder   = AppContext.BaseDirectory;;
             TempFolder   = Path.Combine(BaseFolder, "~temp");
             ZeldaEXE     = Path.Combine(BaseFolder, "Link's Awakening DX HD.exe");
             BackupPath   = Path.Combine(BaseFolder, "Data", "Backup");

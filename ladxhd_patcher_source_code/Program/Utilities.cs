@@ -22,35 +22,31 @@ namespace LADXHD_Patcher
             zipFilePath.RemovePath();
         }
 
-        public static void RunProcess(string fileName, string workingDir, string args)
+        public static void RunProcess(string fileName, string workingDir, List<string> args)
         {
-            // Create the process start info.
+            string escapedArgs = string.Join(" ", System.Linq.Enumerable.Select(args, arg =>
+                "\"" + arg.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\""));
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = fileName,
-                Arguments = args,
+                Arguments = escapedArgs,
                 WorkingDirectory = workingDir,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
             };
 
-            // Start a process, report any exceptions, and close out the process.
             using (var proc = new Process { StartInfo = startInfo })
             {
                 proc.Start();
-
                 string output = null, errors = null;
                 var outTask = Task.Run(() => output = proc.StandardOutput.ReadToEnd());
                 var errTask = Task.Run(() => errors = proc.StandardError.ReadToEnd());
-
                 proc.WaitForExit();
                 Task.WaitAll(outTask, errTask);
-
                 if (proc.ExitCode != 0)
                     throw new Exception(startInfo.FileName + ":\nOUTPUT:\n" + output + "\nERRORS:\n" + errors);
-
-                proc.Dispose();
             }
         }
     }
