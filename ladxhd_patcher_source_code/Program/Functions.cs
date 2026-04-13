@@ -237,19 +237,21 @@ namespace LADXHD_Patcher
             string scriptWinPath = Path.Combine(Config.TempFolder, "finalize.sh");
             File.WriteAllBytes(scriptWinPath, scriptBytes);
 
-            string scriptNativePath = WineHost.ToUnixPath(scriptWinPath);
-            string baseFolder       = WineHost.ToUnixPath(Config.BaseFolder);
-            string executableName   = Path.GetFileNameWithoutExtension(Config.ZeldaEXE);
-            string sentinelWinPath  = Path.Combine(Config.TempFolder, "finalize.done");
+            // Use relative paths to bypass drive mapping issues (CrossOver/Proton/etc).
+            // Config.TempFolder is always a subfolder of Config.BaseFolder.
+            string relativeTemp    = Path.GetFileName(Config.TempFolder);
+            string relativeScript  = "./" + relativeTemp + "/finalize.sh";
+            string executableName  = Path.GetFileNameWithoutExtension(Config.ZeldaEXE);
+            string sentinelWinPath = Path.Combine(Config.TempFolder, "finalize.done");
 
             try
             {
                 var psi = new ProcessStartInfo
                 {
-                    FileName        = "/bin/sh",
-                    Arguments       = $"\"{scriptNativePath}\" \"{baseFolder}\" \"{executableName}\"",
-                    UseShellExecute = false,
-                    CreateNoWindow  = true,
+                    FileName         = "/bin/sh",
+                    Arguments        = $"\"{relativeScript}\" \".\" \"{executableName}\" \"{relativeTemp}\"",
+                    WorkingDirectory = Config.BaseFolder,
+                    UseShellExecute  = false,
                 };
                 Process.Start(psi);
             }

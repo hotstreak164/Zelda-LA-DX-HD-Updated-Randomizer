@@ -2,16 +2,20 @@
 # Finalization script for the LADXHD Patcher — macOS target.
 # Run by the patcher under Wine after all game files have been patched.
 # All host-specific steps are centralised here to avoid Wine process-synchronisation issues.
+# All paths are relative to work around different drive mappings in Wine distributions.
 #
 # Arguments:
-#   $1  BASE  — absolute path to the game folder (e.g. /Users/foo/Games/LADXHD)
-#   $2  NAME  — executable name without extension (e.g. "Link's Awakening DX HD")
+#   $1  BASE      — relative path to game folder (usually ".")
+#   $2  NAME      — executable name without extension (e.g. "Link's Awakening DX HD")
+#   $3  REL_TEMP  — relative path from $1 to the temp folder (usually "~temp")
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BASE="$1"
 NAME="$2"
+REL_TEMP="$3"
+SCRIPT_DIR="$BASE/$REL_TEMP"
+
 BUNDLE="$BASE/$NAME.app"
 BUNDLE_TMP="$SCRIPT_DIR/$NAME.app"
 
