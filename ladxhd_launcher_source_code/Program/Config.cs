@@ -17,7 +17,7 @@ namespace LADXHD_Launcher
         public static string LauncherConfig => Path.Combine(
             File.Exists(Path.Combine(BaseFolder, "portable.txt"))
                 ? BaseFolder
-                : Path.Combine(Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData), "Zelda_LA"), "launcher");
+                : Path.Combine(Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData), "Zelda_LA"), "launcher.cfg");
 
         private static Dictionary<string, object> resources = ResourceHelper.GetAllResources();
 
@@ -168,24 +168,61 @@ namespace LADXHD_Launcher
                 $"SoundEnabled={XnbAudio.Enabled}",
                 $"WindowHeight={App.MainWindowInstance?.Height ?? 768}"
             });
+            // On Linux/Mac, ensure the file is not marked as executable
+            if (!OperatingSystem.IsWindows())
+            {
+                File.SetUnixFileMode(LauncherConfig,
+                    UnixFileMode.UserRead  | 
+                    UnixFileMode.UserWrite |
+                    UnixFileMode.GroupRead |
+                    UnixFileMode.OtherRead);
+            }
         }
 
         public static void LoadLauncherConfig()
         {
-            // If there is no config there is nothing to load.
-            if (!File.Exists(LauncherConfig)) 
-                return;
+            // Migrate old "launcher" file to "launcher.cfg" if it exists.
+            string oldConfig = LauncherConfig.Replace(".cfg", "");
+            if (File.Exists(oldConfig))
+            {
+                // Copy the old path temporarily so we can read it.
+                string oldPath = oldConfig;
 
-            // Loop through the lines in the config.
+                // Read old values first.
+                foreach (string line in File.ReadAllLines(oldPath))
+                {
+                    int eq = line.IndexOf('=');
+                    if (eq < 0) continue;
+                    string key   = line[..eq].Trim();
+                    string value = line[(eq + 1)..].Trim();
+
+                    switch (key)
+                    {
+                        case "SoundEnabled":
+                            XnbAudio.Enabled = value.Equals("True", StringComparison.OrdinalIgnoreCase);
+                            break;
+                        case "WindowHeight":
+                            if (double.TryParse(value, out double h))
+                                App.SavedWindowHeight = h;
+                            break;
+                    }
+                }
+                // Delete old file and save as new format.
+                File.Delete(oldPath);
+                SaveLauncherConfig();
+                return;
+            }
+
+            // Normal load from new .cfg file.
+            if (!File.Exists(LauncherConfig)) return;
+
             foreach (string line in File.ReadAllLines(LauncherConfig))
             {
-                // Get the keys and values.
                 int eq = line.IndexOf('=');
                 if (eq < 0) continue;
                 string key   = line[..eq].Trim();
                 string value = line[(eq + 1)..].Trim();
 
-                // Load the user's settings and apply to the menu.
                 switch (key)
                 {
                     case "SoundEnabled":
