@@ -45,7 +45,7 @@ namespace LADXHD_Patcher
         public static void RunProcess(string fileName, string workingDir, List<string> args)
         {
             string escapedArgs = string.Join(" ", System.Linq.Enumerable.Select(args, arg =>
-                "\"" + arg.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\""));
+                "\"" + arg.Replace("\"", "\\\"") + "\""));
 
             var startInfo = new ProcessStartInfo
             {
