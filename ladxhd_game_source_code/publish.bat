@@ -1,5 +1,6 @@
 @echo off
 cd /d "%~dp0"
+Title LADXHD: Game Publish Script
 
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 :: Configuration
@@ -23,6 +24,9 @@ SET "WSL_PREFIX=export MGFXC_WINE_PATH=$HOME/.wine-mgfxc && cd %WSL_PATH% && $HO
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 :: Publish all Builds
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+echo Publishing game builds...
+echo.
 
 echo Restoring Windows/Android projects...
 dotnet restore

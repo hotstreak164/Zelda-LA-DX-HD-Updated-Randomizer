@@ -57,16 +57,6 @@
 
 #>
 #========================================================================================================================================
-# SET BASE PATHS
-#========================================================================================================================================
-
-Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
-Set-Location ..
-$BaseFolder  = Get-Location
-$GameFolder  = Join-path $BaseFolder ("\ladxhd_game_source_code")
-$PublishPath = Join-path $GameFolder ("\~Publish")
-
-#========================================================================================================================================
 # CONFIGURATION
 #========================================================================================================================================
 
@@ -82,6 +72,17 @@ $CreateLix86 = $true
 $CreateLiArm = $true
 $CreateMcx86 = $true
 $CreateMcArm = $true
+
+#========================================================================================================================================
+# SET BASE PATHS
+#========================================================================================================================================
+
+$Host.UI.RawUI.WindowTitle = "LADXHD: Patch Creation Script"
+Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
+Set-Location ..
+$BaseFolder  = Get-Location
+$GameFolder  = Join-path $BaseFolder ("\ladxhd_game_source_code")
+$PublishPath = Join-path $GameFolder ("\~Publish")
 
 #========================================================================================================================================
 # PUBLISHED PATHS
