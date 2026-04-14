@@ -83,7 +83,7 @@ $BaseFolder   = Get-Location
 $GameFolder   = Join-path $BaseFolder ("\ladxhd_game_source_code")
 $PublishPath  = Join-path $GameFolder ("\~Publish")
 $PatcherPath  = Join-path $BaseFolder ("\ladxhd_patcher_source_code")
-$ResourcePath = Join-path $PatcherPath "\Resources"
+$ResourcePath = Join-path $PatcherPath ("\Resources")
 
 #========================================================================================================================================
 # PUBLISHED PATHS
@@ -102,7 +102,7 @@ $MacOSArPath = Join-path $PublishPath ("\MacOS-Arm64")
 #========================================================================================================================================
 
 $XDelta3Path = Join-Path $PatcherPath ("\Resources\xdelta3.exe")
-$PatchesPath = Join-Path $PatcherPath "\Patches"
+$PatchesPath = Join-Path $PatcherPath ("\Patches")
 
 $WinDXPatches = Join-Path $PatchesPath ("\LADXHD (Win-DX) Patches")
 $WinGLPatches = Join-Path $PatchesPath ("\LADXHD (Win-GL) Patches")
@@ -242,10 +242,10 @@ function GetOldFilePath([object]$File, [string]$GamePath, [string]$RelativePath,
 
 function PrepareAndroid([string]$GamePath)
 {
-    $WorkDir = Join-Path $GamePath "~Temp"
-    $APKFile = Join-Path $GamePath "com.zelda.ladxhd-Signed.apk"
-    $TempZIP = Join-Path $WorkDir "com.zelda.ladxhd-Signed.zip"
-    $MetaInf = Join-Path $WorkDir "META-INF"
+    $WorkDir = Join-Path $GamePath ("~Temp")
+    $APKFile = Join-Path $GamePath ("com.zelda.ladxhd-Signed.apk")
+    $TempZIP = Join-Path $WorkDir ("com.zelda.ladxhd-Signed.zip")
+    $MetaInf = Join-Path $WorkDir ("META-INF")
 
     Remove-Item -Path $WorkDir -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
     New-Item -Path $WorkDir -ItemType Directory | Out-Null
@@ -255,7 +255,7 @@ function PrepareAndroid([string]$GamePath)
     Remove-Item -Path $MetaInf -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
     Remove-Item -Path $TempZIP -Force -ErrorAction SilentlyContinue | Out-Null
 
-    $TempPath = Join-Path $WorkDir "com.zelda.ladxhd"
+    $TempPath = Join-Path $WorkDir ("com.zelda.ladxhd")
     New-Item -Path $TempPath -ItemType Directory | Out-Null
 
     foreach ($Item in Get-ChildItem -LiteralPath $WorkDir)
@@ -263,15 +263,15 @@ function PrepareAndroid([string]$GamePath)
         if ($Item.Name -eq "com.zelda.ladxhd") { continue }
         Move-Item -LiteralPath $Item.FullName -Destination $TempPath -Force
     }
-    $ContPath = Join-Path (Join-Path $TempPath "assets") "Content"
-    $DataPath = Join-Path (Join-Path $TempPath "assets") "Data"
-    $BaseAPK = Join-Path $ResourcePath "android_base.apk"
+    $ContPath = Join-Path (Join-Path $TempPath "assets") ("Content")
+    $DataPath = Join-Path (Join-Path $TempPath "assets") ("Data")
+    $BaseAPK = Join-Path $ResourcePath ("android_base.apk")
 
     Move-Item -LiteralPath $ContPath -Destination $GamePath -Force
     Move-Item -LiteralPath $DataPath -Destination $GamePath -Force
     Remove-Item -Path $BaseAPK -Force -ErrorAction SilentlyContinue | Out-Null
 
-    $TempAPK = Join-Path $GamePath "com.zelda.ladxhd-temp.zip"
+    $TempAPK = Join-Path $GamePath ("com.zelda.ladxhd-temp.zip")
     Copy-Item -LiteralPath $APKFile -Destination $TempAPK -Force
     & $SevenZipExe "d" $TempAPK "META-INF\*" "assets\Content\*" "assets\Data\*" "-r"
     Copy-Item -LiteralPath $TempAPK -Destination $BaseAPK -Force
@@ -328,7 +328,7 @@ function PublishAndPackLauncher()
     Write-Host "Publishing Launcher and packing into ZIP files:"
     Write-Host ""
 
-    $LauncherBat = Join-Path $BaseFolder "ladxhd_launcher_source_code\publish.bat"
+    $LauncherBat = Join-Path $BaseFolder ("ladxhd_launcher_source_code\publish.bat")
 
     if (!(Test-Path $LauncherBat))
     {
@@ -354,7 +354,7 @@ function PublishAndPackLauncher()
 
 function VerifyOriginal()
 {
-    if (!(Test-Path (Join-Path $OldGamePath "Link's Awakening DX HD.exe"))) 
+    if (!(Test-Path (Join-Path $OldGamePath ("Link's Awakening DX HD.exe"))))
     {
         Write-Host "Invalid path or missing executable for original game (OldGamePath)."
         return $false
@@ -376,9 +376,9 @@ function VerifyExecutable([string]$Platform, [string]$GamePath)
 {
     switch -wildcard ($Platform)
     {
-        "Win_*"   { if (!(Test-Path (Join-Path $GamePath "Link's Awakening DX HD.exe"))) { return $false } }
-        "Linux_*" { if (!(Test-Path (Join-Path $GamePath "Link's Awakening DX HD"))) { return $false } }
-        "MacOS_*" { if (!(Test-Path (Join-Path $GamePath "Link's Awakening DX HD"))) { return $false } }
+        "Win_*"   { if (!(Test-Path (Join-Path $GamePath ("Link's Awakening DX HD.exe")))) { return $false } }
+        "Linux_*" { if (!(Test-Path (Join-Path $GamePath ("Link's Awakening DX HD")))) { return $false } }
+        "MacOS_*" { if (!(Test-Path (Join-Path $GamePath ("Link's Awakening DX HD")))) { return $false } }
         "Android" { return $true }
     }
     return $true
@@ -422,7 +422,7 @@ function GeneratePatches([bool]$CreatePatches, [string]$GamePath, [string]$Patch
     Write-Host ('Generating "patches_' + $Platform.ToLower() + '.zip" for patcher program.')
     Write-Host ""
 
-    $ZipPath = Join-Path $PatchOutput  "\*"
+    $ZipPath = Join-Path $PatchOutput ("\*")
     $ZipFile = Join-Path $ResourcePath ("\patches_" + $Platform.ToLower() + ".zip")
     Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue | Out-Null
     Compress-Archive -Path $ZipPath -DestinationPath $ZipFile | Out-Null

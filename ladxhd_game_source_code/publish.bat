@@ -108,5 +108,5 @@ if [%RunCreatePatches%]==[true] (
     echo Done! Game built, patches created, and launcher published.
 ) else (
     echo Done! Builds are in the Publish folder.
+    pause >nul
 )
-pause >nul

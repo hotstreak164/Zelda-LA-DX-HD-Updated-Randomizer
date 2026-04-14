@@ -1,5 +1,22 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.7.5**
+### The "Music to My Ears" Update
+  * Implement music replacement via OGG files placed in "Mods\Music" folder. See the wiki for more info.
+  * Add "(Brazil)" to Portuguese and implement Portuguese (Portugal). (credit @tomasraimundo48-cyber).
+  * Update LAHDMod for textbox overlay to allow floats for non-integer scaling (though not recommended).
+  * Support LAHDMods to individually scale game menus and inventory: can use floats (though not recommended).
+  * Add LAHDMod to allow recoloring the various Hinox minibosses found in dungeons 2, 7, and 8.
+  * Show "Success" label on patcher progress bar after patching is complete and message box is closed.
+  * Give dungeon 7 ball collision when it's height drops to 4 or lower so it bounces off walls on descent.
+  * Improve some descriptions on launcher "Mod" menu and add options from latest LAHDMods.
+  * Fix launcher language not lining up with game menu and fix damage taken multiplier to use decimal value.
+  * Fix launcher scaling issues and intercept fullscreen button so it can not actually fullscreen.
+  * Fix removing repelling velocities when a transition starts so player doesn't get stuck in a loop.
+  * Fix MacOS finalization scripts & bundling for different Wine distributions (credit @aitorciki).
+  * Fix mouse positioning in the map editor for devices that have a "notch" (credit @aitorciki).
+  * Fix miniboss Armos Knight from sometimes sliding after death when arrows are fired in succession.
+
 ## **v1.7.4**
 ### The "Android Mali GPUs Fix" Update
   * Allow resizing the launcher vertically for smaller screens like the one for the Steam Deck.

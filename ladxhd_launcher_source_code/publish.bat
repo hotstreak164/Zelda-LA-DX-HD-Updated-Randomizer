@@ -65,5 +65,5 @@ if [%Copy_to_Resources%]==[true] (
     echo Done! Builds were zipped and copied to the patcher "Resources" folder.
 ) else (
     echo Done! Builds can be found in the Publish folder.
+    pause >nul
 )
-pause >nul

@@ -3,7 +3,7 @@
   <!-- Main configuration. -->
   <PropertyGroup>
     <AssemblyName>Link's Awakening DX HD</AssemblyName>
-    <Version>1.7.4</Version>
+    <Version>1.7.5</Version>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <RuntimeIdentifiers>osx-arm64;osx-x64</RuntimeIdentifiers>
     <StartupObject>ProjectZ.Program</StartupObject>
