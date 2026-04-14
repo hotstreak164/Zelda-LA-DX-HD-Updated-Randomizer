@@ -6,10 +6,7 @@
 #========================================================================================================================================
 <#
 
-  The purpose of this script is to generate patches from v1.0.0 of Link's Awakening DX HD and whatever the latest version is. The
-  original release should be set to the "$OldGamePath" variable, the new release set to the "$NewGamePath" variable, and the version
-  should be set to the "$GameVersion" variable. After that, just run the script and it will generate all the necessary patches. From
-  there the patches can be imported into "Resources.resx" of the patcher source code and compiled into the resulting patcher.
+  The purpose of this script is to generate patches from v1.0.0 of Link's Awakening DX HD and whatever the latest version is. 
 
 #>
 #========================================================================================================================================
@@ -21,24 +18,27 @@
   - Generate xdelta patches to update v1.0.0 or v1.1.4+ to the latest build.
   - XDelta3 patches must share a name with the file they are patching + ".xdelta" extension.
   - For example, the file "musicOverworld.data" the patch should be "musicOverworld.data.xdelta"
+  - This script can be automatically ran from "publish.bat" in "ladxhd_game_source_code" folder.
+  - It can automatically run the launcher "publish.bat" script in "ladxhd_launcher_source_code" folder.
 
   Requirements:
+  - .NET 8.0 SDK for building game/launcher.
   - Original v1.0.0 of the game.
   - New builds of the game.
   - Both must be fully built and playable.
+  - 7-Zip (for Android build).
 
   Configuration:
-  - $GameVersion : Used only for output folder naming.
   - $OldGamePath : Root path where the original v1.0.0 is released.
   - $SevenZipExe : The path to 7-zip. Required to pack Android ".apk" file.
   - $PubLauncher : Publish/pack launcher and move to "Resources" folder.
   - $CreateXXXXX : Create patches for the build described by "XXXXX".
 
   How to use:
-  - Set the paths to the games below in "CONFIGURATION."
+  - Publish the games via "publish.bat" in "ladxhd_game_source_code" folder.
+  - This script will automatically retrieve the published game paths.
   - Version 1.0.0 should be set to "OldGamePath".
   - The new builds should be set to their respective folders.
-  - Set the "GameVersion" which will tag the output folders in "Resources".
   - Right click this script, select "Run with PowerShell".
   - Generated patches can be found in the "Resources" folder.
   - Obviously, the xdelta patches can be found in this folder.
@@ -60,7 +60,6 @@
 # CONFIGURATION
 #========================================================================================================================================
 
-$GameVersion = "1.7.5"
 $OldGamePath = "H:\Projects\Zelda Link's Awakening\original"
 $SevenZipExe = "C:\Program Files\7-Zip\7z.exe"
 $PubLauncher = $true
@@ -80,9 +79,11 @@ $CreateMcArm = $true
 $Host.UI.RawUI.WindowTitle = "LADXHD: Patch Creation Script"
 Set-Location (Split-Path $script:MyInvocation.MyCommand.Path)
 Set-Location ..
-$BaseFolder  = Get-Location
-$GameFolder  = Join-path $BaseFolder ("\ladxhd_game_source_code")
-$PublishPath = Join-path $GameFolder ("\~Publish")
+$BaseFolder   = Get-Location
+$GameFolder   = Join-path $BaseFolder ("\ladxhd_game_source_code")
+$PublishPath  = Join-path $GameFolder ("\~Publish")
+$PatcherPath  = Join-path $BaseFolder ("\ladxhd_patcher_source_code")
+$ResourcePath = Join-path $PatcherPath "\Resources"
 
 #========================================================================================================================================
 # PUBLISHED PATHS
@@ -96,22 +97,20 @@ $LinuxArPath = Join-path $PublishPath ("\Linux-Arm64")
 $MacOS86Path = Join-path $PublishPath ("\MacOS-x86_64")
 $MacOSArPath = Join-path $PublishPath ("\MacOS-Arm64")
 
-$ResourcePath = Join-path $BaseFolder "\ladxhd_patcher_source_code\Resources"
-
 #========================================================================================================================================
 # SETUP XDELTA & OUTPUTS
 #========================================================================================================================================
 
-$XDelta3Path  = Join-Path $BaseFolder ("\ladxhd_patcher_source_code\Resources\xdelta3.exe")
-$PatchFolder  = Join-Path $BaseFolder "\ladxhd_patcher_source_code\Patches"
+$XDelta3Path = Join-Path $PatcherPath ("\Resources\xdelta3.exe")
+$PatchesPath = Join-Path $PatcherPath "\Patches"
 
-$WinDXPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Win-DX) Patches")
-$WinGLPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Win-GL) Patches")
-$DroidPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Android) Patches")
-$Lix86Patches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Linux-x86) Patches")
-$LiArmPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Linux-Arm64) Patches")
-$Mcx86Patches = Join-Path $PatchFolder ("\v" + $GameVersion + " (MacOS-x86) Patches")
-$McArmPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (MacOS-Arm64) Patches")
+$WinDXPatches = Join-Path $PatchesPath ("\LADXHD (Win-DX) Patches")
+$WinGLPatches = Join-Path $PatchesPath ("\LADXHD (Win-GL) Patches")
+$DroidPatches = Join-Path $PatchesPath ("\LADXHD (Android) Patches")
+$Lix86Patches = Join-Path $PatchesPath ("\LADXHD (Linux-x86) Patches")
+$LiArmPatches = Join-Path $PatchesPath ("\LADXHD (Linux-Arm64) Patches")
+$Mcx86Patches = Join-Path $PatchesPath ("\LADXHD (MacOS-x86) Patches")
+$McArmPatches = Join-Path $PatchesPath ("\LADXHD (MacOS-Arm64) Patches")
 
 #========================================================================================================================================
 # CREATE PATCHES FOLDER
@@ -336,18 +335,16 @@ function PublishAndPackLauncher()
         Write-Host "Could not find publish.bat at: $LauncherBat"
         return
     }
-
-    $Process = Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$LauncherBat`"" -Wait -PassThru
-
-    if ($Process.ExitCode -ne 0)
+    & cmd.exe /c "`"$LauncherBat`""
+    
+    if ($LASTEXITCODE -ne 0)
     {
-        Write-Host "Launcher publish failed with exit code: $($Process.ExitCode)"
+        Write-Host "Launcher publish failed with exit code: $LASTEXITCODE"
     }
     else
     {
         Write-Host "Launcher published and packed successfully."
     }
-
     Write-Host ""
 }
 
@@ -399,7 +396,7 @@ function GeneratePatches([bool]$CreatePatches, [string]$GamePath, [string]$Patch
 
     Write-Host "------------------------------------------------------------------------------------------"
     Write-Host ""
-    Write-Host ("Generating " + $Platform + " patches for Link's Awakening DX HD v" + $GameVersion + "...")
+    Write-Host ("Generating " + $Platform + " patches for Link's Awakening DX HD ...")
     Write-Host ""
 
     foreach ($file in Get-ChildItem -LiteralPath $GamePath -Recurse -File) 
