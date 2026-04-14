@@ -2,6 +2,12 @@
 cd /d "%~dp0"
 
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+:: Configuration
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+set RunCreatePatches=true
+
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 :: Path Variables for WSL
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -80,9 +86,23 @@ for /r "%~dp0~Publish" %%f in (nfd.lib nfd.pdb sosdocsunix.txt com.zelda.ladxhd.
 )
 
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+:: Create Patches
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+if [%RunCreatePatches%]==[true] (
+    echo Running CreatePatches.ps1...
+    powershell -ExecutionPolicy Bypass -File "%~dp0..\ladxhd_patcher_source_code\CreatePatches.ps1"
+    if %errorlevel% neq 0 ( echo CreatePatches failed! & pause & exit /b 1 )
+)
+
+::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 :: Finish
 ::───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 echo.
-echo Done! Builds are in the Publish folder. Press a key to close the window.
+if [%RunCreatePatches%]==[true] (
+    echo Done! Game built, patches created, and launcher published.
+) else (
+    echo Done! Builds are in the Publish folder.
+)
 pause >nul

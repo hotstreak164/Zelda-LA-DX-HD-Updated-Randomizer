@@ -27,6 +27,13 @@
   - New builds of the game.
   - Both must be fully built and playable.
 
+  Configuration:
+  - $GameVersion : Used only for output folder naming.
+  - $OldGamePath : Root path where the original v1.0.0 is released.
+  - $SevenZipExe : The path to 7-zip. Required to pack Android ".apk" file.
+  - $PubLauncher : Publish/pack launcher and move to "Resources" folder.
+  - $CreateXXXXX : Create patches for the build described by "XXXXX".
+
   How to use:
   - Set the paths to the games below in "CONFIGURATION."
   - Version 1.0.0 should be set to "OldGamePath".
@@ -63,9 +70,10 @@ $PublishPath = Join-path $GameFolder ("\~Publish")
 # CONFIGURATION
 #========================================================================================================================================
 
-$GameVersion = "1.7.4"
+$GameVersion = "1.7.5"
 $OldGamePath = "H:\Projects\Zelda Link's Awakening\original"
 $SevenZipExe = "C:\Program Files\7-Zip\7z.exe"
+$PubLauncher = $true
 
 $CreateWinDX = $true
 $CreateWinGL = $true
@@ -309,6 +317,41 @@ function CreateMacOSExtraFilesZip([bool]$CreatePatches, [string]$GamePath, [stri
 }
 
 #========================================================================================================================================
+# PUBLISH LAUNCHER AND PACK INTO ZIP IN "RESOURCES" FOLDER
+#========================================================================================================================================
+
+function PublishAndPackLauncher()
+{
+    if (!$PubLauncher) { return }
+  
+    Write-Host "------------------------------------------------------------------------------------------"
+    Write-Host ""
+    Write-Host "Publishing Launcher and packing into ZIP files:"
+    Write-Host ""
+
+    $LauncherBat = Join-Path $BaseFolder "ladxhd_launcher_source_code\publish.bat"
+
+    if (!(Test-Path $LauncherBat))
+    {
+        Write-Host "Could not find publish.bat at: $LauncherBat"
+        return
+    }
+
+    $Process = Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$LauncherBat`"" -Wait -PassThru
+
+    if ($Process.ExitCode -ne 0)
+    {
+        Write-Host "Launcher publish failed with exit code: $($Process.ExitCode)"
+    }
+    else
+    {
+        Write-Host "Launcher published and packed successfully."
+    }
+
+    Write-Host ""
+}
+
+#========================================================================================================================================
 # VERIFICATION
 #========================================================================================================================================
 
@@ -399,6 +442,8 @@ if ((VerifyOriginal) -and (VerifyXDelta))
     GeneratePatches -CreatePatches $CreateLiArm -GamePath $LinuxArPath -PatchOutput $LiArmPatches -Platform "Linux_Arm64"
     GeneratePatches -CreatePatches $CreateMcx86 -GamePath $MacOS86Path -PatchOutput $Mcx86Patches -Platform "MacOS_x86"
     GeneratePatches -CreatePatches $CreateMcArm -GamePath $MacOSArPath -PatchOutput $McArmPatches -Platform "MacOS_Arm64"
+    
+    PublishAndPackLauncher
 
     Write-Host "------------------------------------------------------------------------------------------"
     Write-Host ""
