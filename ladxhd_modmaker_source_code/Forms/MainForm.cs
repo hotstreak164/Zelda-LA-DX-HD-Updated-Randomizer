@@ -7,8 +7,9 @@ namespace LADXHD_ModMaker
 {
     public partial class Form_MainForm : Form
     {
-        public string _gamePath = "";
+        public string _gamePath   = "";
         public string _outputPath = "";
+        public string _imagePath  = "";
 
         public Form_MainForm()
         {
@@ -161,11 +162,11 @@ namespace LADXHD_ModMaker
 
         private void textBox_Image_TextChanged(object sender, EventArgs e)
         {
-            Config.ImagePath = this.textBox_Image.Text;
+            _imagePath = this.textBox_Image.Text;
         }
         private void textBox_Image_Leave(object sender, EventArgs e)
         {
-            if (_outputPath != "" && _outputPath.TestPath())
+            if (_imagePath != "" && _imagePath.TestPath())
                 Config.ImagePath = this.textBox_Image.Text;
             else
                 this.textBox_Image.Text = Config.ImagePath;
@@ -187,7 +188,7 @@ namespace LADXHD_ModMaker
 
                     if (validExt.Contains(dropItem.Extension))
                     {
-                        _outputPath = DroppedPath[0];
+                        _imagePath = DroppedPath[0];
                         Config.ImagePath = DroppedPath[0];
                         this.textBox_Image.Text = Config.ImagePath;
                     }
@@ -205,7 +206,7 @@ namespace LADXHD_ModMaker
 
                 if (validExt.Contains(selectItem.Extension))
                 {
-                    _outputPath = selectedPath;
+                    _imagePath = selectedPath;
                     Config.ImagePath = selectedPath;
                     this.textBox_Image.Text = Config.ImagePath;
                 }

@@ -7,7 +7,9 @@ namespace LADXHD_ModMaker
 {
     internal class Config
     {
-        public const string Version = "1.2.0";
+        public const string Version = "1.2.1";
+
+        public static bool PatchMode;
 
         public static string AppName;
         public static string AppPath;
@@ -20,19 +22,21 @@ namespace LADXHD_ModMaker
         public static string DataPath;
         public static string BackupPath;
 
-        public static string ModsPath;
-        public static string LAHDModPath;
+        public static string ImagePath;
+        public static string TempPath;
+        public static string OutputPath;
+
+        public static string AnimationMods;
         public static string GraphicsMods;
         public static string MusicMods;
+        public static string LanguageMods;
+        public static string LAHDModPath;
 
-        public static string ImagePath;
-        public static string OutputPath;
-        public static string TempPath;
-        public static string PatchesPath;
-        public static string OutLAHDModPath;
+        public static string OutAnimationMods;
+        public static string OutGraphicsMods;
         public static string OutMusicMods;
-
-        public static bool PatchMode;
+        public static string OutLanguageMods;
+        public static string OutLAHDModPath;
 
         public static void Initialize()
         {
@@ -52,33 +56,38 @@ namespace LADXHD_ModMaker
 
         public static void UpdateGamePaths(string input)
         {
-            GamePath = input;
-            DataPath = Path.Combine(GamePath, "Data");
-            BackupPath = Path.Combine(DataPath, "Backup");
-            ModsPath = Path.Combine(GamePath, "Mods");
-            LAHDModPath = Path.Combine(ModsPath, "LAHDMods");
-            GraphicsMods = Path.Combine(ModsPath, "Graphics");
-            MusicMods = Path.Combine(ModsPath, "Music");
+            GamePath      = input;
+            DataPath      = Path.Combine(GamePath, "Data");
+            BackupPath    = Path.Combine(DataPath, "Backup");
+            AnimationMods = Path.Combine(GamePath, "Mods", "Animations");
+            GraphicsMods  = Path.Combine(GamePath, "Mods", "Graphics");
+            MusicMods     = Path.Combine(GamePath, "Mods", "Music");
+            LanguageMods  = Path.Combine(GamePath, "Mods", "Languages");
+            LAHDModPath   = Path.Combine(GamePath, "Mods", "LAHDMods");
         }
 
         public static void UpdateOutputPaths(string output)
         {
             // The paths when creating patches.
-            OutputPath = Path.Combine(output, "~ModOutput");
-            TempPath = Path.Combine(OutputPath, "~temp");
-            PatchesPath = Path.Combine(OutputPath, "Graphics");
-            OutLAHDModPath = Path.Combine(OutputPath, "LAHDMods");
-            OutMusicMods = Path.Combine(OutputPath, "Music");
+            OutputPath       = Path.Combine(output, "~ModOutput");
+            TempPath         = Path.Combine(OutputPath, "~temp");
+            OutAnimationMods = Path.Combine(OutputPath, "Animations");
+            OutGraphicsMods  = Path.Combine(OutputPath, "Graphics");
+            OutMusicMods     = Path.Combine(OutputPath, "Music");
+            OutLanguageMods  = Path.Combine(OutputPath, "Languages");
+            OutLAHDModPath   = Path.Combine(OutputPath, "LAHDMods");
         }
 
         public static void UpdateOutputPaths_ApplyPatches()
         {
             // The paths when applying patches.
-            OutputPath = Path.Combine(GamePath, "Mods", "Graphics");
-            TempPath = Path.Combine(BaseFolder, "~temp");
-            PatchesPath = Path.Combine(BaseFolder, "Graphics");
-            OutLAHDModPath = Path.Combine(BaseFolder, "LAHDMods");
-            OutMusicMods = Path.Combine(BaseFolder, "Music");
+            OutputPath       = Path.Combine(GamePath, "Mods", "Graphics");
+            TempPath         = Path.Combine(BaseFolder, "~temp");
+            OutAnimationMods = Path.Combine(BaseFolder, "Animations");
+            OutGraphicsMods  = Path.Combine(BaseFolder, "Graphics");
+            OutMusicMods     = Path.Combine(BaseFolder, "Music");
+            OutLanguageMods  = Path.Combine(BaseFolder, "Languages");
+            OutLAHDModPath   = Path.Combine(BaseFolder, "LAHDMods");
         }
     }
 }

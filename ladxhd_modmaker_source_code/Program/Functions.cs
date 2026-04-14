@@ -257,7 +257,7 @@ namespace LADXHD_ModMaker
         {
             // Create the necessary output paths.
             Config.TempPath.CreatePath(true);
-            Config.PatchesPath.CreatePath(true);
+            Config.OutGraphicsMods.CreatePath(true);
 
             // Get all files found in the base folder recursively.
             var fileCollection = Config.GraphicsMods.GetFiles("*", true);
@@ -280,7 +280,7 @@ namespace LADXHD_ModMaker
 
                 // Use the relative path to the file to get the finalized output path.
                 string relative = modFileItem.DirectoryName.Replace(Config.GraphicsMods,"").TrimStart('\\');
-                string destination = Path.Combine(Config.PatchesPath, relative).CreatePath();
+                string destination = Path.Combine(Config.OutGraphicsMods, relative).CreatePath();
 
                 // If the file is not an "original" file from v1.0.0 then find the original it was spawned from.
                 if (reverseFileTargets.TryGetValue(modFileItem.Name, out string shortName))
@@ -301,8 +301,10 @@ namespace LADXHD_ModMaker
                 XDelta3.Execute(Operation.Create, originalFileItem.FullName, modFileItem.FullName, outputPatch);
             }
             // Copy any LAHDMOD or music files found in the mods folder.
-            CopyModFiles(Config.LAHDModPath, Config.OutLAHDModPath);
+            CopyModFiles(Config.AnimationMods, Config.OutAnimationMods);
             CopyModFiles(Config.MusicMods, Config.OutMusicMods);
+            CopyModFiles(Config.LanguageMods, Config.OutLanguageMods);
+            CopyModFiles(Config.LAHDModPath, Config.OutLAHDModPath);
 
             // Try to copy over the image file.
             InstallImageFile();
@@ -355,7 +357,7 @@ namespace LADXHD_ModMaker
             Config.OutputPath.CreatePath(true);
 
             // Get all patch files found in the patches folder recursively.
-            var fileCollection = Config.PatchesPath.GetFiles("*", true);
+            var fileCollection = Config.OutGraphicsMods.GetFiles("*", true);
 
             // Get a count of how many files there are.
             TotalCount = fileCollection.Count;
@@ -374,7 +376,7 @@ namespace LADXHD_ModMaker
                 FileItem fileToPatchItem = FindFileToPatch(patchFileItem.BaseName);
 
                 // Use the relative path to the file to get the finalized output path.
-                string relative = patchFileItem.DirectoryName.Replace(Config.PatchesPath,"").TrimStart('\\');
+                string relative = patchFileItem.DirectoryName.Replace(Config.OutGraphicsMods,"").TrimStart('\\');
                 string destination = Path.Combine(Config.OutputPath, relative).CreatePath();
 
                 // If the file to patch doesn't exist then copy the file to the output path.
@@ -389,8 +391,10 @@ namespace LADXHD_ModMaker
                 XDelta3.Execute(Operation.Apply, fileToPatchItem.FullName, patchFileItem.FullName, patchedFile);
             }
             // Copy any LAHDMOD or music files found in the mods folder.
-            CopyModFiles(Config.OutLAHDModPath, Config.LAHDModPath);
+            CopyModFiles(Config.OutAnimationMods, Config.AnimationMods);
             CopyModFiles(Config.OutMusicMods, Config.MusicMods);
+            CopyModFiles(Config.OutLanguageMods, Config.LanguageMods);
+            CopyModFiles(Config.OutLAHDModPath, Config.LAHDModPath);
 
             // Remove the temporary folder.
             Config.TempPath.RemovePath();
