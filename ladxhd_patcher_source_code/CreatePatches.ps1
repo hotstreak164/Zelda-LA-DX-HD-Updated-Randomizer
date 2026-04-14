@@ -101,17 +101,16 @@ $ResourcePath = Join-path $BaseFolder "\ladxhd_patcher_source_code\Resources"
 # SETUP XDELTA & OUTPUTS
 #========================================================================================================================================
 
-$BaseFolder = Split-Path $script:MyInvocation.MyCommand.Path
-$XDelta3Path  = Join-Path $BaseFolder ("\Resources\xdelta3.exe")
+$XDelta3Path  = Join-Path $BaseFolder ("\ladxhd_patcher_source_code\Resources\xdelta3.exe")
+$PatchFolder  = Join-Path $BaseFolder "\ladxhd_patcher_source_code\Patches"
 
-$PatchFolder  = Join-Path $BaseFolder "\Patches"
-$WinDXPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Win-DX) Patches")
-$WinGLPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Win-GL) Patches")
-$DroidPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Android) Patches")
-$Lix86Patches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Linux-x86) Patches")
-$LiArmPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (Linux-Arm64) Patches")
-$Mcx86Patches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (MacOS-x86) Patches")
-$McArmPatches = Join-Path $BaseFolder ("\Patches\v" + $GameVersion + " (MacOS-Arm64) Patches")
+$WinDXPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Win-DX) Patches")
+$WinGLPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Win-GL) Patches")
+$DroidPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Android) Patches")
+$Lix86Patches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Linux-x86) Patches")
+$LiArmPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (Linux-Arm64) Patches")
+$Mcx86Patches = Join-Path $PatchFolder ("\v" + $GameVersion + " (MacOS-x86) Patches")
+$McArmPatches = Join-Path $PatchFolder ("\v" + $GameVersion + " (MacOS-Arm64) Patches")
 
 #========================================================================================================================================
 # CREATE PATCHES FOLDER
