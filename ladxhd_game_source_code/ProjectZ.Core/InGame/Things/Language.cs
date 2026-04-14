@@ -27,7 +27,7 @@ namespace ProjectZ.InGame.Things
                 .ToArray();
 
             var modFiles = GameFS.EnumerateFiles(
-                Values.PathMods,
+                Values.PathLanguageMods,
                 recursive: true,
                 acceptFile: name => name.EndsWith(".lng", StringComparison.OrdinalIgnoreCase))
                 .OrderBy(f => Path.GetFileName(f), StringComparer.OrdinalIgnoreCase)

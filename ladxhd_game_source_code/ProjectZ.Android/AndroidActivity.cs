@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Android.App;
 using Android.Content.PM;
 using Android.Content.Res;
@@ -46,11 +47,13 @@ namespace ProjectZ.Android
             Values.SetUserDataRoot(root);
 
             // Ensure folders exist.
-            System.IO.Directory.CreateDirectory(Values.PathMods);
-            System.IO.Directory.CreateDirectory(Values.PathLAHDMods);
-            System.IO.Directory.CreateDirectory(Values.PathGraphicsMods);
-            System.IO.Directory.CreateDirectory(Values.PathMusicMods);
-            System.IO.Directory.CreateDirectory(Values.PathSaveFolder);
+            Directory.CreateDirectory(Values.PathMods);
+            Directory.CreateDirectory(Values.PathAnimationMods);
+            Directory.CreateDirectory(Values.PathGraphicsMods);
+            Directory.CreateDirectory(Values.PathMusicMods);
+            Directory.CreateDirectory(Values.PathLanguageMods);
+            Directory.CreateDirectory(Values.PathLAHDMods);
+            Directory.CreateDirectory(Values.PathSaveFolder);
 
             // Get real display size for proper fullscreen rendering.
             var surfaceWidth = 0;

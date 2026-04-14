@@ -48,9 +48,11 @@ namespace ProjectZ.InGame.Things
 
         public static string PathDataFolder = "Data";
         public static string PathMods => Path.Combine(UserDataRoot, "Mods");
-        public static string PathLAHDMods => Path.Combine(PathMods, "LAHDMods");
+        public static string PathAnimationMods => Path.Combine(PathMods, "Animations");
         public static string PathGraphicsMods => Path.Combine(PathMods, "Graphics");
         public static string PathMusicMods => Path.Combine(PathMods, "Music");
+        public static string PathLanguageMods => Path.Combine(PathMods, "Languages");
+        public static string PathLAHDMods => Path.Combine(PathMods, "LAHDMods");
 
         public const string EditorUiObjectEditor = "objectEditor";
         public const string EditorUiObjectSelection = "objectSelection";

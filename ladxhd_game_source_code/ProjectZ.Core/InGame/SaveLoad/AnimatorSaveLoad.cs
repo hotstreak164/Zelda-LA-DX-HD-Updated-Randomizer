@@ -72,15 +72,14 @@ namespace ProjectZ.InGame.SaveLoad
 
         public static Animator LoadAnimator(string animatorId, bool redux = false)
         {
-            var fileName = Path.GetFileName(animatorId) + ".ani";
-
             // Try to load a custom animation file before the normal one.
-            var modFile = GameFS.EnumerateFiles(Values.PathMods, recursive: true, acceptFile: name => name.Equals(fileName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-            if (modFile != null)
-                return LoadAnimatorFile(modFile, redux);
+            var customAnimator = Path.Combine(Values.PathAnimationMods, animatorId + ".ani");
+            if (File.Exists(customAnimator))
+                return LoadAnimatorFile(customAnimator, redux);
 
             // Fall back to the game's normal animation files.
-            return LoadAnimatorFile(Path.Combine(Values.PathDataFolder, "Animations", animatorId + ".ani"), redux);
+            var mainAnimator = Path.Combine(Values.PathDataFolder, "Animations", animatorId + ".ani");
+            return LoadAnimatorFile(mainAnimator, redux);
         }
 
         private static string AddReduxToFilename(string spritePath)

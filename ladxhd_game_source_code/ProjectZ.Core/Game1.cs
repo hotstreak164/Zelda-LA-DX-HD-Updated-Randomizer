@@ -295,9 +295,11 @@ namespace ProjectZ
             // Make sure the mods folders exist. This is done for Android in AndroidActivity.
         #if !ANDROID
             Directory.CreateDirectory(Values.PathMods);
-            Directory.CreateDirectory(Values.PathLAHDMods);
+            Directory.CreateDirectory(Values.PathAnimationMods);
             Directory.CreateDirectory(Values.PathGraphicsMods);
             Directory.CreateDirectory(Values.PathMusicMods);
+            Directory.CreateDirectory(Values.PathLanguageMods);
+            Directory.CreateDirectory(Values.PathLAHDMods);
         #endif
 
             // Hook device reset function & create a new SpriteBatch to draw textures.
