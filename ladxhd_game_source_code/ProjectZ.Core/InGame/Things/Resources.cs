@@ -522,9 +522,17 @@ namespace ProjectZ.InGame.Things
 
         public static void AddSoundEffect(ContentManager content, string fileName)
         {
-            var soundEffect = content.Load<SoundEffect>("SoundEffects/" + fileName);
+            // Check for WAV override in mods folder first.
+            var wavPath = Path.Combine(Values.PathSoundEffectMods, fileName + ".wav");
+            if (File.Exists(wavPath))
+            {
+                using var stream = File.OpenRead(wavPath);
+                SoundEffects.TryAdd(fileName, SoundEffect.FromStream(stream));
+                return;
+            }
 
-            // try add is used because some files may already be loaded for the intro sequence
+            // Fall back to XNB.
+            var soundEffect = content.Load<SoundEffect>("SoundEffects/" + fileName);
             SoundEffects.TryAdd(fileName, soundEffect);
         }
 

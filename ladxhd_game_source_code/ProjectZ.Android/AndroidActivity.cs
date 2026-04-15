@@ -53,6 +53,7 @@ namespace ProjectZ.Android
             Directory.CreateDirectory(Values.PathMusicMods);
             Directory.CreateDirectory(Values.PathLanguageMods);
             Directory.CreateDirectory(Values.PathLAHDMods);
+            Directory.CreateDirectory(Values.PathSoundEffectMods);
             Directory.CreateDirectory(Values.PathSaveFolder);
 
             // Get real display size for proper fullscreen rendering.

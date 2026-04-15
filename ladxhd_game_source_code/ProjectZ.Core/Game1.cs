@@ -302,6 +302,7 @@ namespace ProjectZ
             Directory.CreateDirectory(Values.PathMusicMods);
             Directory.CreateDirectory(Values.PathLanguageMods);
             Directory.CreateDirectory(Values.PathLAHDMods);
+            Directory.CreateDirectory(Values.PathSoundEffectMods);
         #endif
 
             // Hook device reset function & create a new SpriteBatch to draw textures.

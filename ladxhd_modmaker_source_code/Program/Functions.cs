@@ -304,6 +304,7 @@ namespace LADXHD_ModMaker
             CopyModFiles(Config.AnimationMods, Config.OutAnimationMods);
             CopyModFiles(Config.MusicMods, Config.OutMusicMods);
             CopyModFiles(Config.LanguageMods, Config.OutLanguageMods);
+            CopyModFiles(Config.SoundsMods, Config.OutSoundsMods);
             CopyModFiles(Config.LAHDModPath, Config.OutLAHDModPath);
 
             // Try to copy over the image file.
@@ -394,6 +395,7 @@ namespace LADXHD_ModMaker
             CopyModFiles(Config.OutAnimationMods, Config.AnimationMods);
             CopyModFiles(Config.OutMusicMods, Config.MusicMods);
             CopyModFiles(Config.OutLanguageMods, Config.LanguageMods);
+            CopyModFiles(Config.OutSoundsMods, Config.SoundsMods);
             CopyModFiles(Config.OutLAHDModPath, Config.LAHDModPath);
 
             // Remove the temporary folder.

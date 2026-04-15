@@ -30,12 +30,14 @@ namespace LADXHD_ModMaker
         public static string GraphicsMods;
         public static string MusicMods;
         public static string LanguageMods;
+        public static string SoundsMods;
         public static string LAHDModPath;
 
         public static string OutAnimationMods;
         public static string OutGraphicsMods;
         public static string OutMusicMods;
         public static string OutLanguageMods;
+        public static string OutSoundsMods;
         public static string OutLAHDModPath;
 
         public static void Initialize()
@@ -63,6 +65,7 @@ namespace LADXHD_ModMaker
             GraphicsMods  = Path.Combine(GamePath, "Mods", "Graphics");
             MusicMods     = Path.Combine(GamePath, "Mods", "Music");
             LanguageMods  = Path.Combine(GamePath, "Mods", "Languages");
+            SoundsMods    = Path.Combine(GamePath, "Mods", "SoundEffects");
             LAHDModPath   = Path.Combine(GamePath, "Mods", "LAHDMods");
         }
 
@@ -75,6 +78,7 @@ namespace LADXHD_ModMaker
             OutGraphicsMods  = Path.Combine(OutputPath, "Graphics");
             OutMusicMods     = Path.Combine(OutputPath, "Music");
             OutLanguageMods  = Path.Combine(OutputPath, "Languages");
+            OutSoundsMods    = Path.Combine(OutputPath, "SoundEffects");
             OutLAHDModPath   = Path.Combine(OutputPath, "LAHDMods");
         }
 
@@ -87,6 +91,7 @@ namespace LADXHD_ModMaker
             OutGraphicsMods  = Path.Combine(BaseFolder, "Graphics");
             OutMusicMods     = Path.Combine(BaseFolder, "Music");
             OutLanguageMods  = Path.Combine(BaseFolder, "Languages");
+            OutSoundsMods    = Path.Combine(BaseFolder, "SoundEffects");
             OutLAHDModPath   = Path.Combine(BaseFolder, "LAHDMods");
         }
     }

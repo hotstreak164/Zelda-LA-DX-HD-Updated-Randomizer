@@ -53,6 +53,7 @@ namespace ProjectZ.InGame.Things
         public static string PathMusicMods => Path.Combine(PathMods, "Music");
         public static string PathLanguageMods => Path.Combine(PathMods, "Languages");
         public static string PathLAHDMods => Path.Combine(PathMods, "LAHDMods");
+        public static string PathSoundEffectMods => Path.Combine(PathMods, "SoundEffects");
 
         public const string EditorUiObjectEditor = "objectEditor";
         public const string EditorUiObjectSelection = "objectSelection";

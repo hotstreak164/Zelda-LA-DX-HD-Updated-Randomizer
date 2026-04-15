@@ -380,9 +380,12 @@ namespace LADXHD_Patcher
             string previousModPath = Path.Combine(Config.BaseFolder, "Data", "Mods");
 
             // Create the new mods folders.
-            Config.LAHDModPath.CreatePath(true);
+            Config.AnimationMods.CreatePath(true);
             Config.GraphicsMods.CreatePath(true);
             Config.MusicMods.CreatePath(true);
+            Config.LanguageMods.CreatePath(true);
+            Config.SoundsMods.CreatePath(true);
+            Config.LAHDModPath.CreatePath(true);
 
             // Find the old "Mods" path for lahdmods and exit if it doesn't exist.
             if (!Directory.Exists(previousModPath))
