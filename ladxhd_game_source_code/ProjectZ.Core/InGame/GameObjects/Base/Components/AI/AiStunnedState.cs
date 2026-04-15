@@ -42,7 +42,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
                 _aiComponent.CurrentStateId != "shake")
                 _oldState = _aiComponent.CurrentStateId;
 
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
+            Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
             _aiComponent.ChangeState("stunned");
         }

@@ -36,7 +36,7 @@ namespace ProjectZ.InGame.Pages
 
         public override void OnLoad(Dictionary<string, object> intent)
         {
-            Game1.GbsPlayer.Pause();
+            Game1.AudioManager.PauseMusic();
 
 #if ANDROID
                 VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, true);
@@ -49,7 +49,7 @@ namespace ProjectZ.InGame.Pages
 
         public override void OnPop(Dictionary<string, object> intent)
         {
-            Game1.GbsPlayer.Resume();
+            Game1.AudioManager.ResumeMusic();
 
 #if ANDROID
                 VirtualController.Initialize(Game1.WindowWidth, Game1.WindowHeight, false);

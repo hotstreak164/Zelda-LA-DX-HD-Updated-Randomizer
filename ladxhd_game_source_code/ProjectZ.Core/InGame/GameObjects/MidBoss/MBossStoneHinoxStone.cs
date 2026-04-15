@@ -65,7 +65,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _collisionCount++;
 
             if ((collisionType & Values.BodyCollision.Floor) != 0)
-                Game1.GameManager.PlaySoundEffect("D360-32-20");
+                Game1.AudioManager.PlaySoundEffect("D360-32-20");
 
             if (_collisionCount > 3 || EntityPosition.Y > _spawnY + Values.FieldHeight - 32)
             {

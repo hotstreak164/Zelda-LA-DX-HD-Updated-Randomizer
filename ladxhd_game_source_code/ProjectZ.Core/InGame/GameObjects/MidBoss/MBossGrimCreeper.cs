@@ -164,7 +164,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _body.IsActive = true;
             _animator.Play("attack");
 
-            Game1.GameManager.SetMusic(79, 2);
+            Game1.AudioManager.SetMusic(79, 2);
         }
 
         private void UpdateSpawn()
@@ -268,7 +268,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void InitJump()
         {
-            Game1.GameManager.PlaySoundEffect("D378-62-3F");
+            Game1.AudioManager.PlaySoundEffect("D378-62-3F");
 
             if (!string.IsNullOrEmpty(_saveKey))
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");

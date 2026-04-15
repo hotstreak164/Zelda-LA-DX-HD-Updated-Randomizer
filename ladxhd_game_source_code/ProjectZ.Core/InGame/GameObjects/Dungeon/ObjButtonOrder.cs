@@ -78,7 +78,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                         Game1.GameManager.SaveManager.SetString(_strKey, "1");
 
                     // Play the sound effect when stepping on the correct tile.
-                    Game1.GameManager.PlaySoundEffect("D360-19-13");
+                    Game1.AudioManager.PlaySoundEffect("D360-19-13");
                 }
                 // The tile is not the currently active tile.
                 else

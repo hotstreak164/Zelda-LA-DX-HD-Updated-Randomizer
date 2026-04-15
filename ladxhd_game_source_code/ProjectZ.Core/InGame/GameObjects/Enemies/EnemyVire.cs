@@ -152,7 +152,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Drowned()
         {
             // play sound effect
-            Game1.GameManager.PlaySoundEffect("D360-14-0E");
+            Game1.AudioManager.PlaySoundEffect("D360-14-0E");
 
             // spawn splash effect
             var fallAnimation = new ObjAnimator(_body.Owner.Map,
@@ -309,7 +309,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             Map.Objects.SpawnObject(vireball0);
             var vireball1 = new EnemyVireball(Map, startPosition, new Vector2(MathF.Cos(radiant + dist), MathF.Sin(radiant + dist) * 1.5f));
             Map.Objects.SpawnObject(vireball1);
-            Game1.GameManager.PlaySoundEffect("D378-13-0D");
+            Game1.AudioManager.PlaySoundEffect("D378-13-0D");
         }
 
         private void UpdateAttack()

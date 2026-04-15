@@ -192,16 +192,16 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
                 var hitState = _damageState.HitKnockBack(gameObject, direction, hitType, pieceOfPower, false);
 
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
                 return hitState;
             }
             _damageState.HitKnockBack(gameObject, direction, hitType, pieceOfPower, false);
 
             if (pieceOfPower)
-                Game1.GameManager.PlaySoundEffect("D370-17-11");
+                Game1.AudioManager.PlaySoundEffect("D370-17-11");
             else
-                Game1.GameManager.PlaySoundEffect("D360-09-09");
+                Game1.AudioManager.PlaySoundEffect("D360-09-09");
 
             return Values.HitCollision.Repelling;
         }

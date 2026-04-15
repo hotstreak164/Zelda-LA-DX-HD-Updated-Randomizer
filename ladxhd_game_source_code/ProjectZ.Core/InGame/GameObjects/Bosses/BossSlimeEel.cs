@@ -190,7 +190,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (!_attackSound && _animator.CurrentFrameIndex == 2)
             {
                 _attackSound = true;
-                Game1.GameManager.PlaySoundEffect("D370-22-16");
+                Game1.AudioManager.PlaySoundEffect("D370-22-16");
             }
 
             if (!_animator.IsPlaying)
@@ -201,7 +201,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void InitExplode()
         {
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D378-12-0C");
             _explosionAnimator.Play("idle");
 
             _isFullyOut = false;
@@ -246,7 +246,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void InitJumpingOut()
         {
-            Game1.GameManager.PlaySoundEffect("D370-22-16");
+            Game1.AudioManager.PlaySoundEffect("D370-22-16");
 
             _animator.Play("head_0");
             _body.VelocityTarget = _moveDirection * new Vector2(0, 1) * 1.5f;
@@ -317,7 +317,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private void OnDeath()
         {
             // spawn a heart
-            Game1.GameManager.PlaySoundEffect("D378-26-1A");
+            Game1.AudioManager.PlaySoundEffect("D378-26-1A");
             Map.Objects.SpawnObject(new ObjItem(Map, (int)EntityPosition.X - 8, (int)EntityPosition.Y - 8, "j", "d5_nHeart", "heartMeterFull", null));
             Game1.GameManager.SaveManager.SetString(_saveKey, "1");
             DespawnObjects();
@@ -399,7 +399,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (_pullSound > 75)
             {
                 _pullSound -= 75;
-                Game1.GameManager.PlaySoundEffect("D360-41-29");
+                Game1.AudioManager.PlaySoundEffect("D360-41-29");
             }
         }
 
@@ -443,7 +443,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (!_attackSound && _animator.CurrentFrameIndex == 3)
             {
                 _attackSound = true;
-                Game1.GameManager.PlaySoundEffect("D370-22-16");
+                Game1.AudioManager.PlaySoundEffect("D370-22-16");
             }
 
             // finished attacking?
@@ -535,9 +535,9 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             if (_aiDamageState.CurrentLives <= 0 && wasAlive)
             {
-                Game1.GameManager.SetMusic(93,2);
-                Game1.GameManager.PlayMusic(true);
-                Game1.GameManager.PlaySoundEffect("D370-16-10");
+                Game1.AudioManager.SetMusic(93,2);
+                Game1.AudioManager.PlayMusic(true);
+                Game1.AudioManager.PlaySoundEffect("D370-16-10");
 
                 Game1.GameManager.StartDialogPath("slime_eel_1");
                 _eelSpawner.ToDespawn();

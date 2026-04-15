@@ -276,7 +276,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             _deathCount -= 100;
 
-            Game1.GameManager.PlaySoundEffect("D378-19-13");
+            Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
             var posX = (int)EntityPosition.X + Game1.RandomNumber.Next(0, 32) - 8 - 16;
             var posY = (int)EntityPosition.Y - (int)EntityPosition.Z + Game1.RandomNumber.Next(0, 32) - 8;
@@ -295,7 +295,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             if (_triggerField.Contains(MapManager.ObjLink.BodyRectangle))
             {
-                Game1.GameManager.SetMusic(24, 2);
+                Game1.AudioManager.SetMusic(24, 2);
                 _aiComponent.ChangeState("preSpawn");
             }
         }
@@ -479,16 +479,16 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
                 _hittable = false;
                 _shakeScreen = false;
-                Game1.GameManager.SetMusic(93,2);
-                Game1.GameManager.PlayMusic(true);
-                Game1.GameManager.PlaySoundEffect("D370-16-10");
+                Game1.AudioManager.SetMusic(93,2);
+                Game1.AudioManager.PlayMusic(true);
+                Game1.AudioManager.PlaySoundEffect("D370-16-10");
 
                 _aiComponent.ChangeState("preDeath");
                 Game1.GameManager.StartDialogPath("facade_death");
             }
             else
             {
-                Game1.GameManager.PlaySoundEffect("D370-07-07");
+                Game1.AudioManager.PlaySoundEffect("D370-07-07");
             }
 
             _blinkTigger.OnInit();
@@ -502,7 +502,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (!string.IsNullOrEmpty(_saveKey))
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
-            Game1.GameManager.PlaySoundEffect("D378-26-1A");
+            Game1.AudioManager.PlaySoundEffect("D378-26-1A");
 
             SpawnHeart();
 

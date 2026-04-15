@@ -53,7 +53,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // play sound effect
             if (playerPowder)
-                Game1.GameManager.PlaySoundEffect("D360-05-05", true);
+                Game1.AudioManager.PlaySoundEffect("D360-05-05", true);
             else
                 _damage = true;
 

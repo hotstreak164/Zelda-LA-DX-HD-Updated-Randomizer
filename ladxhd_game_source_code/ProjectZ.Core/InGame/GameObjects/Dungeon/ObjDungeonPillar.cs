@@ -75,8 +75,8 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             if (GameSettings.ScreenShake)
                 Game1.GameManager.ShakeScreen(1300 + 5 * 500, 3, 2, 5, 2.5f);
 
-            Game1.GameManager.PlaySoundEffect("D360-11-0B");
-            Game1.GameManager.PlaySoundEffect("D378-37-25");
+            Game1.AudioManager.PlaySoundEffect("D360-11-0B");
+            Game1.AudioManager.PlaySoundEffect("D378-37-25");
         }
 
         private void UpdateFalling()

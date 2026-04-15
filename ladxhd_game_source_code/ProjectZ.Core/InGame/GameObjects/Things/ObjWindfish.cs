@@ -38,12 +38,12 @@ namespace ProjectZ.InGame.GameObjects.Things
         {
             if (!_isVisible && Game1.GameManager.SaveManager.GetString(_spawnKey) == "1")
             {
-                Game1.GameManager.PlaySoundEffect("D370-31-1F");
+                Game1.AudioManager.PlaySoundEffect("D370-31-1F");
                 _isVisible = true;
             }
             if (_isVisible && Game1.GameManager.SaveManager.GetString(_spawnKey) == "0")
             {
-                Game1.GameManager.PlaySoundEffect("D370-31-1F");
+                Game1.AudioManager.PlaySoundEffect("D370-31-1F");
                 _isVisible = false;
             }
         }

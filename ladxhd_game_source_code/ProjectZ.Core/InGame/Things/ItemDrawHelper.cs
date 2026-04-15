@@ -209,7 +209,7 @@ namespace ProjectZ.InGame.Things
                     if ((_rubySoundIndex + 1) * 32 <= _rubyCounter)
                     {
                         _rubySoundIndex++;
-                        Game1.GameManager.PlaySoundEffect("D370-05-05");
+                        Game1.AudioManager.PlaySoundEffect("D370-05-05");
                     }
                 }
                 else
@@ -257,7 +257,7 @@ namespace ProjectZ.InGame.Things
                         _heartCount += 4;
 
                         if (_heartSounds)
-                            Game1.GameManager.PlaySoundEffect("D370-06-06");
+                            Game1.AudioManager.PlaySoundEffect("D370-06-06");
 
                         if (_heartCount >= realCount)
                         {

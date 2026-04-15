@@ -46,7 +46,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                     // check if the player has a compass
                     var hasCompass = Game1.GameManager.GetItem("compass") != null;
                     if (hasCompass)
-                        Game1.GameManager.PlaySoundEffect("D370-27-1B");
+                        Game1.AudioManager.PlaySoundEffect("D370-27-1B");
                 }
             }
             // reset when the player is far enough away

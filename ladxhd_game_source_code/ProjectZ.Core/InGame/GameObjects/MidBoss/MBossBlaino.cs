@@ -171,7 +171,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_body.FieldRectangle.Contains(MapManager.ObjLink.BodyRectangle))
             {
                 // start boss music
-                Game1.GameManager.SetMusic(79, 2);
+                Game1.AudioManager.SetMusic(79, 2);
 
                 _aiComponent.ChangeState("jumping");
             }
@@ -292,7 +292,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _drawGlove = true;
 
             _animator.Play("hit1");
-            Game1.GameManager.PlaySoundEffect("D360-51-33");
+            Game1.AudioManager.PlaySoundEffect("D360-51-33");
         }
 
         private void TickSwing0(double counter)
@@ -460,7 +460,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void InitBox()
         {
-            Game1.GameManager.PlaySoundEffect("D378-10-0A");
+            Game1.AudioManager.PlaySoundEffect("D378-10-0A");
         }
 
         private void UpdateBox()
@@ -472,7 +472,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 // box again?
                 if (_boxCount > 0)
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-10-0A");
+                    Game1.AudioManager.PlaySoundEffect("D378-10-0A");
                     _animator.Play("prebox");
                 }
                 else
@@ -584,9 +584,9 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
             // stop boss music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
-            Game1.GameManager.PlaySoundEffect("D360-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D360-27-1B");
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 8));
 
             Map.Objects.DeleteObjects.Add(this);

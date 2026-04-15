@@ -140,7 +140,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             if (_aiComponent.CurrentStateId == "attack")
             {
-                Game1.GameManager.PlaySoundEffect("D360-11-0B");
+                Game1.AudioManager.PlaySoundEffect("D360-11-0B");
                 ToWalking();
             }
         }
@@ -270,7 +270,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void UpdatePreAttack()
         {
-            Game1.GameManager.PlaySoundEffect("D360-09-09", false);
+            Game1.AudioManager.PlaySoundEffect("D360-09-09", false);
 
             // start attacking
             if (!_animator.IsPlaying)
@@ -290,7 +290,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             _aiComponent.ChangeState("bounce");
 
-            Game1.GameManager.PlaySoundEffect("D360-11-0B");
+            Game1.AudioManager.PlaySoundEffect("D360-11-0B");
             _animator.Play("wall");
 
             _damageField.PushMultiplier = 1.75f;
@@ -332,7 +332,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             Game1.GameManager.StartDialogPath("mc_boss_defeat");
 
             // spawn fairy
-            Game1.GameManager.PlaySoundEffect("D360-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D360-27-1B");
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 8));
 
             Map.Objects.DeleteObjects.Add(this);
@@ -365,7 +365,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_aiComponent.CurrentStateId != "bounce")
                 return Values.HitCollision.RepellingParticle;
 
-            Game1.GameManager.PlaySoundEffect("D370-07-07");
+            Game1.AudioManager.PlaySoundEffect("D370-07-07");
 
             _damageState.OnHit(gameObject, direction, hitType, damage, pieceOfPower);
 

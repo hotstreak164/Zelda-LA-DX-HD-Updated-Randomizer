@@ -96,7 +96,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageField.IsActive = false;
 
             if (_playSound)
-                Game1.GameManager.PlaySoundEffect("D360-07-07");
+                Game1.AudioManager.PlaySoundEffect("D360-07-07");
         }
 
         private void UpdateIdle()

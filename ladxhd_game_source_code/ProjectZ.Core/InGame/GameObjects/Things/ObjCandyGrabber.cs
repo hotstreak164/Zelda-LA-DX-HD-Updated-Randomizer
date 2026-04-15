@@ -140,7 +140,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 if ((_marinGame || ControlHandler.TrendyButtonDown(ControlHandler.CancelButton)) &&
                     EntityPosition.X < _vecStart.X + 112)
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-32-20", false);
+                    Game1.AudioManager.PlaySoundEffect("D378-32-20", false);
                     EntityPosition.Move(new Vector2(MoveSpeed, 0));
 
                     if (EntityPosition.X > _vecStart.X + 112)
@@ -148,7 +148,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
                     return _currentState;
                 }
-                Game1.GameManager.StopSoundEffect("D378-32-20");
+                Game1.AudioManager.StopSoundEffect("D378-32-20");
                 Game1.GameManager.SaveManager.SetString("trendy_button_1", "0");
                 Game1.GameManager.SaveManager.SetString("trendy_button_2", "1");
                 return _marinGame ? State.WaitY : State.IdleY;
@@ -170,7 +170,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 if ((_marinGame || ControlHandler.TrendyButtonDown(ControlHandler.ConfirmButton)) &&
                     EntityPosition.Y < _vecStart.Y + 64)
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-32-20", false);
+                    Game1.AudioManager.PlaySoundEffect("D378-32-20", false);
                     EntityPosition.Move(new Vector2(0, MoveSpeed));
 
                     if (EntityPosition.Y > _vecStart.Y + 64)
@@ -179,7 +179,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                     return _currentState;
                 }
 
-                Game1.GameManager.StopSoundEffect("D378-32-20");
+                Game1.AudioManager.StopSoundEffect("D378-32-20");
                 Game1.GameManager.SaveManager.SetString("trendy_button_2", "0");
                 _waitCounter = 0;
                 return State.Grab0;
@@ -229,7 +229,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             State HandleBackY()
             {
-                Game1.GameManager.PlaySoundEffect("D378-32-20", false);
+                Game1.AudioManager.PlaySoundEffect("D378-32-20", false);
                 _grabState -= MoveSpeedGrab * Game1.TimeMultiplier;
                 if (_grabState < 0)
                 {
@@ -241,7 +241,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             State HandleBackX()
             {
-                Game1.GameManager.PlaySoundEffect("D378-32-20", false);
+                Game1.AudioManager.PlaySoundEffect("D378-32-20", false);
 
                 var vecBack = _vecStart - EntityPosition.Position;
                 vecBack.Normalize();
@@ -249,7 +249,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
                 if (EntityPosition.X <= _vecStart.X && EntityPosition.Y <= _vecStart.Y)
                 {
-                    Game1.GameManager.StopSoundEffect("D378-32-20");
+                    Game1.AudioManager.StopSoundEffect("D378-32-20");
                     _waitCounter = 0;
                     EntityPosition.Set(_vecStart);
                     return State.BackWait;
@@ -344,7 +344,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _grabbedBody.AdditionalMovementVT = Vector2.Zero;
             _grabbedBody.IgnoresZ = true;
 
-            Game1.GameManager.PlaySoundEffect("D360-25-19", false);
+            Game1.AudioManager.PlaySoundEffect("D360-25-19", false);
         }
 
         private void UpdateItemPos()

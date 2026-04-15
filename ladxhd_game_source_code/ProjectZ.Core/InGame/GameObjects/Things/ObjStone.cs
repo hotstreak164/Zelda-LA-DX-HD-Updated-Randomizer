@@ -282,7 +282,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 if (_potMessage)
                     Game1.GameManager.StartDialogPath("break_pot");
 
-                Game1.GameManager.PlaySoundEffect(_isHeavy ? "D378-41-29" : "D378-09-09");
+                Game1.AudioManager.PlaySoundEffect(_isHeavy ? "D378-41-29" : "D378-09-09");
 
                 // spawn small particle stones
                 SpawnParticles(EntityPosition.ToVector3());
@@ -318,7 +318,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             Map.Objects.DeleteObjects.Add(this);
 
             // play sound effect
-            Game1.GameManager.PlaySoundEffect("D360-24-18");
+            Game1.AudioManager.PlaySoundEffect("D360-24-18");
 
             var fallAnimation = new ObjAnimator(Map, 0, 0, Values.LayerBottom, "Particles/fall", "idle", true);
             fallAnimation.EntityPosition.Set(new Vector2(

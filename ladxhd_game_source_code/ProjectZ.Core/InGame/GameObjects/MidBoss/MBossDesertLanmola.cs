@@ -129,7 +129,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 _playerLeft = false;
 
                 // Start the boss music and the dialog path.
-                Game1.GameManager.SetMusic(79, 2);
+                Game1.AudioManager.SetMusic(79, 2);
                 Game1.GameManager.StartDialogPath("desertLanmola");
 
                 if (_aiComponent.CurrentStateId == "idle")
@@ -150,7 +150,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (!_playerLeft && !currentField.Contains(MapManager.ObjLink.CenterPosition.Position))
             {
                 _playerLeft = true;
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
             }
         }
 
@@ -224,7 +224,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (!_jumpLandSound && jumpState > 0.5f)
             {
                 _jumpLandSound = true;
-                Game1.GameManager.PlaySoundEffect("D378-35-23");
+                Game1.AudioManager.PlaySoundEffect("D378-35-23");
             }
 
             _head.EntityPosition.Set(headPosition);
@@ -307,7 +307,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 {
                     if (_bodyParts[i] != null && _bodyParts[i].IsVisible && time < DespawnTime - 2000 - (6 - i) * 500)
                     {
-                        Game1.GameManager.PlaySoundEffect("D378-19-13");
+                        Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
                         var animation = new ObjAnimator(Map, 0, 0, Values.LayerTop, "Particles/spawn", "run", true);
                         animation.EntityPosition.Set(new Vector2(
@@ -324,7 +324,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void DespawnEnd()
         {
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
             Map.Objects.DeleteObjects.Add(_head);
 
@@ -366,7 +366,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_lives > 0)
             {
                 _damageTrigger.OnInit();
-                Game1.GameManager.PlaySoundEffect("D370-07-07");
+                Game1.AudioManager.PlaySoundEffect("D370-07-07");
             }
             else
             {
@@ -378,7 +378,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                         part.Death();
 
                 _aiComponent.ChangeState("despawning");
-                Game1.GameManager.PlaySoundEffect("D370-16-10");
+                Game1.AudioManager.PlaySoundEffect("D370-16-10");
             }
 
             return Values.HitCollision.Enemy;

@@ -377,12 +377,12 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 if (!_isSingingWithSound && nearPlayer)
                 {
                     _isSingingWithSound = true;
-                    Game1.GameManager.SetMusic(46, 2);
+                    Game1.AudioManager.SetMusic(46, 2);
                 }
                 else if (_isSingingWithSound && !nearPlayer)
                 {
                     _isSingingWithSound = false;
-                    Game1.GameManager.SetMusic(-1, 2);
+                    Game1.AudioManager.SetMusic(-1, 2);
                 }
             }
             else if (_currentState == States.Singing)
@@ -674,7 +674,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _currentState = States.PostDuo;
                 MapManager.ObjLink.StopOcarinaDuo();
                 Game1.GameManager.StartDialogPath("marin_singing_end");
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
                 Game1.GameManager.SaveManager.RemoveString("marin_sing_position");
             }
 
@@ -752,7 +752,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 {
                     if (GameSettings.ScreenShake)
                         Game1.GameManager.ShakeScreen(450, 0, 2, 0, 5);
-                    Game1.GameManager.PlaySoundEffect("D360-11-0B");
+                    Game1.AudioManager.PlaySoundEffect("D360-11-0B");
                 }
             }
             // ---------------------------------------------------------------------
@@ -764,7 +764,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
                 if (Link.IsRailJumping())
                 {
-                    Game1.GameManager.PlaySoundEffect("D360-08-08");
+                    Game1.AudioManager.PlaySoundEffect("D360-08-08");
 
                     _isRailJumping = true;
                     _holeAbsorb = false;
@@ -784,7 +784,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                     _animator.Play("stand_" + _walkDirection);
                 }
                 else 
-                    Game1.GameManager.PlaySoundEffect("D360-36-24");
+                    Game1.AudioManager.PlaySoundEffect("D360-36-24");
             }
             // Marin is currently in a rail jump.
             if (_isRailJumping)
@@ -852,11 +852,11 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
                 Map.Objects.SpawnObject(splashAnimator);
 
-                Game1.GameManager.PlaySoundEffect("D360-14-0E");
+                Game1.AudioManager.PlaySoundEffect("D360-14-0E");
             }
             // Landed on solid ground.
             else if (landedGround)
-                Game1.GameManager.PlaySoundEffect("D378-07-07");
+                Game1.AudioManager.PlaySoundEffect("D378-07-07");
 
             var playerDirection = Link.EntityPosition.Position - EntityPosition.Position;
             var playerDistance = Math.Abs(playerDirection.X) + Math.Abs(playerDirection.Y);
@@ -961,7 +961,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void StopSinging()
         {
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
             _isSinging = false;
             _isSingingWithSound = false;
             _lastDirection = -1;
@@ -1023,7 +1023,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (value != null && value == "1")
             {
                 StartSinging();
-                Game1.GameManager.SetMusic(46, 2);
+                Game1.AudioManager.SetMusic(46, 2);
                 _currentState = States.Singing;
                 Game1.GameManager.SaveManager.RemoveString("maria_sing");
             }
@@ -1041,7 +1041,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (animalKey != null && animalKey == "1")
             {
                 StartSinging();
-                Game1.GameManager.SetMusic(46, 2);
+                Game1.AudioManager.SetMusic(46, 2);
                 _currentState = States.AnimalSinging;
                 Game1.GameManager.SaveManager.RemoveString("maria_sing_animals");
             }
@@ -1066,7 +1066,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (stopSingingKey != null && stopSingingKey == "1")
             {
                 StartSinging();
-                Game1.GameManager.SetMusic(46, 2);
+                Game1.AudioManager.SetMusic(46, 2);
                 _currentState = States.SingingWalrus;
                 Game1.GameManager.SaveManager.RemoveString("maria_sing_walrus");
             }
@@ -1077,7 +1077,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _duoIndex = 0;
                 _duoCounter = 0;
                 StartSinging();
-                Game1.GameManager.SetMusic(73, 2);
+                Game1.AudioManager.SetMusic(73, 2);
                 _currentState = States.SingingDuo;
                 MapManager.ObjLink.FreezePlayer();
                 Game1.GameManager.SaveManager.RemoveString("maria_start_duo");
@@ -1095,7 +1095,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             {
                 _isSinging = false;
                 _animator.Play("idle");
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
             }
             Game1.GameManager.StartDialogPath("maria");
             return true;

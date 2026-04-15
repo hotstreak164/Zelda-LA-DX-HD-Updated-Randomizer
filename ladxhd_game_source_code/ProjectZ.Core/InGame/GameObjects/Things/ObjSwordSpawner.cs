@@ -79,7 +79,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_animationCounter > 2200 && !_soundEffect)
             {
                 _soundEffect = true;
-                Game1.GameManager.PlaySoundEffect("D370-30-1E");
+                Game1.AudioManager.PlaySoundEffect("D370-30-1E");
             }
 
             if (_drawThunder)
@@ -88,7 +88,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 if (_thunderCounter < 0)
                 {
                     _thunderCounter += 66;
-                    Game1.GameManager.PlaySoundEffect("D378-51-33");
+                    Game1.AudioManager.PlaySoundEffect("D378-51-33");
                 }
             }
 

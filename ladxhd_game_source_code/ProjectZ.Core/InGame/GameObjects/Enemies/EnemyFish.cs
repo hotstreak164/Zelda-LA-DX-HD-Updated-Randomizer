@@ -121,7 +121,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void Splash()
         {
-            Game1.GameManager.PlaySoundEffect("D360-14-0E", false, EntityPosition.Position);
+            Game1.AudioManager.PlaySoundEffect("D360-14-0E", false, EntityPosition.Position);
 
             // spawn splash effect
             var fallAnimation = new ObjAnimator(_body.Owner.Map,

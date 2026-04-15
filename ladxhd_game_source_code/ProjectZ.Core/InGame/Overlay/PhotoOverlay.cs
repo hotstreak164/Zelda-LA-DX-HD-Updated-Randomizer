@@ -102,11 +102,11 @@ namespace ProjectZ.InGame.Overlay
                     if (_unlockState[_cursorIndex])
                     {
                         _isShowingImage = true;
-                        Game1.GameManager.PlaySoundEffect("D360-19-13");
+                        Game1.AudioManager.PlaySoundEffect("D360-19-13");
                     }
                     else
                     {
-                        Game1.GameManager.PlaySoundEffect("D360-29-1D");
+                        Game1.AudioManager.PlaySoundEffect("D360-29-1D");
                     }
                 }
                 // Update the cursor position.
@@ -141,7 +141,7 @@ namespace ProjectZ.InGame.Overlay
                 if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
                 {
                     _hideButtons = !_hideButtons;
-                    Game1.GameManager.PlaySoundEffect("D360-21-15");
+                    Game1.AudioManager.PlaySoundEffect("D360-21-15");
                 }
 
                 // Close the image.
@@ -150,7 +150,7 @@ namespace ProjectZ.InGame.Overlay
                     _isShowingImage = false;
                     _transitionCounter = TransitionTimeClose;
                     _hideButtons = false;
-                    Game1.GameManager.PlaySoundEffect("D360-19-13");
+                    Game1.AudioManager.PlaySoundEffect("D360-19-13");
                 }
             }
 
@@ -189,7 +189,7 @@ namespace ProjectZ.InGame.Overlay
             var cursorIndexNew = CursorIndex(cursorPoint);
             if (_cursorIndex != cursorIndexNew)
             {
-                Game1.GameManager.PlaySoundEffect("D360-10-0A");
+                Game1.AudioManager.PlaySoundEffect("D360-10-0A");
                 _cursorIndex = cursorIndexNew;
             }
         }

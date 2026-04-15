@@ -143,17 +143,17 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 return;
 
             if (_aiComponent.CurrentStateId == "moving" && _aiComponent.CurrentStateId != "damage")
-                Game1.GameManager.PlaySoundEffect("D378-27-1B", false);
+                Game1.AudioManager.PlaySoundEffect("D378-27-1B", false);
 
             else if (_aiComponent.CurrentStateId == "running" || _aiComponent.CurrentStateId == "damage")
             {
-                Game1.GameManager.StopSoundEffect("D378-27-1B");
+                Game1.AudioManager.StopSoundEffect("D378-27-1B");
 
                 _soundTimer -= Game1.DeltaTime;
 
                 if (_soundTimer <= 0)
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-01-01");
+                    Game1.AudioManager.PlaySoundEffect("D378-01-01");
                     _soundTimer = 200;
                 }
             }
@@ -227,8 +227,8 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _body.VelocityTarget = Vector2.Zero;
 
             _aiComponent.ChangeState("dying");
-            Game1.GameManager.PlaySoundEffect("D370-16-10");
-            Game1.GameManager.StopSoundEffect("D378-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D370-16-10");
+            Game1.AudioManager.StopSoundEffect("D378-27-1B");
         }
 
         private void UpdateDying()
@@ -255,9 +255,9 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                     Map.Objects.DeleteObjects.Add(this);
 
                     // stop music
-                    Game1.GameManager.StopMusic(20, 0);
-                    Game1.GameManager.StopMusic(20, 1);
-                    Game1.GameManager.StopMusic(20, 2);
+                    Game1.AudioManager.StopMusic(20, 0);
+                    Game1.AudioManager.StopMusic(20, 1);
+                    Game1.AudioManager.StopMusic(20, 2);
 
                     // set the save key
                     Game1.GameManager.SaveManager.SetString(_saveKey, "1");
@@ -265,12 +265,12 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                     // spawn big heart
                     Map.Objects.SpawnObject(new ObjItem(Map, (int)EntityPosition.X - 8, (int)EntityPosition.Y - 8, "j", "d1_nHeart", "heartMeterFull", null));
 
-                    Game1.GameManager.PlaySoundEffect("D378-26-1A");
+                    Game1.AudioManager.PlaySoundEffect("D378-26-1A");
                 }
                 else if (_dyingState < 0)
                 {
                     _dyingCounter = 50;
-                    Game1.GameManager.PlaySoundEffect("D378-19-13");
+                    Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
                     // spawn explosion effect arount the head
                     var position = new Point((int)(Math.Sin(-_dyingState / 1.5f) * 8), (int)(Math.Cos(-_dyingState / 1.5f) * 8));
@@ -280,7 +280,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 }
                 else
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-19-13");
+                    Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
                     // spawn explosion at the tail
                     Map.Objects.SpawnObject(new ObjAnimator(Map,
@@ -329,7 +329,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _lives -= damage;
             _runCounter = 2000;
 
-            Game1.GameManager.PlaySoundEffect("D370-07-07");
+            Game1.AudioManager.PlaySoundEffect("D370-07-07");
 
             if (_lives > 0)
             {

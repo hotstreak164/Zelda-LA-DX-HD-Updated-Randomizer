@@ -98,7 +98,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reflect()
         {
             // Play the reflected sound effect.
-            Game1.GameManager.PlaySoundEffect("D360-22-16");
+            Game1.AudioManager.PlaySoundEffect("D360-22-16");
 
             // Reverse the direction of the projectile.
             var newDirection = _direction + 2 % 4;

@@ -266,13 +266,13 @@ namespace ProjectZ.InGame.Map
                     }
                     catch (ArgumentException ex)
                     {
-                        Game1.GameManager.PlaySoundEffect("D370-35-23");
+                        Game1.AudioManager.PlaySoundEffect("D370-35-23");
                         System.Diagnostics.Debug.WriteLine($"AddRange failed: {ex.Message} (Count={AlwaysAnimateObjectsMain.Count})");
                         AlwaysAnimateObjectsTemp.AddRange(AlwaysAnimateObjectsMain.ToArray());
                     }
                     catch (Exception ex)
                     {
-                        Game1.GameManager.PlaySoundEffect("D378-55-37");
+                        Game1.AudioManager.PlaySoundEffect("D378-55-37");
                         System.Diagnostics.Debug.WriteLine($"Unexpected exception in AddRange: {ex}");
                     }
                 }

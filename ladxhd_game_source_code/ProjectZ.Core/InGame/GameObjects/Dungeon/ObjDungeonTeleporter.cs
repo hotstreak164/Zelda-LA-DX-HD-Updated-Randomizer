@@ -120,7 +120,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 return;
 
             // Play the teleport sound effect.
-            Game1.GameManager.PlaySoundEffect("D360-28-1C");
+            Game1.AudioManager.PlaySoundEffect("D360-28-1C");
 
             // The teleporter is not on the current map. This only applies for Level 7 dungeon.
             if (!string.IsNullOrEmpty(_teleportMap) && Map.MapName != _teleportMap)

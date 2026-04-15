@@ -121,7 +121,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (_lives > 0 && _flapCounter > 430)
             {
-                Game1.GameManager.PlaySoundEffect("D378-45-2D");
+                Game1.AudioManager.PlaySoundEffect("D378-45-2D");
                 _flapCounter = 0;
             }
         }

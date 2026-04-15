@@ -166,7 +166,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.VelocityTarget = Vector2.Zero;
 
             _aiComponent.ChangeState("jumping");
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
 
             // scale down the damage box
             _damageBox.OffsetY += 8;
@@ -186,7 +186,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (!_stomped && _headJumpBox.Box.Bottom >= MapManager.ObjLink._body.BodyBox.Box.Bottom && 
                 _headJumpBox.Box.Intersects(MapManager.ObjLink._body.BodyBox.Box))
             {
-                Game1.GameManager.PlaySoundEffect("D370-14-0E");
+                Game1.AudioManager.PlaySoundEffect("D370-14-0E");
 
                 MapManager.ObjLink._body.Velocity.Y = -1f;
                 _aiComponent.ChangeState("dead");

@@ -80,7 +80,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 // spawn explosion effect
                 if (_wasHit)
                 {
-                    Game1.GameManager.PlaySoundEffect("D360-03-03");
+                    Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
                     if (_swordHit && (Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.CloakType == GameManager.CloakRed))
                     {
@@ -107,7 +107,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             }
 
             if (!_wasHit)
-                Game1.GameManager.PlaySoundEffect("D360-09-09");
+                Game1.AudioManager.PlaySoundEffect("D360-09-09");
 
             // set a new random direction
             var angle = (Game1.RandomNumber.Next(0, 100) / 100f) * (float)Math.PI * 2f;

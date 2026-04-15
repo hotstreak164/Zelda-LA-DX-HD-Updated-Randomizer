@@ -382,7 +382,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 var eagleFeather = new BossEvilEagleFeather(Map, startPosition, aimDirection * 4);
                 Map.Objects.SpawnObject(eagleFeather);
 
-                Game1.GameManager.PlaySoundEffect("D378-50-32");
+                Game1.AudioManager.PlaySoundEffect("D378-50-32");
             }
         }
 
@@ -396,7 +396,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void FlyUp()
         {
-            Game1.GameManager.PlaySoundEffect("D378-49-31");
+            Game1.AudioManager.PlaySoundEffect("D378-49-31");
             _animator.Play("cflap_" + _direction);
         }
 
@@ -490,7 +490,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 if (!_introSound && EntityPosition.X > _startPosition.X - 130)
                 {
                     _introSound = true;
-                    Game1.GameManager.PlaySoundEffect("D378-34-22");
+                    Game1.AudioManager.PlaySoundEffect("D378-34-22");
                 }
 
                 if (EntityPosition.X > _startPosition.X + 180)
@@ -507,12 +507,12 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 if (!_introSound && EntityPosition.X < _startPosition.X + 110)
                 {
                     _introSound = true;
-                    Game1.GameManager.PlaySoundEffect("D378-48-30");
+                    Game1.AudioManager.PlaySoundEffect("D378-48-30");
                 }
 
                 if (EntityPosition.X < _startPosition.X + 40)
                 {
-                    Game1.GameManager.PlaySoundEffect("D360-48-30");
+                    Game1.AudioManager.PlaySoundEffect("D360-48-30");
                     _animator.Play("flap");
                     _slowStart = EntityPosition.Position;
                     _body.VelocityTarget.X = 0;
@@ -556,7 +556,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _damageState.SetDamageState(true);
             _damageState.CurrentLives -= damage;
 
-            Game1.GameManager.PlaySoundEffect("D370-07-07");
+            Game1.AudioManager.PlaySoundEffect("D370-07-07");
 
             // Dead?
             if (_damageState.CurrentLives <= 0)
@@ -565,9 +565,9 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 _hittableComponent.IsActive = false;
 
                 // stop music
-                Game1.GameManager.StopMusic(20, 0);
-                Game1.GameManager.StopMusic(20, 1);
-                Game1.GameManager.StopMusic(20, 2);
+                Game1.AudioManager.StopMusic(20, 0);
+                Game1.AudioManager.StopMusic(20, 1);
+                Game1.AudioManager.StopMusic(20, 2);
 
                 Game1.GameManager.StartDialogPath("grim_creeper_4");
 
@@ -591,7 +591,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (!string.IsNullOrEmpty(_saveKey))
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
-            Game1.GameManager.PlaySoundEffect("D378-26-1A");
+            Game1.AudioManager.PlaySoundEffect("D378-26-1A");
 
             SpawnHeart();
 

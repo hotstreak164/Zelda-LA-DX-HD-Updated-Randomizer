@@ -113,7 +113,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _body.Velocity.Z = 1.5f;
             _body.Gravity = -0.05f;
 
-            Game1.GameManager.PlaySoundEffect("D360-14-0E");
+            Game1.AudioManager.PlaySoundEffect("D360-14-0E");
 
             Splash();
             _animator.Play("stone_spawn");
@@ -188,7 +188,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _animator.Play("jump");
             _jumpCounter--;
 
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
         }
 
         private void UpdateJump()

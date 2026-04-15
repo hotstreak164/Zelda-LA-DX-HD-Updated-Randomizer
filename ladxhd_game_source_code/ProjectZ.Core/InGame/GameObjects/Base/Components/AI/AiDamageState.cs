@@ -170,7 +170,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             if (hitType == HitType.BowWow)
             {
                 // Bow Wow has a custom sound for attacking so disable the normal sound and play this one.
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
                 PlayDeathSound = false;
                 PlayDeathExplosions = false;
                 DeathAnimation = false;
@@ -198,8 +198,8 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
                         _body.Velocity.Y = direction.Y * HitMultiplierY * speedMultiply;
                     }
                     // Burning with Magic Powder is a combination of two sound effects.
-                    Game1.GameManager.PlaySoundEffect("D360-03-03");
-                    Game1.GameManager.PlaySoundEffect("D378-18-12");
+                    Game1.AudioManager.PlaySoundEffect("D360-03-03");
+                    Game1.AudioManager.PlaySoundEffect("D378-18-12");
 
                     return Values.HitCollision.Enemy;
                 }
@@ -212,16 +212,16 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             if (!BossHitSound)
             {
                 if (pieceOfPower)
-                    Game1.GameManager.PlaySoundEffect("D370-17-11");
+                    Game1.AudioManager.PlaySoundEffect("D370-17-11");
 
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
             }
             else
             {
                 if (CurrentLives <= 0)
-                    Game1.GameManager.PlaySoundEffect("D378-19-13");
+                    Game1.AudioManager.PlaySoundEffect("D378-19-13");
                 else
-                    Game1.GameManager.PlaySoundEffect("D370-07-07");
+                    Game1.AudioManager.PlaySoundEffect("D370-07-07");
             }
             // If the player reduced the damage launch effect.
             if (pieceOfPower && !GameSettings.NoDamageLaunch)
@@ -453,7 +453,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             _deathCount -= 100;
 
             if (PlayDeathExplosions)
-                Game1.GameManager.PlaySoundEffect("D378-19-13");
+                Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
             var posX = (int)_gameObject.EntityPosition.X - ExplostionWidth / 2 + Game1.RandomNumber.Next(0, ExplostionWidth) - 8;
             var posY = (int)_gameObject.EntityPosition.Y - (int)_gameObject.EntityPosition.Z + ExplosionOffsetY - ExplostionHeight + Game1.RandomNumber.Next(0, ExplostionHeight) - 8;
@@ -467,7 +467,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
         public void OnDeathBoss(bool pieceOfPower)
         {
             if (PlayDeathSound)
-                Game1.GameManager.PlaySoundEffect("D370-16-10");
+                Game1.AudioManager.PlaySoundEffect("D370-16-10");
 
             IsActive = false;
 
@@ -489,11 +489,11 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
 
             // Play piece of power sound effect.
             if (pieceOfPower)
-                Game1.GameManager.PlaySoundEffect("D370-18-12");
+                Game1.AudioManager.PlaySoundEffect("D370-18-12");
 
             // Play explosion death sound.
             if (PlayDeathSound)
-                Game1.GameManager.PlaySoundEffect("D378-19-13");
+                Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
             // Spawn the explosion effect.
             var bodyCenter = _body.BodyBox.Box.Center;

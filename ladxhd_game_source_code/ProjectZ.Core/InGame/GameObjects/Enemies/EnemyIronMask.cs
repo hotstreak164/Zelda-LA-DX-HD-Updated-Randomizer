@@ -177,7 +177,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (!_isUnprotected && hitType == HitType.Hookshot && dir == (_direction + 2) % 4 &&
                 _aiComponent.CurrentStateId != "stunned")
             {
-                Game1.GameManager.PlaySoundEffect("D370-01-01");
+                Game1.AudioManager.PlaySoundEffect("D370-01-01");
                 _isUnprotected = true;
                 _animator.Play("unprotected");
                 _damageState.SetDamageState(false);

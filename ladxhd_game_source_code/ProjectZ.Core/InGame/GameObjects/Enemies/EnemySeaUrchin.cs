@@ -114,7 +114,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                     _soundCounter -= Game1.DeltaTime;
                     if (_soundCounter < 0)
                     {
-                        Game1.GameManager.PlaySoundEffect("D360-62-3E", false);
+                        Game1.AudioManager.PlaySoundEffect("D360-62-3E", false);
                         _soundCounter += 75;
                     }
                 }

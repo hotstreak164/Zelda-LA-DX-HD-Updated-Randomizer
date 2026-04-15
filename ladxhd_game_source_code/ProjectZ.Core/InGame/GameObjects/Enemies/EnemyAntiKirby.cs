@@ -144,7 +144,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (MapManager.ObjLink.IsDying())
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D378-59-3B", false, 0.75f, 0, false, 100);
+            Game1.AudioManager.PlaySoundEffect("D378-59-3B", false, 0.75f, 0, false, 100);
 
             if (EntityPosition.Z < 12)
             {
@@ -182,7 +182,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void StopSuckSound()
         {
-            Game1.GameManager.StopSoundEffect("D378-59-3B");
+            Game1.AudioManager.StopSoundEffect("D378-59-3B");
         }
 
         private void ToTrap()
@@ -209,7 +209,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (!_body.WasGrounded && _body.IsGrounded && !_bounceSound)
             {
                 _bounceSound = true;
-                Game1.GameManager.PlaySoundEffect("D360-09-09");
+                Game1.AudioManager.PlaySoundEffect("D360-09-09");
             }
         }
 
@@ -223,7 +223,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             MapManager.ObjLink._body.Velocity = new Vector3(_direction == 0 ? -1.5f : 1.5f, 0, 1.25f);
 
             _aiComponent.ChangeState("spit");
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
             Game1.GameManager.InflictDamage(2);
         }
 

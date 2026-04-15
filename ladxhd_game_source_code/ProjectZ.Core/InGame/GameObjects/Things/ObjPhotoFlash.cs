@@ -31,7 +31,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public override void Init()
         {
-            Game1.GameManager.PlaySoundEffect("D378-63-40");
+            Game1.AudioManager.PlaySoundEffect("D378-63-40");
         }
 
         private void Update()

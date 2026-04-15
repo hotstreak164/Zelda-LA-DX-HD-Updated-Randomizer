@@ -189,7 +189,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void PreShotEnd()
         {
-            Game1.GameManager.PlaySoundEffect("D378-08-08");
+            Game1.AudioManager.PlaySoundEffect("D378-08-08");
             _aiComponent.ChangeState("shoot");
         }
 

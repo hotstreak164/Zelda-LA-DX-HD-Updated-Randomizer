@@ -218,7 +218,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                         _body.Velocity = Vector3.Zero;
 
                         // not in the og game; maybe find a better sound
-                        Game1.GameManager.PlaySoundEffect("D370-14-0E");
+                        Game1.AudioManager.PlaySoundEffect("D370-14-0E");
 
                         if (!_wasUp)
                             IncrementUpState();
@@ -233,7 +233,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                     }
                     else
                     {
-                        Game1.GameManager.PlaySoundEffect("D360-29-1D");
+                        Game1.AudioManager.PlaySoundEffect("D360-29-1D");
                     }
                 }
 

@@ -207,7 +207,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 Map.Objects.DeleteObjects.Add(this);
 
                 // Play the crunch sound and show the smoke effect.
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
                 var explosionAnimation = new ObjAnimator(Map, (int)EntityPosition.X-8, (int)EntityPosition.Y-26, Values.LayerTop, "Particles/spawn", "run", true);
                 Map.Objects.SpawnObject(explosionAnimation);
                 return Values.HitCollision.None;

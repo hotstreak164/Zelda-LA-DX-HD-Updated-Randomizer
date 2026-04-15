@@ -701,7 +701,7 @@ namespace ProjectZ.InGame.Overlay
             _isChanging = true;
 
             if (!_mapOpened)
-                Game1.GameManager.PlaySoundEffect("D360-19-13");
+                Game1.AudioManager.PlaySoundEffect("D360-19-13");
 
             _mapOpened = !_mapOpened;
         }
@@ -779,11 +779,11 @@ namespace ProjectZ.InGame.Overlay
 
             // Pause the currently playing soundeffects.
             if (newState == MenuState.Inventory || newState == MenuState.Menu)
-                Game1.GameManager.PauseSoundEffects();
+                Game1.AudioManager.PauseSoundEffects();
 
             // Play the menu opening sound when opening the options menu or inventory menu.
             if (newState == MenuState.Inventory || newState == MenuState.Menu)
-                Game1.GameManager.PlaySoundEffect("D360-17-11");
+                Game1.AudioManager.PlaySoundEffect("D360-17-11");
 
             // The inventory open was opened.
             if (newState == MenuState.Inventory)
@@ -811,7 +811,7 @@ namespace ProjectZ.InGame.Overlay
         {
             // Play the menu closing sound when closing the options menu or inventory menu.
             if (_currentMenuState == MenuState.Inventory || _currentMenuState == MenuState.Menu)
-                Game1.GameManager.PlaySoundEffect("D360-18-12");
+                Game1.AudioManager.PlaySoundEffect("D360-18-12");
 
             _fading = true;
             _fadeDir = -1;
@@ -823,7 +823,7 @@ namespace ProjectZ.InGame.Overlay
             Game1.UiPageManager.PopAllPages(PageManager.TransitionAnimation.TopToBottom, PageManager.TransitionAnimation.TopToBottom);
 
             // Resume the sound effects.
-            Game1.GameManager.ContinueSoundEffects();
+            Game1.AudioManager.ContinueSoundEffects();
         }
 
         public bool MenuIsOpen()

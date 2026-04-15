@@ -95,7 +95,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 var animation = new ObjSparkingEffect(Map, 0, 0, 0, 0);
                 animation.EntityPosition.Set(new Vector3(EntityPosition.X, EntityPosition.Y - EntityPosition.Z, 0));
                 Map.Objects.SpawnObject(animation);
-                Game1.GameManager.PlaySoundEffect("D360-07-07");
+                Game1.AudioManager.PlaySoundEffect("D360-07-07");
             }
             return Values.HitCollision.None;
         }
@@ -111,7 +111,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             Vector2 LinkPos = Link.EntityPosition.Position;
 
             // Play sound effect.
-            Game1.GameManager.PlaySoundEffect("D378-45-2D", false);
+            Game1.AudioManager.PlaySoundEffect("D378-45-2D", false);
 
             // The boomerang has just been thrown out or is moving away from the player.
             if (!_comingBack)
@@ -266,7 +266,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 var animation = new ObjSparkingEffect(Map, 0, 0, 0, 0);
                 animation.EntityPosition.Set(new Vector3(EntityPosition.X, EntityPosition.Y - EntityPosition.Z, 0));
                 Map.Objects.SpawnObject(animation);
-                Game1.GameManager.PlaySoundEffect("D360-07-07");
+                Game1.AudioManager.PlaySoundEffect("D360-07-07");
             }
             // Specify that it's coming back and remove collision.
             _comingBack = true;

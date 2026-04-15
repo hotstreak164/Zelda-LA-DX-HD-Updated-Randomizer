@@ -1,5 +1,4 @@
 ﻿using ProjectZ.InGame.GameObjects.Effects;
-using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.GameObjects.Base.Components.AI
@@ -38,7 +37,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
         private void FallDeath()
         {
             // play sound effect
-            Game1.GameManager.PlaySoundEffect("D360-14-0E");
+            Game1.AudioManager.PlaySoundEffect("D360-14-0E");
 
             // spawn splash effect
             var fallAnimation = new ObjAnimator(_body.Owner.Map,

@@ -171,7 +171,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _animator.Play(_dir == 2 ? "rotatel" : "rotate");
             _animator.SetFrame((_dir + 1) % 4);
 
-            Game1.GameManager.PlaySoundEffect("D360-07-07");
+            Game1.AudioManager.PlaySoundEffect("D360-07-07");
         }
 
         private void TickDespawn(double time)

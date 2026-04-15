@@ -129,7 +129,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         public void FightInit()
         {
-            Game1.GameManager.PlaySoundEffect("D360-49-31");
+            Game1.AudioManager.PlaySoundEffect("D360-49-31");
         }
 
         private void OnBurn()
@@ -195,7 +195,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void InitAttack()
         {
-            Game1.GameManager.PlaySoundEffect("D360-49-31");
+            Game1.AudioManager.PlaySoundEffect("D360-49-31");
 
             _damageField.IsActive = true;
             _hittableComponent.IsActive = true;

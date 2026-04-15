@@ -311,12 +311,12 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
             // stop boss music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
-            Game1.GameManager.PlaySoundEffect("D378-26-1A");
+            Game1.AudioManager.PlaySoundEffect("D378-26-1A");
 
             // spawns a fairy
-            Game1.GameManager.PlaySoundEffect("D360-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D360-27-1B");
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 8));
 
             Map.Objects.DeleteObjects.Add(this);
@@ -389,7 +389,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_aiComponent.CurrentStateId == "walk")
             {
                 _aiDamageState.SetDamageState(false);
-                Game1.GameManager.PlaySoundEffect("D370-07-07");
+                Game1.AudioManager.PlaySoundEffect("D370-07-07");
 
                 return Values.HitCollision.Repelling | Values.HitCollision.Repelling0;
             }

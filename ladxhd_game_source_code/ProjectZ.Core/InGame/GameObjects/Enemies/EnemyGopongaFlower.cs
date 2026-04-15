@@ -166,7 +166,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             }
             if (!_blockSound)
             {
-                Game1.GameManager.PlaySoundEffect("D360-09-09");
+                Game1.AudioManager.PlaySoundEffect("D360-09-09");
                 _blockSound = true;
             }
             return Values.HitCollision.Blocking;

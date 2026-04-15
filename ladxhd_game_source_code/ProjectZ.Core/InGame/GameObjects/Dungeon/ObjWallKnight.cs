@@ -38,7 +38,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             // gets destroyed by a bomb
             if (hitType == HitType.Bomb)
             {
-                Game1.GameManager.PlaySoundEffect("D378-09-09");
+                Game1.AudioManager.PlaySoundEffect("D378-09-09");
 
                 _knight.WallSpawn();
                 

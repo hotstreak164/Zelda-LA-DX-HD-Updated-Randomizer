@@ -218,8 +218,8 @@ namespace ProjectZ.InGame.GameObjects.Things
                     SpawnItem(direction);
 
                     // Play the sound and show the smoke effect.
-                    Game1.GameManager.PlaySoundEffect("D360-09-09");
-                    Game1.GameManager.PlaySoundEffect("D360-47-2F");
+                    Game1.AudioManager.PlaySoundEffect("D360-09-09");
+                    Game1.AudioManager.PlaySoundEffect("D360-47-2F");
                     var explosionAnimation = new ObjAnimator(Map, (int)EntityPosition.X - 8, (int)EntityPosition.Y - 8, Values.LayerTop, "Particles/spawn", "run", true);
                     Map.Objects.SpawnObject(explosionAnimation);
                 }
@@ -305,7 +305,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (IsDead) return;
             IsDead = true;
  
-            Game1.GameManager.PlaySoundEffect("D378-05-05");
+            Game1.AudioManager.PlaySoundEffect("D378-05-05");
  
             if (!NoRespawn)
                 Map.Objects.SpawnObject(new ObjBushRespawner(Map, (int)_respawnPosition.X - 8, (int)_respawnPosition.Y - 8, _spawnItem, _spriteId, _hasCollider, _drawShadow, _setGrassField, _drawLayer, _pickupKey));

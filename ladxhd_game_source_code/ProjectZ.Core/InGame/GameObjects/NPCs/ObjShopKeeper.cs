@@ -131,7 +131,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 if (!_soundEffect)
                 {
                     _soundEffect = true;
-                    Game1.GameManager.PlaySoundEffect("D378-38-26");
+                    Game1.AudioManager.PlaySoundEffect("D378-38-26");
                 }
             }
             // Start reducing health after 250ms every 100ms.

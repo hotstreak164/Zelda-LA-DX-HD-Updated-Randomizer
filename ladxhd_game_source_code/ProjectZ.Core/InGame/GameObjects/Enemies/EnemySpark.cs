@@ -129,7 +129,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (hitType == HitType.Boomerang)
             {
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
                 Destroy();
                 return Values.HitCollision.Enemy;
             }

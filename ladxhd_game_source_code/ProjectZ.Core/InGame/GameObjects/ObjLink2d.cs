@@ -300,7 +300,7 @@ namespace ProjectZ.InGame.GameObjects
 
                     // Play the sound when hitting the ground unless disabled.
                     if (!NoDropSound)
-                        Game1.GameManager.PlaySoundEffect("D378-07-07");
+                        Game1.AudioManager.PlaySoundEffect("D378-07-07");
 
                     // When hitting the ground reset the "held" state for the next jump.
                     _jump2DHeld = false;
@@ -740,7 +740,7 @@ namespace ProjectZ.InGame.GameObjects
 
                         if (CurrentState != State.Dying)
                         {
-                            Game1.GameManager.PlaySoundEffect("D370-03-03");
+                            Game1.AudioManager.PlaySoundEffect("D370-03-03");
 
                             CurrentState = State.Drowning;
                             _isClimbing = false;
@@ -788,7 +788,7 @@ namespace ProjectZ.InGame.GameObjects
             // Ascend in the water faster.
             if (IsSwimmingState())
             {
-                Game1.GameManager.PlaySoundEffect("D360-13-0D");
+                Game1.AudioManager.PlaySoundEffect("D360-13-0D");
                 _swimVelocity.Y = -1.185f;
             }
             // Must not be carrying or must be in one of the following states.
@@ -813,7 +813,7 @@ namespace ProjectZ.InGame.GameObjects
                     Direction = 1;
             }
             if (PlaySound)
-                Game1.GameManager.PlaySoundEffect("D360-13-0D");
+                Game1.AudioManager.PlaySoundEffect("D360-13-0D");
 
             _jumpStartTime = Game1.TotalGameTime;
 

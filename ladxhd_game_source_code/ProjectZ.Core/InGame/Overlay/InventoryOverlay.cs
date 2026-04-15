@@ -186,7 +186,7 @@ namespace ProjectZ.InGame.Overlay
             {
                 if (ControlHandler.ButtonPressed((CButtons)((int)CButtons.A * Math.Pow(2, i))))
                 {
-                    Game1.GameManager.PlaySoundEffect("D360-19-13");
+                    Game1.AudioManager.PlaySoundEffect("D360-19-13");
                     Game1.GameManager.ChangeItem(i, _selectedItemSlot + Values.HandItemSlots);
                 }
             }
@@ -210,7 +210,7 @@ namespace ProjectZ.InGame.Overlay
                     else if (dir == 3)
                         selectionOffset += _itemSlotWidth;
 
-                    Game1.GameManager.PlaySoundEffect("D360-10-0A");
+                    Game1.AudioManager.PlaySoundEffect("D360-10-0A");
                 }
                 _selectionButtonPressed = true;
             }

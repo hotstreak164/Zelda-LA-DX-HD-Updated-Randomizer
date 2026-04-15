@@ -87,7 +87,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             Game1.GameManager.SaveManager.SetString(_strKey, "1");
 
             if (_soundEffect)
-                Game1.GameManager.PlaySoundEffect("D378-04-04");
+                Game1.AudioManager.PlaySoundEffect("D378-04-04");
 
             if (_delete)
                 Map.Objects.DeleteObjects.Add(this);

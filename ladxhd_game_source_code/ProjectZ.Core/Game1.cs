@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ProjectZ.Base;
 using ProjectZ.Base.UI;
+using ProjectZ.InGame.Audio;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.GameObjects;
 using ProjectZ.InGame.Map;
@@ -22,6 +23,7 @@ namespace ProjectZ
         public static Game1 Instance;
         public static GraphicsDeviceManager Graphics;
         public static SpriteBatch SpriteBatch;
+        public static AudioManager AudioManager = new AudioManager();
         public static UiManager UiManager = new UiManager();
         public static ScreenManager ScreenManager = new ScreenManager();
         public static PageManager UiPageManager = new PageManager();
@@ -319,7 +321,7 @@ namespace ProjectZ
             SettingsSaveLoad.LoadSettings();
 
             // Load the Intro Screen and its resources.
-            GameManager.UpdateSoundEffects();
+            AudioManager.UpdateSoundEffects();
             Resources.LoadIntro(Graphics.GraphicsDevice, Content);
             ScreenManager.LoadIntro(Content);
 
@@ -426,7 +428,7 @@ namespace ProjectZ
             WasActive = IsActive;
 
             // Mute music and sound effects if user disabled on inactive window.
-            GameManager.HandleInactiveWindow(IsActive);
+            AudioManager.HandleInactiveWindow(IsActive);
 
             // Updates the FPS counter.
             _fpsCounter.Update(gameTime);

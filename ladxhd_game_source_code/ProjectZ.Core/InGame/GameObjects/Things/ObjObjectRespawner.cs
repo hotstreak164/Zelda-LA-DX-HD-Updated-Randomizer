@@ -95,7 +95,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             }
             SpawnObject();
 
-            Game1.GameManager.PlaySoundEffect("D360-15-0F");
+            Game1.AudioManager.PlaySoundEffect("D360-15-0F");
 
             // spawn explosion effect
             Map.Objects.SpawnObject(new ObjAnimator(Map, (int)EntityPosition.X, (int)EntityPosition.Y, Values.LayerTop, "Particles/spawn", "run", true));

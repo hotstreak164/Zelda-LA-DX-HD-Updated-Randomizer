@@ -232,7 +232,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var fallAnimation = new ObjAnimator(Map, (int)EntityPosition.X - 5, (int)EntityPosition.Y - 5 - SpriteOffsetY, Values.LayerBottom, "Particles/fall", "idle", true);
             Map.Objects.SpawnObject(fallAnimation);
 
-            Game1.GameManager.PlaySoundEffect("D360-24-18");
+            Game1.AudioManager.PlaySoundEffect("D360-24-18");
         }
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType hitType, int damage, bool pieceOfPower)

@@ -63,7 +63,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             {
                 var anim = new ObjAnimator(Map, (int)EntityPosition.X, (int)EntityPosition.Y, Values.LayerTop, "Particles/spawn", "run", true);
                 Map.Objects.SpawnObject(anim);
-                Game1.GameManager.PlaySoundEffect("D360-47-2F");
+                Game1.AudioManager.PlaySoundEffect("D360-47-2F");
             }
             if (_green)
                 Map.Objects.SpawnObject(new EnemyBombiteGreen(Map, (int)EntityPosition.X, (int)EntityPosition.Y));

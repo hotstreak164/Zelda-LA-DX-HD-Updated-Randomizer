@@ -210,7 +210,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (!allEqual && resetBoys)
             {
-                Game1.GameManager.PlaySoundEffect("D360-29-1D");
+                Game1.AudioManager.PlaySoundEffect("D360-29-1D");
 
                 for (var i = 0; i < 3; i++)
                     Game1.GameManager.SaveManager.RemoveInt(ActiveKey + i);
@@ -220,7 +220,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (allEqual)
             {
                 SetSolved();
-                Game1.GameManager.PlaySoundEffect("D378-19-13");
+                Game1.AudioManager.PlaySoundEffect("D378-19-13");
             }
         }
 
@@ -262,7 +262,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (_aiComponent.CurrentStateId == "damage")
                 return Values.HitCollision.None;
 
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
+            Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
             _body.Velocity.X = direction.X * 2.5f;
             _body.Velocity.Y = direction.Y * 2.5f;

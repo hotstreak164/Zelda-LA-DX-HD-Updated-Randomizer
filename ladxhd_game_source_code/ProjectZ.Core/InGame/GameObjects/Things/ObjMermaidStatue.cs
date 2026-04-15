@@ -74,7 +74,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 Game1.GameManager.RemoveItem("trade12", 1);
                 Game1.GameManager.StartDialogPath("mermaid_statue_1");
-                Game1.GameManager.PlaySoundEffect("D378-04-04");
+                Game1.AudioManager.PlaySoundEffect("D378-04-04");
                 _aiComponent.ChangeState("preMoving");
             }
             else
@@ -92,7 +92,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void InitMoving()
         {
-            Game1.GameManager.PlaySoundEffect("D378-17-11");
+            Game1.AudioManager.PlaySoundEffect("D378-17-11");
         }
 
         private void MoveTick(double time)
@@ -109,7 +109,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             Game1.GameManager.SaveManager.SetString(_strKey, "1");
             _aiComponent.ChangeState("moved");
 
-            Game1.GameManager.PlaySoundEffect("D360-02-02");
+            Game1.AudioManager.PlaySoundEffect("D360-02-02");
         }
     }
 }

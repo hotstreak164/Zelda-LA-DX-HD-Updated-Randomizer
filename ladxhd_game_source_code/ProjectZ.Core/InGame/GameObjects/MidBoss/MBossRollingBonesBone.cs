@@ -97,7 +97,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 if (_deathCount > _deathState * 75)
                 {
                     _deathState++;
-                    Game1.GameManager.PlaySoundEffect("D378-04-04");
+                    Game1.AudioManager.PlaySoundEffect("D378-04-04");
 
                     // spawn explosion effect
                     Map.Objects.SpawnObject(new ObjAnimator(Map, (int)EntityPosition.X, (int)EntityPosition.Y + (6 - _deathState) * 16, Values.LayerBottom, "Particles/spawn", "run", true));
@@ -109,7 +109,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             // move sound effect
             if (Math.Abs(_body.Velocity.X) > 0.05f && !_hasCollided)
-                Game1.GameManager.PlaySoundEffect("D370-26-1A", false);
+                Game1.AudioManager.PlaySoundEffect("D370-26-1A", false);
 
             // collided with the wall? => slow down and stop
             if (_hasCollided)
@@ -140,7 +140,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void OnCollision(Values.BodyCollision direction)
         {
-            Game1.GameManager.PlaySoundEffect("D360-11-0B");
+            Game1.AudioManager.PlaySoundEffect("D360-11-0B");
             if (GameSettings.ScreenShake)
                 Game1.GameManager.ShakeScreen(650, 1.75f, 0.00f, 6.50f, 0.00f);
 

@@ -159,7 +159,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             // remove the bottle from the map
             Map.Objects.DeleteObjects.Add(this);
 
-            Game1.GameManager.PlaySoundEffect("D378-41-29");
+            Game1.AudioManager.PlaySoundEffect("D378-41-29");
         }
 
         public void StartFollowing()
@@ -251,7 +251,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (_body.IsGrounded)
             {
                 _body.Velocity.Z = 1.25f;
-                Game1.GameManager.PlaySoundEffect("D360-32-20");
+                Game1.AudioManager.PlaySoundEffect("D360-32-20");
             }
 
             // move towards the target position
@@ -288,7 +288,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             // jump
             _body.Velocity.Z = 1.25f;
 
-            Game1.GameManager.PlaySoundEffect("D360-32-20");
+            Game1.AudioManager.PlaySoundEffect("D360-32-20");
 
             // follow the player
             var direction = MapManager.ObjLink.Position - new Vector2(EntityPosition.X, EntityPosition.Y - 4);

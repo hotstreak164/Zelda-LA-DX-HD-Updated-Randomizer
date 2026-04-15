@@ -181,7 +181,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (_damageState.CurrentLives <= 0 && _damageState.DamageTrigger.CurrentTime > 0)
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D360-60-3C");
+            Game1.AudioManager.PlaySoundEffect("D360-60-3C");
 
             _aiComponent.ChangeState("despawn");
             _animator.Play("despawn");

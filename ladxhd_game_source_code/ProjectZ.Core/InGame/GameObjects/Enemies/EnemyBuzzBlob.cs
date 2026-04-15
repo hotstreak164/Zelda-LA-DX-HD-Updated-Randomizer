@@ -194,7 +194,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             {
                 _isCukeman = true;
                 _animator.Play("cukeman");
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
                 // spawn explosion effect
                 ObjAnimator animator;
@@ -223,7 +223,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 return;
 
             MapManager.ObjLink.ShockPlayer(ShockTime);
-            Game1.GameManager.PlaySoundEffect("D378-28-1C");
+            Game1.AudioManager.PlaySoundEffect("D378-28-1C");
 
             _body.VelocityTarget = Vector2.Zero;
             _aiComponent.ChangeState("shocking");

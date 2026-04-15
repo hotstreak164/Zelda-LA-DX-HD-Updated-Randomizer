@@ -91,7 +91,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private void OnMoveCollision(Values.BodyCollision collision)
         {
             if ((collision & Values.BodyCollision.Floor) != 0)
-                Game1.GameManager.PlaySoundEffect("D360-09-09");
+                Game1.AudioManager.PlaySoundEffect("D360-09-09");
         }
 
         private bool Interact()

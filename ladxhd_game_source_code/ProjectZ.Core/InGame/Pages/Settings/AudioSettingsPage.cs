@@ -61,7 +61,7 @@ namespace ProjectZ.InGame.Pages
             // Slider: Sound Effects Volume
             _sliderSoundVolume = new InterfaceSlider("settings_audio_effect_volume",
                 buttonWidth, 11, new Point(1, 2), 0, 100, 5, GameSettings.EffectVolume, 
-                number => { Game1.GameManager.UpdateSoundEffects(); GameSettings.EffectVolume = number; })
+                number => { Game1.AudioManager.UpdateSoundEffects(); GameSettings.EffectVolume = number; })
                 { SetString = number => " " + number + "%" };
             _contentLayout.AddElement(_sliderSoundVolume);
             _tooltips.Add("tooltip_audio_effect_volume");
@@ -142,7 +142,7 @@ namespace ProjectZ.InGame.Pages
             {
                 _showTooltip = !_showTooltip;
                 if (_showTooltip)
-                    Game1.GameManager.PlaySoundEffect("D360-21-15");
+                    Game1.AudioManager.PlaySoundEffect("D360-21-15");
             }
             // Hide the tooltip when pressing anything.
             else if (ControlHandler.AnyButtonPressed())

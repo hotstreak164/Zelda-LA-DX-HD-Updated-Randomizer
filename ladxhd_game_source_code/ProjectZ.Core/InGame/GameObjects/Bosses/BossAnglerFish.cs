@@ -226,7 +226,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             _aiComponent.ChangeState("attack");
 
-            Game1.GameManager.PlaySoundEffect("D370-13-0D");
+            Game1.AudioManager.PlaySoundEffect("D370-13-0D");
 
             _body.VelocityTarget.X = -3;
         }
@@ -235,7 +235,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             _aiComponent.ChangeState("shaking");
 
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D378-12-0C");
             if (GameSettings.ScreenShake)
                 Game1.GameManager.ShakeScreen(750, 3.00f, 0.00f, 8.50f, 0.00f);
 
@@ -344,7 +344,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             else
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D378-19-13");
+            Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
             var posX = (int)EntityPosition.X + Game1.RandomNumber.Next(0, 28) - 34;
             var posY = (int)EntityPosition.Y - (int)EntityPosition.Z + Game1.RandomNumber.Next(0, 28) - 10;
@@ -362,12 +362,12 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             SpawnHeart();
 
-            Game1.GameManager.PlaySoundEffect("D378-26-1A");
+            Game1.AudioManager.PlaySoundEffect("D378-26-1A");
 
             // stop music
-            Game1.GameManager.StopMusic(20, 0);
-            Game1.GameManager.StopMusic(20, 1);
-            Game1.GameManager.StopMusic(20, 2);
+            Game1.AudioManager.StopMusic(20, 0);
+            Game1.AudioManager.StopMusic(20, 1);
+            Game1.AudioManager.StopMusic(20, 2);
 
             Map.Objects.DeleteObjects.Add(this);
             DestroyBarrier();
@@ -413,7 +413,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 // just died?
                 if (_currentLives <= 0)
                 {
-                    Game1.GameManager.PlaySoundEffect("D370-16-10");
+                    Game1.AudioManager.PlaySoundEffect("D370-16-10");
                     _aiComponent.ChangeState("blink");
                     _body.VelocityTarget = Vector2.Zero;
                     _damageField.IsActive = false;
@@ -423,7 +423,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 }
                 else
                 {
-                    Game1.GameManager.PlaySoundEffect("D370-07-07");
+                    Game1.AudioManager.PlaySoundEffect("D370-07-07");
                 }
 
                 _damageCountdown.OnInit();

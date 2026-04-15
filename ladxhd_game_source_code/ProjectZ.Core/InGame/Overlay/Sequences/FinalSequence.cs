@@ -229,7 +229,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
             SpriteDict.Clear();
             _cameraPosition = Vector2.Zero;
 
-            Game1.GameManager.SetMusic(60, 2);
+            Game1.AudioManager.SetMusic(60, 2);
 
             _screenIndex = 3;
             _screen3Counter = 0;
@@ -403,7 +403,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
             if (_screen0Counter > 3000 && !_playedIslandSound)
             {
                 _playedIslandSound = true;
-                Game1.GameManager.PlaySoundEffect("D378-53-35");
+                Game1.AudioManager.PlaySoundEffect("D378-53-35");
             }
             var percentage = MathHelper.Clamp((float)(_screen0Counter - 3000) / 3000, 0, 1);
             // start slow and speed up
@@ -419,7 +419,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
                 Game1.GameManager.SaveManager.SetString("final_state", "1");
                 Game1.GameManager.SaveManager.SetString("activate_fountain", "1");
                 Game1.GameManager.InGameOverlay.CloseOverlay();
-                Game1.GameManager.StopMusic();
+                Game1.AudioManager.StopMusic();
                 MapManager.ObjLink.InitEnding();
             }
         }
@@ -431,13 +431,13 @@ namespace ProjectZ.InGame.Overlay.Sequences
             if (_segullSoundCounter < 0)
             {
                 _segullSoundCounter += Game1.RandomNumber.Next(1500, 2500);
-                Game1.GameManager.PlaySoundEffect("D360-33-21");
+                Game1.AudioManager.PlaySoundEffect("D360-33-21");
             }
             _waveSoundCounter -= Game1.DeltaTime;
             if (_waveSoundCounter < 0)
             {
                 _waveSoundCounter += 3500;
-                Game1.GameManager.PlaySoundEffect("D378-15-0F");
+                Game1.AudioManager.PlaySoundEffect("D378-15-0F");
             }
         }
 
@@ -561,12 +561,12 @@ namespace ProjectZ.InGame.Overlay.Sequences
             if (!_playedWaleSound0 && _s4Wale.Position.Y < 62)
             {
                 _playedWaleSound0 = true;
-                Game1.GameManager.PlaySoundEffect("D370-23-17");
+                Game1.AudioManager.PlaySoundEffect("D370-23-17");
             }
             if (!_playedWaleSound1 && _s4Wale.Position.Y < 32)
             {
                 _playedWaleSound1 = true;
-                Game1.GameManager.PlaySoundEffect("D370-23-17");
+                Game1.AudioManager.PlaySoundEffect("D370-23-17");
             }
             if (_s4Wale.Position.Y < 24)
             {
@@ -638,7 +638,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
                         _marSeagull.Color = Color.White * 0f;
                         Sprites.Add(_marSeagull);
 
-                        Game1.GameManager.PlaySoundEffect("D360-28-1C");
+                        Game1.AudioManager.PlaySoundEffect("D360-28-1C");
                     }
                     // Fade in marin and set seagull transparency.
                     if (_screen6Counter <= 7500)
@@ -650,7 +650,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
                         if (_marSeagull != null)
                             _marSeagull.Color = Color.White * 0f;
 
-                        Game1.GbsPlayer.SetVolumeMultiplier(t);
+                        Game1.AudioManager.SetMusicVolumeMultiplier(t);
                     }
                     // Fade out Marin and music while fading in the seagull.
                     else if (_screen6Counter > 7500 && _screen6Counter <= 12000)
@@ -662,7 +662,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
                         if (_marSeagull != null)
                             _marSeagull.Color = Color.White * seagullAlpha;
 
-                        Game1.GbsPlayer.SetVolumeMultiplier(1f - t);
+                        Game1.AudioManager.SetMusicVolumeMultiplier(1f - t);
                     }
                     // The fade is complete.
                     else
@@ -671,22 +671,22 @@ namespace ProjectZ.InGame.Overlay.Sequences
                         if (_marSeagull != null)
                             _marSeagull.Color = Color.White;
 
-                        Game1.GbsPlayer.SetVolumeMultiplier(0f);
+                        Game1.AudioManager.SetMusicVolumeMultiplier(0f);
                     }
                     // Seagull sound triggers.
                     if (_screen6Counter > 12500 && !_marinSeagullScree[0])
                     {
-                        Game1.GameManager.PlaySoundEffect("D360-33-21");
+                        Game1.AudioManager.PlaySoundEffect("D360-33-21");
                         _marinSeagullScree[0] = true;
                     }
                     if (_screen6Counter > 14500 && !_marinSeagullScree[1])
                     {
-                        Game1.GameManager.PlaySoundEffect("D360-33-21");
+                        Game1.AudioManager.PlaySoundEffect("D360-33-21");
                         _marinSeagullScree[1] = true;
                     }
                     if (_screen6Counter > 16500 && !_marinSeagullScree[2])
                     {
-                        Game1.GameManager.PlaySoundEffect("D360-33-21");
+                        Game1.AudioManager.PlaySoundEffect("D360-33-21");
                         _marinSeagullScree[2] = true;
                     }
                     // Segull starts flying away at 14.2 seconds.
@@ -720,7 +720,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
                         _creditsContent = null;
                         _marinEndingTriggered = true;
 
-                        Game1.GameManager.SetMusic(46, 2);
+                        Game1.AudioManager.SetMusic(46, 2);
                     }
                     // Exit to the intro scene.
                     else

@@ -116,7 +116,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 EntityPosition.Y - 10 - _canSprite.ScaledRectangle.Height);
             _canVelocity = new Vector2(0, _canSpeed);
 
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
         }
 
         private void KeyChanged()

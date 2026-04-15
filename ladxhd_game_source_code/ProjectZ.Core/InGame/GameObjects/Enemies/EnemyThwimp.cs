@@ -101,14 +101,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.IgnoresZ = false;
             _animator.Play("angry");
 
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
         }
 
         private void InitWait()
         {
             _animator.Play("idle");
          
-            Game1.GameManager.PlaySoundEffect("D360-09-09");
+            Game1.AudioManager.PlaySoundEffect("D360-09-09");
             if (GameSettings.ExScreenShake)
                 Game1.GameManager.ShakeScreen(35, 0.00f, 0.75f, 0.00f, 50);
         }

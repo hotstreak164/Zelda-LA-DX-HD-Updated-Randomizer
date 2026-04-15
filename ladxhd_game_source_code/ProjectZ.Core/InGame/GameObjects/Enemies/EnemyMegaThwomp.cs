@@ -86,7 +86,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _body.IsActive = false;
                 if (GameSettings.ScreenShake)
                     Game1.GameManager.ShakeScreen(750, 0.00f, 1.50f, 0.00f, 10.00f);
-                Game1.GameManager.PlaySoundEffect("D378-12-0C");
+                Game1.AudioManager.PlaySoundEffect("D378-12-0C");
             }
         }
     }

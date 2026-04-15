@@ -74,7 +74,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private void SpawnSplash()
         {
             if (_init)
-                Game1.GameManager.PlaySoundEffect("D378-36-24");
+                Game1.AudioManager.PlaySoundEffect("D378-36-24");
             _init = true;
 
             var splashAnimator0 = new ObjAnimator(Map, (int)EntityPosition.X - 6, (int)EntityPosition.Y + 1, 0, 0, Values.LayerPlayer, "Particles/fishingSplash", "idle", true);

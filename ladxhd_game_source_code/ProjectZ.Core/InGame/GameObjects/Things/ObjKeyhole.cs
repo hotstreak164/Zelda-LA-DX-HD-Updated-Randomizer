@@ -65,10 +65,10 @@ namespace ProjectZ.InGame.GameObjects.Things
         {
             _isOpening = true;
 
-            Game1.GbsPlayer.Pause();
+            Game1.AudioManager.PauseMusic();
 
             // key sound
-            Game1.GameManager.PlaySoundEffect("D378-04-04");
+            Game1.AudioManager.PlaySoundEffect("D378-04-04");
         }
 
         private void Update()
@@ -89,10 +89,10 @@ namespace ProjectZ.InGame.GameObjects.Things
                 _rumbling = true;
 
                 // dungeon one sound
-                Game1.GameManager.PlaySoundEffect("D378-42-2A");
+                Game1.AudioManager.PlaySoundEffect("D378-42-2A");
 
                 // rumble sound; maybe used for other dungeons?
-                //Game1.GameManager.PlaySoundEffect("D378-46-2E");
+                //Game1.AudioManager.PlaySoundEffect("D378-46-2E");
 
                 // shake the screen
                 if (GameSettings.ScreenShake)
@@ -107,7 +107,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             Map.Objects.DeleteObjects.Add(this);
 
-            Game1.GbsPlayer.Resume();
+            Game1.AudioManager.ResumeMusic();
         }
     }
 }

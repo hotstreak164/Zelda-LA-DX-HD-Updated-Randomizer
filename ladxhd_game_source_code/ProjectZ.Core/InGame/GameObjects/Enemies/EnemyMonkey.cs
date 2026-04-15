@@ -121,7 +121,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 return;
             }
 
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
 
             _body.VelocityTarget = new Vector2(0, 0);
 
@@ -169,7 +169,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.IsGrounded = false;
             _body.Velocity = new Vector3(0, 0, 2.0f);
 
-            Game1.GameManager.PlaySoundEffect("D370-20-14");
+            Game1.AudioManager.PlaySoundEffect("D370-20-14");
         }
 
         private void UpdateJump()
@@ -197,7 +197,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 // jump away from the player
                 _body.Velocity = new Vector3(direction.X * 1.25f, direction.Y * 1.25f, 1.25f);
 
-                Game1.GameManager.PlaySoundEffect("D370-20-14");
+                Game1.AudioManager.PlaySoundEffect("D370-20-14");
             }
         }
     }

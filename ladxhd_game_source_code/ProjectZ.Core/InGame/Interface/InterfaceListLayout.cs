@@ -118,7 +118,7 @@ namespace ProjectZ.InGame.Interface
                 Elements[_selectionIndex].Select(HorizontalMode ? Directions.Left : Directions.Top, true);
 
             if (playSound)
-                Game1.GameManager.PlaySoundEffect("D360-10-0A");
+                Game1.AudioManager.PlaySoundEffect("D360-10-0A");
         }
 
         public override InputEventReturn PressedButton(CButtons pressedButton)
@@ -167,7 +167,7 @@ namespace ProjectZ.InGame.Interface
             else
                 Elements[_selectionIndex].Select(HorizontalMode ? Directions.Left : Directions.Top, true);
 
-            Game1.GameManager.PlaySoundEffect("D360-10-0A");
+            Game1.AudioManager.PlaySoundEffect("D360-10-0A");
 
             return rValue;
         }

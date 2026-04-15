@@ -434,9 +434,9 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 // metalic bounce sound
                 if (_item.Name == "smallkey" || _item.Name == "sword2")
-                    Game1.GameManager.PlaySoundEffect("D378-23-17");
+                    Game1.AudioManager.PlaySoundEffect("D378-23-17");
                 else
-                    Game1.GameManager.PlaySoundEffect("D360-09-09");
+                    Game1.AudioManager.PlaySoundEffect("D360-09-09");
             }
         }
 
@@ -453,7 +453,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private void HoleDespawn()
         {
             // play sound effect
-            Game1.GameManager.PlaySoundEffect("D360-24-18");
+            Game1.AudioManager.PlaySoundEffect("D360-24-18");
 
             var fallAnimation = new ObjAnimator(Map, (int)EntityPosition.X - 5, (int)EntityPosition.Y - 8, Values.LayerBottom, "Particles/fall", "idle", true);
             Map.Objects.SpawnObject(fallAnimation);

@@ -84,8 +84,8 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
 
             _opening = true;
 
-            Game1.GameManager.PlaySoundEffect("D378-04-04");
-            Game1.GameManager.StopMusic();
+            Game1.AudioManager.PlaySoundEffect("D378-04-04");
+            Game1.AudioManager.StopMusic();
         }
 
         private void OnKeyChange()
@@ -117,7 +117,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 _shakeScreen = true;
                 if (GameSettings.ExScreenShake)
                     Game1.GameManager.ShakeScreen(2750, 1, 0, 5, 5);
-                Game1.GameManager.PlaySoundEffect("D378-29-1D");
+                Game1.AudioManager.PlaySoundEffect("D378-29-1D");
             }
 
             if (_opening && !_animatorTop0.IsPlaying)
@@ -128,13 +128,13 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                     _animatorTop0.Play("rotate");
                     _animatorTop1.Play("rotate");
                     _animatorBottom.Play("rotate");
-                    Game1.GameManager.PlaySoundEffect("D360-46-2E");
+                    Game1.AudioManager.PlaySoundEffect("D360-46-2E");
                 }
                 else if (_isRotating)
                 {
                     _opened = true;
-                    Game1.GameManager.PlaySoundEffect("D360-02-02");
-                    Game1.GameManager.PlayMusic();
+                    Game1.AudioManager.PlaySoundEffect("D360-02-02");
+                    Game1.AudioManager.PlayMusic();
 
                     RemoveComponent(CollisionComponent.Index);
                 }

@@ -17,11 +17,11 @@ namespace ProjectZ.InGame.Screens
         {
             _counter = 2000;
 
-            Game1.GameManager.ResetMusic();
-            Game1.GameManager.SetMusic(67, 0);
+            Game1.AudioManager.ResetMusic();
+            Game1.AudioManager.SetMusic(67, 0);
 
-            Game1.GbsPlayer.SetVolumeMultiplier(1.0f);
-            Game1.GbsPlayer.Play();
+            Game1.AudioManager.SetMusicVolumeMultiplier(1.0f);
+            Game1.AudioManager.PlayMusic();
         }
 
         public override void Update(GameTime gameTime)

@@ -296,7 +296,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                     _aiComponent.ChangeState("burning");
                     var speedMultiply = (hitType == HitType.MagicPowder ? 0.125f : 0.5f);
 
-                    Game1.GameManager.PlaySoundEffect("D378-18-12");
+                    Game1.AudioManager.PlaySoundEffect("D378-18-12");
 
                     return Values.HitCollision.Enemy;
                 }
@@ -304,7 +304,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_aiComponent.CurrentStateId == "idle" ||
                 _aiComponent.CurrentStateId == "walking")
             {
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
                 _aiComponent.ChangeState("preAttack");
                 _damageState.SetDamageState();

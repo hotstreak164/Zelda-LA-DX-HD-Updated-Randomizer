@@ -237,7 +237,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageState.SetDamageState(false);
             _body.Velocity.X = direction.X * 3.0f;
             _body.Velocity.Y = direction.Y * 3.0f;
-            Game1.GameManager.PlaySoundEffect("D360-09-09");
+            Game1.AudioManager.PlaySoundEffect("D360-09-09");
             return Values.HitCollision.Enemy;
         }
     }

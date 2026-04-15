@@ -129,7 +129,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void StartSong()
         {
-            Game1.GameManager.SetMusic(47, 2);
+            Game1.AudioManager.SetMusic(47, 2);
             _isPlaying = true;
             _startedPlaying = true;
 

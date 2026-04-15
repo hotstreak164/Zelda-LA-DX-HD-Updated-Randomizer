@@ -195,7 +195,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void StartSong()
         {
-            Game1.GameManager.SetMusic(52, 2);
+            Game1.AudioManager.SetMusic(52, 2);
             _isPlaying = true;
             _startedPlaying = true;
             _drawDarkness = true;

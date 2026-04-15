@@ -28,9 +28,6 @@ namespace ProjectZ.InGame.GameObjects.Things
             EntitySize = new Rectangle(0, 0, 16, 16);
 
             _teleporterId = teleporterId;
-            if (_teleporterId < 0)
-                System.Diagnostics.Debug.WriteLine("Error: teleporter id needs to be bigger than -1");
-
             _field = Map.GetField(posX, posY);
 
             var animator = AnimatorSaveLoad.LoadAnimator("Objects/holeTeleporter");

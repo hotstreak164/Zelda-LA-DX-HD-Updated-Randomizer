@@ -38,7 +38,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_introMusic && _lastTrackId != 28)
             {
                 _lastTrackId = 28;
-                Game1.GameManager.SetMusic(28, 0, true);
+                Game1.AudioManager.SetMusic(28, 0, true);
                 return;
             }
             // If we're not forcing the intro music get the tile data.
@@ -62,7 +62,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                     if (_lastTrackId != trackID)
                     {
                         _lastTrackId = trackID;
-                        Game1.GameManager.SetMusic(trackID, 0, true);
+                        Game1.AudioManager.SetMusic(trackID, 0, true);
                     }
                 }
             }

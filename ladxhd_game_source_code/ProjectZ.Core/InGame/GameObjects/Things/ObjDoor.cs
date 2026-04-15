@@ -163,7 +163,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 colorMode = true;
             }
             // Play the stairs sound effect.
-            Game1.GameManager.PlaySoundEffect("D378-06-06");
+            Game1.AudioManager.PlaySoundEffect("D378-06-06");
 
             MapManager.ObjLink.MapTransitionStart = MapManager.ObjLink.Position;
             MapManager.ObjLink.MapTransitionEnd = transitionEnd;

@@ -194,7 +194,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void JumpDeath()
         {
             // player jumped on the goomba
-            Game1.GameManager.PlaySoundEffect("D370-14-0E");
+            Game1.AudioManager.PlaySoundEffect("D370-14-0E");
 
             if (Map.Is2dMap)
                 MapManager.ObjLink._body.Velocity.Y = -1.0f;

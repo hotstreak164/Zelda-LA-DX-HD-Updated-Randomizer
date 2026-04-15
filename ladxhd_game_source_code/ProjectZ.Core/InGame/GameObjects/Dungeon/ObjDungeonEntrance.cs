@@ -67,7 +67,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 _sprite.SourceRectangle.Height--;
 
                 if(_sprite.SourceRectangle.Height == 8)
-                    Game1.GameManager.PlaySoundEffect("D360-35-23", false, 1, 0, true);
+                    Game1.AudioManager.PlaySoundEffect("D360-35-23", false, 1, 0, true);
             }
             else
             {

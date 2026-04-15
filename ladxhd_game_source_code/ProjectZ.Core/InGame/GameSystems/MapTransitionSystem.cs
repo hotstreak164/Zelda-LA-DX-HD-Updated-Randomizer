@@ -93,7 +93,7 @@ namespace ProjectZ.InGame.GameSystems
             if (CurrentState != TransitionState.Idle)
                 Game1.GameManager.InGameOverlay.DisableOverlayToggle = true;
             else
-                Game1.GbsPlayer.SetVolumeMultiplier(1);
+                Game1.AudioManager.SetMusicVolumeMultiplier(1);
 
             if (CurrentState == TransitionState.TransitionOut)
             {
@@ -108,7 +108,7 @@ namespace ProjectZ.InGame.GameSystems
 
                 // slowly lower the volume of the music
                 var newVolume = 1 - MathHelper.Clamp(transitionState, 0, 1);
-                Game1.GbsPlayer.SetVolumeMultiplier(newVolume);
+                Game1.AudioManager.SetMusicVolumeMultiplier(newVolume);
 
                 if (_wobbleTransitionOut)
                 {
@@ -166,8 +166,8 @@ namespace ProjectZ.InGame.GameSystems
 
                 // Slowly increase the volume of the music; the music is only playing.
                 var newVolume = 1 - percentage;
-                if (Game1.GbsPlayer.GetVolumeMultiplier() < 1)
-                    Game1.GbsPlayer.SetVolumeMultiplier(newVolume);
+                if (Game1.AudioManager.GetMusicVolumeMultiplier() < 1)
+                    Game1.AudioManager.SetMusicVolumeMultiplier(newVolume);
 
                 if (!_wobbleTransitionOut && !_knockoutTransition && !_introTransition)
                     Game1.GameManager.DrawPlayerOnTopPercentage = percentage;
@@ -278,8 +278,8 @@ namespace ProjectZ.InGame.GameSystems
             MapManager.ObjLink.EndTransitioning();
 
             // Start playing the next song.
-            Game1.GbsPlayer.SetVolumeMultiplier(1);
-            Game1.GbsPlayer.Play();
+            Game1.AudioManager.SetMusicVolumeMultiplier(1);
+            Game1.AudioManager.PlayMusic();
 
             // Stop snapping the camera.
             Camera.SnapCamera = false;
@@ -457,6 +457,7 @@ namespace ProjectZ.InGame.GameSystems
                 _finishedLoading = true;
             }
         }
+
         private void SetUpMusic(MapManager mm, int stage)
         {
             // Game manager and the current map.
@@ -467,7 +468,6 @@ namespace ProjectZ.InGame.GameSystems
             if (stage == 1)
             {
                 // Music handling
-                var currentTrack = Game1.GbsPlayer.CurrentTrack;
                 var nextTrack = -1;
                 for (var i = 0; i < map.MapMusic.Length; i++)
                     if (map.MapMusic[i] >= 0)
@@ -482,15 +482,15 @@ namespace ProjectZ.InGame.GameSystems
 
                 // Clear the music from all slots.
                 if (restart1)
-                    gm.SetMusic(-1, 0);
+                    Game1.AudioManager.SetMusic(-1, 0);
                 if (restart2)
-                    gm.SetMusic(-1, 1);
-                gm.SetMusic(-1, 2);
+                    Game1.AudioManager.SetMusic(-1, 1);
+                Game1.AudioManager.SetMusic(-1, 2);
 
                 // Stop whatever music was playing.
                 if (restart1)
                 {
-                    Game1.GbsPlayer.Stop();
+                    Game1.AudioManager.StopMusic();
                     Game1.GbsPlayer.Pump();
                 }
             }
@@ -499,8 +499,12 @@ namespace ProjectZ.InGame.GameSystems
             {
                 // Set the music to play. Music will start in "EndTransition".
                 for (var i = 0; i < map.MapMusic.Length; i++)
+                {
                     if (map.MapMusic[i] >= 0)
-                        Game1.GameManager.SetMusic(map.MapMusic[i], i, false);
+                    {
+                        Game1.AudioManager.SetMusic(map.MapMusic[i], i, false);
+                    }
+                }
             }
         }
 

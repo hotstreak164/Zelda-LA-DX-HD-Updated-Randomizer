@@ -40,7 +40,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // gets destroyed by a bomb
             if (hitType == HitType.Bomb)
             {
-                Game1.GameManager.PlaySoundEffect("D360-02-02");
+                Game1.AudioManager.PlaySoundEffect("D360-02-02");
 
                 Map.Objects.DeleteObjects.Add(this);
 

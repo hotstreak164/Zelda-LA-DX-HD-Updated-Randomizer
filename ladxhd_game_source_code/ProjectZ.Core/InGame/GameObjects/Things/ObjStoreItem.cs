@@ -79,7 +79,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             else
                 MapManager.ObjLink.StopHoldingItem();
 
-            Game1.GameManager.PlaySoundEffect("D360-19-13");
+            Game1.AudioManager.PlaySoundEffect("D360-19-13");
             _holding = !_holding;
             return true;
         }

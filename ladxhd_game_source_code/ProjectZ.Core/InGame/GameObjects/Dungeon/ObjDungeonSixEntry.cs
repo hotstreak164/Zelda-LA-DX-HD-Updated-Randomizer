@@ -90,19 +90,19 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                     EntityPosition.Set(new Vector2(EntityPosition.X, EntityPosition.Y - 8));
                     _sprite.SourceRectangle.Height += 8;
 
-                    Game1.GameManager.PlaySoundEffect("D360-47-2F");
+                    Game1.AudioManager.PlaySoundEffect("D360-47-2F");
 
                     if (_sprite.SourceRectangle.Height == 64)
                     {
                         _spawnParticles = false;
-                        Game1.GameManager.PlaySoundEffect("D360-02-02");
+                        Game1.AudioManager.PlaySoundEffect("D360-02-02");
                     }
                 }
                 else
                 {
                     _opening = false;
                     _isOpen = true;
-                    Game1.GameManager.SetMusic(-1, 2);
+                    Game1.AudioManager.SetMusic(-1, 2);
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             if (_opening || _isOpen)
                 return;
 
-            Game1.GbsPlayer.Stop();
+            Game1.AudioManager.StopMusic();
 
             SetObjectState(true);
 

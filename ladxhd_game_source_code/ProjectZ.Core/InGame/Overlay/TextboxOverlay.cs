@@ -345,7 +345,7 @@ namespace ProjectZ.InGame.Overlay
             {
                 _end = true;
                 _running = false;
-                Game1.GameManager.PlaySoundEffect("D360-21-15");
+                Game1.AudioManager.PlaySoundEffect("D360-21-15");
             }
         }
 
@@ -390,7 +390,7 @@ namespace ProjectZ.InGame.Overlay
                     _running = false;
 
                     if (!fastForward)
-                        Game1.GameManager.PlaySoundEffect("D360-21-15");
+                        Game1.AudioManager.PlaySoundEffect("D360-21-15");
                     return;
                 }
             }
@@ -398,13 +398,13 @@ namespace ProjectZ.InGame.Overlay
             bool isMonkey = Game1.GameManager.CurrentDialogKey.StartsWith("castle_monkey");
 
             if (!fastForward && isMonkey && _running && _currentDialogCount % 7 == 0)
-                Game1.GameManager.PlaySoundEffect("D370-20-14", true);
+                Game1.AudioManager.PlaySoundEffect("D370-20-14", true);
 
             else if (!fastForward && !OwlMode && _running && _currentDialogCount % 6 == 0)
-                Game1.GameManager.PlaySoundEffect("D370-15-0F", true);
+                Game1.AudioManager.PlaySoundEffect("D370-15-0F", true);
 
             else if (!fastForward && OwlMode && _running && _currentDialogCount % 28 == 0)
-                Game1.GameManager.PlaySoundEffect("D370-25-19", true);
+                Game1.AudioManager.PlaySoundEffect("D370-25-19", true);
 
             _currentDialogCount++;
         }
@@ -439,7 +439,7 @@ namespace ProjectZ.InGame.Overlay
             if (_currentChoiceSelection != newSelection)
             {
                 _currentChoiceSelection = newSelection;
-                Game1.GameManager.PlaySoundEffect("D360-10-0A");
+                Game1.AudioManager.PlaySoundEffect("D360-10-0A");
             }
         }
 

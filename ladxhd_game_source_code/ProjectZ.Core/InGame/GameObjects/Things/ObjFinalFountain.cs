@@ -58,7 +58,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private void Activate()
         {
             _isActive = true;
-            Game1.GameManager.PlaySoundEffect("D378-52-34");
+            Game1.AudioManager.PlaySoundEffect("D378-52-34");
             if (GameSettings.ScreenShake)
                 Game1.GameManager.ShakeScreen(WobbleTime, 1, 0, 6, 0);
             Map.CameraTarget = new Vector2(MapManager.ObjLink.PosX, MapManager.ObjLink.PosY);

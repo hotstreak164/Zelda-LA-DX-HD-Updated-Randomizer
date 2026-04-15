@@ -81,7 +81,7 @@ namespace ProjectZ.InGame.Interface
             {
                 // Play a sound effect in most cases, except when it's these buttons.
                 if (buttonText != "Back" && buttonText != "Return to Game")
-                    Game1.GameManager.PlaySoundEffect("D360-19-13");
+                    Game1.AudioManager.PlaySoundEffect("D360-19-13");
 
                 // Run the click function and return input did something.
                 ClickFunction(this);

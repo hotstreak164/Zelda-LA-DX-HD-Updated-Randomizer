@@ -123,7 +123,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private void InitAwake()
         {
             _animator.Play("red");
-            Game1.GameManager.SetMusic(79, 2);
+            Game1.AudioManager.SetMusic(79, 2);
         }
 
         private void UpdateAwake()
@@ -174,7 +174,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                         _body.Velocity.Z += 1.125f;
                         _body.VelocityTarget = distance * WalkSpeed;
 
-                        Game1.GameManager.PlaySoundEffect("D360-32-20");
+                        Game1.AudioManager.PlaySoundEffect("D360-32-20");
                     }
                 }
             }
@@ -186,7 +186,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _body.IgnoresZ = true;
             _body.VelocityTarget = Vector2.Zero;
 
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
 
             var distance = MapManager.ObjLink.Position - EntityPosition.Position;
             if (distance != Vector2.Zero)
@@ -220,7 +220,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 MapManager.ObjLink.GroundStun(1000);
                 if (GameSettings.ScreenShake)
                     Game1.GameManager.ShakeScreen(500, 0.00f, 2.50f, 0.00f, 10.00f);
-                Game1.GameManager.PlaySoundEffect("D360-11-0B");
+                Game1.AudioManager.PlaySoundEffect("D360-11-0B");
 
                 _aiComponent.ChangeState("attackFinished");
             }
@@ -231,7 +231,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_animator.CurrentAnimation.Id == "angry")
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D378-41-29");
+            Game1.AudioManager.PlaySoundEffect("D378-41-29");
             SpawnStones();
 
             _animator.Play("angry");
@@ -242,7 +242,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_animator.CurrentAnimation.Id == "broken")
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D378-41-29");
+            Game1.AudioManager.PlaySoundEffect("D378-41-29");
             SpawnStones();
 
             _animator.Play("broken");
@@ -274,7 +274,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             SpawnKey();
 
             // stop boss music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
             Map.Objects.DeleteObjects.Add(this);
         }

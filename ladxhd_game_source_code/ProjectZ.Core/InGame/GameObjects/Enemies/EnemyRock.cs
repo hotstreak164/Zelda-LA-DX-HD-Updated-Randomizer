@@ -77,7 +77,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             // bounce in a random direction
             if (_body.IsGrounded)
             {
-                Game1.GameManager.PlaySoundEffect("D360-32-20", true, EntityPosition.Position);
+                Game1.AudioManager.PlaySoundEffect("D360-32-20", true, EntityPosition.Position);
 
                 _body.Velocity.Z = Game1.RandomNumber.Next(150, 250) / 100f;
 

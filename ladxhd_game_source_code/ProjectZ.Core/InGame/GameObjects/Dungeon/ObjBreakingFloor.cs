@@ -77,7 +77,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 // spawn the hole and delete itself
                 if (_breakCounter >= BreakTime)
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-43-2B");
+                    Game1.AudioManager.PlaySoundEffect("D378-43-2B");
                     Deactivate();
                 }
             }

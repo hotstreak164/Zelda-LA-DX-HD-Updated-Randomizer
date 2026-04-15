@@ -134,7 +134,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             splashAnimator.EntityPosition.Set(new Vector2(EntityPosition.X - 8, EntityPosition.Y - EntityPosition.Z - 16));
             Map.Objects.SpawnObject(splashAnimator);
 
-            Game1.GameManager.PlaySoundEffect("D378-19-13");
+            Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
             Map.Objects.DeleteObjects.Add(this);
         }

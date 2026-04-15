@@ -181,7 +181,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             if ((direction & Values.BodyCollision.Floor) != 0)
             {
-                Game1.GameManager.PlaySoundEffect("D360-09-09");
+                Game1.AudioManager.PlaySoundEffect("D360-09-09");
 
                 // stop hitting the player/boss when the ball touches the ground
                 _damageField.IsActive = false;

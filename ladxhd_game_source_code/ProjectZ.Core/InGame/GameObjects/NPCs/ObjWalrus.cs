@@ -159,7 +159,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_danceCounter > 250)
             {
                 _danceCounter -= 9999;
-                Game1.GameManager.PlaySoundEffect("D360-39-27");
+                Game1.AudioManager.PlaySoundEffect("D360-39-27");
             }
 
             if (!_animator.IsPlaying)
@@ -187,7 +187,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _body.Velocity.Z = 1.25f;
             _jumpCount--;
 
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
         }
 
         private void UpdateJump()
@@ -203,8 +203,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         {
             _animator.Play("jump");
 
-            Game1.GameManager.PlaySoundEffect("D360-39-27");
-            Game1.GameManager.PlaySoundEffect("D378-17-11");
+            Game1.AudioManager.PlaySoundEffect("D360-39-27");
+            Game1.AudioManager.PlaySoundEffect("D378-17-11");
         }
 
         private void UpdateRoll()
@@ -226,7 +226,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         {
             if (!_splashed && EntityPosition.Z < _spriteSourceRectangle.Height)
             {
-                Game1.GameManager.PlaySoundEffect("D378-36-24");
+                Game1.AudioManager.PlaySoundEffect("D378-36-24");
 
                 var splashAnimator0 = new ObjAnimator(Map, (int)EntityPosition.X - 6, (int)EntityPosition.Y + 1, 0, 0, Values.LayerPlayer, "Particles/fishingSplash", "idle", true);
                 var splashAnimator1 = new ObjAnimator(Map, (int)EntityPosition.X + 6, (int)EntityPosition.Y + 2, 0, 0, Values.LayerPlayer, "Particles/fishingSplash", "idle", true);

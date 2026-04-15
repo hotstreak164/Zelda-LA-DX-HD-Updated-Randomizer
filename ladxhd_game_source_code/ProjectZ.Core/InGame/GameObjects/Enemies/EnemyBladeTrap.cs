@@ -184,7 +184,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                     _maxPosition[i] = predicted;
 
                     // Play the movement sound effect and start moving.
-                    Game1.GameManager.PlaySoundEffect("D378-10-0A");
+                    Game1.AudioManager.PlaySoundEffect("D378-10-0A");
                     _aiComponent.ChangeState("snap");
                     _moveDir = i;
                 }
@@ -202,7 +202,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 // Play the collision sound effect and snap the trap into place.
                 _movePosition = _maxPosition[_moveDir];
                 _aiComponent.ChangeState("wait");
-                Game1.GameManager.PlaySoundEffect("D360-07-07");
+                Game1.AudioManager.PlaySoundEffect("D360-07-07");
             }
             // Update the trap's position until it reaches it's max movement value.
             UpdatePosition();

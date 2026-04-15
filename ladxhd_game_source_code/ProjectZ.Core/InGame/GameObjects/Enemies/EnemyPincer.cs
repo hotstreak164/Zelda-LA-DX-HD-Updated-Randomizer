@@ -284,8 +284,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void FakeHoleDeath()
         {
             // Play the "falling down hole" sound effect.
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
-            Game1.GameManager.PlaySoundEffect("D360-24-18");
+            Game1.AudioManager.PlaySoundEffect("D360-03-03");
+            Game1.AudioManager.PlaySoundEffect("D360-24-18");
 
             // Spawn the graphics for it.
             var fallAnimation = new ObjAnimator(_aiComponent.Owner.Map, 0, 0, Values.LayerBottom, "Particles/fall", "idle", true);

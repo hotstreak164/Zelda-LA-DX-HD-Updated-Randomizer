@@ -174,7 +174,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 return;
             }
 
-            Game1.GameManager.PlaySoundEffect("D378-31-1F", false);
+            Game1.AudioManager.PlaySoundEffect("D378-31-1F", false);
 
             _collidingObjects.Clear();
             Map.Objects.GetComponentList(_collidingObjects, (int)_rangeBox.X, (int)_rangeBox.Y,

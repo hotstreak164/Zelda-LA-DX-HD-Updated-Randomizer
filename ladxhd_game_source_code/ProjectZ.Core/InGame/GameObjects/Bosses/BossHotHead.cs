@@ -170,7 +170,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             _sprite.IsVisible = true;
             _animator.Play(_damaged ? "damaged" : "flame");
-            Game1.GameManager.PlaySoundEffect("D370-22-16");
+            Game1.AudioManager.PlaySoundEffect("D370-22-16");
 
             SpawnSplashAnimation();
         }
@@ -181,7 +181,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (!_body.IsGrounded)
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D360-50-32");
+            Game1.AudioManager.PlaySoundEffect("D360-50-32");
 
             SpawnSplashAnimation();
             SpawnSplashParticles();
@@ -222,7 +222,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void UpdateMoving()
         {
-            Game1.GameManager.PlaySoundEffect("D378-13-0D", false);
+            Game1.AudioManager.PlaySoundEffect("D378-13-0D", false);
         }
 
         private void ContinueMoving()
@@ -279,7 +279,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             _damaged = true;
 
-            Game1.GameManager.PlaySoundEffect("D378-41-29");
+            Game1.AudioManager.PlaySoundEffect("D378-41-29");
 
             _animator.Play("damaged");
             _aiComponent.ChangeState("broken");
@@ -331,7 +331,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (Map.GetFieldState(spawnPosition) != MapStates.FieldStates.None)
                 spawnPosition = new Vector2((int)_spawnPosition.X, (int)_spawnPosition.Y + 32);
 
-            Game1.GameManager.PlaySoundEffect("D378-26-1A");
+            Game1.AudioManager.PlaySoundEffect("D378-26-1A");
 
             Map.Objects.SpawnObject(new ObjItem(Map, (int)spawnPosition.X, (int)spawnPosition.Y, "j", "d8_nHeart", "heartMeterFull", null));
         }
@@ -375,7 +375,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             {
                 _damageState.SetDamageState();
                 _aiComponent.ChangeState("damaged");
-                Game1.GameManager.PlaySoundEffect("D370-07-07");
+                Game1.AudioManager.PlaySoundEffect("D370-07-07");
                 return Values.HitCollision.Enemy;
             }
 
@@ -410,8 +410,8 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 // freeze in the air + show final dialog
                 if (_damageState.CurrentLives <= 0)
                 {
-                    Game1.GameManager.SetMusic(93,2);
-                    Game1.GameManager.PlaySoundEffect("D370-16-10");
+                    Game1.AudioManager.SetMusic(93,2);
+                    Game1.AudioManager.PlaySoundEffect("D370-16-10");
 
                     _body.IsActive = false;
                     Game1.GameManager.StartDialogPath("hot_head_death");

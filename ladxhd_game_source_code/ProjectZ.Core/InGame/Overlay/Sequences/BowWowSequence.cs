@@ -152,7 +152,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
                 {
                     _flashPercentage = 1;
                     _spritePhotoFlash.Color = Color.White * _flashPercentage;
-                    Game1.GameManager.PlaySoundEffect("D378-63-40");
+                    Game1.AudioManager.PlaySoundEffect("D378-63-40");
 
                     // Show the Bow Wow picture.
                     _showPicture = true;
@@ -257,7 +257,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
                     {
                         _blockCount++;
 
-                        Game1.GameManager.PlaySoundEffect("D360-07-07");
+                        Game1.AudioManager.PlaySoundEffect("D360-07-07");
 
                         // show block particle
                         _particleCounter = 175;

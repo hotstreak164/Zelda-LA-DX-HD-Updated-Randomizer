@@ -232,7 +232,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private void FallDeath()
         {
             // play sound effect
-            Game1.GameManager.PlaySoundEffect("D360-24-18");
+            Game1.AudioManager.PlaySoundEffect("D360-24-18");
 
             var fallAnimation = new ObjAnimator(Map, 0, 0, Values.LayerBottom, "Particles/fall", "idle", true);
             fallAnimation.EntityPosition.Set(new Vector2(
@@ -310,7 +310,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 _map.Objects.Hit(this, new Vector2(EntityPosition.X, EntityPosition.Y),
                     new Box(EntityPosition.X - 20, EntityPosition.Y - 20 - 5, 0, 40, 40, 16), HitType.Bomb, 2, false);
 
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D378-12-0C");
 
             _animator.Play("explode");
             _animator.SetFrame(1);
@@ -344,20 +344,20 @@ namespace ProjectZ.InGame.GameObjects.Things
                 if ((collision & Values.BodyCollision.Horizontal) != 0)
                 {
                     Body.Velocity.X = -Body.Velocity.X * 0.25f;
-                    Game1.GameManager.PlaySoundEffect("D360-09-09");
+                    Game1.AudioManager.PlaySoundEffect("D360-09-09");
                 }
                 if ((collision & Values.BodyCollision.Bottom) != 0 && Body.Velocity.Y < -0.075f)
                 {
                     Body.DragAir *= 0.975f;
                     SetCarriableActive(true);
-                    Game1.GameManager.PlaySoundEffect("D360-09-09");
+                    Game1.AudioManager.PlaySoundEffect("D360-09-09");
                 }
             }
 
             if ((collision & Values.BodyCollision.Floor) != 0)
             {
                 if (Body.Velocity.Z > 0.5f)
-                    Game1.GameManager.PlaySoundEffect("D360-09-09");
+                    Game1.AudioManager.PlaySoundEffect("D360-09-09");
 
                 //Body.Level = 0;
                 Body.Drag *= 0.8f;

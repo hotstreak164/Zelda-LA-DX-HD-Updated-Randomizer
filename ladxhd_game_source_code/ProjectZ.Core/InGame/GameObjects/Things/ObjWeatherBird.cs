@@ -122,7 +122,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void InitMoving()
         {
-            Game1.GameManager.PlaySoundEffect("D378-17-11");
+            Game1.AudioManager.PlaySoundEffect("D378-17-11");
 
             // set the key
             if (_saveKey != null)
@@ -141,7 +141,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void MoveEnd()
         {
-            Game1.GameManager.PlaySoundEffect("D360-35-23");
+            Game1.AudioManager.PlaySoundEffect("D360-35-23");
 
             // finished moving
             EntityPosition.Set(_aimPosition);

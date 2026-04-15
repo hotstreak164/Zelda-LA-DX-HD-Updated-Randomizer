@@ -63,8 +63,8 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             _hitCooldown = 250;
             _colorCounter = ColorChangeTime;
             
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
-            Game1.GameManager.PlaySoundEffect("D370-14-0E");
+            Game1.AudioManager.PlaySoundEffect("D360-03-03");
+            Game1.AudioManager.PlaySoundEffect("D370-14-0E");
 
             // toggle the key
             var lastState = Game1.GameManager.SaveManager.GetString(_key, "0");

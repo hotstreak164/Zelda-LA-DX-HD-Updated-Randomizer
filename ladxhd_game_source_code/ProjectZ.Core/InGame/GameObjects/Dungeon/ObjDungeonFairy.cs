@@ -204,7 +204,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 };
                 MapManager.ObjLink.PickUpItem(cItem, true);
             }
-            Game1.GameManager.PlaySoundEffect("D370-01-01");
+            Game1.AudioManager.PlaySoundEffect("D370-01-01");
             _collected = true;
         }
 

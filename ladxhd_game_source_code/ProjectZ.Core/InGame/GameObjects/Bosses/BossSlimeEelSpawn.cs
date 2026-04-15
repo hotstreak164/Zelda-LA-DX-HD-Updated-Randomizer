@@ -185,12 +185,12 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                     _shakeSoundCounter += 2000;
 
                     if (_spawnState == SpawnState.Shake)
-                        Game1.GameManager.PlaySoundEffect("D378-29-1D", true);
+                        Game1.AudioManager.PlaySoundEffect("D378-29-1D", true);
 
                     if (_spawnState == SpawnState.FloorBreak)
                     {
-                        Game1.GameManager.StopSoundEffect("D378-29-1D");
-                        Game1.GameManager.PlaySoundEffect("D378-61-3E", true);
+                        Game1.AudioManager.StopSoundEffect("D378-29-1D");
+                        Game1.AudioManager.PlaySoundEffect("D378-61-3E", true);
                     }
                 }
             }
@@ -301,7 +301,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void SpawnStonesWall(int posX, int posY, int dir)
         {
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D378-12-0C");
 
             var randomOffset0 = Game1.RandomNumber.Next(90, 110) / 100f;
             var randomOffset1 = Game1.RandomNumber.Next(90, 110) / 100f;

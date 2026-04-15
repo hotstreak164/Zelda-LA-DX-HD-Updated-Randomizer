@@ -101,7 +101,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // play soundeffect on pull
             if (!_wasPulled && direction.Y > 0)
-                Game1.GameManager.PlaySoundEffect("D378-17-11");
+                Game1.AudioManager.PlaySoundEffect("D378-17-11");
             _wasPulled = direction.Y > 0;
 
             _position.Move(direction * PullSpeed);

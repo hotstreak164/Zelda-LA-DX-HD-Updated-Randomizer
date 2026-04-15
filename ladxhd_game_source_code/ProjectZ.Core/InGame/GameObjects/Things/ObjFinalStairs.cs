@@ -43,7 +43,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 _spawned = true;
                 _drawComponent.IsActive = true;
-                Game1.GameManager.PlaySoundEffect("D360-47-2F");
+                Game1.AudioManager.PlaySoundEffect("D360-47-2F");
             }
         }
 

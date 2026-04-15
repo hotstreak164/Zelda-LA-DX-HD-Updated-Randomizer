@@ -198,7 +198,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void ToFalling()
         {
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
 
             _pushable = true;
             _body.IsActive = true;
@@ -237,7 +237,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("jumping");
             _animator.Play("jump");
 
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
 
             var vecDirection = MapManager.ObjLink.Position - EntityPosition.Position;
             if (vecDirection != Vector2.Zero)

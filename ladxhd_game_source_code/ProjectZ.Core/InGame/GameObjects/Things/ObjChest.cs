@@ -232,12 +232,12 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_aiComponent.CurrentStateId != "closed")
                 return false;
 
-            Game1.GameManager.PlaySoundEffect("D378-04-04");
+            Game1.AudioManager.PlaySoundEffect("D378-04-04");
 
             // spawn object
             if (_spawnObject != null)
             {
-                Game1.GameManager.PlaySoundEffect("D360-29-1D");
+                Game1.AudioManager.PlaySoundEffect("D360-29-1D");
 
                 _aiComponent.ChangeState("opened");
                 SpawnObject();

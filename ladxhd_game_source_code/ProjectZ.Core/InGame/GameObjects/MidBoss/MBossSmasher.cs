@@ -131,7 +131,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 _aiComponent.ChangeState("waiting");
 
                 // stop boss music
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
             }
         }
 
@@ -152,7 +152,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _aiComponent.ChangeState("walk");
 
             // start boss music
-            Game1.GameManager.SetMusic(79, 2);
+            Game1.AudioManager.SetMusic(79, 2);
         }
 
         private void InitPickup()
@@ -163,7 +163,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 return;
             }
 
-            Game1.GameManager.PlaySoundEffect("D370-28-1C");
+            Game1.AudioManager.PlaySoundEffect("D370-28-1C");
 
             _pickupStart = new Vector2(_ball.EntityPosition.Position.X, EntityPosition.Y - _ball.EntityPosition.Position.Y);
             _direction = _ball.EntityPosition.Position.X < EntityPosition.X ? 0 : 1;
@@ -327,7 +327,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             _aiComponent.ChangeState("postThrow");
 
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
 
             _animator.Play("idle_" + _direction);
             _body.Velocity = new Vector3(0, 0, 1.75f);
@@ -428,10 +428,10 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
             // stop boss music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
             // spawns a fairy
-            Game1.GameManager.PlaySoundEffect("D360-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D360-27-1B");
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 8));
 
             Map.Objects.DeleteObjects.Add(this);

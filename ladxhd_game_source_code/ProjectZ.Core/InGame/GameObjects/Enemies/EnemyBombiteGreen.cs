@@ -226,9 +226,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (hitType != HitType.MagicPowder)
             {
                 if (pieceOfPower)
-                    Game1.GameManager.PlaySoundEffect("D370-17-11");
+                    Game1.AudioManager.PlaySoundEffect("D370-17-11");
 
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
                 if (pieceOfPower)
                     _damageState.HitKnockBack(gameObject, direction, hitType, pieceOfPower, false);

@@ -107,7 +107,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if ((hitType & HitType.Sword) == 0)
                 return Values.HitCollision.None;
 
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
+            Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
             OnDeath(true);
 
@@ -140,7 +140,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reflect(Vector2 shieldDirection)
         {
             // Play the deflection sound.
-            Game1.GameManager.PlaySoundEffect("D360-22-16");
+            Game1.AudioManager.PlaySoundEffect("D360-22-16");
 
             // Don't let the spear reflect more than once.
             _reflected = true;
@@ -163,7 +163,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void OnDeath(bool playSound)
         {
             if (playSound)
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
             var splashAnimator = new ObjAnimator(Map, 0, 0, 0, 0, Values.LayerTop, "Particles/spawn", "run", true);
             splashAnimator.EntityPosition.Set(EntityPosition.Position - new Vector2(8, 8));

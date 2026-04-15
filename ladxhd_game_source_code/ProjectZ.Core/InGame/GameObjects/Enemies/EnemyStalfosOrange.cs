@@ -180,7 +180,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void ToJumping()
         {
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
 
             _aiComponent.ChangeState("jumping");
 

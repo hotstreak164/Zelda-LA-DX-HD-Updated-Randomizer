@@ -50,7 +50,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 // Jump into the bed and start the transition.
                 _startBed = true;
-                Game1.GameManager.SetMusic(29, 2);
+                Game1.AudioManager.SetMusic(29, 2);
                 MapManager.ObjLink.StartRailJump(new Vector2(EntityPosition.X + 8, EntityPosition.Y + 21), 1, 1);
                 MapManager.ObjLink.StartBedTransition();
             }

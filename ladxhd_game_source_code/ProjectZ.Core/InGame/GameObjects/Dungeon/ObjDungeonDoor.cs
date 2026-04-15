@@ -135,7 +135,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 return false;
             }
             // Only play the sound effect when the player uses a key to open the door.
-            Game1.GameManager.PlaySoundEffect("D378-04-04", false);
+            Game1.AudioManager.PlaySoundEffect("D378-04-04", false);
 
             // Save the status of this door being opened if door has a dictionary entry.
             if (!string.IsNullOrEmpty(_strPushKey))
@@ -154,7 +154,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             _currentState = DoorStates.Closing;
             _collisionComponent.IsActive = true;
 
-            Game1.GameManager.PlaySoundEffect("D378-16-10", false);
+            Game1.AudioManager.PlaySoundEffect("D378-16-10", false);
         }
 
         private void KeyChanged()

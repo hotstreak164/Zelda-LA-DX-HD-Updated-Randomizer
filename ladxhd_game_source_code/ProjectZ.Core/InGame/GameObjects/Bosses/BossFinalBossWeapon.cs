@@ -106,7 +106,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (_soundCounter < 0)
             {
                 _soundCounter += 250;
-                Game1.GameManager.PlaySoundEffect("D378-58-3A");
+                Game1.AudioManager.PlaySoundEffect("D378-58-3A");
             }
             var rectangle = _animator.CollisionRectangle;
 

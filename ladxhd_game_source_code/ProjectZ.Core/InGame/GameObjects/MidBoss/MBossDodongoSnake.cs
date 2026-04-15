@@ -268,8 +268,8 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 _encountered = true;
 
                 // Start the music if it hasn't already started playing.
-                if (Game1.GameManager.GetCurrentMusic() != 79)
-                    Game1.GameManager.SetMusic(79, 2);
+                if (Game1.AudioManager.GetCurrentMusic() != 79)
+                    Game1.AudioManager.SetMusic(79, 2);
             }
             // Check if the player left the room.
             else if (!_body.FieldRectangle.Contains(MapManager.ObjLink.CenterPosition.Position) && _encountered)
@@ -278,7 +278,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 _encountered = false;
 
                 // Restore normal dungeon music.
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
             }
             // Try to eat any bombs found within range.
             EatBombs();
@@ -373,7 +373,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                         bomb.Map.Objects.DeleteObjects.Add(bomb);
 
                         // Play the bomb eating sound effect.
-                        Game1.GameManager.PlaySoundEffect("D360-42-2A");
+                        Game1.AudioManager.PlaySoundEffect("D360-42-2A");
                         ToExploding();
                     }
                 }
@@ -386,11 +386,11 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             // When it's the last snake remaining, stop the music on death.
             if (_bossCount <= 1)
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
 
             // Play explosion sound effect & spawn fairy.
-            Game1.GameManager.PlaySoundEffect("D378-26-1A");
-            Game1.GameManager.PlaySoundEffect("D360-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D378-26-1A");
+            Game1.AudioManager.PlaySoundEffect("D360-27-1B");
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)_bodyExplosionPosition.X, (int)_bodyExplosionPosition.Y + 8, 0));
 
             // Shake the screen.
@@ -460,7 +460,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
                     if (!_playedExplosion)
                     {
-                        Game1.GameManager.PlaySoundEffect("D378-12-0C");
+                        Game1.AudioManager.PlaySoundEffect("D378-12-0C");
                         _playedExplosion = true;
                     }
                 }
@@ -494,7 +494,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             _aiComponent.ChangeState("death");
 
-            Game1.GameManager.PlaySoundEffect("D370-16-10");
+            Game1.AudioManager.PlaySoundEffect("D370-16-10");
         }
     }
 }

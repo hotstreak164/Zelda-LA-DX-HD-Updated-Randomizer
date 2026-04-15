@@ -92,7 +92,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         public override void Init()
         {
-            Game1.GameManager.PlaySoundEffect("D378-10-0A");
+            Game1.AudioManager.PlaySoundEffect("D378-10-0A");
         }
 
         private void UpdateIdle()
@@ -135,7 +135,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _animator.SetFrame((dir + 1) % 4);
 
             if (_playSound)
-                Game1.GameManager.PlaySoundEffect("D360-07-07");
+                Game1.AudioManager.PlaySoundEffect("D360-07-07");
         }
 
         private void TickDespawn(double time)

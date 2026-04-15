@@ -40,7 +40,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (!_playedSoundEffect && _animator.CurrentFrameIndex == 1)
             {
                 _playedSoundEffect = true;
-                Game1.GameManager.PlaySoundEffect("D360-64-40");
+                Game1.AudioManager.PlaySoundEffect("D360-64-40");
             }
 
             // hole is only active while at the x frame

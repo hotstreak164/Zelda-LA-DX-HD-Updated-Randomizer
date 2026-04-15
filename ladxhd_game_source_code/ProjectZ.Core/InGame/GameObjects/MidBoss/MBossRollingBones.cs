@@ -141,7 +141,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             if ((collision & Values.BodyCollision.Floor) != 0)
             {
-                Game1.GameManager.PlaySoundEffect("D360-32-20");
+                Game1.AudioManager.PlaySoundEffect("D360-32-20");
             }
         }
 
@@ -151,7 +151,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_aiComponent.CurrentStateId == "waiting" && Game1.GameManager.SaveManager.GetString(_triggerKey) == "1")
             {
                 // start boss music
-                Game1.GameManager.SetMusic(79, 2);
+                Game1.AudioManager.SetMusic(79, 2);
                 _hitComponent.IsActive = true;
                 _aiComponent.ChangeState("initJump");
             }
@@ -279,7 +279,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_burstCounter < 0)
             {
                 _burstCounter += 150;
-                Game1.GameManager.PlaySoundEffect("D378-19-13");
+                Game1.AudioManager.PlaySoundEffect("D378-19-13");
             }
 
             _deathCount += Game1.DeltaTime;
@@ -301,9 +301,9 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
             // stop boss music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
-            Game1.GameManager.PlaySoundEffect("D360-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D360-27-1B");
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 8));
 
             Map.Objects.DeleteObjects.Add(this);
@@ -313,7 +313,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private void OnDeath(bool pieceOfPower)
         {
             _aiComponent.ChangeState("blink");
-            Game1.GameManager.PlaySoundEffect("D370-16-10");
+            Game1.AudioManager.PlaySoundEffect("D370-16-10");
 
             _damageField.IsActive = false;
             _hitComponent.IsActive = false;

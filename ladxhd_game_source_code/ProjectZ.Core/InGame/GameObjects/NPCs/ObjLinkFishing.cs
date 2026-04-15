@@ -102,7 +102,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 // throw hook
                 if (_animator.CurrentFrameIndex == 5)
                 {
-                    Game1.GameManager.PlaySoundEffect("D360-08-08");
+                    Game1.AudioManager.PlaySoundEffect("D360-08-08");
                     _hookVelocity = new Vector2(-2.0f, -1f);
                     _isFishing = true;
                     HasFish = false;

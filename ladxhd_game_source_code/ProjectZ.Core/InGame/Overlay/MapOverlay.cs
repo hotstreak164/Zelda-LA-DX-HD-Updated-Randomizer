@@ -323,7 +323,7 @@ namespace ProjectZ.InGame.Overlay
                 // Play an animation and a sound effect.
                 var explosionAnimation = new ObjAnimator(MapManager.ObjLink.Map, (int)teleportPoint.X, (int)teleportPoint.Y - 8, Values.LayerTop, "Particles/pieceOfPowerExplosion", "run", true);
                 MapManager.ObjLink.Map.Objects.SpawnObject(explosionAnimation);
-                Game1.GameManager.PlaySoundEffect("D360-27-1B");
+                Game1.AudioManager.PlaySoundEffect("D360-27-1B");
                 MapManager.ObjLink.ManboTeleport = false;
             }
         }
@@ -374,14 +374,14 @@ namespace ProjectZ.InGame.Overlay
                 newPosition.Y < Game1.GameManager.MapVisibility.GetLength(1) &&
                 (_fullMap || Game1.GameManager.MapVisibility[newPosition.X, newPosition.Y]))
             {
-                Game1.GameManager.PlaySoundEffect("D360-10-0A");
+                Game1.AudioManager.PlaySoundEffect("D360-10-0A");
                 _selectionPosition = newPosition;
                 _animationSelection.Stop();
                 _animationSelection.Play("idle");
             }
             else
             {
-                Game1.GameManager.PlaySoundEffect("D360-09-09");
+                Game1.AudioManager.PlaySoundEffect("D360-09-09");
             }
         }
 

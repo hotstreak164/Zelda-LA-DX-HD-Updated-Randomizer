@@ -123,7 +123,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (!string.IsNullOrEmpty(_strKey))
                 Game1.GameManager.SaveManager.SetString(_strKey, "1");
 
-            Game1.GameManager.PlaySoundEffect("D360-06-06");
+            Game1.AudioManager.PlaySoundEffect("D360-06-06");
 
             _sprite.IsVisible = true;
 
@@ -161,7 +161,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _aiComponent.ChangeState("bat");
             _animator.Play("bat");
 
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D378-12-0C");
 
             // spawn effect
             var objAnimation = new ObjAnimator(Map,
@@ -180,7 +180,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _animator.Play("attack");
             _showThunder = true;
 
-            Game1.GameManager.PlaySoundEffect("D378-38-26");
+            Game1.AudioManager.PlaySoundEffect("D378-38-26");
         }
 
         private void UpdateThunder()
@@ -204,7 +204,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void InitDespawn()
         {
-            Game1.GameManager.PlaySoundEffect("D360-59-3B");
+            Game1.AudioManager.PlaySoundEffect("D360-59-3B");
         }
 
         private void TickDespawn(double state)

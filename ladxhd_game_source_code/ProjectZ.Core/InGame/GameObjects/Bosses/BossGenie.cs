@@ -172,7 +172,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _smokeTop.Play("despawn");
             _spawnCounter = _smokeTop.GetAnimationTime();
 
-            Game1.GameManager.PlaySoundEffect("D360-31-1F");
+            Game1.AudioManager.PlaySoundEffect("D360-31-1F");
 
             _drawSmoke = true;
         }
@@ -205,7 +205,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _smokePosition1 = new Vector2(EntityPosition.X, EntityPosition.Y - 29);
             _smokeTop.Play("top");
 
-            Game1.GameManager.PlaySoundEffect("D360-06-06");
+            Game1.AudioManager.PlaySoundEffect("D360-06-06");
 
             _shadowComponent.IsActive = true;
             _drawSmoke = true;
@@ -381,7 +381,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             fireball.ThrowFireball(playerDirection);
 
-            Game1.GameManager.PlaySoundEffect("D378-40-28");
+            Game1.AudioManager.PlaySoundEffect("D378-40-28");
         }
 
         private void AttackEnd()
@@ -454,9 +454,9 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
             // stop music
-            Game1.GameManager.StopMusic(20, 0);
-            Game1.GameManager.StopMusic(20, 1);
-            Game1.GameManager.StopMusic(20, 2);
+            Game1.AudioManager.StopMusic(20, 0);
+            Game1.AudioManager.StopMusic(20, 1);
+            Game1.AudioManager.StopMusic(20, 2);
 
             var heartPosition = new Vector2(EntityPosition.X, EntityPosition.Y - EntityPosition.Z);
             var centerDistance = heartPosition - _roomCenter;

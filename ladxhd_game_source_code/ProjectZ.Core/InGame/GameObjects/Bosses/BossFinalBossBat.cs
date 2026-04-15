@@ -91,7 +91,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 playerDirection.Normalize();
             _body.VelocityTarget = playerDirection * 1.75f;
 
-            Game1.GameManager.PlaySoundEffect("D378-40-28");
+            Game1.AudioManager.PlaySoundEffect("D378-40-28");
         }
 
         private void FadeOut(double time)

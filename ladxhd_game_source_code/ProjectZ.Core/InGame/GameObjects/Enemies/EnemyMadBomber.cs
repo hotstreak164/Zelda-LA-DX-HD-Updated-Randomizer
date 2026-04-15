@@ -211,7 +211,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             bomb.Body.Bounciness = 0.25f;
             Map.Objects.SpawnObject(bomb);
 
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
         }
 
         private void UpdateLeaving()

@@ -168,8 +168,8 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (!_playerInRoom && currentField.Contains(MapManager.ObjLink.CenterPosition.Position))
             {
                 // Do not play music if it's already playing.
-                if (Game1.GameManager.GetCurrentMusic() != 79)
-                    Game1.GameManager.SetMusic(79, 2);
+                if (Game1.AudioManager.GetCurrentMusic() != 79)
+                    Game1.AudioManager.SetMusic(79, 2);
 
                 _playerInRoom = true;
 
@@ -183,7 +183,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             // Stop the music when the player leaves the room.
             else if (_playerInRoom && !currentField.Contains(MapManager.ObjLink.CenterPosition.Position))
             {
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
                 _playerInRoom = false;
 
                 // Disable the hit component.
@@ -196,7 +196,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             MapManager.ObjLink.Stun(2000);
             MapManager.ObjLink.StartGrab();
 
-            Game1.GameManager.PlaySoundEffect("D370-22-16");
+            Game1.AudioManager.PlaySoundEffect("D370-22-16");
 
             _body.VelocityTarget = Vector2.Zero;
 
@@ -223,7 +223,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void InitThrow()
         {
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
 
             // set the position to be inside of the hinox body to not start throwing the player into a collider
             var grabEndPosition = new Vector3(EntityPosition.X + 16 * _grabDirection, EntityPosition.Y, 25);
@@ -281,7 +281,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void UpdatePreRun()
         {
-            Game1.GameManager.PlaySoundEffect("D360-32-20", false);
+            Game1.AudioManager.PlaySoundEffect("D360-32-20", false);
         }
 
         private void InitRun()
@@ -349,7 +349,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             Map.Objects.SpawnObject(bomb);
             new ObjSpriteShadow(Map, bomb, Values.LayerPlayer, "sprshadowm");
 
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
 
             // play throw animation
             _animator.Play("throw_" + _animator.CurrentFrameIndex);
@@ -370,12 +370,12 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
             // stop the music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
-            Game1.GameManager.PlaySoundEffect("D378-26-1A");
+            Game1.AudioManager.PlaySoundEffect("D378-26-1A");
 
             // spawns a fairy
-            Game1.GameManager.PlaySoundEffect("D360-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D360-27-1B");
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 8));
 
             Map.Objects.DeleteObjects.Add(this);

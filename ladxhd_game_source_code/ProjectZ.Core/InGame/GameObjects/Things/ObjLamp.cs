@@ -125,7 +125,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (!_lampKeyState && newKeyState)
             {
                 // play sound effect
-                Game1.GameManager.PlaySoundEffect("D378-18-12");
+                Game1.AudioManager.PlaySoundEffect("D378-18-12");
             }
 
             _lampKeyState = newKeyState;
@@ -200,7 +200,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 _liveTime = powder_time;
 
                 // play sound effect
-                Game1.GameManager.PlaySoundEffect("D378-18-12");
+                Game1.AudioManager.PlaySoundEffect("D378-18-12");
 
                 _lampKeyState = true;
                 if (!string.IsNullOrEmpty(_lampKey))

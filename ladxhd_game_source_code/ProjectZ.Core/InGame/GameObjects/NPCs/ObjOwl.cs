@@ -160,7 +160,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (playerDirection.Length() < 64 && MapManager.ObjLink.IsGrounded())
             {
                 // start playing owl music
-                Game1.GameManager.SetMusic(33, 2);
+                Game1.AudioManager.SetMusic(33, 2);
 
                 _leavePosition = new Vector3(originX, originY - 90, 90);
                 _aiComponent.ChangeState("talk");
@@ -209,8 +209,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _flySoundCount = 0;
 
             // start playing owl music; not in the final scene
-            if (Game1.GameManager.GetCurrentMusic() != 88)
-                Game1.GameManager.SetMusic(33, 2);
+            if (Game1.AudioManager.GetCurrentMusic() != 88)
+                Game1.AudioManager.SetMusic(33, 2);
 
             // Don't softlock the game when opening the egg or the ending sequence.
             var noFreeze = _keyCondition == "9_0" || _keyCondition == "final";
@@ -258,7 +258,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_flySoundCount < 0)
             {
                 _flySoundCount = 500;
-                Game1.GameManager.PlaySoundEffect("D378-45-2D", false);
+                Game1.AudioManager.PlaySoundEffect("D378-45-2D", false);
             }
 
             if (_airCount > _enterTime)
@@ -358,7 +358,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _animator.SpeedMultiplier = 1.5f;
             }
             // stop playing music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
             // Unfreeze the game as the owl starts leaving.
             MapManager.ObjLink.FreezeAnimations(false);
@@ -371,7 +371,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_flySoundCount < 0)
             {
                 _flySoundCount = 175;
-                Game1.GameManager.PlaySoundEffect("D378-05-05");
+                Game1.AudioManager.PlaySoundEffect("D378-05-05");
             }
             _airCount += Game1.DeltaTime;
 
@@ -402,7 +402,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private void InitTalked()
         {
             // stop playing music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
         }
     }
 }

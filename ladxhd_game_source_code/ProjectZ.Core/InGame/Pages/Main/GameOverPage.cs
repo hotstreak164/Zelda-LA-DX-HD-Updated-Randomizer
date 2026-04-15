@@ -39,11 +39,11 @@ namespace ProjectZ.InGame.Pages
             PageLayout.Deselect(false);
             PageLayout.Select(InterfaceElement.Directions.Top, false);
 
-            Game1.GameManager.ResetMusic();
-            Game1.GameManager.SetMusic(2, 0);
+            Game1.AudioManager.ResetMusic();
+            Game1.AudioManager.SetMusic(2, 0);
 
-            Game1.GbsPlayer.SetVolumeMultiplier(1.0f);
-            Game1.GbsPlayer.Play();
+            Game1.AudioManager.SetMusicVolumeMultiplier(1.0f);
+            Game1.AudioManager.PlayMusic();
 
             _pageLayout.Recalculate = true;
 

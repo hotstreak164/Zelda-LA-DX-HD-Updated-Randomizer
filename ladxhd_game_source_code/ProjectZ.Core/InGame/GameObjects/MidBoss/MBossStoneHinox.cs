@@ -159,7 +159,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
                 _aiComponent.ChangeState("attack");
 
-                Game1.GameManager.PlaySoundEffect("D360-11-0B");
+                Game1.AudioManager.PlaySoundEffect("D360-11-0B");
                 // shake the screen
                 if (GameSettings.ScreenShake)
                     Game1.GameManager.ShakeScreen(800, 0.00f, 2.00f, 0.00f, 9.5f);
@@ -290,10 +290,10 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
             // stop boss music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
             // spawns a fairy
-            Game1.GameManager.PlaySoundEffect("D360-27-1B");
+            Game1.AudioManager.PlaySoundEffect("D360-27-1B");
             Map.Objects.SpawnObject(new ObjDungeonFairy(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 8));
 
             Map.Objects.DeleteObjects.Add(this);

@@ -101,7 +101,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if ((hitType & HitType.Sword) != 0 && (hitType & HitType.Boomerang) != 0 && (hitType & HitType.Hookshot) != 0 && (hitType & HitType.Bomb) != 0)
                 return Values.HitCollision.None;
 
-            Game1.GameManager.PlaySoundEffect("D378-09-09");
+            Game1.AudioManager.PlaySoundEffect("D378-09-09");
 
             Map.Objects.DeleteObjects.Add(this);
             Map.Objects.SpawnObject(new CrystalRespawner(Map, (int)EntityPosition.X - 8, (int)EntityPosition.Y - 16, _spriteId, _dialogPath, _isHardCrystal, _colorIndex));

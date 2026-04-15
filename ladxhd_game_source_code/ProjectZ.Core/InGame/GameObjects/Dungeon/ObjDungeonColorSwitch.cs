@@ -124,7 +124,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             if (_moving)
                 IncreaseIndex();
 
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
+            Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
             _moving = true;
             _colorChanged = false;

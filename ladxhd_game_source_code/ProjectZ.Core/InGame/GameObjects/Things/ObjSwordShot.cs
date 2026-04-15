@@ -102,7 +102,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         public override void Init()
         {
-            Game1.GameManager.PlaySoundEffect("D360-59-3B");
+            Game1.AudioManager.PlaySoundEffect("D360-59-3B");
         }
 
         public void Update()

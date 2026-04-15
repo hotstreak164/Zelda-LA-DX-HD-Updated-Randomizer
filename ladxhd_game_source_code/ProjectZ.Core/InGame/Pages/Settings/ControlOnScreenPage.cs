@@ -114,7 +114,7 @@ namespace ProjectZ.Core.InGame.Pages.Settings
             {
                 _showTooltip = !_showTooltip;
                 if (_showTooltip)
-                    Game1.GameManager.PlaySoundEffect("D360-21-15");
+                    Game1.AudioManager.PlaySoundEffect("D360-21-15");
             }
             // Hide the tooltip when pressing anything.
             else if (ControlHandler.AnyButtonPressed())

@@ -234,14 +234,14 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void InitFlee()
         {
-            Game1.GameManager.PlaySoundEffect("D378-62-3F");
+            Game1.AudioManager.PlaySoundEffect("D378-62-3F");
 
             _body.IsActive = false;
             _damageField.IsActive = false;
             _animator.Play("stand" + _direction);
 
             // stop the music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
         }
 
         private void FleeTick(double counter)
@@ -267,14 +267,14 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_encounterState == _encounterNumber.ToString() &&
                 _body.FieldRectangle.Contains(MapManager.ObjLink.BodyRectangle))
             {
-                Game1.GameManager.SetMusic(79, 2);
+                Game1.AudioManager.SetMusic(79, 2);
                 _aiComponent.ChangeState("preFall");
             }
         }
 
         private void InitFall()
         {
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
 
             _animator.Play("stand1");
             _shadowComponent.IsActive = true;
@@ -307,7 +307,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 if (!_attackSound)
                 {
                     _attackSound = true;
-                    Game1.GameManager.PlaySoundEffect("D378-39-27");
+                    Game1.AudioManager.PlaySoundEffect("D378-39-27");
                 }
 
                 // attack the player
@@ -374,7 +374,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void InitJump()
         {
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
 
             _animator.Play("stand" + _direction);
 
@@ -457,7 +457,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _damageField.IsActive = false;
 
             if (!_instantFall)
-                Game1.GameManager.PlaySoundEffect("D360-40-28");
+                Game1.AudioManager.PlaySoundEffect("D360-40-28");
 
             for (var i = 0; i < _partVelocity.Length; i++)
             {
@@ -565,7 +565,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 Game1.GameManager.SaveManager.SetString(_saveKey, (_encounterNumber + 1).ToString());
 
             // stop the music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
             SpawnHookshot();
 

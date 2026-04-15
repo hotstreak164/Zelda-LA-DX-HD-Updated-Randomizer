@@ -68,7 +68,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             if (_knockoutMode)
             {
                 _knockoutMode = false;
-                Game1.GameManager.PlaySoundEffect("D360-11-0B");
+                Game1.AudioManager.PlaySoundEffect("D360-11-0B");
 
                 MapManager.ObjLink.Knockout(new Vector2(_hitDirection * 0.75f, -1), _resetDoor);
                 return true;

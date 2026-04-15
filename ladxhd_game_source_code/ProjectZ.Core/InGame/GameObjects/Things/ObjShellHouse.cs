@@ -123,7 +123,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 if (_soundCounter < 0)
                 {
                     _soundCounter += Game1.RandomNumber.Next(50, 200);;
-                    Game1.GameManager.PlaySoundEffect("D370-06-06");
+                    Game1.AudioManager.PlaySoundEffect("D370-06-06");
                 }
 
                 // 2sec -> 16px
@@ -153,9 +153,9 @@ namespace ProjectZ.InGame.GameObjects.Things
                                      _shellCount >= 20;
 
                     if (PlaySound)
-                        Game1.GameManager.PlaySoundEffect("D360-02-02");
+                        Game1.AudioManager.PlaySoundEffect("D360-02-02");
                     else
-                        Game1.GameManager.PlaySoundEffect("D360-29-1D");
+                        Game1.AudioManager.PlaySoundEffect("D360-29-1D");
 
                     var objParticle0 = new ObjAnimator(Map, 0, 0, 0, 0, Values.LayerPlayer, "Particles/shell_mansion_particle", "idle", true);
                     objParticle0.Animator.CurrentAnimation.LoopCount = 1;
@@ -193,7 +193,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                     {
                         _spawnPresent = true;
 
-                        Game1.GameManager.PlaySoundEffect("D378-12-0C");
+                        Game1.AudioManager.PlaySoundEffect("D378-12-0C");
 
                         var objExplosion = new ObjAnimator(Map, 0, 0, 0, 0, Values.LayerBottom, "Particles/explosionBomb", "run", true);
                         objExplosion.EntityPosition.Set(new Vector2((int)EntityPosition.X - 48, (int)EntityPosition.Y - 64));

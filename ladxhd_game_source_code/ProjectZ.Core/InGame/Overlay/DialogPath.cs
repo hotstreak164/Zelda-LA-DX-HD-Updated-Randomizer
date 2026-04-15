@@ -399,7 +399,7 @@ namespace ProjectZ.InGame.Overlay
     {
         public override bool Execute()
         {
-            Game1.GbsPlayer.Stop();
+            Game1.AudioManager.StopMusic();
             return true;
         }
     }
@@ -416,7 +416,7 @@ namespace ProjectZ.InGame.Overlay
         }
         public override bool Execute()
         {
-            Game1.GameManager.StopMusic(_time, _priority);
+            Game1.AudioManager.StopMusic(_time, _priority);
             return true;
         }
     }
@@ -435,12 +435,12 @@ namespace ProjectZ.InGame.Overlay
         {
             if (_priority < 0)
             {
-                Game1.GameManager.StopMusic();
+                Game1.AudioManager.StopMusic();
                 return true;
             }
-            Game1.GameManager.SetMusic(_songNr, _priority);
+            Game1.AudioManager.SetMusic(_songNr, _priority);
             if (_songNr >= 0)
-                Game1.GbsPlayer.Play();
+                Game1.AudioManager.PlayMusic();
 
             return true;
         }
@@ -457,7 +457,7 @@ namespace ProjectZ.InGame.Overlay
 
         public override bool Execute()
         {
-            Game1.GbsPlayer.SetPlaybackSpeed(_playbackSpeed);
+            Game1.AudioManager.SetMusicPlaybackSpeed(_playbackSpeed);
             return true;
         }
     }
@@ -472,7 +472,7 @@ namespace ProjectZ.InGame.Overlay
         }
         public override bool Execute()
         {
-            Game1.GameManager.PlaySoundEffect(_soundEffect);
+            Game1.AudioManager.PlaySoundEffect(_soundEffect);
             return true;
         }
     }

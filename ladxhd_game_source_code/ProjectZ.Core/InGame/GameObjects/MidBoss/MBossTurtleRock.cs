@@ -219,7 +219,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _animator.Play("stone");
             _aiComponent.ChangeState("stone");
             _aiDamageState.CurrentLives = EnemyLives.TurtleRock;
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
         }
 
         public override void Init()
@@ -367,7 +367,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                     return;
                 }
 
-                Game1.GameManager.PlaySoundEffect("D378-19-13");
+                Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
                 var partIndex = _partBreakOrder[_partBreakIndex];
                 _partVelocity[partIndex] = new Vector3(0.45f, 0, 1.5f);
@@ -422,13 +422,13 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void OnDeath()
         {
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D378-12-0C");
 
             if (!string.IsNullOrEmpty(_saveKey))
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
             // stop boss music
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
 
             Map.Objects.DeleteObjects.Add(this);
         }
@@ -496,7 +496,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             // close the eyes for a short time
             if (!_aiDamageState.IsInDamageState())
             {
-                Game1.GameManager.PlaySoundEffect("D370-07-07");
+                Game1.AudioManager.PlaySoundEffect("D370-07-07");
                 _animator.Play("damaged");
             }
 
@@ -521,7 +521,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             if (songIndex == 2 && _aiComponent.CurrentStateId == "stone")
             {
-                Game1.GameManager.SetMusic(56, 2);
+                Game1.AudioManager.SetMusic(56, 2);
 
                 _collisionComponent.IsActive = false;
                 _damageField.IsActive = true;

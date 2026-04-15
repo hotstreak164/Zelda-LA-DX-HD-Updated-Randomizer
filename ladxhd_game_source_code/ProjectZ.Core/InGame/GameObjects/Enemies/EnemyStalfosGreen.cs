@@ -174,7 +174,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _aiComponent.ChangeState("moveUp");
 
-            Game1.GameManager.PlaySoundEffect("D360-36-24");
+            Game1.AudioManager.PlaySoundEffect("D360-36-24");
 
             _animator.Play("jump");
 
@@ -232,7 +232,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _aiComponent.ChangeState("waitFloor");
 
-            Game1.GameManager.PlaySoundEffect("D360-07-07");
+            Game1.AudioManager.PlaySoundEffect("D360-07-07");
 
             // this is green in the original
             var animation = new ObjSparkingEffect(Map, 0, 0, 0, 0);

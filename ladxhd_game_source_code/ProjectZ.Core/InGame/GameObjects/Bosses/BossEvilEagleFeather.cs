@@ -92,7 +92,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (_reflected)
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D360-22-16");
+            Game1.AudioManager.PlaySoundEffect("D360-22-16");
 
             _reflected = true;
             _damageFieldComponent.IsActive = false;

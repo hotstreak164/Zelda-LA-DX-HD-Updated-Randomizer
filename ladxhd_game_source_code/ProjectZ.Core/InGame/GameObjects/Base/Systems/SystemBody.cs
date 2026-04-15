@@ -249,7 +249,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
                 {
                     body.Velocity.Y *= 0.25f;
 
-                    Game1.GameManager.PlaySoundEffect("D360-14-0E");
+                    Game1.AudioManager.PlaySoundEffect("D360-14-0E");
 
                     // spawn splash animation
                     var splashAnimator = new ObjAnimator(body.Owner.Map, 0, 0, 0, 3, 1, "Particles/splash", "idle", true);
@@ -508,9 +508,9 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
             if (!onHole)
             {
                 if ((body.CurrentFieldState & (MapStates.FieldStates.Water | MapStates.FieldStates.DeepWater)) == 0)
-                    Game1.GameManager.PlaySoundEffect("D378-07-07");
+                    Game1.AudioManager.PlaySoundEffect("D378-07-07");
                 else if ((body.CurrentFieldState & MapStates.FieldStates.DeepWater) == 0)
-                    Game1.GameManager.PlaySoundEffect("D360-14-0E");
+                    Game1.AudioManager.PlaySoundEffect("D360-14-0E");
             }
             // Reset for the next jump.
             _inAir = false;

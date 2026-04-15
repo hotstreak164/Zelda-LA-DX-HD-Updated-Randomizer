@@ -110,7 +110,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (timeStep > 12)
             {
                 // stop the music
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
 
                 Map.Objects.DeleteObjects.Add(this);
             }
@@ -227,7 +227,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_isDespawning || Game1.GameManager.SaveManager.GetString(_strKey) != "1")
                 return;
 
-            Game1.GameManager.SetMusic(75, 2);
+            Game1.AudioManager.SetMusic(75, 2);
 
             _isDespawning = true;
 

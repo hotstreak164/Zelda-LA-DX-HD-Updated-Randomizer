@@ -326,16 +326,15 @@ namespace ProjectZ.InGame.Screens
             _cameraCenter = new Vector2(-220, 55);
 
             // start playing the prologue music
-            Game1.GameManager.ResetMusic();
-            Game1.GameManager.StopMusic();
-            Game1.GameManager.SetMusic(25, 0);
+            Game1.AudioManager.ResetMusic();
+            Game1.AudioManager.StopMusic();
+            Game1.AudioManager.SetMusic(25, 0);
 
-            Game1.GbsPlayer.SetVolumeMultiplier(1.0f);
-            Game1.GbsPlayer.Play();
+            Game1.AudioManager.SetMusicVolumeMultiplier(1.0f);
+            Game1.AudioManager.PlayMusic();
 
             // play track for 52sec
-            Game1.GbsPlayer.SoundGenerator.SetStopTime(51.25f);
-
+            Game1.AudioManager.SetMusicStopTime(51.25f);
         }
 
         public override void Update(GameTime gameTime)
@@ -358,10 +357,10 @@ namespace ProjectZ.InGame.Screens
                 }
             }
 
-            if (Game1.GbsPlayer.SoundGenerator.WasStopped && Game1.GbsPlayer.SoundGenerator.FinishedPlaying())
+            if (Game1.AudioManager.GetMusicStopTimeExpired())
             {
-                Game1.GameManager.SetMusic(0, 0);
-                Game1.GbsPlayer.Play();
+                Game1.AudioManager.SetMusic(0, 0);
+                Game1.AudioManager.PlayMusic();
             }
 
             if (Game1.FinishedLoading && (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton) || ControlHandler.ButtonPressed(CButtons.Start)))
@@ -372,7 +371,7 @@ namespace ProjectZ.InGame.Screens
                 } 
                 else
                 {
-                    Game1.GameManager.SetMusic(12, 0);
+                    Game1.AudioManager.SetMusic(12, 0);
 
                     _strandFadeCount = 0;
                     _cameraState = 0;
@@ -435,7 +434,7 @@ namespace ProjectZ.InGame.Screens
                         _thunderCounts[i] = Game1.RandomNumber.Next(2000, 4000);
 
                         // play sound effect
-                        Game1.GameManager.PlaySoundEffect("D378-12-0C", true);
+                        Game1.AudioManager.PlaySoundEffect("D378-12-0C", true);
 
                         var randomX = (int)_cameraCenter.X - 150 + Game1.RandomNumber.Next(0, 300);
                         if (animation < 2)
@@ -458,7 +457,7 @@ namespace ProjectZ.InGame.Screens
                 if (_oceanFrameIndex != _linkBoatAnimator.CurrentFrameIndex &&
                     (_linkBoatAnimator.CurrentFrameIndex == 1 || _linkBoatAnimator.CurrentFrameIndex == 10))
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-12-0C", true);
+                    Game1.AudioManager.PlaySoundEffect("D378-12-0C", true);
                 }
                 _oceanFrameIndex = _linkBoatAnimator.CurrentFrameIndex;
 
@@ -594,7 +593,7 @@ namespace ProjectZ.InGame.Screens
 
                         if (_logoState == 1)
                         {
-                            Game1.GameManager.PlaySoundEffect("D378-25-19");
+                            Game1.AudioManager.PlaySoundEffect("D378-25-19");
                             _currentState = States.StrandLogo;
                         }
                     }
@@ -618,7 +617,7 @@ namespace ProjectZ.InGame.Screens
                     _oceanShoreCounter += 2650;
                     if (_oceanShoreLimit <= 9)
                     {
-                        Game1.GameManager.PlaySoundEffect("D378-15-0F");
+                        Game1.AudioManager.PlaySoundEffect("D378-15-0F");
                         _oceanShoreLimit++;
                     }
                 }

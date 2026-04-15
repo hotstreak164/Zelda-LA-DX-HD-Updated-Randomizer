@@ -65,11 +65,11 @@ namespace ProjectZ.InGame.Screens
             Game1.UiPageManager.ClearStack();
             Game1.UiPageManager.ChangePage(typeof(MainMenuPage), null, PageManager.TransitionAnimation.TopToBottom, PageManager.TransitionAnimation.TopToBottom);
 
-            Game1.GameManager.ResetMusic();
-            Game1.GameManager.SetMusic(16, 0);
+            Game1.AudioManager.ResetMusic();
+            Game1.AudioManager.SetMusic(16, 0);
 
-            Game1.GbsPlayer.SetVolumeMultiplier(1.0f);
-            Game1.GbsPlayer.Play();
+            Game1.AudioManager.SetMusicVolumeMultiplier(1.0f);
+            Game1.AudioManager.PlayMusic();
         }
 
         public override void Update(GameTime gameTime)

@@ -114,7 +114,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         private void EndAbsorb()
         {
             // play sound effect
-            Game1.GameManager.PlaySoundEffect("D360-24-18");
+            Game1.AudioManager.PlaySoundEffect("D360-24-18");
 
             var fallAnimation = new ObjAnimator(Map, 0, 0, Values.LayerBottom, "Particles/fall", "idle", true);
             fallAnimation.EntityPosition.Set(new Vector2(
@@ -229,17 +229,17 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 _hitEnemies = false;
                 _body.Level = 0;
                 _body.DragAir *= 0.965f;
-                Game1.GameManager.PlaySoundEffect("D378-23-17");
+                Game1.AudioManager.PlaySoundEffect("D378-23-17");
             }
 
             if ((direction & Values.BodyCollision.Horizontal) != 0)
             {
-                Game1.GameManager.PlaySoundEffect("D360-07-07");
+                Game1.AudioManager.PlaySoundEffect("D360-07-07");
                 _body.Velocity.X = -_body.Velocity.X * 0.45f;
             }
             if ((direction & Values.BodyCollision.Vertical) != 0)
             {
-                Game1.GameManager.PlaySoundEffect("D360-07-07");
+                Game1.AudioManager.PlaySoundEffect("D360-07-07");
                 _body.Velocity.Y = -_body.Velocity.Y * 0.45f;
             }
         }

@@ -169,7 +169,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (_soundCounter < 0)
             {
                 _soundCounter += 55;
-                Game1.GameManager.PlaySoundEffect("D360-62-3E", false);
+                Game1.AudioManager.PlaySoundEffect("D360-62-3E", false);
             }
 
             // get the new direction the player is pushing
@@ -213,7 +213,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             // stop moving if there is no hole at next position
             if (!CheckForHole((int)_endPosition.X - 8, (int)_endPosition.Y - 14))
             {
-                Game1.GameManager.PlaySoundEffect("D360-47-2F");
+                Game1.AudioManager.PlaySoundEffect("D360-47-2F");
 
                 // spawn the explosion effect
                 var splashAnimator = new ObjAnimator(Map, (int)EntityPosition.X - 8,

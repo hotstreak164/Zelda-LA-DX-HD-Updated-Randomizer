@@ -104,7 +104,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_soundCounter > 65)
             {
                 _soundCounter -= 65;
-                Game1.GameManager.PlaySoundEffect("D378-11-0B", true);
+                Game1.AudioManager.PlaySoundEffect("D378-11-0B", true);
             }
 
             if (_pullingPlayer)
@@ -280,7 +280,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _pokeParticleSpawned = true;
 
             // hookshot repels from the colliding box
-            Game1.GameManager.PlaySoundEffect("D360-07-07");
+            Game1.AudioManager.PlaySoundEffect("D360-07-07");
             var animation = new ObjSparkingEffect(Map, 0, 0, 0, 0);
             animation.EntityPosition.Set(_hookshotPosition.Position);
             Map.Objects.SpawnObject(animation);

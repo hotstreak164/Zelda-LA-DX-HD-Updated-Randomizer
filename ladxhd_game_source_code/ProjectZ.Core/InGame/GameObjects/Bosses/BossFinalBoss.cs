@@ -398,7 +398,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private void InitMoveBody()
         {
             _hideBody = false;
-            Game1.GameManager.PlaySoundEffect("D360-53-35");
+            Game1.AudioManager.PlaySoundEffect("D360-53-35");
         }
 
         private void UpdateBodyPartPosition(float state)
@@ -463,7 +463,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             _hideBody = true;
             _animator.Play("despawn");
-            Game1.GameManager.PlaySoundEffect("D360-04-04");
+            Game1.AudioManager.PlaySoundEffect("D360-04-04");
         }
 
         private void UpdateDespawn()
@@ -526,7 +526,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             if (_body.IsGrounded)
             {
-                Game1.GameManager.PlaySoundEffect("D360-32-20");
+                Game1.AudioManager.PlaySoundEffect("D360-32-20");
 
                 if (Game1.RandomNumber.Next(0, 3) == 0)
                     _aiComponent.ChangeState("slimeDespawn");
@@ -579,7 +579,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private void InitGiantZolDamaged()
         {
             _animator.Play("slime_damaged");
-            Game1.GameManager.PlaySoundEffect("D360-55-37");
+            Game1.AudioManager.PlaySoundEffect("D360-55-37");
         }
 
         private void TickGiantZolDamaged(double counter)
@@ -620,7 +620,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
 
             EntityPosition.Offset(new Vector2(0, -2));
-            Game1.GameManager.PlaySoundEffect("D370-33-21");
+            Game1.AudioManager.PlaySoundEffect("D370-33-21");
 
             _body.VelocityTarget = Vector2.Zero;
             ExplodeAnimation();
@@ -650,7 +650,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             _pushRepel = true;
             _damageField.IsActive = true;
-            Game1.GameManager.PlaySoundEffect("D370-35-23");
+            Game1.AudioManager.PlaySoundEffect("D370-35-23");
             _aiComponent.ChangeState("manPreAttack");
         }
 
@@ -674,7 +674,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             _agahnimInit = false;
             _animator.Play("man_" + _direction);
-            Game1.GameManager.PlaySoundEffect("D370-34-22");
+            Game1.AudioManager.PlaySoundEffect("D370-34-22");
 
             _objFireball = new BossFinalBossFireball(this, EntityPosition.Position + _fireballOffset[_direction]);
             Map.Objects.SpawnObject(_objFireball);
@@ -730,7 +730,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void InitManMove()
         {
-            Game1.GameManager.PlaySoundEffect("D360-53-35");
+            Game1.AudioManager.PlaySoundEffect("D360-53-35");
             _body.CollisionTypes = Values.CollisionTypes.None;
             _agahnimTargetPosition = RandomRoomPositionSide();
         }
@@ -755,7 +755,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void InitManRotate()
         {
-            Game1.GameManager.PlaySoundEffect("D360-54-36");
+            Game1.AudioManager.PlaySoundEffect("D360-54-36");
             _animator.Play("man_rotate");
             // first frame = up
             // make sure to not jump to a different direction
@@ -850,7 +850,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 if (_moldormSoundCounter < 0)
                 {
                     _moldormSoundCounter += 250;
-                    Game1.GameManager.PlaySoundEffect("D360-56-38");
+                    Game1.AudioManager.PlaySoundEffect("D360-56-38");
                 }
             }
 
@@ -885,7 +885,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _bodyShadow.IsActive = false;
             _drawComponent.Layer = Values.LayerBottom;
 
-            Game1.GameManager.PlaySoundEffect("D378-55-37");
+            Game1.AudioManager.PlaySoundEffect("D378-55-37");
 
             ExplosionParticle();
         }
@@ -1005,18 +1005,18 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void InitLanmolaExplose()
         {
-            Game1.GameManager.StopMusic(20, 0);
-            Game1.GameManager.StopMusic(20, 1);
-            Game1.GameManager.StopMusic(20, 2);
+            Game1.AudioManager.StopMusic(20, 0);
+            Game1.AudioManager.StopMusic(20, 1);
+            Game1.AudioManager.StopMusic(20, 2);
 
-            Game1.GameManager.PlaySoundEffect("D370-16-10");
+            Game1.AudioManager.PlaySoundEffect("D370-16-10");
             _body.VelocityTarget = Vector2.Zero;
             ExplodeAnimation();
         }
 
         private void InitLanmolaMove()
         {
-            Game1.GameManager.PlaySoundEffect("D360-53-35");
+            Game1.AudioManager.PlaySoundEffect("D360-53-35");
         }
 
         private void UpdateLanmolaMove()
@@ -1073,7 +1073,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             _body.VelocityTarget = Vector2.Zero;
 
-            Game1.GameManager.PlaySoundEffect("D378-25-19");
+            Game1.AudioManager.PlaySoundEffect("D378-25-19");
 
             if (_ganonLives > 0)
                 _aiComponent.ChangeState("ganonCatchWeapon");
@@ -1085,7 +1085,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _animator.Pause();
             _animatorWeapon.Pause();
 
-            Game1.GameManager.PlaySoundEffect("D370-16-10");
+            Game1.AudioManager.PlaySoundEffect("D370-16-10");
         }
 
         private void InitGanonExplode()
@@ -1093,7 +1093,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _drawGanonWeapon = false;
             EntityPosition.Set(new Vector2(EntityPosition.X, EntityPosition.Y - 4));
 
-            Game1.GameManager.PlaySoundEffect("D378-55-37");
+            Game1.AudioManager.PlaySoundEffect("D378-55-37");
             ExplodeAnimation();
         }
 
@@ -1234,7 +1234,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             var playerDirection = MapManager.ObjLink.Position - EntityPosition.Position;
             var dir = playerDirection.X < 0 ? -1 : 1;
 
-            Game1.GameManager.PlaySoundEffect("D370-35-23");
+            Game1.AudioManager.PlaySoundEffect("D370-35-23");
 
             _animator.Play("ganon_spawn_" + dir);
         }
@@ -1260,7 +1260,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             var playerDirection = MapManager.ObjLink.Position - EntityPosition.Position;
             var dir = playerDirection.X < 0 ? -1 : 1;
 
-            Game1.GameManager.PlaySoundEffect("D360-57-39");
+            Game1.AudioManager.PlaySoundEffect("D360-57-39");
 
             _animator.Play("ganon_weapon_spawn_" + dir);
             _animatorWeapon.Play("ganon_weapon_spawn_" + dir);
@@ -1293,8 +1293,8 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             Sprite.SpriteShader = null;
 
-            Game1.GameManager.PlaySoundEffect("D370-16-10");
-            Game1.GameManager.PlaySoundEffect("D378-60-3D");
+            Game1.AudioManager.PlaySoundEffect("D370-16-10");
+            Game1.AudioManager.PlaySoundEffect("D378-60-3D");
         }
 
         private void UpdateFinalDeath()
@@ -1328,10 +1328,10 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void InitFinalBlink()
         {
-            Game1.GameManager.SetMusic(93, 2);
+            Game1.AudioManager.SetMusic(93, 2);
 
-            Game1.GameManager.StopSoundEffect("D360-61-3D");
-            Game1.GameManager.PlaySoundEffect("D370-16-10");
+            Game1.AudioManager.StopSoundEffect("D360-61-3D");
+            Game1.AudioManager.PlaySoundEffect("D370-16-10");
 
             // hack to not allow anymore attacks
             _body.VelocityTarget = Vector2.Zero;
@@ -1351,8 +1351,8 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void InitFinalSpawn()
         {
-            Game1.GameManager.PlaySoundEffect("D370-35-23");
-            Game1.GameManager.SetMusic(79, 2);
+            Game1.AudioManager.PlaySoundEffect("D370-35-23");
+            Game1.AudioManager.SetMusic(79, 2);
 
             _targetPosition = EntityPosition.Position;
             _animator.Play("final_spawn");
@@ -1395,7 +1395,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         {
             _animatorEye.Update();
 
-            Game1.GameManager.PlaySoundEffect("D360-61-3D", false);
+            Game1.AudioManager.PlaySoundEffect("D360-61-3D", false);
 
             // move to the target position
             var distance = _targetPosition - EntityPosition.Position;
@@ -1470,7 +1470,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private void InitExplode()
         {
             _pushRepel = false;
-            Game1.GameManager.PlaySoundEffect("D378-55-37");
+            Game1.AudioManager.PlaySoundEffect("D378-55-37");
             ExplodeAnimation();
         }
 
@@ -1509,7 +1509,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void InitMove()
         {
-            Game1.GameManager.PlaySoundEffect("D360-53-35");
+            Game1.AudioManager.PlaySoundEffect("D360-53-35");
             _body.CollisionTypes = Values.CollisionTypes.None;
         }
 
@@ -1684,7 +1684,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 if (_ganonLives <= 0)
                     _aiComponent.ChangeState("ganonDeath");
 
-                Game1.GameManager.PlaySoundEffect("D370-07-07");
+                Game1.AudioManager.PlaySoundEffect("D370-07-07");
                 _aiDamageState.SetDamageState();
 
                 return Values.HitCollision.Repelling;
@@ -1710,8 +1710,8 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                     _body.Velocity.X += direction.X;
                     _body.Velocity.Y += direction.Y;
 
-                    Game1.GameManager.PlaySoundEffect("D360-09-09");
-                    Game1.GameManager.PlaySoundEffect("D370-17-11");
+                    Game1.AudioManager.PlaySoundEffect("D360-09-09");
+                    Game1.AudioManager.PlaySoundEffect("D370-17-11");
 
                     return Values.HitCollision.Repelling | Values.HitCollision.Repelling1;
                 }
@@ -1738,7 +1738,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                         MapManager.ObjLink.ToggleLowHealthBeep(false);
                         _aiComponent.ChangeState("finalBlink");
                     }
-                    Game1.GameManager.PlaySoundEffect("D370-07-07");
+                    Game1.AudioManager.PlaySoundEffect("D370-07-07");
 
                     // randomly change the speed of the two parts
                     _dethIPartSpeed0 = (1 / 2500.0f * MathF.PI * 2) * (1 + (Game1.RandomNumber.Next(0, 101) - 50) / 500f);
@@ -1763,8 +1763,8 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 if (_moldormLives <= 0)
                     _aiComponent.ChangeState("moldormDying");
 
-                Game1.GameManager.PlaySoundEffect("D370-07-07");
-                Game1.GameManager.StopSoundEffect("D360-56-38");
+                Game1.AudioManager.PlaySoundEffect("D370-07-07");
+                Game1.AudioManager.StopSoundEffect("D360-56-38");
 
                 _moldormHit = true;
                 _aiDamageState.SetDamageState(true);

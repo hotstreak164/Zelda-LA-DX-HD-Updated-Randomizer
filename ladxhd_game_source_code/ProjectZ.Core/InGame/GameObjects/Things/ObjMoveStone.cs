@@ -287,7 +287,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private void ToMoving()
         {
-            Game1.GameManager.PlaySoundEffect("D378-17-11");
+            Game1.AudioManager.PlaySoundEffect("D378-17-11");
             _aiComponent.ChangeState("moving");
         }
 
@@ -358,7 +358,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // fall into the water
             if (_body.CurrentFieldState.HasFlag(MapStates.FieldStates.DeepWater))
             {
-                Game1.GameManager.PlaySoundEffect("D360-14-0E");
+                Game1.AudioManager.PlaySoundEffect("D360-14-0E");
 
                 // spawn splash effect
                 var fallAnimation = new ObjAnimator(Map,

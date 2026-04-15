@@ -72,7 +72,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 var explosionAnimation = new ObjAnimator(Map, (int)EntityPosition.X, (int)EntityPosition.Y, Values.LayerTop, "Particles/spawn", "run", true);
                 Map.Objects.SpawnObject(explosionAnimation);
-                Game1.GameManager.PlaySoundEffect("D360-47-2F");
+                Game1.AudioManager.PlaySoundEffect("D360-47-2F");
             }
             // Spawn the original enemy
             Map.Objects.SpawnObject(new EnemySpinyBeetle(Map, _posX, _posY, _type));

@@ -380,12 +380,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 if (!string.IsNullOrEmpty(_strKey))
                     Game1.GameManager.SaveManager.SetString(_strKey, "1");
 
-                Game1.GameManager.PlaySoundEffect("D378-04-04");
+                Game1.AudioManager.PlaySoundEffect("D378-04-04");
                 _aiComponent.ChangeState("hole");
             }
             else
             {
-                Game1.GameManager.PlaySoundEffect("D360-29-1D");
+                Game1.AudioManager.PlaySoundEffect("D360-29-1D");
                 _aiComponent.ChangeState("wrongHole");
             }
 
@@ -471,7 +471,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (!_inHole)
             {
-                Game1.GameManager.PlaySoundEffect("D360-03-03");
+                Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
                 _aiComponent.ChangeState("ball");
                 _damageState.HitKnockBack(originObject, direction, hitType, pieceOfPower, false);

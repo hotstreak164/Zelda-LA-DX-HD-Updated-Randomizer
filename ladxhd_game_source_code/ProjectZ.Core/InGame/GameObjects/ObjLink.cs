@@ -752,7 +752,7 @@ namespace ProjectZ.InGame.GameObjects
                         _finalIndex = 1;
                         _finalSeqCounter += 2250;
                         Animation.Play("show1");
-                        Game1.GameManager.PlaySoundEffect("D360-52-34");
+                        Game1.AudioManager.PlaySoundEffect("D360-52-34");
                     }
                 }
                 else if (_finalIndex == 1)
@@ -824,7 +824,7 @@ namespace ProjectZ.InGame.GameObjects
                 {
                     _shownSwordLv2Dialog = true;
                     _showSwordL2ParticleCounter = 0;
-                    Game1.GameManager.SetMusic(-1, 2);
+                    Game1.AudioManager.SetMusic(-1, 2);
                     Game1.GameManager.StartDialogPath("sword2Collected");
                 }
                 // make sure to show the sword while the dialog box is open
@@ -849,7 +849,7 @@ namespace ProjectZ.InGame.GameObjects
                     _holeTeleportCounter -= 1000;
                     _shadowComponent.Transparency = 0;
 
-                    Game1.GameManager.PlaySoundEffect("D360-37-25");
+                    Game1.AudioManager.PlaySoundEffect("D360-37-25");
                 }
             }
             else if (CurrentState == State.TeleporterUp)
@@ -1575,7 +1575,7 @@ namespace ProjectZ.InGame.GameObjects
                 _finalSeqCounter = 1500;
                 Animation.Play("final_stand_down");
                 CurrentState = State.FinalInstruments;
-                Game1.GameManager.SetMusic(62, 2);
+                Game1.AudioManager.SetMusic(62, 2);
                 Game1.GameManager.SaveManager.RemoveString("link_final");
             }
 
@@ -1601,7 +1601,7 @@ namespace ProjectZ.InGame.GameObjects
             var dSnakeMusic = Game1.GameManager.SaveManager.GetString("dodongo_snake_music");
             if (!string.IsNullOrEmpty(dSnakeMusic))
             {
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
                 Game1.GameManager.SaveManager.RemoveString("dodongo_snake_music");
             }
 
@@ -1805,7 +1805,7 @@ namespace ProjectZ.InGame.GameObjects
             if (blocked && (IsBlockingState() || _bootsRunning && CarryShield))
             {
                 if (type == HitType.Projectile)
-                    Game1.GameManager.PlaySoundEffect("D360-22-16");
+                    Game1.AudioManager.PlaySoundEffect("D360-22-16");
 
                 return false;
             }
@@ -1833,7 +1833,7 @@ namespace ProjectZ.InGame.GameObjects
             if (_hitCount > 0)
                 return false;
 
-            Game1.GameManager.PlaySoundEffect("D370-03-03");
+            Game1.AudioManager.PlaySoundEffect("D370-03-03");
 
             // Use the calculated cooldown if not set by an external call.
             if (damageCooldown != 0)
@@ -1892,8 +1892,8 @@ namespace ProjectZ.InGame.GameObjects
             Animation.Play("dying");
 
             // Stop the music and play the death sound effect.
-            Game1.GameManager.StopMusic(true);
-            Game1.GameManager.PlaySoundEffect("D370-08-08");
+            Game1.AudioManager.StopMusic(true);
+            Game1.AudioManager.PlaySoundEffect("D370-08-08");
 
             // Set the correct start frame depending on the direction the player is facing
             int[] dirToFrame = { 0, 2, 1, 3 };
@@ -1985,7 +1985,7 @@ namespace ProjectZ.InGame.GameObjects
                     if (_waterSoundCounter > 250)
                     {
                         _waterSoundCounter -= 250;
-                        Game1.GameManager.PlaySoundEffect("D360-14-0E", false);
+                        Game1.AudioManager.PlaySoundEffect("D360-14-0E", false);
                     }
                 }
 
@@ -2121,7 +2121,7 @@ namespace ProjectZ.InGame.GameObjects
                     damageBox.X += AnimationHelper.DirectionOffset[Direction].X;
                     damageBox.Y += AnimationHelper.DirectionOffset[Direction].Y;
 
-                    Game1.GameManager.PlaySoundEffect("D360-11-0B");
+                    Game1.AudioManager.PlaySoundEffect("D360-11-0B");
 
                     Map.Objects.Hit(this, damageOrigin, damageBox, HitType.PegasusBootsPush, 0, false);
                 }
@@ -2494,7 +2494,7 @@ namespace ProjectZ.InGame.GameObjects
             if (!Jump(false, false))
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
 
             _railJump = true;
 
@@ -2560,7 +2560,7 @@ namespace ProjectZ.InGame.GameObjects
                             _body.Position.Y + _body.OffsetY + _body.Height - _body.Position.Z - 6));
                         Map.Objects.SpawnObject(splashAnimator);
 
-                        Game1.GameManager.PlaySoundEffect("D360-14-0E");
+                        Game1.AudioManager.PlaySoundEffect("D360-14-0E");
 
                         _diveCounter = 0;
                         _swimBoostCount = 0;
@@ -2595,7 +2595,7 @@ namespace ProjectZ.InGame.GameObjects
                                 _body.Position.Y + _body.OffsetY + _body.Height - _body.Position.Z - 6));
                             Map.Objects.SpawnObject(splashAnimator);
 
-                            Game1.GameManager.PlaySoundEffect("D370-03-03");
+                            Game1.AudioManager.PlaySoundEffect("D370-03-03");
 
                             CurrentState = State.Drowning;
                             _drownedInLava = inLava;
@@ -2678,7 +2678,7 @@ namespace ProjectZ.InGame.GameObjects
                 else if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
                 {
                     _swimBoostCount = 300;
-                    Game1.GameManager.PlaySoundEffect("D360-15-0F");
+                    Game1.AudioManager.PlaySoundEffect("D360-15-0F");
                 }
 
                 if (_swimBoostCount > 0)
@@ -2713,7 +2713,7 @@ namespace ProjectZ.InGame.GameObjects
                 _body.Position.Y + _body.OffsetY + _body.Height - _body.Position.Z - 3));
             Map.Objects.SpawnObject(splashAnimator);
 
-            Game1.GameManager.PlaySoundEffect("D360-14-0E");
+            Game1.AudioManager.PlaySoundEffect("D360-14-0E");
 
             _diveCounter = diveTime;
         }
@@ -2952,7 +2952,7 @@ namespace ProjectZ.InGame.GameObjects
                 if (_lowHealthBeepCounter > 825)
                 {
                     _lowHealthBeepCounter = 0;
-                    Game1.GameManager.PlaySoundEffect("D370-04-04");
+                    Game1.AudioManager.PlaySoundEffect("D370-04-04");
                 }
             }
         }
@@ -3132,9 +3132,9 @@ namespace ProjectZ.InGame.GameObjects
                 // is the sound effect still playing?
                 if (_instrumentPickupTime + 7500 < Game1.TotalGameTime)
                 {
-                    Game1.GameManager.SetMusic(_instrumentMusicIndex[_instrumentIndex], 2);
-                    Game1.GbsPlayer.Play();
-                    Game1.GbsPlayer.SoundGenerator.SetStopTime(8);
+                    Game1.AudioManager.SetMusic(_instrumentMusicIndex[_instrumentIndex], 2);
+                    Game1.AudioManager.PlayMusic();
+                    Game1.AudioManager.SetMusicStopTime(8);
                     CurrentState = State.ShowInstrumentPart1;
                 }
             }
@@ -3145,13 +3145,13 @@ namespace ProjectZ.InGame.GameObjects
                 if (_instrumentCounter > 3500)
                 {
                     _drawInstrumentEffect = true;
-                    Game1.GameManager.PlaySoundEffect("D360-43-2B", false);
+                    Game1.AudioManager.PlaySoundEffect("D360-43-2B", false);
                 }
                 if (_instrumentCounter > 8000)
                 {
-                    Game1.GameManager.SetMusic(-1, 0);
-                    Game1.GameManager.SetMusic(-1, 2);
-                    Game1.GameManager.PlaySoundEffect("D378-44-2C");
+                    Game1.AudioManager.SetMusic(-1, 0);
+                    Game1.AudioManager.SetMusic(-1, 2);
+                    Game1.AudioManager.PlaySoundEffect("D378-44-2C");
 
                     _instrumentCounter = 0;
                     CurrentState = State.ShowInstrumentPart2;
@@ -3160,7 +3160,7 @@ namespace ProjectZ.InGame.GameObjects
             else if (CurrentState == State.ShowInstrumentPart2)
             {
                 // Some update caused music to continue playing after instrument screen goes white so don't let this happen. 
-                Game1.GameManager.StopMusic(true);
+                Game1.AudioManager.StopMusic(true);
 
                 _instrumentCounter += Game1.DeltaTime;
                 var transitionSystem = (MapTransitionSystem)Game1.GameManager.GameSystems[typeof(MapTransitionSystem)];
@@ -3337,7 +3337,7 @@ namespace ProjectZ.InGame.GameObjects
             _holeFallCounter = 350;
 
             Animation.Play("fall");
-            Game1.GameManager.PlaySoundEffect("D370-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D370-12-0C");
         }
 
         private void OnHoleReset()
@@ -3428,7 +3428,7 @@ namespace ProjectZ.InGame.GameObjects
 
             CurrentState = State.Jumping;
 
-            Game1.GameManager.PlaySoundEffect("D360-13-0D");
+            Game1.AudioManager.PlaySoundEffect("D360-13-0D");
 
             Direction = 3;
             Animation.Play("jump_" + Direction);
@@ -3689,7 +3689,7 @@ namespace ProjectZ.InGame.GameObjects
             {
                 // The variable below freezes the world around Link and disables the inventory.
                 _pickingUpSword = true;
-                Game1.GameManager.SetMusic(14, 2);
+                Game1.AudioManager.SetMusic(14, 2);
 
                 // Freeze the game. The "sword1Collected:0" event in "scripts.zScript" will unfreeze after a time.
                 FreezeAnimations(true);
@@ -3701,7 +3701,7 @@ namespace ProjectZ.InGame.GameObjects
                 equipmentPosition = Game1.GameManager.GetEquipmentSlot("sword1");
                 Game1.GameManager.RemoveItem("sword1", 99);
                 Game1.GameManager.CollectItem(itemCollected, equipmentPosition);
-                Game1.GameManager.SetMusic(14, 2);
+                Game1.AudioManager.SetMusic(14, 2);
             }
 
             // The Angler Key (level 3 dungeon) was collected.
@@ -3718,7 +3718,7 @@ namespace ProjectZ.InGame.GameObjects
                 var mirrorShield = Game1.GameManager.GetItem("mirrorShield");
                 if (mirrorShield != null)
                 {
-                    Game1.GameManager.PlaySoundEffect(item.SoundEffectName, true, 1, 0, item.TurnDownMusic);
+                    Game1.AudioManager.PlaySoundEffect(item.SoundEffectName, true, 1, 0, item.TurnDownMusic);
                     return;
                 }
             }
@@ -3755,7 +3755,7 @@ namespace ProjectZ.InGame.GameObjects
                 // Interestingly, this starts track 36 which is the heart container pickup sound + the "dungeon cleared" music that follows. But the only part of this
                 // that is played is the heart pickup sound. The music is started more quickly in "script.zScript" where it plays track 23 which is the dungeon cleared
                 // music without the sound effect. This allows the music to play more quickly after the heart pickup, as there is a delay after the sound in track 36.
-                Game1.GameManager.SetMusic(36, 2);
+                Game1.AudioManager.SetMusic(36, 2);
             }
 
             // A Seashell present at the mansion was collected.
@@ -3778,7 +3778,7 @@ namespace ProjectZ.InGame.GameObjects
             {
                 // Play the healing sound effect if HP is lower than current max.
                 if (Game1.GameManager.CurrentHealth < Game1.GameManager.MaxHearts * 4)
-                    Game1.GameManager.PlaySoundEffect("D370-06-06");
+                    Game1.AudioManager.PlaySoundEffect("D370-06-06");
 
                 // Add 4 hit points to current health.
                 Game1.GameManager.CurrentHealth += itemCollected.Count * 4;
@@ -3820,9 +3820,9 @@ namespace ProjectZ.InGame.GameObjects
                 }
                 // Initialize the powerup state if it's a powerup item.
                 if (ShowItem.Name == "guardianAcorn")
-                    Game1.GameManager.InitGuardianAcorn();
+                    Game1.AudioManager.InitGuardianAcorn();
                 else if (ShowItem.Name == "pieceOfPower")
-                    Game1.GameManager.InitPieceOfPower();
+                    Game1.AudioManager.InitPieceOfPower();
 
                 // Show Link holding the sword when picking up a Piece of Power.
                 if (ShowItem.Name == "pieceOfPower")
@@ -3878,7 +3878,7 @@ namespace ProjectZ.InGame.GameObjects
             if (item.Name.StartsWith("instrument"))
             {
                 // stop playing music
-                Game1.GameManager.SetMusic(26, 2);
+                Game1.AudioManager.SetMusic(26, 2);
 
                 _instrumentPickupTime = Game1.TotalGameTime;
 
@@ -3893,9 +3893,9 @@ namespace ProjectZ.InGame.GameObjects
 
             // play sound
             if (playSound && item.SoundEffectName != null)
-                Game1.GameManager.PlaySoundEffect(item.SoundEffectName, true, 1, 0, item.TurnDownMusic);
+                Game1.AudioManager.PlaySoundEffect(item.SoundEffectName, true, 1, 0, item.TurnDownMusic);
             if (item.MusicName >= 0)
-                Game1.GameManager.SetMusic(item.MusicName, 1);
+                Game1.AudioManager.SetMusic(item.MusicName, 1);
         }
 
         private void UpdatePickup()
@@ -3966,7 +3966,7 @@ namespace ProjectZ.InGame.GameObjects
                 // Spin the sword after picking it up off the beach.
                 if (ShowItem.Name == "sword1")
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-03-03");
+                    Game1.AudioManager.PlaySoundEffect("D378-03-03");
                     Animation.Play("swing_3");
                     AnimatorWeapons.Play("swing_3");
                     CurrentState = State.SwordShow1;
@@ -3976,8 +3976,8 @@ namespace ProjectZ.InGame.GameObjects
                 // If it's an instrument stop powerup music and set vars for instrument sequence.
                 else if (ShowItem.Name.StartsWith("instrument"))
                 {
-                    Game1.GameManager.StopPieceOfPower();
-                    Game1.GameManager.StopGuardianAcorn();
+                    Game1.AudioManager.StopPieceOfPower();
+                    Game1.AudioManager.StopGuardianAcorn();
 
                     _itemShowCounter = 0;
                     _instrumentCounter = 0;
@@ -4013,7 +4013,7 @@ namespace ProjectZ.InGame.GameObjects
                     Animation.Play("show2");
                     _showSwordLv2Counter = 500;
                     CurrentState = State.SwordShow2;
-                    Game1.GameManager.PlaySoundEffect("D360-07-07");
+                    Game1.AudioManager.PlaySoundEffect("D360-07-07");
                     var animation = new ObjSparkingEffect(Map, 0, 0, 0, 0);
                     animation.EntityPosition.Set(new Vector2(BodyRectangle.X, EntityPosition.Y - EntityPosition.Z - 30));
                     Map.Objects.SpawnObject(animation);
@@ -4065,7 +4065,7 @@ namespace ProjectZ.InGame.GameObjects
 
             // Play a random sword slash sound effect.
             var slashSounds = new[] { "D378-02-02", "D378-20-14", "D378-21-15", "D378-24-18" };
-            Game1.GameManager.PlaySoundEffect(slashSounds[Game1.RandomNumber.Next(0, 4)]);
+            Game1.AudioManager.PlaySoundEffect(slashSounds[Game1.RandomNumber.Next(0, 4)]);
 
             // Play the attack and weapon animation.
             Animation.Stop();
@@ -4232,7 +4232,7 @@ namespace ProjectZ.InGame.GameObjects
 
                     // Finished charging?
                     if (_swordChargeCounter <= 0)
-                        Game1.GameManager.PlaySoundEffect("D360-04-04");
+                        Game1.AudioManager.PlaySoundEffect("D360-04-04");
                 }
             }
             else
@@ -4281,7 +4281,7 @@ namespace ProjectZ.InGame.GameObjects
             Animation.Play("swing_" + Direction);
             AnimatorWeapons.Play("swing_" + Direction);
 
-            Game1.GameManager.PlaySoundEffect("D378-03-03");
+            Game1.AudioManager.PlaySoundEffect("D378-03-03");
 
             _swordChargeCounter = sword_charge_time;
             _isSwordSpinAttack = true;
@@ -4407,10 +4407,10 @@ namespace ProjectZ.InGame.GameObjects
                         swordRectangle.Y + EntityPosition.Y - EntityPosition.Z + _animationOffsetY, 0,
                         swordRectangle.Width, swordRectangle.Height, 4);
                     var destroyableWall = DestroyableWall(swordBox);
-                    Game1.GameManager.PlaySoundEffect("D360-07-07");
+                    Game1.AudioManager.PlaySoundEffect("D360-07-07");
 
                     if (destroyableWall)
-                        Game1.GameManager.PlaySoundEffect("D378-23-17");
+                        Game1.AudioManager.PlaySoundEffect("D378-23-17");
 
                     var pokeParticle = new ObjSparkingEffect(Map, 0, 0, 0, 0);
                     pokeParticle.EntityPosition.X = EntityPosition.X + _pokeAnimationOffset[Direction].X;
@@ -4472,7 +4472,7 @@ namespace ProjectZ.InGame.GameObjects
 
         private void SpawnRepelParticle(RectangleF collisionRectangle, int OffsetX = 0, int OffsetY = 0)
         {
-            Game1.GameManager.PlaySoundEffect("D360-07-07");
+            Game1.AudioManager.PlaySoundEffect("D360-07-07");
 
             // Spawn the poke particle.
             var posX = (int)(EntityPosition.X - 8 + collisionRectangle.X + collisionRectangle.Width / 2 + OffsetX);
@@ -4496,7 +4496,7 @@ namespace ProjectZ.InGame.GameObjects
                 return;
 
             if (!_wasBlocking & !_blockButton)
-                Game1.GameManager.PlaySoundEffect("D378-22-16");
+                Game1.AudioManager.PlaySoundEffect("D378-22-16");
 
             _wasBlocking = _blockButton = true;
 
@@ -4575,11 +4575,11 @@ namespace ProjectZ.InGame.GameObjects
                     var posX = (int)(pushedRectangle.PushableBox.Box.X + pushedRectangle.PushableBox.Box.Width / 2);
                     var posY = (int)(pushedRectangle.PushableBox.Box.Y + pushedRectangle.PushableBox.Box.Height / 2);
                     Map.Objects.SpawnObject(new ObjSparkingEffect(Map, posX, posY, 0, 0));
-                    Game1.GameManager.PlaySoundEffect("D360-07-07");
+                    Game1.AudioManager.PlaySoundEffect("D360-07-07");
                 }
                 // Play the "bumping" sound effect.
                 else
-                    Game1.GameManager.PlaySoundEffect("D360-09-09");
+                    Game1.AudioManager.PlaySoundEffect("D360-09-09");
             }
             PreventFieldKnockback();
         }
@@ -4624,7 +4624,7 @@ namespace ProjectZ.InGame.GameObjects
                 _isTrapped || !_canJump)
             {
                 if (_isTrapped && playSoundEffect)
-                    Game1.GameManager.PlaySoundEffect("D360-13-0D");
+                    Game1.AudioManager.PlaySoundEffect("D360-13-0D");
 
                 return false;
             }
@@ -4636,7 +4636,7 @@ namespace ProjectZ.InGame.GameObjects
             ReleaseCarriedObject();
 
             if (playSoundEffect)
-                Game1.GameManager.PlaySoundEffect("D360-13-0D");
+                Game1.AudioManager.PlaySoundEffect("D360-13-0D");
 
             if (_isRafting)
             {
@@ -4891,7 +4891,7 @@ namespace ProjectZ.InGame.GameObjects
                 Animation.Play("powder_" + Direction);
             }
 
-            Game1.GameManager.PlaySoundEffect("D378-10-0A");
+            Game1.AudioManager.PlaySoundEffect("D378-10-0A");
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4916,9 +4916,9 @@ namespace ProjectZ.InGame.GameObjects
             _canDig = Map.CanDig(_digPosition);
 
             if (_canDig)
-                Game1.GameManager.PlaySoundEffect("D378-14-0E");
+                Game1.AudioManager.PlaySoundEffect("D378-14-0E");
             else
-                Game1.GameManager.PlaySoundEffect("D360-07-07");
+                Game1.AudioManager.PlaySoundEffect("D360-07-07");
         }
 
         private void UpdateDigging()
@@ -5133,7 +5133,7 @@ namespace ProjectZ.InGame.GameObjects
 
         private void ThrowCarriedObject()
         {
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
 
             // play a little throw animation
             Animation.Play("throw_" + Direction);
@@ -5150,7 +5150,7 @@ namespace ProjectZ.InGame.GameObjects
 
             _carriedComponent = carriableComponent;
 
-            Game1.GameManager.PlaySoundEffect("D370-02-02");
+            Game1.AudioManager.PlaySoundEffect("D370-02-02");
 
             _carryStartPosition = _carriedComponent.Init();
             _carriedComponent.IsPickedUp = true;
@@ -5374,7 +5374,7 @@ namespace ProjectZ.InGame.GameObjects
             CurrentState = State.MagicRod;
             _swordChargeCounter = sword_charge_time;
 
-            Game1.GameManager.PlaySoundEffect("D378-13-0D");
+            Game1.AudioManager.PlaySoundEffect("D378-13-0D");
             StopRaft();
 
             // play animation
@@ -5402,7 +5402,7 @@ namespace ProjectZ.InGame.GameObjects
             _ocarinaCounter = 0;
 
             // Pause whatever music is playing.
-            Game1.GbsPlayer.Pause();
+            Game1.AudioManager.PauseMusic();
 
             // Set the selected ocarina song integer.
             _ocarinaSong = Game1.GameManager.SelectedOcarinaSong;
@@ -5416,7 +5416,7 @@ namespace ProjectZ.InGame.GameObjects
                 _ => "D370-21-15"   // Bad Playing
             };
             // Play the selected song.
-            Game1.GameManager.PlaySoundEffect(ocarinaSong);
+            Game1.AudioManager.PlaySoundEffect(ocarinaSong);
 
             // Set the state, face Link forward, and show the animation.
             CurrentState = State.Ocarina;
@@ -5433,13 +5433,13 @@ namespace ProjectZ.InGame.GameObjects
         private void StopOcarina()
         {
             // Try to cancel the ocarina songs.
-            Game1.GameManager.StopSoundEffect("D370-09-09");
-            Game1.GameManager.StopSoundEffect("D370-11-0B");
-            Game1.GameManager.StopSoundEffect("D370-10-0A");
-            Game1.GameManager.StopSoundEffect("D370-21-15");
+            Game1.AudioManager.StopSoundEffect("D370-09-09");
+            Game1.AudioManager.StopSoundEffect("D370-11-0B");
+            Game1.AudioManager.StopSoundEffect("D370-10-0A");
+            Game1.AudioManager.StopSoundEffect("D370-21-15");
 
             // Resume the background music.
-            Game1.GbsPlayer.Play();
+            Game1.AudioManager.PlayMusic();
 
             // This will not become some kind of exploit.
             PreventDamageTimer = 0;
@@ -5517,7 +5517,7 @@ namespace ProjectZ.InGame.GameObjects
 
             // Continue playing the music.
             if (_ocarinaSong != 1)
-                Game1.GbsPlayer.Play();
+                Game1.AudioManager.PlayMusic();
 
             // Bad ocarina song was played.
             if (_ocarinaSong == -1)
@@ -5535,7 +5535,7 @@ namespace ProjectZ.InGame.GameObjects
                     // Open a new instance of the map overlay and set the flag 'ManboTeleport' that signifies it was an ocarina warp.
                     ManboTeleport = true;
                     Game1.GameManager.InGameOverlay.StartSequence("map");
-                    Game1.GbsPlayer.Play();
+                    Game1.AudioManager.PlayMusic();
                     ReturnToIdle();
                     return;
                 }
@@ -5547,7 +5547,7 @@ namespace ProjectZ.InGame.GameObjects
                 MapTransitionEnd = EntityPosition.Position;
                 TransitionOutWalking = false;
 
-                Game1.GameManager.PlaySoundEffect("D360-44-2C");
+                Game1.AudioManager.PlaySoundEffect("D360-44-2C");
 
                 // load the map
                 var transitionSystem = (MapTransitionSystem)Game1.GameManager.GameSystems[typeof(MapTransitionSystem)];
@@ -5678,7 +5678,7 @@ namespace ProjectZ.InGame.GameObjects
                     // Water splash particles.
                     if (_body.CurrentFieldState.HasFlag(MapStates.FieldStates.Water))
                     {
-                        Game1.GameManager.PlaySoundEffect("D360-14-0E");
+                        Game1.AudioManager.PlaySoundEffect("D360-14-0E");
 
                         var splashAnimator = new ObjAnimator(_body.Owner.Map, 0, 0, 0, 3, 1, "Particles/splash", "idle", true);
                         splashAnimator.EntityPosition.Set(new Vector2(
@@ -5689,7 +5689,7 @@ namespace ProjectZ.InGame.GameObjects
                     // Ground dust particles.
                     else
                     {
-                        Game1.GameManager.PlaySoundEffect("D378-07-07");
+                        Game1.AudioManager.PlaySoundEffect("D378-07-07");
 
                         var animator = new ObjAnimator(Map, (int)EntityPosition.X, (int)(EntityPosition.Y + 1),
                             0, -1 - (int)EntityPosition.Z, Values.LayerPlayer, "Particles/run", "spawn", true);
@@ -5956,7 +5956,7 @@ namespace ProjectZ.InGame.GameObjects
         public void StartIntro()
         {
             // set the music
-            Game1.GameManager.SetMusic(27, 2);
+            Game1.AudioManager.SetMusic(27, 2);
 
             CurrentState = State.Intro;
 
@@ -6131,8 +6131,8 @@ namespace ProjectZ.InGame.GameObjects
 
                 if (isOverworld || !mapIsCave && !mapIsDungeon)
                 {
-                    Game1.GameManager.StopGuardianAcorn();
-                    Game1.GameManager.StopPieceOfPower();
+                    Game1.AudioManager.StopGuardianAcorn();
+                    Game1.AudioManager.StopPieceOfPower();
                 }
             }
             // The BowWow object is designed to automatically set to "_objBowWow" so it needs to be
@@ -6590,7 +6590,7 @@ namespace ProjectZ.InGame.GameObjects
             }
             // Restart the music.
             if (!GameSettings.MutePowerups && (Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.GuardianAcornIsActive))
-                Game1.GameManager.StartPowerupMusic(1);
+                Game1.AudioManager.StartPowerupMusic(1);
 
             // Destroy the field barrier after a transition so it can be recreated.
             DestroyFieldBarrier();

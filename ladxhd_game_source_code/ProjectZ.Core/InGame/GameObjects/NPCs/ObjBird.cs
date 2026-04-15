@@ -158,7 +158,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _attackTransparency = AnimationHelper.MoveToTarget(_attackTransparency, target, 0.1f * Game1.TimeMultiplier);
             _sprite.Color = Color.White * _attackTransparency;
 
-            Game1.GameManager.PlaySoundEffect("D378-45-2D", false);
+            Game1.AudioManager.PlaySoundEffect("D378-45-2D", false);
 
             if (_attackTransparency == 0)
             {
@@ -189,7 +189,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _hitCounter = 0;
                 _aiComponent.ChangeState("idle");
             }
-            Game1.GameManager.PlaySoundEffect("D370-19-13", false);
+            Game1.AudioManager.PlaySoundEffect("D370-19-13", false);
 
             _attackCounter -= Game1.DeltaTime;
             if (_attackCounter < 0)
@@ -304,7 +304,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void UpdatePickedUp()
         {
-            Game1.GameManager.PlaySoundEffect("D370-19-13", false);
+            Game1.AudioManager.PlaySoundEffect("D370-19-13", false);
             UpdateAnimation();
         }
 
@@ -334,7 +334,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                     _aiComponent.ChangeState("burning");
                     var speedMultiply = (hitType == HitType.MagicPowder ? 0.125f : 0.5f);
 
-                    Game1.GameManager.PlaySoundEffect("D378-18-12");
+                    Game1.AudioManager.PlaySoundEffect("D378-18-12");
 
                     return Values.HitCollision.Enemy;
                 }
@@ -349,8 +349,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_hitCounter > 35)
                 _attackMode = true;
 
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
-            Game1.GameManager.PlaySoundEffect("D370-19-13");
+            Game1.AudioManager.PlaySoundEffect("D360-03-03");
+            Game1.AudioManager.PlaySoundEffect("D370-19-13");
             _aiComponent.ChangeState("fleeing");
 
             Game1.GameManager.StartDialogPath("bird_hit");

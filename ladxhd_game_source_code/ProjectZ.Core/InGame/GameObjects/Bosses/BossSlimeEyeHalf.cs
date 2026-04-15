@@ -180,7 +180,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
                     MapManager.ObjLink.GroundStun();
 
-                    Game1.GameManager.PlaySoundEffect("D360-11-0B");
+                    Game1.AudioManager.PlaySoundEffect("D360-11-0B");
                     if (GameSettings.ScreenShake)
                         Game1.GameManager.ShakeScreen(500, 0.00f, 2.00f, 0.00f, 12.5f);
                 }
@@ -244,12 +244,12 @@ namespace ProjectZ.InGame.GameObjects.Bosses
                 // killed both parts?
                 else
                 {
-                    Game1.GameManager.PlaySoundEffect("D378-26-1A");
+                    Game1.AudioManager.PlaySoundEffect("D378-26-1A");
                     Game1.GameManager.SaveManager.SetString(_saveKey, "1");
 
-                    Game1.GameManager.StopMusic(20, 0);
-                    Game1.GameManager.StopMusic(20, 1);
-                    Game1.GameManager.StopMusic(20, 2);
+                    Game1.AudioManager.StopMusic(20, 0);
+                    Game1.AudioManager.StopMusic(20, 1);
+                    Game1.AudioManager.StopMusic(20, 2);
 
                     // spawn big heart
                     Map.Objects.SpawnObject(new ObjItem(Map,

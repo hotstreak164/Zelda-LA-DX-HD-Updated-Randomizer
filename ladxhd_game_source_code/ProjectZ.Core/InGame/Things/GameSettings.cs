@@ -100,7 +100,11 @@
         public static int MusicVolume
         {
             get => _musicVolume;
-            set { _musicVolume = value; Game1.GbsPlayer.SetVolume(value / 100.0f); }
+            set
+            {
+                _musicVolume = value;
+                Game1.AudioManager?.SetMusicVolume(value / 100.0f);
+            }
         }
 
         public static int EffectVolume

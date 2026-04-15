@@ -141,7 +141,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             if (_aiComponent.CurrentStateId == "pong")
             {
-                Game1.GameManager.PlaySoundEffect("D360-09-09");
+                Game1.AudioManager.PlaySoundEffect("D360-09-09");
 
                 if ((direction & Values.BodyCollision.Horizontal) != 0)
                     _body.VelocityTarget.X = -_body.VelocityTarget.X;

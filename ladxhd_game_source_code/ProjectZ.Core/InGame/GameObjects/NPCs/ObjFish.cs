@@ -258,7 +258,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             Body.Velocity = new Vector3(0.5f, -2.5f, 0.0f);
 
             // splash effect
-            Game1.GameManager.PlaySoundEffect("D360-14-0E");
+            Game1.AudioManager.PlaySoundEffect("D360-14-0E");
             var splashAnimator = new ObjAnimator(Map, 0, 0, 0, 36, 0, "Particles/fishingSplash", "idle", true);
             splashAnimator.EntityPosition.Set(new Vector2(EntityPosition.X + 8, 0));
             Map.Objects.SpawnObject(splashAnimator);

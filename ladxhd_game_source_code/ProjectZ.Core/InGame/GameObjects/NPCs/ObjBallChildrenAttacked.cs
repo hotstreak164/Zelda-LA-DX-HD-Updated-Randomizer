@@ -105,7 +105,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 if (!_musicPlaying)
                 {
                     _musicPlaying = true;
-                    Game1.GameManager.SetMusic(13, 2);
+                    Game1.AudioManager.SetMusic(13, 2);
                 }
             }
             else
@@ -113,7 +113,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 if (_musicPlaying)
                 {
                     _musicPlaying = false;
-                    Game1.GameManager.SetMusic(-1, 2);
+                    Game1.AudioManager.SetMusic(-1, 2);
                 }
             }
         }

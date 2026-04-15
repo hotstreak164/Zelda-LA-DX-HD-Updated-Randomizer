@@ -152,7 +152,7 @@ namespace ProjectZ.InGame.Interface
             NumberChanged?.Invoke(Start + CurrentStep);
 
             // Play the "click" sound effect.
-            Game1.GameManager.PlaySoundEffect("D360-10-0A");
+            Game1.AudioManager.PlaySoundEffect("D360-10-0A");
             return InputEventReturn.Something;
         }
 

@@ -54,7 +54,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // spawn explosion effect
             Map.Objects.SpawnObject(new ObjAnimator(Map, (int)EntityPosition.X, (int)EntityPosition.Y, Values.LayerBottom, "Particles/spawn", "run", true));
 
-            Game1.GameManager.PlaySoundEffect("D378-04-04");
+            Game1.AudioManager.PlaySoundEffect("D378-04-04");
 
             // remove the blockade
             Map.Objects.DeleteObjects.Add(this);

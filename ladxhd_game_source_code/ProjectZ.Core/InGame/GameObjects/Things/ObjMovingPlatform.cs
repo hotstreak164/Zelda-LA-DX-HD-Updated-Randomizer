@@ -135,7 +135,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 _dir = 1;
 
                 if (!_wasStandingOnTop && _state < _time - 250)
-                    Game1.GameManager.PlaySoundEffect("D378-17-11");
+                    Game1.AudioManager.PlaySoundEffect("D378-17-11");
             }
 
             if (_isMoving)
@@ -181,7 +181,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (!_isMoving && _isStandingOnTop && MapManager.ObjLink.CurrentState == ObjLink.State.Carrying)
             {
                 if (_state < _time)
-                    Game1.GameManager.PlaySoundEffect("D378-17-11");
+                    Game1.AudioManager.PlaySoundEffect("D378-17-11");
                 _isMoving = true;
             }
 

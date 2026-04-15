@@ -295,7 +295,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         {
             _animator.Play("jump_1");
             _aiComponent.ChangeState("banana");
-            Game1.GameManager.PlaySoundEffect("D360-01-01");
+            Game1.AudioManager.PlaySoundEffect("D360-01-01");
         }
 
         private void ToBusiness()
@@ -386,7 +386,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (hitType == HitType.BowWow)
                 StartBowWowFight();
 
-            Game1.GameManager.PlaySoundEffect("D360-03-03");
+            Game1.AudioManager.PlaySoundEffect("D360-03-03");
 
             _damageCounter = DamageTime;
 

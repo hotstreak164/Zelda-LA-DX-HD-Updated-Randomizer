@@ -263,7 +263,7 @@ namespace ProjectZ.InGame.Pages
             {
                 _showTooltip = !_showTooltip;
                 if (_showTooltip)
-                    Game1.GameManager.PlaySoundEffect("D360-21-15");
+                    Game1.AudioManager.PlaySoundEffect("D360-21-15");
                 else
                     _startError = false;
             }
@@ -291,7 +291,7 @@ namespace ProjectZ.InGame.Pages
             // Allow forcefully starting a new game.
             if (ControlHandler.ButtonPressed(CButtons.Start))
             {
-                Game1.GameManager.PlaySoundEffect("D360-19-13");
+                Game1.AudioManager.PlaySoundEffect("D360-19-13");
                 OnClickNewGameButton(_startGameButton);
             }
         }
@@ -351,11 +351,11 @@ namespace ProjectZ.InGame.Pages
             // If entering a secret name play music.
             if (name == "totaka" || name == "totakeke" || name == "moyse")
             {
-                Game1.GameManager.SetMusic(59, 2);
+                Game1.AudioManager.SetMusic(59, 2);
             }
             else if (name == "zelda" || name == "塞尔达")
             {
-                Game1.GameManager.SetMusic(95, 2);
+                Game1.AudioManager.SetMusic(95, 2);
             }
             // Initialize a new save file: SaveSlot, SaveName, Equipment, SaveManager, etc.
             Game1.GameManager.CreateNewSaveFile(_selectedSaveSlot, _strNameInput);

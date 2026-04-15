@@ -128,7 +128,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _body.VelocityTarget = Vector2.Zero;
 
                 // spawn explosion with sound effect
-                Game1.GameManager.PlaySoundEffect("D378-12-0C");
+                Game1.AudioManager.PlaySoundEffect("D378-12-0C");
                 Map.Objects.SpawnObject(new ObjAnimator(Map, (int)EntityPosition.X, (int)EntityPosition.Y - 8 - 13, Values.LayerTop, "Particles/explosionRaccoon", "run", true));
             }
 
@@ -143,7 +143,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 npcTarin.Body.Gravity = -0.175f;
                 Map.Objects.SpawnObject(npcTarin);
 
-                Game1.GbsPlayer.Resume();
+                Game1.AudioManager.ResumeMusic();
             }
 
             if (_rotationTimer > 6000)
@@ -155,7 +155,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void OnCollision(Values.BodyCollision collision)
         {
-            Game1.GameManager.PlaySoundEffect("D360-09-09", true);
+            Game1.AudioManager.PlaySoundEffect("D360-09-09", true);
 
             if ((collision & Values.BodyCollision.Horizontal) != 0)
                 _body.VelocityTarget.X = -_body.VelocityTarget.X;
@@ -177,7 +177,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void StartMoving()
         {
-            Game1.GbsPlayer.Pause();
+            Game1.AudioManager.PauseMusic();
 
             _isRotating = true;
             _animator.Play("rotate");

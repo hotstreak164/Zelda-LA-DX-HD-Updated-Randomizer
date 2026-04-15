@@ -144,7 +144,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 // If a heart is collected and the fairy despawns stop the music.
                 if (_musicPlaying)
                 {
-                    Game1.GameManager.SetMusic(-1, 2);
+                    Game1.AudioManager.SetMusic(-1, 2);
                     _musicPlaying = false;
                 }
             }
@@ -153,12 +153,12 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             if (_stateIdle && !_musicPlaying && _body.FieldRectangle.Contains(MapManager.ObjLink.CenterPosition.Position))
             {
-                Game1.GameManager.SetMusic(11, 2);
+                Game1.AudioManager.SetMusic(11, 2);
                 _musicPlaying = true;
             }
             else if (_musicPlaying && !_body.FieldRectangle.Contains(MapManager.ObjLink.CenterPosition.Position))
             {
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
                 _musicPlaying = false;
             }
         }
@@ -190,20 +190,20 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (_heartTimer > HealingStart)
                 _healCounter += Game1.DeltaTime;
 
-            Game1.GameManager.PlaySoundEffect("D370-06-06", false);
+            Game1.AudioManager.PlaySoundEffect("D370-06-06", false);
 
             if (_healCounter > HealingStepTime)
             {
                 _healCounter -= HealingStepTime;
                 if (Game1.GameManager.CurrentHealth < Game1.GameManager.MaxHearts * 4)
                 {
-                    Game1.GameManager.PlaySoundEffect("D370-06-06", true);
+                    Game1.AudioManager.PlaySoundEffect("D370-06-06", true);
                     Game1.GameManager.HealPlayer(_healStepAmount);
                 }
             }
             if (_heartTimer > DespawnStart)
             {
-                Game1.GameManager.PlaySoundEffect("D360-38-26");
+                Game1.AudioManager.PlaySoundEffect("D360-38-26");
                 _aiComponent.ChangeState("despawning");
             }
             Game1.GameManager.InGameOverlay.DisableInventoryToggle = true;
@@ -212,7 +212,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private void InitDespawning()
         {
             _despawnCounter = DespawnTime;
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.SetMusic(-1, 2);
             _musicPlaying = false;
             Game1.GameManager.InGameOverlay.DisableInventoryToggle = true;
         }

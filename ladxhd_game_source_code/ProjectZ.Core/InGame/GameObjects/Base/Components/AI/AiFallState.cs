@@ -45,7 +45,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Components.AI
             _aiComponent.Owner.Map.Objects.DeleteObjects.Add(_aiComponent.Owner);
 
             // play sound effect
-            Game1.GameManager.PlaySoundEffect("D360-24-18");
+            Game1.AudioManager.PlaySoundEffect("D360-24-18");
 
             var fallAnimation = new ObjAnimator(_aiComponent.Owner.Map, 0, 0, Values.LayerBottom, "Particles/fall", "idle", true);
             fallAnimation.EntityPosition.Set(new Vector2(

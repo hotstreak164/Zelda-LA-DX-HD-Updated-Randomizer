@@ -218,7 +218,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _freezePlayer = true;
 
             // Change the music to the resurrection music.
-            Game1.GameManager.SetMusic(84, 2);
+            Game1.AudioManager.SetMusic(84, 2);
 
             // Spawn the rooster's spirit which flies into the body.
             _objParticle = new ObjCockParticle(Map, new Vector2(EntityPosition.X, EntityPosition.Y - 8));
@@ -250,8 +250,8 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             Map.Objects.SpawnObject(objAnimation);
 
             // Play the explosion sound effect and restore the music.
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
-            Game1.GameManager.SetMusic(-1, 2);
+            Game1.AudioManager.PlaySoundEffect("D378-12-0C");
+            Game1.AudioManager.SetMusic(-1, 2);
 
             // Play the spawn animation, change the AI state, and spawn a sprite shadow.
             _animator.Play("spawn");
@@ -266,7 +266,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private void StartFollowing()
         {
-            Game1.GameManager.PlaySoundEffect("D368-16-10");
+            Game1.AudioManager.PlaySoundEffect("D368-16-10");
 
             // Add the rooster as a follower.
             var itemRooster = new GameItemCollected("rooster") { Count = 1 };
@@ -395,7 +395,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (!MapManager.ObjLink.IsFlying())
                 MapManager.ObjLink.StartFlying(this);
 
-            Game1.GameManager.PlaySoundEffect("D378-45-2D", false);
+            Game1.AudioManager.PlaySoundEffect("D378-45-2D", false);
 
             // move up
             var targetPosZ = 36 + MathF.Sin(((float)Game1.TotalGameTime / 450) * MathF.PI * 2) * 1.5f;
@@ -472,7 +472,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         public void BorrowRooster()
         {
             _animator.Play("stand_3");
-            Game1.GameManager.PlaySoundEffect("D368-16-10");
+            Game1.AudioManager.PlaySoundEffect("D368-16-10");
             _aiComponent.ChangeState("following");
             _carriableCompnent.IsActive = true;
             RemoveComponent(CollisionComponent.Index);

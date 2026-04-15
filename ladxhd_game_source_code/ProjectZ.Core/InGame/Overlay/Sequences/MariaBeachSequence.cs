@@ -114,14 +114,14 @@ namespace ProjectZ.InGame.Overlay.Sequences
             if (_birdSoundCounter < 0)
             {
                 _birdSoundCounter += Game1.RandomNumber.Next(1000, 3500);
-                Game1.GameManager.PlaySoundEffect("D360-33-21");
+                Game1.AudioManager.PlaySoundEffect("D360-33-21");
             }
 
             _shoreSoundCounter -= Game1.DeltaTime;
             if (_shoreSoundCounter < 0)
             {
                 _shoreSoundCounter += 3500;
-                Game1.GameManager.PlaySoundEffect("D378-15-0F");
+                Game1.AudioManager.PlaySoundEffect("D378-15-0F");
             }
 
             // update the seagulls far away

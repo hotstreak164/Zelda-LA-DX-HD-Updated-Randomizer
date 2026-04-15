@@ -94,7 +94,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 if(_soundCounter < 0)
                 {
                     _soundCounter += 25;
-                    Game1.GameManager.PlaySoundEffect("D360-34-22", true, MathF.Sin((float)(Game1.TotalGameTime / 65)) * 0.125f + 0.875f, -MathF.Sin((float)(Game1.TotalGameTime / 65)) * 0.25f - 0.125f);
+                    Game1.AudioManager.PlaySoundEffect("D360-34-22", true, MathF.Sin((float)(Game1.TotalGameTime / 65)) * 0.125f + 0.875f, -MathF.Sin((float)(Game1.TotalGameTime / 65)) * 0.25f - 0.125f);
                 }
             }
 

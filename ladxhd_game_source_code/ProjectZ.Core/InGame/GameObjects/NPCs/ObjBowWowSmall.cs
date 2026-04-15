@@ -170,7 +170,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private bool Interact()
         {
-            Game1.GameManager.PlaySoundEffect("D370-24-18");
+            Game1.AudioManager.PlaySoundEffect("D370-24-18");
             Game1.GameManager.StartDialogPath(_name);
 
             return true;

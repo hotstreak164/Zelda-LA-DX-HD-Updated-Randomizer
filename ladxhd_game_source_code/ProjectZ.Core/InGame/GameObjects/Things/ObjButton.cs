@@ -62,7 +62,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 // activate the button if the player is standing on it long enough
                 if (_counter <= 0)
                 {
-                    Game1.GameManager.PlaySoundEffect("D370-14-0E");
+                    Game1.AudioManager.PlaySoundEffect("D370-14-0E");
 
                     if (!string.IsNullOrEmpty(_strKey))
                         Game1.GameManager.SaveManager.SetString(_strKey, "1");

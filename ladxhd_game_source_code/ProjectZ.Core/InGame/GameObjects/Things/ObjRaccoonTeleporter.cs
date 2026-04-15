@@ -109,7 +109,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // For the raccoon teleport, play a sound effect and reset the warning message.
             if (_mode == 0)
             {
-                Game1.GameManager.PlaySoundEffect("D360-30-1E");
+                Game1.AudioManager.PlaySoundEffect("D360-30-1E");
                 Game1.GameManager.SaveManager.SetString("raccoon_warning", "0");
             }
         }

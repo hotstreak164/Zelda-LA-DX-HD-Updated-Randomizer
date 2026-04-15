@@ -231,7 +231,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             if (_soundCounter < 0)
             {
                 _soundCounter += 135;
-                Game1.GameManager.PlaySoundEffect("D360-63-3F");
+                Game1.AudioManager.PlaySoundEffect("D360-63-3F");
             }
         }
 
@@ -260,7 +260,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             SetSaveString();
 
-            Game1.GameManager.PlaySoundEffect("D378-09-09");
+            Game1.AudioManager.PlaySoundEffect("D378-09-09");
 
             // spawn stone particles
             var rndMin = 50;

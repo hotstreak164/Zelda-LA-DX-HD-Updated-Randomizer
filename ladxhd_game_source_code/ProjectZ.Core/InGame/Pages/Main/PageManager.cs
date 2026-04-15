@@ -54,8 +54,6 @@ namespace ProjectZ.InGame.Pages
 
         public void Load(ContentManager content)
         {
-            System.Diagnostics.Debug.WriteLine("ParseMod");
-
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "PageManager.lahdmod");
             ModFile.Parse(modFile, this);
@@ -295,7 +293,7 @@ namespace ProjectZ.InGame.Pages
             _transitionTime = _transitionInAnimation == TransitionAnimation.Fade ? TransitionFade : TransitionNormal;
 
             if (!SkipSound)
-                Game1.GameManager.PlaySoundEffect("D360-18-12");
+                Game1.AudioManager.PlaySoundEffect("D360-18-12");
         }
 
         public void PopAllPages(TransitionAnimation animationIn = TransitionAnimation.RightToLeft, TransitionAnimation animationOut = TransitionAnimation.RightToLeft)

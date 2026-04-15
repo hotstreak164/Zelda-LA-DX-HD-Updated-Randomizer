@@ -129,10 +129,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _aiDamageState.HitKnockBack(gameObject, direction, hitType, pieceOfPower, false);
 
-            Game1.GameManager.PlaySoundEffect("D360-09-09");
+            Game1.AudioManager.PlaySoundEffect("D360-09-09");
 
             if (pieceOfPower)
-                Game1.GameManager.PlaySoundEffect("D370-17-11");
+                Game1.AudioManager.PlaySoundEffect("D370-17-11");
 
             return Values.HitCollision.Blocking;
         }

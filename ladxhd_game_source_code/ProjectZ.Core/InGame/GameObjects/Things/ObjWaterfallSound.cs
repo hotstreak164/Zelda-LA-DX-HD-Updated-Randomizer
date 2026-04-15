@@ -42,7 +42,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_soundTimer < 0)
             {
                 _soundTimer += Game1.RandomNumber.Next(64, 80);
-                Game1.GameManager.PlaySoundEffect("D378-30-1E", true, _maxPosition, Range);
+                Game1.AudioManager.PlaySoundEffect("D378-30-1E", true, _maxPosition, Range);
                 _maxDistance = float.MaxValue;
             }
         }

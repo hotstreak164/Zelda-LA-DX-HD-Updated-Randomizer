@@ -108,7 +108,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void Reflect(Vector2 shieldDirection)
         {
             // Play the deflection sound.
-            Game1.GameManager.PlaySoundEffect("D360-22-16");
+            Game1.AudioManager.PlaySoundEffect("D360-22-16");
 
             // Don't let the spear reflect more than once.
             _reflected = true;

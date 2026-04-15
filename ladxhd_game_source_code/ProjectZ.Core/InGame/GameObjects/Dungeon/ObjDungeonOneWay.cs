@@ -78,7 +78,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             // hide the player
             MapManager.ObjLink.IsVisible = false;
 
-            Game1.GameManager.PlaySoundEffect("D360-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D360-12-0C");
 
             _isRotation = true;
 

@@ -91,7 +91,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         public void Fire()
         {
-            Game1.GameManager.PlaySoundEffect("D378-56-38");
+            Game1.AudioManager.PlaySoundEffect("D378-56-38");
 
             _isMoving = true;
             _aiComponent.ChangeState("moving");
@@ -184,7 +184,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
         private void Repell()
         {
-            Game1.GameManager.PlaySoundEffect("D378-56-38");
+            Game1.AudioManager.PlaySoundEffect("D378-56-38");
 
             _isRepelled = true;
             _moveTime = 0;
@@ -234,7 +234,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private void OnDeath(bool PlaySound = false)
         {
             if (PlaySound)
-                Game1.GameManager.PlaySoundEffect("D378-54-36");
+                Game1.AudioManager.PlaySoundEffect("D378-54-36");
 
             var posX = (int)EntityPosition.X;
             var posY = (int)EntityPosition.Y;

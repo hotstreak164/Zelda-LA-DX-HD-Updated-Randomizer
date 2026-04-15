@@ -77,7 +77,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // freeze the animation until the song gets played
             MapManager.ObjLink.FreezeAnimationState();
 
-            Game1.GameManager.StopMusic();
+            Game1.AudioManager.StopMusic();
         }
 
         private void Update()
@@ -97,7 +97,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 var itemName = "instrument" + _shownInstrument;
                 var item = Game1.GameManager.GetItem(itemName);
                 if (item != null)
-                    Game1.GameManager.PlaySoundEffect("D378-43-2B");
+                    Game1.AudioManager.PlaySoundEffect("D378-43-2B");
                 _showInstrument[_shownInstrument] = item != null;
                 _shownInstrument++;
             }
@@ -107,7 +107,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 _linkOcarinaAnimation = true;
                 MapManager.ObjLink.StartOcarinaDuo();
                 // @TODO: can we only access this state with at least 2 instruments?
-                Game1.GameManager.SetMusic(62 + _playerInstrumentCount, 2);
+                Game1.AudioManager.SetMusic(62 + _playerInstrumentCount, 2);
             }
 
             // shake the screen
@@ -119,7 +119,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 {
                     _isRunning = false;
                     MapManager.ObjLink.StopOcarinaDuo();
-                    Game1.GameManager.SetMusic(-1, 2);
+                    Game1.AudioManager.SetMusic(-1, 2);
                     return;
                 }
 
@@ -152,8 +152,8 @@ namespace ProjectZ.InGame.GameObjects.Things
 
                 Game1.GameManager.SaveManager.SetString("owl", "9_0");
 
-                Game1.GameManager.PlaySoundEffect("D360-35-23");
-                Game1.GameManager.PlaySoundEffect("D378-12-0C");
+                Game1.AudioManager.PlaySoundEffect("D360-35-23");
+                Game1.AudioManager.PlaySoundEffect("D378-12-0C");
 
                 Map.Objects.DeleteObjects.Add(this);
             }

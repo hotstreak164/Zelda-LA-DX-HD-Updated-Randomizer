@@ -131,7 +131,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 _direction = direction.X < 0 ? 0 : 1;
                 _animator.Play("jump_" + _direction);
 
-                Game1.GameManager.PlaySoundEffect("D360-36-24", false);
+                Game1.AudioManager.PlaySoundEffect("D360-36-24", false);
             }
             else
             {
@@ -175,7 +175,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _direction = direction.X < 0 ? 0 : 1;
             _animator.Play("jump_" + _direction);
 
-            Game1.GameManager.PlaySoundEffect("D360-36-24", false);
+            Game1.AudioManager.PlaySoundEffect("D360-36-24", false);
 
             // start fading away
             if (distance < 48)

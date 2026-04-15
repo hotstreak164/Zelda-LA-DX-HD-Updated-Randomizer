@@ -126,7 +126,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_dead)
                 return;
 
-            Game1.GameManager.PlaySoundEffect("D378-18-12");
+            Game1.AudioManager.PlaySoundEffect("D378-18-12");
             var animation = new ObjBurningEffect(Map, (int)EntityPosition.X, (int)EntityPosition.Y - (int)EntityPosition.Z, 0, 0);
             Map.Objects.SpawnObject(animation);
             Map.Objects.RegisterAlwaysAnimateObject(animation);

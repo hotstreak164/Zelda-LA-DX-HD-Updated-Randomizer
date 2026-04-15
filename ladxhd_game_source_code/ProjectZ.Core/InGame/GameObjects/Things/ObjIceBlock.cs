@@ -106,7 +106,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (hitType != HitType.MagicRod)
                 return Values.HitCollision.Repelling;
 
-            Game1.GameManager.PlaySoundEffect("D378-19-13");
+            Game1.AudioManager.PlaySoundEffect("D378-19-13");
 
             Map.Objects.SpawnObject(new ObjIceBlockRespawner(Map, _posX, _posY, false));
             var animation = new ObjAnimator(Map, (int)EntityPosition.X, (int)EntityPosition.Y, 0, 0, Values.LayerPlayer, "Particles/ice block despawn", "run", true);

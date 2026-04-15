@@ -75,9 +75,9 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 Map.Objects.DeleteObjects.Add(this);
 
                 if (_playSound)
-                    Game1.GameManager.PlaySoundEffect("D360-02-02");
+                    Game1.AudioManager.PlaySoundEffect("D360-02-02");
                     
-                Game1.GameManager.PlaySoundEffect("D378-09-09");
+                Game1.AudioManager.PlaySoundEffect("D378-09-09");
 
                 if (!string.IsNullOrEmpty(SaveKey))
                     Game1.GameManager.SaveManager.SetString(SaveKey, "1");

@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (_shoreTimer > 2000)
             {
                 _shoreTimer -= 2000;
-                Game1.GameManager.PlaySoundEffect("D378-15-0F", true, new Vector2(MathF.Min(160 * 5.5f, MapManager.ObjLink.PosX), _positionY + 200));
+                Game1.AudioManager.PlaySoundEffect("D378-15-0F", true, new Vector2(MathF.Min(160 * 5.5f, MapManager.ObjLink.PosX), _positionY + 200));
             }
         }
     }

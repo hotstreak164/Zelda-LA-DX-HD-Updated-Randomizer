@@ -136,7 +136,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             _aiComponent.ChangeState("attack");
             _animator.Play("attack");
             _body.IgnoresZ = false;
-            Game1.GameManager.PlaySoundEffect("D360-08-08");
+            Game1.AudioManager.PlaySoundEffect("D360-08-08");
         }
 
         private void ToGoingUp()
@@ -175,7 +175,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (GameSettings.ScreenShake)
                 Game1.GameManager.ShakeScreen(350, 0.00f, 1.00f, 10.0f, 25.0f);
 
-            Game1.GameManager.PlaySoundEffect("D378-12-0C");
+            Game1.AudioManager.PlaySoundEffect("D378-12-0C");
 
             _aiComponent.ChangeState("attackCooldown");
         }

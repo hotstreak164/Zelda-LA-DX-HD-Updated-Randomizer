@@ -173,7 +173,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             if (_body.IsGrounded)
             {
-                Game1.GameManager.PlaySoundEffect("D378-12-0C");
+                Game1.AudioManager.PlaySoundEffect("D378-12-0C");
                 if (GameSettings.ScreenShake)
                     Game1.GameManager.ShakeScreen(500, 0.00f, 2.00f, 0.00f, 12.5f);
 
@@ -246,7 +246,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             if (_damageState.DamageTrigger.CurrentTime > 0)
                 return Values.HitCollision.None;
 
-            Game1.GameManager.PlaySoundEffect("D370-07-07");
+            Game1.AudioManager.PlaySoundEffect("D370-07-07");
 
             _damageState.SetDamageState();
 

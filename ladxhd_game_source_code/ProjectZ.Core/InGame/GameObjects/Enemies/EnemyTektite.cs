@@ -113,7 +113,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void InitJumping()
         {
-            Game1.GameManager.PlaySoundEffect("D360-36-24", true, EntityPosition.Position);
+            Game1.AudioManager.PlaySoundEffect("D360-36-24", true, EntityPosition.Position);
 
             _animator.Play("jump");
 

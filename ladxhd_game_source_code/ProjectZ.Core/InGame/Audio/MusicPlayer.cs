@@ -4,8 +4,9 @@ using System.Threading;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using ProjectZ.InGame.Things;
 
-namespace ProjectZ.Core.InGame.Things
+namespace ProjectZ.InGame.Audio
 {
     public class MusicPlayer
     {
@@ -17,10 +18,22 @@ namespace ProjectZ.Core.InGame.Things
         private string _currentPath;
         private float _volume = 1f;
         private float _volumeMultiplier = 1f;
+        private float _playbackSpeed = 1f;
+        private float _gain = 1f;
         private readonly object _lock = new object();
+
+        private double _stopTime = 0;
+        private bool _wasStopped = false;
+
+        public bool WasStopped => _wasStopped;
 
         public bool IsPlaying => _instance?.State == SoundState.Playing;
         public int CurrentTrack => _currentTrack;
+
+        public void SetGain(float gain)
+        {
+            _gain = Math.Max(0f, gain);
+        }
 
         public void Play(string path, int trackId)
         {
@@ -53,6 +66,32 @@ namespace ProjectZ.Core.InGame.Things
             }
             _currentPath = null;
             _currentTrack = -1;
+            _wasStopped = false;
+            _stopTime = 0;
+        }
+
+        public void SetStopTime(float seconds)
+        {
+            _stopTime = seconds;
+            _wasStopped = false;
+        }
+
+        public void Pause()
+        {
+            lock (_lock)
+            {
+                if (_instance?.State == SoundState.Playing)
+                    _instance.Pause();
+            }
+        }
+
+        public void Resume()
+        {
+            lock (_lock)
+            {
+                if (_instance?.State == SoundState.Paused)
+                    _instance.Resume();
+            }
         }
 
         public void SetVolume(float volume)
@@ -67,6 +106,17 @@ namespace ProjectZ.Core.InGame.Things
             ApplyVolume();
         }
 
+        public float GetVolumeMultiplier()
+        {
+            return _volumeMultiplier;
+        }
+
+        public void SetPlaybackSpeed(float speed)
+        {
+            if (speed <= 0f) speed = 1f;
+            _playbackSpeed = speed;
+        }
+
         private void ApplyVolume()
         {
             lock (_lock)
@@ -74,6 +124,31 @@ namespace ProjectZ.Core.InGame.Things
                 if (_instance != null)
                     _instance.Volume = MathHelper.Clamp(_volume * _volumeMultiplier, 0f, 1f);
             }
+        }
+
+        private static float GetGain(NVorbis.VorbisReader vorbis)
+        {
+            // File gain.txt takes priority and is applied globally to all files in the folder.
+            var gainFile = Path.Combine(Values.PathMusicMods, "volume.txt");
+            if (File.Exists(gainFile) && float.TryParse(
+                File.ReadAllText(gainFile).Trim(),
+                NumberStyles.Float,
+                CultureInfo.InvariantCulture,
+                out float globalGain))
+                return globalGain / 100.0f;
+
+            // Fall back to per-file VOLUME tag.
+            var tags = vorbis.Tags;
+            if (tags != null)
+            {
+                var volumeTag = tags.GetTagSingle("VOLUME");
+                if (volumeTag != null && float.TryParse(volumeTag.Trim(),
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out float volume))
+                    return volume / 100.0f;
+            }
+            return 1.0f;
         }
 
         private void StreamLoop(string path, CancellationToken ct)
@@ -144,23 +219,31 @@ namespace ProjectZ.Core.InGame.Things
                 var audioChannels = channels == 1 ? AudioChannels.Mono : AudioChannels.Stereo;
 
                 var loop = GetLoopPoints(vorbis, path);
+                var gain = GetGain(vorbis) * _gain;
 
                 lock (_lock)
                 {
                     _instance?.Dispose();
-                    _instance = new DynamicSoundEffectInstance(sampleRate, audioChannels);
+                    _instance = new DynamicSoundEffectInstance((int)(sampleRate * _playbackSpeed), audioChannels);
                     _instance.Volume = MathHelper.Clamp(_volume * _volumeMultiplier, 0f, 1f);
                     _instance.Play();
                 }
-
                 const int samplesPerChunk = 4096;
                 var floatBuf = new float[samplesPerChunk * channels];
                 var byteBuf = new byte[floatBuf.Length * 2];
+                var elapsed = 0.0;
 
                 while (!ct.IsCancellationRequested)
                 {
                     while (!ct.IsCancellationRequested && _instance.PendingBufferCount < 3)
                     {
+                        // Check stop time
+                        if (_stopTime > 0 && elapsed >= _stopTime)
+                        {
+                            _wasStopped = true;
+                            _cts.Cancel();
+                            return;
+                        }
                         // If we have a loop end point, check if we're about to pass it
                         int samplesToRead = floatBuf.Length;
                         if (loop.EndSample >= 0)
@@ -183,13 +266,15 @@ namespace ProjectZ.Core.InGame.Things
 
                         for (int i = 0; i < read; i++)
                         {
-                            short s = (short)MathHelper.Clamp(floatBuf[i] * 32767f, short.MinValue, short.MaxValue);
+                            short s = (short)MathHelper.Clamp(floatBuf[i] * gain * 32767f, short.MinValue, short.MaxValue);
                             byteBuf[i * 2]     = (byte)(s & 0xFF);
                             byteBuf[i * 2 + 1] = (byte)(s >> 8);
                         }
 
                         lock (_lock)
                             _instance?.SubmitBuffer(byteBuf, 0, read * 2);
+
+                        elapsed += (double)read / channels / sampleRate;
                     }
                     Thread.Sleep(10);
                 }

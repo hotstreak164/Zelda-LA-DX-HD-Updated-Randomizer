@@ -181,7 +181,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             // player left the room?
             if (!_body.FieldRectangle.Intersects(MapManager.ObjLink.BodyRectangle))
             {
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
                 _aiComponent.ChangeState("idle");
             }
         }
@@ -191,7 +191,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             // start walking
             if (_body.FieldRectangle.Intersects(MapManager.ObjLink.BodyRectangle))
             {
-                Game1.GameManager.SetMusic(79, 2);
+                Game1.AudioManager.SetMusic(79, 2);
                 _aiComponent.ChangeState("walk");
             }
         }
@@ -302,7 +302,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void InitAttackReturn()
         {
-            Game1.GameManager.PlaySoundEffect("D370-22-16");
+            Game1.AudioManager.PlaySoundEffect("D370-22-16");
         }
 
         private void UpdateAttackRevert()
@@ -335,7 +335,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             {
                 Game1.GameManager.SaveManager.SetString(_saveKey, "1");
                 // stop boss music
-                Game1.GameManager.SetMusic(-1, 2);
+                Game1.AudioManager.SetMusic(-1, 2);
             }
 
             Map.Objects.DeleteObjects.Add(this);
