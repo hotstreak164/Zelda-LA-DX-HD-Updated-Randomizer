@@ -30,9 +30,9 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         bool  light_source = true;
         int   light_red = 255;
-        int   light_grn = 220;
-        int   light_blu = 160;
-        float light_bright = 0.8f;
+        int   light_grn = 240;
+        int   light_blu = 220;
+        float light_bright = 0.7f;
         int   light_size = 42;
 
         public ObjMagicRodShot(Map.Map map, CPosition linkPos, Vector2 offsetpos, int direction) : base(map)
