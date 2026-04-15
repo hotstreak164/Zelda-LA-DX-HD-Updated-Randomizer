@@ -63,7 +63,7 @@
             this.picturebox_Main.InitialImage = global::LADXHD_ModMaker.Properties.Resources.la;
             this.picturebox_Main.Location = new System.Drawing.Point(9, 0);
             this.picturebox_Main.Name = "picturebox_Main";
-            this.picturebox_Main.Size = new System.Drawing.Size(347, 241);
+            this.picturebox_Main.Size = new System.Drawing.Size(350, 248);
             this.picturebox_Main.TabIndex = 0;
             this.picturebox_Main.TabStop = false;
             // 
@@ -82,15 +82,15 @@
             this.groupBox_Main.Controls.Add(this.panel_Description);
             this.groupBox_Main.Controls.Add(this.label_ModName);
             this.groupBox_Main.Controls.Add(this.textBox_ModName);
-            this.groupBox_Main.Location = new System.Drawing.Point(9, 247);
+            this.groupBox_Main.Location = new System.Drawing.Point(9, 251);
             this.groupBox_Main.Name = "groupBox_Main";
-            this.groupBox_Main.Size = new System.Drawing.Size(347, 326);
+            this.groupBox_Main.Size = new System.Drawing.Size(350, 326);
             this.groupBox_Main.TabIndex = 0;
             this.groupBox_Main.TabStop = false;
             // 
             // button_Image
             // 
-            this.button_Image.Location = new System.Drawing.Point(313, 196);
+            this.button_Image.Location = new System.Drawing.Point(317, 194);
             this.button_Image.Name = "button_Image";
             this.button_Image.Size = new System.Drawing.Size(28, 24);
             this.button_Image.TabIndex = 6;
@@ -101,7 +101,7 @@
             // label_Image
             // 
             this.label_Image.AutoSize = true;
-            this.label_Image.Location = new System.Drawing.Point(5, 179);
+            this.label_Image.Location = new System.Drawing.Point(5, 177);
             this.label_Image.Name = "label_Image";
             this.label_Image.Size = new System.Drawing.Size(103, 13);
             this.label_Image.TabIndex = 0;
@@ -112,9 +112,9 @@
             // textBox_Image
             // 
             this.textBox_Image.AllowDrop = true;
-            this.textBox_Image.Location = new System.Drawing.Point(5, 198);
+            this.textBox_Image.Location = new System.Drawing.Point(5, 196);
             this.textBox_Image.Name = "textBox_Image";
-            this.textBox_Image.Size = new System.Drawing.Size(304, 20);
+            this.textBox_Image.Size = new System.Drawing.Size(308, 20);
             this.textBox_Image.TabIndex = 5;
             this.textBox_Image.TextChanged += new System.EventHandler(this.textBox_Image_TextChanged);
             this.textBox_Image.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox_Image_DragDrop);
@@ -123,7 +123,7 @@
             // 
             // button_OutputPath
             // 
-            this.button_OutputPath.Location = new System.Drawing.Point(314, 292);
+            this.button_OutputPath.Location = new System.Drawing.Point(318, 290);
             this.button_OutputPath.Name = "button_OutputPath";
             this.button_OutputPath.Size = new System.Drawing.Size(28, 24);
             this.button_OutputPath.TabIndex = 10;
@@ -134,7 +134,7 @@
             // label_OutputPath
             // 
             this.label_OutputPath.AutoSize = true;
-            this.label_OutputPath.Location = new System.Drawing.Point(6, 275);
+            this.label_OutputPath.Location = new System.Drawing.Point(6, 273);
             this.label_OutputPath.Name = "label_OutputPath";
             this.label_OutputPath.Size = new System.Drawing.Size(67, 13);
             this.label_OutputPath.TabIndex = 0;
@@ -144,9 +144,9 @@
             // textBox_OutputPath
             // 
             this.textBox_OutputPath.AllowDrop = true;
-            this.textBox_OutputPath.Location = new System.Drawing.Point(6, 294);
+            this.textBox_OutputPath.Location = new System.Drawing.Point(6, 292);
             this.textBox_OutputPath.Name = "textBox_OutputPath";
-            this.textBox_OutputPath.Size = new System.Drawing.Size(304, 20);
+            this.textBox_OutputPath.Size = new System.Drawing.Size(308, 20);
             this.textBox_OutputPath.TabIndex = 9;
             this.textBox_OutputPath.TextChanged += new System.EventHandler(this.textBox_OutputPath_TextChanged);
             this.textBox_OutputPath.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox_OutputPath_DragDrop);
@@ -155,7 +155,7 @@
             // 
             // button_GamePath
             // 
-            this.button_GamePath.Location = new System.Drawing.Point(314, 244);
+            this.button_GamePath.Location = new System.Drawing.Point(318, 242);
             this.button_GamePath.Name = "button_GamePath";
             this.button_GamePath.Size = new System.Drawing.Size(28, 24);
             this.button_GamePath.TabIndex = 8;
@@ -166,7 +166,7 @@
             // label_GamePath
             // 
             this.label_GamePath.AutoSize = true;
-            this.label_GamePath.Location = new System.Drawing.Point(6, 227);
+            this.label_GamePath.Location = new System.Drawing.Point(6, 225);
             this.label_GamePath.Name = "label_GamePath";
             this.label_GamePath.Size = new System.Drawing.Size(110, 13);
             this.label_GamePath.TabIndex = 0;
@@ -177,9 +177,9 @@
             // textBox_GamePath
             // 
             this.textBox_GamePath.AllowDrop = true;
-            this.textBox_GamePath.Location = new System.Drawing.Point(6, 246);
+            this.textBox_GamePath.Location = new System.Drawing.Point(6, 244);
             this.textBox_GamePath.Name = "textBox_GamePath";
-            this.textBox_GamePath.Size = new System.Drawing.Size(304, 20);
+            this.textBox_GamePath.Size = new System.Drawing.Size(308, 20);
             this.textBox_GamePath.TabIndex = 7;
             this.textBox_GamePath.TextChanged += new System.EventHandler(this.textBox_GamePath_TextChanged);
             this.textBox_GamePath.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox_GamePath_DragDrop);
@@ -189,7 +189,7 @@
             // label_Description
             // 
             this.label_Description.AutoSize = true;
-            this.label_Description.Location = new System.Drawing.Point(6, 63);
+            this.label_Description.Location = new System.Drawing.Point(6, 61);
             this.label_Description.Name = "label_Description";
             this.label_Description.Size = new System.Drawing.Size(87, 13);
             this.label_Description.TabIndex = 0;
@@ -200,7 +200,7 @@
             // 
             this.panel_Description.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panel_Description.Controls.Add(this.richTextBox_Description);
-            this.panel_Description.Location = new System.Drawing.Point(6, 83);
+            this.panel_Description.Location = new System.Drawing.Point(6, 81);
             this.panel_Description.Name = "panel_Description";
             this.panel_Description.Size = new System.Drawing.Size(334, 86);
             this.panel_Description.TabIndex = 3;
@@ -218,7 +218,7 @@
             // label_ModName
             // 
             this.label_ModName.AutoSize = true;
-            this.label_ModName.Location = new System.Drawing.Point(6, 15);
+            this.label_ModName.Location = new System.Drawing.Point(6, 13);
             this.label_ModName.Name = "label_ModName";
             this.label_ModName.Size = new System.Drawing.Size(62, 13);
             this.label_ModName.TabIndex = 0;
@@ -227,7 +227,7 @@
             // 
             // textBox_ModName
             // 
-            this.textBox_ModName.Location = new System.Drawing.Point(6, 34);
+            this.textBox_ModName.Location = new System.Drawing.Point(6, 32);
             this.textBox_ModName.Name = "textBox_ModName";
             this.textBox_ModName.Size = new System.Drawing.Size(334, 20);
             this.textBox_ModName.TabIndex = 1;
@@ -235,7 +235,7 @@
             // 
             // button_CreateMod
             // 
-            this.button_CreateMod.Location = new System.Drawing.Point(8, 603);
+            this.button_CreateMod.Location = new System.Drawing.Point(8, 607);
             this.button_CreateMod.Name = "button_CreateMod";
             this.button_CreateMod.Size = new System.Drawing.Size(140, 30);
             this.button_CreateMod.TabIndex = 11;
@@ -245,7 +245,7 @@
             // 
             // button_Close
             // 
-            this.button_Close.Location = new System.Drawing.Point(218, 603);
+            this.button_Close.Location = new System.Drawing.Point(222, 607);
             this.button_Close.Name = "button_Close";
             this.button_Close.Size = new System.Drawing.Size(140, 30);
             this.button_Close.TabIndex = 12;
@@ -255,16 +255,16 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(9, 580);
+            this.progressBar.Location = new System.Drawing.Point(9, 584);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(347, 16);
+            this.progressBar.Size = new System.Drawing.Size(351, 16);
             this.progressBar.TabIndex = 0;
             // 
             // Form_MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 639);
+            this.ClientSize = new System.Drawing.Size(368, 643);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.button_Close);
             this.Controls.Add(this.button_CreateMod);

@@ -7,7 +7,7 @@ namespace LADXHD_ModMaker
 {
     internal class Config
     {
-        public const string Version = "1.2.1";
+        public const string Version = "1.2.2";
 
         public static bool PatchMode;
 
