@@ -71,7 +71,7 @@ public partial class HomeView : UserControl
 
     private async void ModsButton_Click(object sender, RoutedEventArgs e)
     {
-        _parent?.HideSavedNotification();
+        _parent?.HideNotifications();
         _parent?.ShowLoadingMessage();
 
         await System.Threading.Tasks.Task.Run(() =>

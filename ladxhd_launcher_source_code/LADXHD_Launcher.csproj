@@ -25,6 +25,10 @@
     </PackageReference>
     <PackageReference Include="System.Windows.Extensions" Version="8.0.0" Condition="'$(TargetOS)' == 'win'"/>
   </ItemGroup>
+  
+  <PropertyGroup>
+      <TrimmerRootDescriptor>TrimmerRoots.xml</TrimmerRootDescriptor>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetOS)' == 'win'">
     <OutputType>WinExe</OutputType>

@@ -302,13 +302,13 @@ powder_gravity = 5.00
 
 //: ObjPowder
 // Emits light. Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
-// Defaults: true / 160 / 160 / 255 / 0.625 / 24
+// Defaults: true / 230 / 230 / 255 / 0.35 / 20
 light_source = true
-light_red = 160
-light_grn = 160
+light_red = 230
+light_grn = 230
 light_blu = 255
-light_bright = 0.625
-light_size = 24
+light_bright = 0.35
+light_size = 20
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -337,12 +337,12 @@ magicrod_cast2d = false
 
 //: ObjMagicRodShot
 // Magic Rod Missile: Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
-// Defaults: true / 255 / 220 / 160 / 0.80 / 42
+// Defaults: true / 255 / 240 / 220 / 0.70 / 42
 light_source = true
 light_red = 255
-light_grn = 220
-light_blu = 160
-light_bright = 0.80
+light_grn = 240
+light_blu = 220
+light_bright = 0.70
 light_size = 42
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -352,12 +352,12 @@ light_size = 42
 
 //: ObjBurningEffect
 // Color values should be 0-255. Brightness 0.00-1.00. Higher values may cause issues or crash the game.
-// Defaults: true / 255 / 220 / 160 / 0.80 / 120 / 0.35
+// Defaults: true / 255 / 230 / 230 / 0.70 / 120 / 0.35
 light_source = true
 light_red = 255
-light_grn = 220
-light_blu = 160
-light_bright = 0.80
+light_grn = 230
+light_blu = 230
+light_bright = 0.70
 light_size = 120
 light_fade = 0.35
 

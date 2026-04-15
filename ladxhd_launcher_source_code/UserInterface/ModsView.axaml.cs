@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
@@ -196,10 +197,42 @@ public partial class ModsView : UserControl
         XnbAudio.PlayXnbSound(XnbAudio.SoundClose);
     }
 
+    private async void ResetButton_Click(object sender, RoutedEventArgs e)
+    {
+        string targetDir = File.Exists(Path.Combine(Config.BaseFolder, "portable.txt"))
+            ? Config.BaseFolder
+            : Path.Combine(Environment.GetFolderPath(
+                Environment.SpecialFolder.LocalApplicationData), "Zelda_LA");
+        string advancedPath = Path.Combine(targetDir, "advanced");
+
+        // Delete the existing file
+        if (File.Exists(advancedPath))
+            File.Delete(advancedPath);
+
+        // Re-extract from resources
+        var resources = ResourceHelper.GetAllResources();
+        if (resources.ContainsKey("advanced"))
+            File.WriteAllBytes(advancedPath, (byte[])resources["advanced"]);
+
+        // Reload on background thread
+        await System.Threading.Tasks.Task.Run(() =>
+        {
+            AdvancedSettings.Load(AppContext.BaseDirectory);
+        });
+
+        // Back on UI thread — rebuild controls then show notification and play sound
+        LoadValues();
+
+
+        await System.Threading.Tasks.Task.Delay(250);
+        _parent?.ShowNotification(MainWindow.NotificationType.Reset);
+        XnbAudio.PlayXnbSound(XnbAudio.SoundReset);
+    }
+
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
         AdvancedSettings.Save(AppContext.BaseDirectory);
-        _parent?.ShowSavedNotification();
+        _parent?.ShowNotification(MainWindow.NotificationType.Save);
         _parent?.NavigateTo(_parent.HomeView);
         XnbAudio.PlayXnbSound(XnbAudio.SoundXSave);
     }

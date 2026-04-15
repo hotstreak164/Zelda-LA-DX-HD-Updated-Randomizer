@@ -17,6 +17,8 @@ public partial class MainWindow : Window
     private DispatcherTimer _loadingTimer;
     private DispatcherTimer _savedTimer;
 
+    public enum NotificationType { Save, Reset }
+
     public void NavigateTo(UserControl page)
     {
         PageContent.Content = page;
@@ -77,36 +79,57 @@ public partial class MainWindow : Window
         _loadingTimer.Start();
     }
 
-    public void HideSavedNotification()
+    public void HideNotifications()
     {
         _savedTimer?.Stop();
         SavedNotification.Opacity = 0;
+        ResetNotification.Opacity = 0;
     }
 
-    public void ShowSavedNotification()
+    public void ShowNotification(NotificationType type)
     {
-        // Stop any existing saved timer
+        // Stop any existing saved timer.
         _savedTimer?.Stop();
 
-        SavedNotification.Opacity = 1.0;
+        // Show the proper notification type.
+        if (type == NotificationType.Save)
+        {
+            ResetNotification.Opacity = 0;
+            SavedNotification.Opacity = 1.0;
+        }
+        else if (type == NotificationType.Reset)
+        {
+            ResetNotification.Opacity = 1.0;
+            SavedNotification.Opacity = 0;
+        }
+        // Used to fade out the notification.
         double opacity = 1.0;
         int holdFrames = 60;
         int frameCount = 0;
 
+        // Timer that fades out the message.
         _savedTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
         _savedTimer.Tick += (s, e) =>
         {
+            // Increment the framecount every 16 milliseconds.
             frameCount++;
             if (frameCount < holdFrames)
                 return;
+
+            // Reduce the opacity.
             opacity -= 0.02;
             if (opacity <= 0)
             {
                 opacity = 0;
                 _savedTimer.Stop();
             }
-            SavedNotification.Opacity = opacity;
+            // Fade out the notification.
+            if (type == NotificationType.Save)
+                SavedNotification.Opacity = opacity;
+            else if (type == NotificationType.Reset)
+                ResetNotification.Opacity = opacity;
         };
+        // Start the timer.
         _savedTimer.Start();
     }
 }

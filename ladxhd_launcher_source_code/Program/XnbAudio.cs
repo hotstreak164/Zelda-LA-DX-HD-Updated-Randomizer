@@ -17,6 +17,7 @@ public static class XnbAudio
     public static string SoundClose;
     public static string SoundClick;
     public static string SoundSelect;
+    public static string SoundReset;
 
     public static bool Enabled { get; set; } = true;
     public static bool SuppressSound { get; set; } = false;
@@ -131,10 +132,11 @@ public static class XnbAudio
         SoundClose  = Path.Combine(Config.BaseFolder, "Content", "SoundEffects", "D360-18-12.xnb");
         SoundClick  = Path.Combine(Config.BaseFolder, "Content", "SoundEffects", "D360-10-0A.xnb");
         SoundSelect = Path.Combine(Config.BaseFolder, "Content", "SoundEffects", "D360-19-13.xnb");
+        SoundReset  = Path.Combine(Config.BaseFolder, "Content", "SoundEffects", "D360-27-1B.xnb");
 
         Task.Run(() =>
         {
-            foreach (var path in new[] { SoundSave, SoundXSave, SoundOpen, SoundClose, SoundClick, SoundSelect })
+            foreach (var path in new[] { SoundSave, SoundXSave, SoundOpen, SoundClose, SoundClick, SoundSelect, SoundReset })
             {
                 try
                 {

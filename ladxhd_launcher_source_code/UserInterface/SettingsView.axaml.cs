@@ -234,7 +234,7 @@ public partial class SettingsView : UserControl
     {
         SaveValues();
         GameSettings.Save(AppContext.BaseDirectory);
-        _parent?.ShowSavedNotification();
+        _parent?.ShowNotification(MainWindow.NotificationType.Save);
         _parent?.NavigateTo(_parent.HomeView);
         XnbAudio.PlayXnbSound(XnbAudio.SoundSave);
     }

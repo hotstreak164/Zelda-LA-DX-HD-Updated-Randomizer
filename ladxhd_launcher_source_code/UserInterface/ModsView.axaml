@@ -36,23 +36,28 @@
         </Border>
 
         <!-- Button bar pinned to bottom row -->
-        <Canvas Grid.Row="1">
-            <Button Canvas.Left="30" Canvas.Top="10" Width="86" Height="34"
-                    Click="BackButton_Click">
-                <Image Source="avares://Launcher/Resources/button_back.png"
-                       Stretch="None" />
-            </Button>
-            <Button Canvas.Left="238" Canvas.Top="10" Width="74" Height="36"
-                    Click="SaveButton_Click">
-                <Image Source="avares://Launcher/Resources/button_save.png"
-                       Stretch="None" />
-            </Button>
-            <Button Canvas.Left="445" Canvas.Top="10" Width="75" Height="34"
-                    Click="ExitButton_Click">
-                <Image Source="avares://Launcher/Resources/button_exit.png"
-                       Stretch="None" />
-            </Button>
-        </Canvas>
+		<Canvas Grid.Row="1">
+			<Button Canvas.Left="30" Canvas.Top="10" Width="86" Height="34"
+					Click="BackButton_Click">
+				<Image Source="avares://Launcher/Resources/button_back.png"
+					   Stretch="None" />
+			</Button>
+			<Button Canvas.Left="169" Canvas.Top="10" Width="96" Height="34"
+					Click="ResetButton_Click">
+				<Image Source="avares://Launcher/Resources/button_reset.png"
+					   Stretch="None" />
+			</Button>
+			<Button Canvas.Left="318" Canvas.Top="10" Width="74" Height="36"
+					Click="SaveButton_Click">
+				<Image Source="avares://Launcher/Resources/button_save.png"
+					   Stretch="None" />
+			</Button>
+			<Button Canvas.Left="445" Canvas.Top="10" Width="75" Height="34"
+					Click="ExitButton_Click">
+				<Image Source="avares://Launcher/Resources/button_exit.png"
+					   Stretch="None" />
+			</Button>
+		</Canvas>
 
     </Grid>
 </UserControl>

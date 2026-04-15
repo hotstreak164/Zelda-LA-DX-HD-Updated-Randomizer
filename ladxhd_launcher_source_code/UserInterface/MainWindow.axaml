@@ -33,6 +33,14 @@
                IsHitTestVisible="False"
                HorizontalAlignment="Center"
                VerticalAlignment="Center" />
+		<Image x:Name="ResetNotification"
+			   Source="avares://Launcher/Resources/reset_message.png"
+			   Stretch="None"
+			   Opacity="0"
+			   IsHitTestVisible="False"
+			   HorizontalAlignment="Center"
+			   VerticalAlignment="Center" />
+
     </Panel>
     <Window.Styles>
         <!-- Button Style -->
