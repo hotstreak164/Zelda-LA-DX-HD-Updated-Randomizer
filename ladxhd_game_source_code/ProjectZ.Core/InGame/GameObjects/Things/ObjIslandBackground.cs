@@ -37,8 +37,8 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly Rectangle _waveSource;
         private readonly Rectangle _topWaveSource;
 
-        private readonly Color _colorSky = new Color(65, 90, 255);
-        private readonly Color _colorOceanBright = new Color(66, 89, 255);
+        private Color _colorSky = new Color(65, 90, 255);
+        private Color _colorOceanBright = new Color(66, 89, 255);
 
         private readonly DictAtlasEntry _oceanGradient;
 
@@ -46,6 +46,10 @@ namespace ProjectZ.InGame.GameObjects.Things
 
         private int _topWaveFrame;
         private int _topWaveSpeed = 250;
+
+        int sky_color_red = 65;
+        int sky_color_grn = 90;
+        int sky_color_blu = 255;
 
         int ocean_color_red = 66;
         int ocean_color_grn = 89;
@@ -58,6 +62,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // If a mod file exists load the values from it.
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjIslandBackground.lahdmod");
             ModFile.Parse(modFile, this);
+            _colorSky = new Color(sky_color_red, sky_color_grn, sky_color_blu);
             _colorOceanBright = new Color(ocean_color_red, ocean_color_grn, ocean_color_blu);
 
             _waveSource = Resources.SourceRectangle("water_3");
