@@ -52,7 +52,7 @@ namespace LADXHD_ModMaker
         public void SetInformation()
         {
             this.label_ModName.Text = Config.ModName;
-            this.label_Description.Text = Config.Description;
+            this.label_Description.Text = Config.Description.Replace("\\n", "\n");
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -63,15 +63,15 @@
             this.groupBox_ModDescription.Controls.Add(this.label_ModName);
             this.groupBox_ModDescription.Location = new System.Drawing.Point(9, 316);
             this.groupBox_ModDescription.Name = "groupBox_ModDescription";
-            this.groupBox_ModDescription.Size = new System.Drawing.Size(347, 102);
+            this.groupBox_ModDescription.Size = new System.Drawing.Size(347, 112);
             this.groupBox_ModDescription.TabIndex = 2;
             this.groupBox_ModDescription.TabStop = false;
             // 
             // label_Description
             // 
-            this.label_Description.Location = new System.Drawing.Point(5, 38);
+            this.label_Description.Location = new System.Drawing.Point(5, 29);
             this.label_Description.Name = "label_Description";
-            this.label_Description.Size = new System.Drawing.Size(336, 55);
+            this.label_Description.Size = new System.Drawing.Size(340, 80);
             this.label_Description.TabIndex = 1;
             this.label_Description.Text = "This is where the description of the mod goes.";
             // 
@@ -79,7 +79,7 @@
             // 
             this.label_ModName.AutoSize = true;
             this.label_ModName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_ModName.Location = new System.Drawing.Point(5, 12);
+            this.label_ModName.Location = new System.Drawing.Point(5, 9);
             this.label_ModName.Name = "label_ModName";
             this.label_ModName.Size = new System.Drawing.Size(170, 13);
             this.label_ModName.TabIndex = 0;
@@ -87,7 +87,7 @@
             // 
             // button_Install
             // 
-            this.button_Install.Location = new System.Drawing.Point(8, 448);
+            this.button_Install.Location = new System.Drawing.Point(8, 458);
             this.button_Install.Name = "button_Install";
             this.button_Install.Size = new System.Drawing.Size(140, 30);
             this.button_Install.TabIndex = 8;
@@ -97,7 +97,7 @@
             // 
             // button_Close
             // 
-            this.button_Close.Location = new System.Drawing.Point(217, 448);
+            this.button_Close.Location = new System.Drawing.Point(217, 458);
             this.button_Close.Name = "button_Close";
             this.button_Close.Size = new System.Drawing.Size(140, 30);
             this.button_Close.TabIndex = 9;
@@ -107,7 +107,7 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(9, 425);
+            this.progressBar.Location = new System.Drawing.Point(9, 435);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(347, 16);
             this.progressBar.TabIndex = 10;
@@ -158,7 +158,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 485);
+            this.ClientSize = new System.Drawing.Size(368, 495);
             this.Controls.Add(this.groupBox_ModGamePath);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.button_Close);

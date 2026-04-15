@@ -56,7 +56,7 @@ namespace LADXHD_ModMaker
 
         private void richTextBox_Description_TextChanged(object sender, EventArgs e)
         {
-            Config.Description = this.richTextBox_Description.Text;
+            Config.Description = this.richTextBox_Description.Text.Replace("\r\n", "\\n").Replace("\n", "\\n");
         }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
