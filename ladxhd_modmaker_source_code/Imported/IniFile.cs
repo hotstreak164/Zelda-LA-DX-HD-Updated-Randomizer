@@ -33,8 +33,8 @@ namespace LADXHD_ModMaker
 
         public string Read(string Key, string Section = null)
         {
-            var RetVal = new StringBuilder(255);
-            GetPrivateProfileString(Section ?? this.EXE, Key, "", RetVal, 255, this.Path);
+            var RetVal = new StringBuilder(4096);
+            GetPrivateProfileString(Section ?? this.EXE, Key, "", RetVal, 4096, this.Path);
 
             string Value = RetVal.ToString();
 

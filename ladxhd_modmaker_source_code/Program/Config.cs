@@ -74,12 +74,12 @@ namespace LADXHD_ModMaker
             // The paths when creating patches.
             OutputPath       = Path.Combine(output, "~ModOutput");
             TempPath         = Path.Combine(OutputPath, "~temp");
-            OutAnimationMods = Path.Combine(OutputPath, "Animations");
-            OutGraphicsMods  = Path.Combine(OutputPath, "Graphics");
-            OutMusicMods     = Path.Combine(OutputPath, "Music");
-            OutLanguageMods  = Path.Combine(OutputPath, "Languages");
-            OutSoundsMods    = Path.Combine(OutputPath, "SoundEffects");
-            OutLAHDModPath   = Path.Combine(OutputPath, "LAHDMods");
+            OutAnimationMods = Path.Combine(OutputPath, "Mods", "Animations");
+            OutGraphicsMods  = Path.Combine(OutputPath, "Mods", "Graphics");
+            OutMusicMods     = Path.Combine(OutputPath, "Mods", "Music");
+            OutLanguageMods  = Path.Combine(OutputPath, "Mods", "Languages");
+            OutSoundsMods    = Path.Combine(OutputPath, "Mods", "SoundEffects");
+            OutLAHDModPath   = Path.Combine(OutputPath, "Mods", "LAHDMods");
         }
 
         public static void UpdateOutputPaths_ApplyPatches()
@@ -87,12 +87,12 @@ namespace LADXHD_ModMaker
             // The paths when applying patches.
             OutputPath       = Path.Combine(GamePath, "Mods", "Graphics");
             TempPath         = Path.Combine(BaseFolder, "~temp");
-            OutAnimationMods = Path.Combine(BaseFolder, "Animations");
-            OutGraphicsMods  = Path.Combine(BaseFolder, "Graphics");
-            OutMusicMods     = Path.Combine(BaseFolder, "Music");
-            OutLanguageMods  = Path.Combine(BaseFolder, "Languages");
-            OutSoundsMods    = Path.Combine(BaseFolder, "SoundEffects");
-            OutLAHDModPath   = Path.Combine(BaseFolder, "LAHDMods");
+            OutAnimationMods = Path.Combine(BaseFolder, "Mods", "Animations");
+            OutGraphicsMods  = Path.Combine(BaseFolder, "Mods", "Graphics");
+            OutMusicMods     = Path.Combine(BaseFolder, "Mods", "Music");
+            OutLanguageMods  = Path.Combine(BaseFolder, "Mods", "Languages");
+            OutSoundsMods    = Path.Combine(BaseFolder, "Mods", "SoundEffects");
+            OutLAHDModPath   = Path.Combine(BaseFolder, "Mods", "LAHDMods");
         }
     }
 }
