@@ -7,7 +7,6 @@ namespace LADXHD_Patcher
     internal class XDelta3
     {
         private static string Exe;
-        private static string Args;
 
         private static Dictionary<string, object> resources = ResourceHelper.GetAllResources();
 
@@ -40,7 +39,6 @@ namespace LADXHD_Patcher
                 RedirectStandardError = true,
                 WindowStyle           = ProcessWindowStyle.Normal
             };
-
             Process xDelta = new Process();
             xDelta.StartInfo = startInfo;
             try
