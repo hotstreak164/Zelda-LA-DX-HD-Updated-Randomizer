@@ -1,5 +1,17 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.7.6**
+### The "Audio & Launcher Maintenance" Update
+  * A repo has been opened for mods! Check here: https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Mods
+  * Music replacement should now be fully functional. There was a lot more to it than I imagined.
+  * Implement sound effect replacement via WAV files that match the names of the XNB sound effects.
+  * Add a "Reset" button to the Launcher "Mod" menu. It is suggested to use this to fix issue below.
+  * New "Mods" folder categories: Animations, Graphics, LAHDMods, Languages, Music, and SoundEffects.
+  * Update the Mod Maker to reflect the recent changes with mod folders and fix description limit.
+  * Support changing the overworld sky color via "ObjIslandBackground.lahdmod" which I overlooked.
+  * Fix the Launcher's default "Mod" lighting values of Magic Powder, Magic Rod, and Burning effect.
+  * Fix the patcher being able to create the Android version (fixed in a v1.7.5 followup patcher).
+
 ## **v1.7.5**
 ### The "Music to My Ears" Update
   * Implement music replacement via OGG files placed in "Mods\Music" folder. See the wiki for more info.

@@ -21,7 +21,7 @@ The game can be patched to port to Windows (DX11), Windows (OpenGL), Android, an
 
 I have compiled all this information into a wiki page here: [Building / Contributing](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/wiki/Building-&-Contributing).
 
-## Patching v1.0.0 (or v1.1.4+) to v1.7.5.
+## Patching v1.0.0 (or v1.1.4+) to v1.7.6.
 
 To download the latest update, there is a patcher on the [Releases](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/releases) page.<br>
 If you wish to build the game yourself, see **Personal Build / Publishing**.
@@ -57,6 +57,13 @@ LADXHD.Patcher.exe --silent
 | 1 | Game executable not found |
 | 2 | Patching failed |
 | 3 | Invalid arguments |
+
+## Modding
+
+See the [Wiki](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated/wiki) for more information on modding. It is possible to replace the graphics, music, sound effects, dialogue, and animations in a non-destructive way. There are also "LAHDMods" which allow configuring advanced options that are not normally available and can be used in conjunction with mods to provide more features.
+
+If you are a mod author who wants to share your mod, or are a user looking for mods, I have set up a repository for mods here:<br>
+[TLoZ: LADXHD Mods](https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Mods)
 
 ## About This Repository
 
