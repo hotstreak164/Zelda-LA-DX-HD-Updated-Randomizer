@@ -201,7 +201,12 @@ namespace ProjectZ.InGame.SaveLoad
         public static void LoadMap(string mapName, Map.Map map)
         {
             map.MapName = mapName;
-            var mapFile = GameFS.NormalizePath(Path.Combine(Values.PathDataFolder, "Maps", mapName));
+
+            var modFile = Path.Combine(Values.PathMapMods, mapName);
+            var mapFile = File.Exists(modFile)
+                ? modFile
+                : GameFS.NormalizePath(Path.Combine(Values.PathDataFolder, "Maps", mapName));
+
             LoadMapFile(mapFile, map);
         }
 

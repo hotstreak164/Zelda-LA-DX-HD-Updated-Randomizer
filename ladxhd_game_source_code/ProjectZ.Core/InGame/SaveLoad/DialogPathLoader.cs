@@ -14,20 +14,23 @@ namespace ProjectZ.InGame.SaveLoad
         {
             filePath = GameFS.ToAssetPath(filePath);
             using var reader = new StreamReader(GameFS.OpenRead(filePath));
+            LoadScripts(reader, dialogPaths, replaceKeys: false);
+        }
+
+        public static void LoadScripts(StreamReader reader, Dictionary<string, List<DialogPath>> dialogPaths, bool replaceKeys)
+        {
+            var replacedKeys = new HashSet<string>();
 
             while (!reader.EndOfStream)
             {
                 var strLine = reader.ReadLine().Replace(" ", "");
-
                 if (strLine.Length == 0 || strLine.StartsWith("//"))
                     continue;
 
                 var split = strLine.Split(new[] { "->" }, StringSplitOptions.None);
-
                 if (split.Length <= 1) continue;
 
                 var splitKey = split[0].Split(':');
-
                 DialogPath newPath;
                 if (splitKey.Length == 2)
                     newPath = new DialogPath(splitKey[0], splitKey[1]);
@@ -37,13 +40,15 @@ namespace ProjectZ.InGame.SaveLoad
                 for (var i = 1; i < split.Length; i++)
                     AddAction(newPath, split[i], splitKey[0]);
 
+                // on first encounter of a key in mod pass, wipe the base entries
+                if (replaceKeys && replacedKeys.Add(splitKey[0]))
+                    dialogPaths.Remove(splitKey[0]);
+
                 if (dialogPaths.ContainsKey(splitKey[0]))
                     dialogPaths[splitKey[0]].Add(newPath);
                 else
                     dialogPaths.Add(splitKey[0], new List<DialogPath> { newPath });
             }
-
-            reader.Close();
         }
 
         private static void AddAction(DialogPath path, string split, string key)

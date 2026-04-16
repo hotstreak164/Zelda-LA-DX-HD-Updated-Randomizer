@@ -195,6 +195,13 @@ namespace ProjectZ.InGame.Things
             ItemManager.Load();
 
             DialogPathLoader.LoadScripts(Path.Combine(Values.PathDataFolder, "scripts.zScript"), _dialogPaths);
+
+            var modScript = Path.Combine(Values.PathMods, "scripts.zScript");
+            if (File.Exists(modScript))
+            {
+                using var reader = new StreamReader(File.OpenRead(modScript));
+                DialogPathLoader.LoadScripts(reader, _dialogPaths, replaceKeys: true);
+            }
         }
 
         public void OnLoad()
@@ -940,14 +947,16 @@ namespace ProjectZ.InGame.Things
 
         public bool LoadMiniMap(string mapName)
         {
-            // already loaded the levels?
             if (DungeonMaps.ContainsKey(mapName))
                 return true;
 
-            // load the mini map
-            var fileName = Path.Combine(Values.PathDataFolder, "Dungeon", mapName) + ".txt";
-            var dungeonMap = SaveLoadMap.LoadMiniMap(fileName);
+            var fileName = mapName + ".txt";
+            var modFile = Path.Combine(Values.PathDungeonMods, fileName);
+            var filePath = File.Exists(modFile)
+                ? modFile
+                : Path.Combine(Values.PathDataFolder, "Dungeon", fileName);
 
+            var dungeonMap = SaveLoadMap.LoadMiniMap(filePath);
             if (dungeonMap == null)
                 return false;
 

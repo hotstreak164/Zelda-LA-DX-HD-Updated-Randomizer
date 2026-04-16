@@ -116,19 +116,11 @@ namespace ProjectZ.InGame.Pages
             {
                 page.OnResize(newWidth, newHeight);
             }
-
-
-
             // If the value was set override the scaling value.
             if (menu_scale_override > 0)
                 _menuScale = menu_scale_override;
             else
                 _menuScale = Game1.UiScale;
-
-            System.Diagnostics.Debug.WriteLine(_menuScale);
-            System.Diagnostics.Debug.WriteLine(Game1.UiScale);
-            System.Diagnostics.Debug.WriteLine(menu_scale_override);
-
 
             var pageWidth  = (Game1.WindowWidth / 2 - _width * _menuScale / 2) / _menuScale * _menuScale;
             var pageHeight = (Game1.WindowHeight / 2 - _height * _menuScale / 2) / _menuScale * _menuScale;

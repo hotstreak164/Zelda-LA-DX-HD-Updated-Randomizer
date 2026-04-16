@@ -49,10 +49,12 @@ namespace ProjectZ.Android
             // Ensure folders exist.
             Directory.CreateDirectory(Values.PathMods);
             Directory.CreateDirectory(Values.PathAnimationMods);
+            Directory.CreateDirectory(Values.PathDungeonMods);
             Directory.CreateDirectory(Values.PathGraphicsMods);
             Directory.CreateDirectory(Values.PathMusicMods);
             Directory.CreateDirectory(Values.PathLanguageMods);
             Directory.CreateDirectory(Values.PathLAHDMods);
+            Directory.CreateDirectory(Values.PathMapMods);
             Directory.CreateDirectory(Values.PathSoundEffectMods);
             Directory.CreateDirectory(Values.PathSaveFolder);
 

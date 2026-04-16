@@ -16,8 +16,6 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (int.TryParse(_title, out var songNr))
                 Map.MapMusic[0] = GetProperMusicTrack(songNr);
 
-            System.Diagnostics.Debug.WriteLine(Map.MapMusic[0]);
-
             IsDead = true;
         }
 
