@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.GameObjects.Base;
@@ -55,10 +56,20 @@ namespace ProjectZ.InGame.GameObjects.Bosses
         private bool _drawSmoke;
         private bool _attackMode;
 
+        private float _fireballTimer;
+        private float _throwDelay = 2857f;
+
+        private float genie_fireball_interval = 800f;
+        private bool  genie_fireball_shader = false;
+
         public bool IsVisible { get; private set; }
 
         public BossGenie(Map.Map map, string saveKey, Vector3 position, BossGenieBottle objBottle) : base(map)
         {
+            // If a mod file exists load the values from it.
+            string modFile = Path.Combine(Values.PathLAHDMods, "BossGenie.lahdmod");
+            ModFile.Parse(modFile, this);
+
             _saveKey = saveKey;
 
             _objBottle = objBottle;
@@ -100,6 +111,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             var stateFollow = new AiState(UpdateFollow) { Init = InitFollow };
             var stateRotate = new AiState { Init = InitRotation };
             stateRotate.Trigger.Add(new AiTriggerCountdown(RotateTime, RotateTick, RotateEnd));
+            var stateReturn = new AiState(UpdateReturn) { Init = InitReturn };
 
             _aiComponent = new AiComponent();
 
@@ -110,6 +122,8 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _aiComponent.States.Add("attack", stateAttack);
             _aiComponent.States.Add("follow", stateFollow);
             _aiComponent.States.Add("rotate", stateRotate);
+            _aiComponent.States.Add("return", stateReturn);
+
             _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, _lives, true, false);
             _damageState.AddBossDamageState(OnDeath);
             _damageState.ExplosionOffsetY = -8;
@@ -303,7 +317,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _damageField.IsActive = true;
 
             // throw fireball
-            var fireball = new BossGenieFireball(Map, EntityPosition.ToVector3());
+            var fireball = new BossGenieFireball(Map, EntityPosition.ToVector3(), genie_fireball_shader);
             Map.Objects.SpawnObject(fireball);
 
             // spawn the ball on the left or right side
@@ -325,9 +339,10 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             for (var i = 0; i < _fireballCount; i++)
             {
                 // spawn behind the genie for the initial frame
-                _fireballs[i] = new BossGenieFireball(Map, new Vector3(EntityPosition.X, EntityPosition.Y - 1, EntityPosition.Z + 12));
+                _fireballs[i] = new BossGenieFireball(Map, new Vector3(EntityPosition.X, EntityPosition.Y - 1, EntityPosition.Z + 12), genie_fireball_shader);
                 Map.Objects.SpawnObject(_fireballs[i]);
             }
+            _fireballTimer = _throwDelay;
         }
 
         private void AttackTick(double counter)
@@ -336,26 +351,53 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             for (var i = _fireballIndex; i < _fireballCount; i++)
             {
-                // 5 fireballs form a full circle
-                var circleCount = 5;
                 var fullTurns = 7;
                 var radiant = (state * MathF.PI * 2 * fullTurns + i * 2 * (2 * MathF.PI) / 5);
-
                 var newPosition = new Vector3(EntityPosition.X - MathF.Sin(radiant) * 12, EntityPosition.Y - 1, EntityPosition.Z + 30 - MathF.Cos(radiant) * 15);
                 _fireballs[i].SetPosition(newPosition);
-
-                // throw fireball at the time where the ball is behind the genie
-                if (state > 2f / fullTurns + (_fireballIndex * (3 / (float)circleCount)) * (1 / (float)fullTurns))
-                {
-                    ThrowFireball();
-                }
             }
-
-            // move the genie left/right and up/down
+            _fireballTimer -= Game1.DeltaTime;
+            if (_fireballTimer <= 0 && _fireballIndex < _fireballCount)
+            {
+                _fireballTimer += genie_fireball_interval;
+                ThrowFireball();
+            }
             var moveState = state * MathF.PI * 2 * 2;
             var offsetX = MathF.Sin(moveState) * 27;
             var offsetY = MathF.Sin(moveState * 7) * 4;
             EntityPosition.Set(new Vector2(_spawnPosition.X + offsetX, _spawnPosition.Y + offsetY));
+
+            if (_fireballIndex >= _fireballCount)
+            {
+                _aiComponent.ChangeState("return");
+            }
+        }
+
+        private void AttackEnd()
+        {
+            _aiComponent.ChangeState("return");
+        }
+
+        private void InitReturn()
+        {
+
+        }
+
+        private void UpdateReturn()
+        {
+            var direction = new Vector2(_spawnPosition.X - EntityPosition.X, _spawnPosition.Y - EntityPosition.Y);
+    
+            if (direction.Length() < 1f)
+            {
+                EntityPosition.Set(_spawnPosition);
+                _aiComponent.ChangeState("despawn");
+                return;
+            }
+            direction.Normalize();
+
+            EntityPosition.Set(new Vector2(
+                EntityPosition.X + direction.X * Game1.TimeMultiplier,
+                EntityPosition.Y + direction.Y * Game1.TimeMultiplier));
         }
 
         private void ThrowFireball()
@@ -382,11 +424,6 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             fireball.ThrowFireball(playerDirection);
 
             Game1.AudioManager.PlaySoundEffect("D378-40-28");
-        }
-
-        private void AttackEnd()
-        {
-            _aiComponent.ChangeState("despawn");
         }
 
         private void Update()

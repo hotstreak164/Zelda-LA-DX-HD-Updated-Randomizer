@@ -2,8 +2,8 @@ using Microsoft.Xna.Framework;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
+using ProjectZ.InGame.GameObjects.Base.Components.AI;
 using ProjectZ.InGame.GameObjects.Things;
-using ProjectZ.InGame.Map;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.GameObjects.Bosses
@@ -11,15 +11,18 @@ namespace ProjectZ.InGame.GameObjects.Bosses
     internal class BossGenieFireball : GameObject
     {
         private readonly BodyComponent _body;
+        private readonly CSprite _sprite;
+        private bool _useShader;
 
-        public BossGenieFireball(Map.Map map, Vector3 position) : base(map)
+        public BossGenieFireball(Map.Map map, Vector3 position, bool useShader) : base(map)
         {
             Tags = Values.GameObjectTag.Enemy;
 
             EntityPosition = new CPosition(position);
             EntitySize = new Rectangle(-7, -64, 14, 64);
 
-            var sprite = new CSprite("fireball", EntityPosition, new Vector2(-7, -16));
+            _sprite = new CSprite("fireball", EntityPosition, new Vector2(-7, -16));
+            _useShader = useShader;
 
             _body = new BodyComponent(EntityPosition, -5, -10, 10, 10, 8)
             {
@@ -33,10 +36,21 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             var damageCollider = new CBox(EntityPosition, -6, -12, 0, 12, 12, 8, true);
             AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageCollider, HitType.Enemy, 4));
             AddComponent(BodyComponent.Index, _body);
-            AddComponent(DrawComponent.Index, new DrawCSpriteComponent(sprite, Values.LayerPlayer));
-            AddComponent(DrawShadowComponent.Index, new BodyDrawShadowComponent(_body, sprite));
+            AddComponent(DrawComponent.Index, new DrawCSpriteComponent(_sprite, Values.LayerPlayer));
+            AddComponent(DrawShadowComponent.Index, new BodyDrawShadowComponent(_body, _sprite));
+            AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             Map.Objects.RegisterAlwaysAnimateObject(this);
             new ObjSpriteShadow(map, this, Values.LayerPlayer, "sprshadowm");
+        }
+
+        private void Update()
+        {
+            if (!_useShader)
+                return;
+
+            _sprite.SpriteShader = (Game1.TotalGameTime % (AiDamageState.BlinkTime * 2) < AiDamageState.BlinkTime) 
+                ? Resources.DamageSpriteShader0 
+                : null;
         }
 
         public void ThrowFireball(Vector3 velocity)
