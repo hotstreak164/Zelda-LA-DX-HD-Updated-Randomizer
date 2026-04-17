@@ -381,9 +381,11 @@ namespace LADXHD_Patcher
 
             // Create the new mods folders.
             Config.AnimationMods.CreatePath(true);
+            Config.DungeonMods.CreatePath(true);
             Config.GraphicsMods.CreatePath(true);
             Config.MusicMods.CreatePath(true);
             Config.LanguageMods.CreatePath(true);
+            Config.MapsMods.CreatePath(true);
             Config.SoundsMods.CreatePath(true);
             Config.LAHDModPath.CreatePath(true);
 

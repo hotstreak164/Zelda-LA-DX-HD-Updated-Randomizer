@@ -16,9 +16,11 @@ namespace LADXHD_Patcher
         public static string BackupPath;
 
         public static string AnimationMods;
+        public static string DungeonMods;
         public static string GraphicsMods;
         public static string MusicMods;
         public static string LanguageMods;
+        public static string MapsMods;
         public static string SoundsMods;
         public static string LAHDModPath;
 
@@ -39,27 +41,29 @@ namespace LADXHD_Patcher
 
         public static void Initialize()
         {
-            AppPath      = Assembly.GetExecutingAssembly().Location;
-            BaseFolder   = AppContext.BaseDirectory;;
-            TempFolder   = Path.Combine(BaseFolder, "~temp");
-            ZeldaEXE     = Path.Combine(BaseFolder, "Link's Awakening DX HD.exe");
-            BackupPath   = Path.Combine(BaseFolder, "Data", "Backup");
+            AppPath       = Assembly.GetExecutingAssembly().Location;
+            BaseFolder    = AppContext.BaseDirectory;;
+            TempFolder    = Path.Combine(BaseFolder, "~temp");
+            ZeldaEXE      = Path.Combine(BaseFolder, "Link's Awakening DX HD.exe");
+            BackupPath    = Path.Combine(BaseFolder, "Data", "Backup");
 
             AnimationMods = Path.Combine(BaseFolder, "Mods", "Animations");
+            DungeonMods   = Path.Combine(BaseFolder, "Mods", "Dungeon");
             GraphicsMods  = Path.Combine(BaseFolder, "Mods", "Graphics");
             MusicMods     = Path.Combine(BaseFolder, "Mods", "Music");
             LanguageMods  = Path.Combine(BaseFolder, "Mods", "Languages");
+            MapsMods      = Path.Combine(BaseFolder, "Mods", "Maps");
             SoundsMods    = Path.Combine(BaseFolder, "Mods", "SoundEffects");
             LAHDModPath   = Path.Combine(BaseFolder, "Mods", "LAHDMods");
 
-            Launcher     = Path.Combine(BaseFolder, "Launcher");
-            WLauncher    = Path.Combine(BaseFolder, "Launcher.exe");
+            Launcher      = Path.Combine(BaseFolder, "Launcher");
+            WLauncher     = Path.Combine(BaseFolder, "Launcher.exe");
 
-            ApkSign      = Path.Combine(TempFolder, "android", "apksigner.jar");
-            ZipAlign     = Path.Combine(TempFolder, "android", "zipalign.exe");
-            KeyStore     = Path.Combine(TempFolder, "android", "keystore.jks");
-            JavaExe      = Path.Combine(TempFolder, "android", "java", "bin", "java.exe");
-            SevenZip     = Path.Combine(TempFolder, "7z.exe");
+            ApkSign       = Path.Combine(TempFolder, "android", "apksigner.jar");
+            ZipAlign      = Path.Combine(TempFolder, "android", "zipalign.exe");
+            KeyStore      = Path.Combine(TempFolder, "android", "keystore.jks");
+            JavaExe       = Path.Combine(TempFolder, "android", "java", "bin", "java.exe");
+            SevenZip      = Path.Combine(TempFolder, "7z.exe");
 
             CleanUp.Init();
         }
