@@ -560,6 +560,7 @@ namespace ProjectZ.InGame.Things
                 TextureList[textureName] = texture;
             }
         }
+
         // Note that "por" and "pte" are both "Portuguese" and share textures.
         private static readonly HashSet<string> _languageSet = new(StringComparer.OrdinalIgnoreCase) { "chn", "deu", "esp", "fre", "ind", "ita", "por", "pte", "rus" };
 

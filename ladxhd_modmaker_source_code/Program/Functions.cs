@@ -159,6 +159,10 @@ namespace LADXHD_ModMaker
 
         private static void CopyModFiles(string sourcePath, string destinationPath)
         {
+            // If the source doesn't exist then skip it.
+            if (!sourcePath.TestPath())
+                return;
+
             // Create the destination if it doesn't exist.
             destinationPath.CreatePath(false);
 
@@ -302,10 +306,16 @@ namespace LADXHD_ModMaker
             }
             // Copy any LAHDMOD or music files found in the mods folder.
             CopyModFiles(Config.AnimationMods, Config.OutAnimationMods);
+            CopyModFiles(Config.DungeonMods, Config.OutDungeonMods);
             CopyModFiles(Config.MusicMods, Config.OutMusicMods);
             CopyModFiles(Config.LanguageMods, Config.OutLanguageMods);
+            CopyModFiles(Config.MapsMods, Config.OutMapsMods);
             CopyModFiles(Config.SoundsMods, Config.OutSoundsMods);
             CopyModFiles(Config.LAHDModPath, Config.OutLAHDModPath);
+
+            // Copy a "scripts.zScripts" file if it exists.
+            if (Config.ZScripts.TestPath())
+                Config.ZScripts.CopyPath(Config.OutZScripts, true);
 
             // Try to copy over the image file.
             InstallImageFile();
@@ -393,10 +403,16 @@ namespace LADXHD_ModMaker
             }
             // Copy any LAHDMOD or music files found in the mods folder.
             CopyModFiles(Config.OutAnimationMods, Config.AnimationMods);
+            CopyModFiles(Config.OutDungeonMods, Config.DungeonMods);
             CopyModFiles(Config.OutMusicMods, Config.MusicMods);
             CopyModFiles(Config.OutLanguageMods, Config.LanguageMods);
+            CopyModFiles(Config.OutMapsMods, Config.MapsMods);
             CopyModFiles(Config.OutSoundsMods, Config.SoundsMods);
             CopyModFiles(Config.OutLAHDModPath, Config.LAHDModPath);
+
+            // Copy a "scripts.zScripts" file if it exists.
+            if (Config.OutZScripts.TestPath())
+                Config.OutZScripts.CopyPath(Config.ZScripts, true);
 
             // Remove the temporary folder.
             Config.TempPath.RemovePath();
