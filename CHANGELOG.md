@@ -1,5 +1,14 @@
 # **The Legend of Zelda: Link's Awakening DX HD Changelog:**
 
+## **v1.7.7**
+### The "Supporting My LAHD Mod" Update
+  * More modding support: allow loading custom maps, dungeon minimap files, and scripts.zscript.
+  * Update Mod Maker to support latest additions to modding & fix crash if a mod folder is missing.
+  * Add support for "Genie" LAHDMod that can configure his fireball throw speed and fireball flicker.
+  * Implement latest LAHDMod options into Launcher's "Mods" (Hinox, Genie, Island Background).
+  * Created an "official-unofficial" Link's Awakening HD mod that rolls back "DX" specific changes.
+  * Check this post for more details: https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Mods/discussions/7
+
 ## **v1.7.6**
 ### The "Audio & Launcher Maintenance" Update
   * A repo has been opened for mods! Check here: https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Mods
