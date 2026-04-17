@@ -211,6 +211,9 @@ public static class AdvancedSettings
             { "tunic_red_b",                    "Tunic Red: Blue Value"             },
 
             // Graphics: Island Ocean Color
+            { "sky_color_red",                  "Sky Color: Red Value"              },
+            { "sky_color_grn",                  "Sky Color: Green Value"            },
+            { "sky_color_blu",                  "Sky Color: Blue Value"             },
             { "ocean_color_red",                "Ocean Color: Red Value"            },
             { "ocean_color_grn",                "Ocean Color: Green Value"          },
             { "ocean_color_blu",                "Ocean Color: Blue Value"           },
@@ -262,6 +265,21 @@ public static class AdvancedSettings
 
             // Objects: Lamps
             { "powder_time",                    "Powder Light Duration"             },
+
+            // Boss: Hinox
+            { "hinox_1_red",                    "Level 2 Hinox Red"                 },
+            { "hinox_1_grn",                    "Level 2 Hinox Green"               },
+            { "hinox_1_blu",                    "Level 2 Hinox Blue"                },
+            { "hinox_2_red",                    "Level 7 Hinox Red"                 },
+            { "hinox_2_grn",                    "Level 7 Hinox Green"               },
+            { "hinox_2_blu",                    "Level 7 Hinox Blue"                },
+            { "hinox_3_red",                    "Level 8 Hinox Red"                 },
+            { "hinox_3_grn",                    "Level 8 Hinox Green"               },
+            { "hinox_3_blu",                    "Level 8 Hinox Blue"                },
+
+            // Boss: Genie
+            { "genie_fireball_interval",        "Fireball Interval"                 },
+            { "genie_fireball_shader",          "Use Sprite Shader"                 },
 
             // Enemy: Flame Fountain
             { "sprite_shader",                  "Use Sprite Shader"                 },

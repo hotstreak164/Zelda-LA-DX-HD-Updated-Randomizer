@@ -597,6 +597,47 @@ light_size = 64
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+[Boss: Hinox]
+// Modifies properties of the "Hinox" miniboss found in the Level 2, 7, and 8 Dungeons.
+
+//: MBossHinox
+// Level 2 Dungeon Hinox Colors
+// Default: 248 / 120 / 8
+hinox_1_red = 248
+hinox_1_grn = 120
+hinox_1_blu = 8
+
+//: MBossHinox
+// Level 7 Dungeon Hinox Colors
+// Default: 248 / 8 / 40
+hinox_2_red = 248
+hinox_2_grn = 8
+hinox_2_blu = 40
+
+//: MBossHinox
+// Level 8 Dungeon Hinox Colors
+// Default: 24 / 128 / 248
+hinox_3_red = 24
+hinox_3_grn = 128
+hinox_3_blu = 248
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Boss: Genie]
+// Modifies properties of the "Genie" boss found in the Level 2 Dungeon: Bottle Grotto.
+
+//: BossGenie
+// Fireball Cooldown: The time between fireball attacks. Use 500 for original Link's Awakening or 800 for DX.
+// Default: 800
+genie_fireball_interval = 800
+
+//: BossGenie
+// Fireball Shader: Flashes the fireball with damage shader. Original Link's Awakening uses this, DX does not.
+// Default: false
+genie_fireball_shader = false
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 [Enemy: Lives]
 // Configures the number of "lives" of all enemies in the game. Lives are in essence the number of "Hit Points" the enemies have. The level 1 sword deals 1 damage. The level 2 sword deals 2 damage. Piece of Power, Sword Spin, and Red Tunic multiply damage by (x2). Max possible damage is 16. Level 2 sword (2) * Red Tunic (x2) * Piece of Power (x2) * Sword Spin (x2) = 16 damage.
 
@@ -737,6 +778,13 @@ tunic_red_b = 41
 
 [Graphics: Island Ocean Color]
 // Set's the color of the ocean at the bottom of the Overworld below the gradient found in "..\Data\Map Objects\objects.png". The purpose of this lahdmod is to be used with a Graphics mod.
+
+//: ObjIslandBackground
+// Sky Color
+// Defaults: 65 / 90 / 255
+sky_color_red = 65
+sky_color_grn = 90
+sky_color_blu = 255
 
 //: ObjIslandBackground
 // Ocean Color
