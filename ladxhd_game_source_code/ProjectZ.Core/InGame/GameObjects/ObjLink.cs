@@ -484,6 +484,9 @@ namespace ProjectZ.InGame.GameObjects
         float light_bright = 1.0f;
         int light_size = 120;
 
+        float dmg_shader_mark0 = 0.100f;
+        float dmg_shader_mark1 = 0.725f;
+
         float dmg_shader_color1_red = 255;
         float dmg_shader_color1_grn = 181;
         float dmg_shader_color1_blu =  49;
@@ -502,6 +505,8 @@ namespace ProjectZ.InGame.GameObjects
             string modFile = Path.Combine(Values.PathLAHDMods, "ObjLink.lahdmod");
             ModFile.Parse(modFile, this);
 
+            Resources.DamageSpriteShader0.FloatParameter["mark0"] = dmg_shader_mark0;
+            Resources.DamageSpriteShader0.FloatParameter["mark1"] = dmg_shader_mark1;
             Resources.DamageSpriteShader0["Color0"] = new Vector4(dmg_shader_color1_red/255f, dmg_shader_color1_grn/255f, dmg_shader_color1_blu/255f, 1.0f);
             Resources.DamageSpriteShader0["Color1"] = new Vector4(dmg_shader_color2_red/255f, dmg_shader_color2_grn/255f, dmg_shader_color2_blu/255f, 1.0f);
             Resources.DamageSpriteShader0["Color2"] = new Vector4(dmg_shader_color3_red/255f, dmg_shader_color3_grn/255f, dmg_shader_color3_blu/255f, 1.0f);
