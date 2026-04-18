@@ -7,6 +7,8 @@
 **/Content
 assets_original/
 
+ladxhd_patcher_source_code/Patches
+
 ladxhd_game_source_code/ProjectZ.Android/Data/
 ladxhd_game_source_code/ProjectZ.Desktop/Data/
 ladxhd_game_source_code/ProjectZ.Linux/Data/
